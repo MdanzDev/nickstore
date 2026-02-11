@@ -22,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* Glass effect with more personality */
         .glass-panel {
             background: rgba(18, 22, 28, 0.85);
             backdrop-filter: blur(10px);
@@ -62,7 +61,7 @@
             box-shadow: 0 8px 16px rgba(63,140,255,0.35);
         }
 
-        /* FIXED: Denomination cards - 100% clickable with big tap area */
+        /* FIXED: Denomination cards - 100% clickable, single highlight only */
         .denom-card {
             background: #1e252f;
             border: 1.5px solid #2d3541;
@@ -78,8 +77,8 @@
 
         .denom-card.selected {
             background: linear-gradient(145deg, #2a3440, #1f2a35);
-            border: 1.5px solid #3f8cff;
-            box-shadow: 0 8px 18px #3f8cff30;
+            border: 1.5px solid #3f8cff !important;
+            box-shadow: 0 8px 18px #3f8cff40;
         }
 
         .denom-card:hover {
@@ -201,7 +200,6 @@
             font-weight: 600;
         }
 
-        /* fix for button tap highlight */
         button, .denom-card, .game-card {
             -webkit-tap-highlight-color: transparent;
         }
@@ -235,7 +233,7 @@
         </div>
     </div>
 
-    <!-- NAVIGATION - BOLD -->
+    <!-- NAVIGATION -->
     <nav class="glass-panel sticky top-0 z-50 px-5 py-4" style="backdrop-filter: blur(16px);">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-end gap-2 cursor-pointer" onclick="showView('games')">
@@ -263,9 +261,9 @@
     </nav>
 
     <main class="flex-1 overflow-y-auto">
-        <!-- GAMES VIEW - RICH VISUAL -->
+        <!-- GAMES VIEW -->
         <div id="view-games" class="max-w-7xl mx-auto p-5">
-            <!-- HERO SECTION - NO CRINGE, JUST CLEAN GAMING VIBE -->
+            <!-- HERO SECTION -->
             <div class="hero-gradient p-7 mb-9 flex items-center justify-between">
                 <div>
                     <h2 class="text-3xl font-black text-white tracking-tight">🔥 Instant top-up</h2>
@@ -283,7 +281,7 @@
             <!-- CATEGORIES -->
             <div class="category-scroll overflow-x-auto flex gap-3 mb-8 pb-2" id="categoryContainer"></div>
 
-            <!-- GAME GRID - BOLDER CARDS -->
+            <!-- GAME GRID -->
             <div id="gameGrid" class="game-grid"></div>
             <div id="emptyState" class="hidden text-center py-24">
                 <i class="fas fa-search text-5xl text-gray-600 mb-5"></i>
@@ -303,7 +301,7 @@
         </div>
     </main>
 
-    <!-- PRODUCT MODAL - FULLY FIXED DENOM CLICK -->
+    <!-- PRODUCT MODAL - COMPLETELY FIXED HIGHLIGHTING -->
     <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
     <div id="productModal" class="modal-content">
         <div class="p-7">
@@ -327,7 +325,7 @@
                 <input type="text" id="playerId" placeholder="example: 12345678 (required)" class="w-full">
             </div>
 
-            <!-- DENOM GRID - 100% FIXED, CLICK WORKS EVERY TIME -->
+            <!-- DENOM GRID - 100% FIXED HIGHLIGHT, ONLY ONE BUTTON HIGHLIGHTS -->
             <div class="mb-8">
                 <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 block flex items-center gap-2">
                     <i class="fas fa-cube text-[#3f8cff]"></i> Select denomination
@@ -368,16 +366,17 @@
 
     <script>
         // *****************************************************
-        // NICK·STORE - ULTIMATE FIX: denom click 100% working
-        // more visual, not minimalist, buttery smooth
+        // NICK·STORE - COMPLETELY FIXED HIGHLIGHTING
+        // Only one denomination button highlights at a time
+        // No more double highlight or glitchy selection
         // *****************************************************
 
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSEzcyRUGrj5Z6kL-2Ms19p_Kwi-hcdHp1SAMG9XcxA7dNbih2PyB1l8uQamxpEP3NVSuN1aJj4_oi1/pub?output=csv';
         const WA_NUMBER = '60137345871';
 
         let allProducts = [];
-        let cart = JSON.parse(localStorage.getItem('nick_cart_v2')) || [];
-        let history = JSON.parse(localStorage.getItem('nick_history_v2')) || [];
+        let cart = JSON.parse(localStorage.getItem('nick_cart_fixed')) || [];
+        let history = JSON.parse(localStorage.getItem('nick_history_fixed')) || [];
         let selectedGame = null;
         let selectedProduct = null;
         let currentCategory = 'all';
@@ -481,8 +480,10 @@
             document.getElementById('modalImg').style.backgroundImage = `url('${gameData.image}')`;
             document.getElementById('playerId').value = '';
 
-            // ========== FIXED DENOM GRID ==========
-            // DIRECT CLICK HANDLER, NO EVENT BUBBLING ISSUES
+            // ========== COMPLETELY FIXED DENOM GRID ==========
+            // Clear any existing selectedProduct
+            selectedProduct = null;
+            
             const denomGrid = document.getElementById('denomGrid');
             denomGrid.innerHTML = variants.map(p => `
                 <div onclick="selectProduct('${p.id}')" id="btn-${p.id}" class="denom-card">
@@ -492,7 +493,7 @@
                 </div>
             `).join('');
 
-            // Auto select first
+            // Auto select first product
             if (variants.length > 0) {
                 selectProduct(variants[0].id);
             }
@@ -501,16 +502,17 @@
             document.getElementById('productModal').classList.add('active');
         }
 
-        // SELECTION - explicitly remove/add classes
+        // SELECTION - FIXED: ONLY ONE HIGHLIGHT, NO GHOST HIGHLIGHTS
         function selectProduct(id) {
-            // remove selected from all denom cards
+            // First, remove 'selected' class from ALL denomination cards
             document.querySelectorAll('.denom-card').forEach(el => {
-                el.classList.remove('selected', 'border-[#3f8cff]', 'bg-[#2a3440]');
+                el.classList.remove('selected');
             });
             
+            // Then add 'selected' class ONLY to the clicked card
             const target = document.getElementById(`btn-${id}`);
             if (target) {
-                target.classList.add('selected', 'border-[#3f8cff]', 'bg-[#2a3440]');
+                target.classList.add('selected');
                 selectedProduct = allProducts.find(p => p.id === id);
             }
         }
@@ -578,10 +580,26 @@
             totalEl.innerText = `RM ${total.toFixed(2)}`;
         }
 
-        function removeFromCart(id) { cart = cart.filter(i => i.cartId !== id); saveCart(); updateCartUI(); showToast('🗑️ Removed'); }
-        function saveCart() { localStorage.setItem('nick_cart_v2', JSON.stringify(cart)); }
-        function openCart() { document.getElementById('cartOverlay').classList.add('active'); document.getElementById('cartSidebar').classList.add('active'); }
-        function closeCart() { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartSidebar').classList.remove('active'); }
+        function removeFromCart(id) { 
+            cart = cart.filter(i => i.cartId !== id); 
+            saveCart(); 
+            updateCartUI(); 
+            showToast('🗑️ Removed'); 
+        }
+        
+        function saveCart() { 
+            localStorage.setItem('nick_cart_fixed', JSON.stringify(cart)); 
+        }
+        
+        function openCart() { 
+            document.getElementById('cartOverlay').classList.add('active'); 
+            document.getElementById('cartSidebar').classList.add('active'); 
+        }
+        
+        function closeCart() { 
+            document.getElementById('cartOverlay').classList.remove('active'); 
+            document.getElementById('cartSidebar').classList.remove('active'); 
+        }
 
         function checkout() {
             if (!cart.length) return showToast('Cart empty');
@@ -594,8 +612,11 @@
             msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}*`;
             const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString('en-MY') };
             history.unshift(order);
-            localStorage.setItem('nick_history_v2', JSON.stringify(history));
-            cart = []; saveCart(); updateCartUI(); closeCart();
+            localStorage.setItem('nick_history_fixed', JSON.stringify(history));
+            cart = []; 
+            saveCart(); 
+            updateCartUI(); 
+            closeCart();
             window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
             showToast('📲 Order sent');
         }
@@ -608,7 +629,10 @@
 
         function renderHistory() {
             const container = document.getElementById('historyList');
-            if (!history.length) { container.innerHTML = `<div class="text-center py-16 text-gray-500 bg-[#1b232e] rounded-3xl"><i class="fas fa-history text-5xl mb-5 opacity-40"></i><p class="text-lg">No history</p></div>`; return; }
+            if (!history.length) { 
+                container.innerHTML = `<div class="text-center py-16 text-gray-500 bg-[#1b232e] rounded-3xl"><i class="fas fa-history text-5xl mb-5 opacity-40"></i><p class="text-lg">No history</p></div>`; 
+                return; 
+            }
             container.innerHTML = history.map(o => `
                 <div class="bg-[#1a222e] p-6 rounded-3xl border border-white/10">
                     <div class="flex justify-between items-center mb-4">
@@ -620,9 +644,20 @@
             `).join('');
         }
 
-        function toggleSearch() { document.getElementById('searchBar').classList.toggle('hidden'); }
-        function handleSearch(val) { renderGames(val); }
-        function showToast(msg) { let t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300); }
+        function toggleSearch() { 
+            document.getElementById('searchBar').classList.toggle('hidden'); 
+        }
+        
+        function handleSearch(val) { 
+            renderGames(val); 
+        }
+        
+        function showToast(msg) { 
+            let t = document.getElementById('toast'); 
+            t.innerText = msg; 
+            t.classList.add('show'); 
+            setTimeout(() => t.classList.remove('show'), 2300); 
+        }
     </script>
 </body>
 </html>
