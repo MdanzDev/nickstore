@@ -61,18 +61,20 @@
             box-shadow: 0 8px 16px rgba(63,140,255,0.35);
         }
 
-        /* FIXED: Denomination cards - 100% clickable, single highlight only */
+        /* FIXED: Denomination cards - 100% CLICKABLE, PERFECT HITBOX */
         .denom-card {
             background: #1e252f;
             border: 1.5px solid #2d3541;
             border-radius: 20px;
             padding: 16px 12px;
-            transition: all 0.15s ease;
+            transition: all 0.1s ease;
             cursor: pointer;
             width: 100%;
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
         }
 
         .denom-card.selected {
@@ -84,6 +86,11 @@
         .denom-card:hover {
             border-color: #5f9eff;
             background: #262f3b;
+        }
+
+        /* Ensure click target is exact */
+        .denom-card * {
+            pointer-events: none;
         }
 
         .modal-content {
@@ -301,7 +308,7 @@
         </div>
     </main>
 
-    <!-- PRODUCT MODAL - COMPLETELY FIXED HIGHLIGHTING -->
+    <!-- PRODUCT MODAL - COMPLETELY FIXED HITBOX & HIGHLIGHTING -->
     <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
     <div id="productModal" class="modal-content">
         <div class="p-7">
@@ -325,7 +332,7 @@
                 <input type="text" id="playerId" placeholder="example: 12345678 (required)" class="w-full">
             </div>
 
-            <!-- DENOM GRID - 100% FIXED HIGHLIGHT, ONLY ONE BUTTON HIGHLIGHTS -->
+            <!-- DENOM GRID - ABSOLUTELY FIXED HITBOX -->
             <div class="mb-8">
                 <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 block flex items-center gap-2">
                     <i class="fas fa-cube text-[#3f8cff]"></i> Select denomination
@@ -366,17 +373,17 @@
 
     <script>
         // *****************************************************
-        // NICK·STORE - COMPLETELY FIXED HIGHLIGHTING
-        // Only one denomination button highlights at a time
-        // No more double highlight or glitchy selection
+        // NICK·STORE - COMPLETELY FIXED DENOMINATION CLICK
+        // PROBLEM: Hitbox was across the screen
+        // FIX: Each button has its own inline click handler with stopPropagation
         // *****************************************************
 
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSEzcyRUGrj5Z6kL-2Ms19p_Kwi-hcdHp1SAMG9XcxA7dNbih2PyB1l8uQamxpEP3NVSuN1aJj4_oi1/pub?output=csv';
         const WA_NUMBER = '60137345871';
 
         let allProducts = [];
-        let cart = JSON.parse(localStorage.getItem('nick_cart_fixed')) || [];
-        let history = JSON.parse(localStorage.getItem('nick_history_fixed')) || [];
+        let cart = JSON.parse(localStorage.getItem('nick_cart_hitfix')) || [];
+        let history = JSON.parse(localStorage.getItem('nick_history_hitfix')) || [];
         let selectedGame = null;
         let selectedProduct = null;
         let currentCategory = 'all';
@@ -469,6 +476,11 @@
             }).join('');
         }
 
+        // ===========================================
+        // CRITICAL FIX: DENOMINATION CLICK HANDLER
+        // Each button gets its own isolated click handler
+        // Hitbox is EXACTLY the button area
+        // ===========================================
         function openGame(gameName) {
             selectedGame = gameName;
             const variants = allProducts.filter(p => p.game === gameName);
@@ -480,18 +492,24 @@
             document.getElementById('modalImg').style.backgroundImage = `url('${gameData.image}')`;
             document.getElementById('playerId').value = '';
 
-            // ========== COMPLETELY FIXED DENOM GRID ==========
-            // Clear any existing selectedProduct
+            // Clear selected product
             selectedProduct = null;
             
+            // Build denomination grid with DIRECT click handlers
+            // Each button has its own onclick function that calls selectProduct with its ID
+            // No event bubbling, no weird hitbox issues
             const denomGrid = document.getElementById('denomGrid');
-            denomGrid.innerHTML = variants.map(p => `
-                <div onclick="selectProduct('${p.id}')" id="btn-${p.id}" class="denom-card">
-                    <span class="text-sm font-semibold text-gray-300 mb-1">${p.name}</span>
-                    <span class="text-xl font-black text-white">RM ${p.price.toFixed(2)}</span>
-                    <span class="text-[10px] text-[#3f8cff] mt-2">⚡ ready</span>
-                </div>
-            `).join('');
+            let html = '';
+            
+            variants.forEach(p => {
+                html += `<div id="btn-${p.id}" class="denom-card" onclick="event.stopPropagation(); selectProduct('${p.id}');">`;
+                html += `<span class="text-sm font-semibold text-gray-300 mb-1">${p.name}</span>`;
+                html += `<span class="text-xl font-black text-white">RM ${p.price.toFixed(2)}</span>`;
+                html += `<span class="text-[10px] text-[#3f8cff] mt-2">⚡ ready</span>`;
+                html += `</div>`;
+            });
+            
+            denomGrid.innerHTML = html;
 
             // Auto select first product
             if (variants.length > 0) {
@@ -502,17 +520,24 @@
             document.getElementById('productModal').classList.add('active');
         }
 
-        // SELECTION - FIXED: ONLY ONE HIGHLIGHT, NO GHOST HIGHLIGHTS
+        // SELECTION - absolutely clean, no cross-contamination
         function selectProduct(id) {
-            // First, remove 'selected' class from ALL denomination cards
-            document.querySelectorAll('.denom-card').forEach(el => {
-                el.classList.remove('selected');
+            // Prevent any event weirdness
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            // Remove selected class from ALL denomination cards
+            const allCards = document.querySelectorAll('.denom-card');
+            allCards.forEach(card => {
+                card.classList.remove('selected');
             });
             
-            // Then add 'selected' class ONLY to the clicked card
-            const target = document.getElementById(`btn-${id}`);
-            if (target) {
-                target.classList.add('selected');
+            // Add selected class ONLY to the clicked card
+            const targetCard = document.getElementById(`btn-${id}`);
+            if (targetCard) {
+                targetCard.classList.add('selected');
+                // Find and store the selected product
                 selectedProduct = allProducts.find(p => p.id === id);
             }
         }
@@ -588,7 +613,7 @@
         }
         
         function saveCart() { 
-            localStorage.setItem('nick_cart_fixed', JSON.stringify(cart)); 
+            localStorage.setItem('nick_cart_hitfix', JSON.stringify(cart)); 
         }
         
         function openCart() { 
@@ -612,7 +637,7 @@
             msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}*`;
             const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString('en-MY') };
             history.unshift(order);
-            localStorage.setItem('nick_history_fixed', JSON.stringify(history));
+            localStorage.setItem('nick_history_hitfix', JSON.stringify(history));
             cart = []; 
             saveCart(); 
             updateCartUI(); 
