@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nick-Store · elite gaming credits</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --nick-bg: #03050a;
+            --nick-surface: #0e111b;
+            --nick-card: rgba(18, 22, 33, 0.9);
+            --nick-accent: #00ffbb;
+            --nick-accent-glow: rgba(0, 255, 187, 0.15);
+            --nick-border: rgba(255, 255, 255, 0.04);
+            --nick-silver: #b2becd;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at 100% 0%, #0a0c14 0%, #03050a 100%);
+            color: #f0f3fa;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            letter-spacing: 0.01em;
+        }
+
+        .glass-nav {
+            background: rgba(6, 8, 14, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 255, 187, 0.08);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .logo-font {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #b0f0e6 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            font-weight: 900;
+        }
+
+        .nick-glow {
+            text-shadow: 0 0 8px rgba(0,255,187,0.4);
+        }
+
+        .game-card {
+            background: var(--nick-card);
+            border: 1px solid var(--nick-border);
+            border-radius: 28px;
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+            backdrop-filter: blur(4px);
+        }
+
+        .game-card:hover {
+            border-color: rgba(0, 255, 187, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,255,187,0.1);
+        }
+
+        .game-card:active { transform: scale(0.97); }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            color: #9aa4b5;
+            font-size: 12px; font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            transition: 0.15s;
+            letter-spacing: 0.02em;
+        }
+
+        .category-btn.active {
+            background: #00ffbb;
+            color: #000;
+            border-color: #00ffbb;
+            font-weight: 700;
+            box-shadow: 0 0 15px #00ffbb55;
+        }
+
+        .denom-btn {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 18px;
+            transition: all 0.15s;
+        }
+
+        .denom-btn.selected {
+            background: #00ffbb10;
+            border: 1px solid #00ffbb;
+            box-shadow: 0 0 15px #00ffbb25;
+        }
+
+        .modal-content {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #0b0e17;
+            border-radius: 36px 36px 0 0;
+            border-top: 1px solid rgba(0,255,187,0.15);
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.3, 0.8, 0.2, 1);
+            z-index: 1001;
+        }
+
+        .modal-content.active { transform: translateY(0); }
+
+        .cart-sidebar {
+            position: fixed; top: 0; right: 0; bottom: 0;
+            width: 100%; max-width: 420px;
+            background: #0a0d15;
+            backdrop-filter: blur(24px);
+            border-left: 1px solid rgba(0,255,187,0.2);
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1);
+            z-index: 1001;
+            display: flex; flex-direction: column;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+        }
+
+        .cart-sidebar.active { transform: translateX(0); }
+
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(2, 3, 6, 0.8);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+        }
+        .modal-overlay.active { display: block; }
+
+        .toast {
+            position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #00ffbb; color: #000; padding: 14px 30px; border-radius: 50px;
+            font-weight: 700; font-size: 14px; z-index: 10000;
+            box-shadow: 0 0 30px #00ffbb70; transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        .loading-screen {
+            position: fixed; inset: 0;
+            background: #03050a;
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2f3545; border-radius: 20px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ffbb; }
+
+        .hero-glow {
+            background: radial-gradient(circle at 30% 30%, rgba(0,255,187,0.08) 0%, transparent 70%);
+        }
+
+        input, .cart-item {
+            transition: all 0.2s;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN · NICK STORE SIGNATURE -->
+    <div id="loadingScreen" class="loading-screen" style="flex-direction: column;">
+        <div class="relative">
+            <div class="w-20 h-20 border-4 border-white/5 border-t-[#00ffbb] rounded-full animate-spin shadow-2xl"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-3xl filter drop-shadow-lg">🎮</span>
+            </div>
+        </div>
+        <h3 class="logo-font text-2xl font-black mt-6 tracking-widest">NICK·STORE</h3>
+        <p id="loadingText" class="text-xs text-gray-500 mt-3 tracking-wider">loading premium catalog ...</p>
+    </div>
+
+    <!-- NAVIGATION · ELEVATED DARK -->
+    <nav class="glass-nav px-5 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex flex-col cursor-pointer group" onclick="showView('games')">
+                <h1 class="logo-font font-black text-2xl tracking-tight">NICK<span class="text-white/80" style="-webkit-text-fill-color: #fff;">·</span>STORE</h1>
+                <span class="text-[7px] font-bold tracking-[0.45em] text-[#00ffbb]/70 mt-[-4px]">ELITE GAMING</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSearch()" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 hover:border-[#00ffbb]/40 transition-all">
+                    <i class="fas fa-search text-sm text-gray-300"></i>
+                </button>
+                <button onclick="openCart()" class="relative w-11 h-11 flex items-center justify-center rounded-2xl bg-[#00ffbb]/10 border border-[#00ffbb]/20 hover:bg-[#00ffbb]/20">
+                    <i class="fas fa-shopping-cart text-sm text-white"></i>
+                    <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-[#00ffbb] text-black text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border border-black/30 shadow-lg">0</span>
+                </button>
+                <button onclick="showView('history')" class="w-10 h-10 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 hover:border-[#00ffbb]/40">
+                    <i class="fas fa-clock text-sm"></i>
+                </button>
+            </div>
+        </div>
+        <div id="searchBar" class="max-w-7xl mx-auto mt-4 hidden px-1">
+            <div class="relative">
+                <i class="fas fa-search absolute left-4 top-3.5 text-gray-500 text-sm"></i>
+                <input type="text" id="gameSearch" oninput="handleSearch(this.value)" placeholder="Search for games, credits..." 
+                    class="w-full bg-[#0c0f17] border border-white/10 rounded-2xl pl-11 pr-5 py-3.5 text-sm outline-none focus:border-[#00ffbb]/50 focus:bg-[#0a0d15] transition-all text-white/90 placeholder:text-gray-600">
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto">
+        <!-- GAMES VIEW - MAIN CATALOG -->
+        <div id="view-games" class="max-w-7xl mx-auto p-5">
+            <!-- Hero Premium -->
+            <div class="relative mb-10 p-7 rounded-4xl bg-gradient-to-br from-[#0f121b] to-[#06080e] border border-white/5 overflow-hidden hero-glow">
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl font-extrabold mb-2 tracking-tight"><span class="logo-font">instant</span> <span style="color: #00ffbb; text-shadow: 0 0 10px #00ffbb80;">top‑up</span></h2>
+                    <p class="text-gray-400 text-sm max-w-md">lightning delivery · verified credits · 24/7 support</p>
+                    <div class="flex mt-5 gap-2">
+                        <span class="bg-[#00ffbb]/20 text-[#bbffec] text-[10px] px-3 py-1.5 rounded-full font-bold border border-[#00ffbb]/30">⚡ +5000 trusted</span>
+                        <span class="bg-white/5 text-gray-300 text-[10px] px-3 py-1.5 rounded-full">🎮 100+ games</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories – glass scroll -->
+            <div class="category-scroll overflow-x-auto flex gap-2 mb-7 pb-1" id="categoryContainer"></div>
+
+            <!-- Product Grid -->
+            <div id="gameGrid" class="game-grid"></div>
+            <div id="emptyState" class="hidden text-center py-24">
+                <i class="fas fa-ghost text-5xl text-gray-700 mb-4"></i>
+                <p class="text-gray-500 text-sm">nothing found · try another search</p>
+            </div>
+        </div>
+
+        <!-- HISTORY VIEW minimal clean -->
+        <div id="view-history" class="hidden max-w-2xl mx-auto p-5">
+            <div class="flex items-center gap-4 mb-7">
+                <button onclick="showView('games')" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:border-[#00ffbb]/50"><i class="fas fa-arrow-left text-gray-300"></i></button>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">purchase history</h2>
+            </div>
+            <div id="historyList" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <!-- PRODUCT MODAL · NICK STYLE -->
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
+    <div id="productModal" class="modal-content">
+        <div class="p-7">
+            <div class="flex justify-between items-start mb-7">
+                <div class="flex gap-5">
+                    <div id="modalImg" class="w-20 h-20 rounded-2xl bg-cover bg-center border-2 border-[#00ffbb]/20 shadow-xl"></div>
+                    <div class="pt-1">
+                        <h3 id="modalTitle" class="text-xl font-black tracking-tight">loading</h3>
+                        <p id="modalCategory" class="text-[10px] font-bold text-[#00ffbb] uppercase tracking-widest mt-1">premium</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="w-9 h-9 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/20"><i class="fas fa-times text-sm"></i></button>
+            </div>
+
+            <div class="space-y-7">
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-3"><i class="fas fa-id-card text-[#00ffbb]"></i> 1. player ID / username</label>
+                    <input type="text" id="playerId" placeholder="e.g. 1234567890 | nickname" 
+                        class="w-full bg-[#0e121b] border border-white/10 rounded-2xl px-5 py-4 text-sm outline-none focus:border-[#00ffbb]/60 focus:bg-[#0a0e15] transition placeholder:text-gray-600">
+                </div>
+
+                <div>
+                    <label class="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2 mb-3"><i class="fas fa-gem text-[#00ffbb]"></i> 2. choose package</label>
+                    <div id="denomGrid" class="grid grid-cols-2 gap-3"></div>
+                </div>
+
+                <div class="pt-3">
+                    <button onclick="addToCart()" class="w-full bg-[#00ffbb] text-black py-4.5 rounded-2xl font-extrabold text-sm tracking-wide active:scale-[0.98] transition-all shadow-lg shadow-[#00ffbb]/30 flex items-center justify-center gap-2">
+                        <i class="fas fa-cart-plus"></i> ADD TO CART
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART SIDEBAR · PREMIUM -->
+    <div id="cartOverlay" class="modal-overlay" onclick="closeCart()"></div>
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-[#080b12]">
+            <h3 class="font-black text-lg flex items-center gap-2"><span class="w-2 h-2 bg-[#00ffbb] rounded-full"></span> YOUR CART</h3>
+            <button onclick="closeCart()" class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
+        <div class="p-6 bg-[#080b12]/90 border-t border-white/10 backdrop-blur">
+            <div class="flex justify-between items-center mb-5">
+                <span class="text-gray-400 text-sm font-medium">total amount</span>
+                <span id="cartTotal" class="text-2xl font-black text-[#00ffbb] drop-shadow-md">RM 0.00</span>
+            </div>
+            <button onclick="checkout()" class="w-full bg-[#00ffbb] hover:bg-[#00eeaa] text-black py-4.5 rounded-2xl font-extrabold flex items-center justify-center gap-3 transition-all shadow-2xl shadow-[#00ffbb]/30">
+                <i class="fab fa-whatsapp text-lg"></i> CHECKOUT VIA WHATSAPP
+            </button>
+            <p class="text-[9px] text-center text-gray-600 mt-4 tracking-wider">🔒 instant processing · save to history</p>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">✔️ item added</div>
+
+    <script>
+        // ========== NICK·STORE ==========
+        // RENAMED, ELEVATED UI, premium feel, better microinteractions
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSEzcyRUGrj5Z6kL-2Ms19p_Kwi-hcdHp1SAMG9XcxA7dNbih2PyB1l8uQamxpEP3NVSuN1aJj4_oi1/pub?output=csv';
+        const WA_NUMBER = '60137345871'; 
+
+        let allProducts = [];
+        let cart = JSON.parse(localStorage.getItem('nick_cart')) || [];
+        let history = JSON.parse(localStorage.getItem('nick_history')) || [];
+        let selectedGame = null;
+        let selectedProduct = null;
+        let currentCategory = 'all';
+
+        window.onload = () => { fetchData(); updateCartUI(); };
+
+        async function fetchData() {
+            const loadingText = document.getElementById('loadingText');
+            try {
+                const response = await fetch(SHEET_URL);
+                const csvData = await response.text();
+                Papa.parse(csvData, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        allProducts = results.data.map((item, idx) => ({
+                            id: item.id || `nick-${idx}-${Date.now()}`,
+                            name: item.name || 'diamond',
+                            game: item.game || 'Game',
+                            price: parseFloat(String(item.price || '0').replace(/[^\d.-]/g, '')) || 9.99,
+                            category: item.cat || 'Games',
+                            image: item.thumbnail || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.game || 'Nick')}&background=00ccaa&color=fff&size=200`
+                        }));
+                        renderCategories();
+                        renderGames();
+                        document.getElementById('loadingScreen').style.display = 'none';
+                    }
+                });
+            } catch (e) {
+                loadingText.innerText = "error · using demo data";
+                setTimeout(() => {
+                    allProducts = [
+                        {id: 'n1', name:'100 diamonds', game:'Mobile Legends', price:12.90, category:'MOBA', image:'https://ui-avatars.com/api/?name=ML&background=00ccaa&color=fff'},
+                        {id: 'n2', name:'2800 V-Bucks', game:'Fortnite', price:45.00, category:'Battle Royale', image:'https://ui-avatars.com/api/?name=FN&background=00ccaa&color=fff'},
+                        {id: 'n3', name:'60 Genesis Crystal', game:'Genshin Impact', price:16.90, category:'RPG', image:'https://ui-avatars.com/api/?name=GI&background=00ccaa&color=fff'},
+                    ];
+                    renderCategories(); renderGames(); 
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 600);
+            }
+        }
+
+        function renderCategories() {
+            const cats = ['all', ...new Set(allProducts.map(p => p.category))];
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = cats.map(cat => `
+                <button onclick="setCategory('${cat}')" class="category-btn whitespace-nowrap ${currentCategory === cat ? 'active' : ''}">
+                    ${cat === 'all' ? '🔥 all' : cat.toUpperCase()}
+                </button>
+            `).join('');
+        }
+
+        function setCategory(cat) { currentCategory = cat; renderCategories(); renderGames(); }
+
+        function renderGames(search = '') {
+            const grid = document.getElementById('gameGrid');
+            const uniqueGames = [...new Set(allProducts.map(p => p.game))];
+            const filtered = uniqueGames.filter(gameName => {
+                const gameProducts = allProducts.filter(p => p.game === gameName);
+                const matchesCat = currentCategory === 'all' || (gameProducts[0]?.category === currentCategory);
+                const matchesSearch = gameName.toLowerCase().includes(search.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = ''; 
+                document.getElementById('emptyState').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('emptyState').classList.add('hidden');
+            grid.innerHTML = filtered.map(gameName => {
+                const gameData = allProducts.find(p => p.game === gameName) || allProducts[0];
+                const prices = allProducts.filter(p => p.game === gameName).map(p => p.price);
+                const minPrice = prices.length ? Math.min(...prices) : 0;
+                return `
+                    <div class="game-card p-3 flex flex-col cursor-pointer" onclick="openGame('${gameName.replace(/'/g, "\\'")}')">
+                        <div class="aspect-[1/1] w-full rounded-2xl bg-cover bg-center mb-3 border border-white/10 shadow-md" style="background-image: url('${gameData.image}')"></div>
+                        <div class="px-1 pb-1">
+                            <h4 class="font-extrabold text-sm truncate tracking-tight">${gameName}</h4>
+                            <div class="flex justify-between items-center mt-1">
+                                <p class="text-[11px] font-medium text-[#00ffbb]">RM ${minPrice.toFixed(2)}</p>
+                                <span class="text-[9px] text-gray-500">+</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openGame(gameName) {
+            selectedGame = gameName;
+            const variants = allProducts.filter(p => p.game === gameName);
+            if (!variants.length) return;
+            const gameData = variants[0];
+            document.getElementById('modalTitle').innerText = gameName;
+            document.getElementById('modalCategory').innerText = gameData.category || 'PREMIUM';
+            document.getElementById('modalImg').style.backgroundImage = `url('${gameData.image}')`;
+            document.getElementById('playerId').value = '';
+
+            const denomGrid = document.getElementById('denomGrid');
+            denomGrid.innerHTML = variants.map((p, i) => `
+                <button onclick="selectProduct('${p.id}')" id="btn-${p.id}" 
+                    class="denom-btn p-4 rounded-xl bg-white/5 flex flex-col items-start transition-all hover:bg-white/10">
+                    <span class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">${p.name}</span>
+                    <span class="text-base font-black text-white mt-1">RM ${p.price.toFixed(2)}</span>
+                </button>
+            `).join('');
+
+            selectProduct(variants[0].id);
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function selectProduct(id) {
+            selectedProduct = allProducts.find(p => p.id === id);
+            document.querySelectorAll('.denom-btn').forEach(b => {
+                b.classList.remove('selected', 'border-[#00ffbb]', 'bg-[#00ffbb]/10');
+            });
+            const btn = document.getElementById(`btn-${id}`);
+            if (btn) btn.classList.add('selected', 'border-[#00ffbb]', 'bg-[#00ffbb]/10');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        function addToCart() {
+            const pid = document.getElementById('playerId').value.trim();
+            if (!pid) return showToast("❗ enter player ID", true);
+            if (!selectedProduct) return showToast("choose package", true);
+            cart.push({
+                cartId: Date.now() + Math.random(),
+                game: selectedGame,
+                product: selectedProduct.name,
+                price: selectedProduct.price,
+                playerId: pid,
+                image: selectedProduct.image
+            });
+            saveCart(); closeModal(); showToast("✓ added to cart"); updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItems');
+            const totalEl = document.getElementById('cartTotal');
+            document.getElementById('cartCount').innerText = cart.length;
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="flex flex-col items-center py-16 text-gray-500"><i class="fas fa-bag-shopping text-4xl mb-4 opacity-30"></i><span class="text-sm">your cart is empty</span></div>`;
+                totalEl.innerText = "RM 0.00"; return;
+            }
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                total += item.price;
+                return `
+                    <div class="cart-item flex gap-4 bg-[#121724] p-4 rounded-2xl border border-white/5 hover:border-[#00ffbb]/30 transition">
+                        <img src="${item.image}" class="w-14 h-14 rounded-xl object-cover border border-white/10">
+                        <div class="flex-1 min-w-0">
+                            <h5 class="text-sm font-bold truncate">${item.game}</h5>
+                            <p class="text-[11px] text-gray-400 mt-0.5">${item.product}</p>
+                            <p class="text-[11px] font-mono text-[#99ffe8] mt-1.5 bg-black/20 px-2 py-0.5 rounded-full inline-block">🆔 ${item.playerId}</p>
+                        </div>
+                        <div class="text-right flex flex-col justify-between items-end">
+                            <span class="text-base font-black text-white">RM${item.price.toFixed(2)}</span>
+                            <button onclick="removeFromCart(${item.cartId})" class="text-[#ff8888] hover:text-red-400 text-xs bg-white/5 p-2 rounded-full"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            totalEl.innerText = `RM ${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(id) { cart = cart.filter(i => i.cartId !== id); saveCart(); updateCartUI(); showToast("🗑️ removed"); }
+        function saveCart() { localStorage.setItem('nick_cart', JSON.stringify(cart)); }
+        function openCart() { document.getElementById('cartOverlay').classList.add('active'); document.getElementById('cartSidebar').classList.add('active'); }
+        function closeCart() { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartSidebar').classList.remove('active'); }
+
+        function checkout() {
+            if (cart.length === 0) return showToast("cart empty", true);
+            let message = "*🛒 NICK·STORE ORDER*%0A%0A";
+            let total = 0;
+            cart.forEach((item, i) => {
+                message += `*${i+1}. ${item.game}*%0A`;
+                message += `   └ ${item.product}%0A`;
+                message += `   └ ID: ${item.playerId}%0A`;
+                message += `   └ RM ${item.price.toFixed(2)}%0A%0A`;
+                total += item.price;
+            });
+            message += `*💰 TOTAL: RM ${total.toFixed(2)}*%0A`;
+            message += `%0A✅ processed by Nick-Store`;
+            const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString('en-MY') };
+            history.unshift(order);
+            localStorage.setItem('nick_history', JSON.stringify(history));
+            cart = []; saveCart(); updateCartUI(); closeCart();
+            window.open(`https://wa.me/${WA_NUMBER}?text=${message}`, '_blank');
+            showToast("order sent via WhatsApp");
+        }
+
+        function showView(view) {
+            document.getElementById('view-games').classList.add('hidden');
+            document.getElementById('view-history').classList.add('hidden');
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            if (view === 'history') renderHistory();
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            if (!history.length) { container.innerHTML = `<div class="text-center py-16 text-gray-500 bg-white/5 rounded-3xl"><i class="fas fa-box-open text-4xl mb-4 opacity-40"></i><p class="text-sm">no orders yet</p></div>`; return; }
+            container.innerHTML = history.map(order => `
+                <div class="bg-[#11161f] p-5 rounded-3xl border border-white/10">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[10px] font-mono text-gray-500 bg-black/30 px-3 py-1.5 rounded-full">${order.date}</span>
+                        <span class="text-md font-black text-[#00ffbb]">RM ${order.total?.toFixed(2)}</span>
+                    </div>
+                    <div class="space-y-3">
+                        ${order.items?.map(item => `
+                            <div class="text-xs flex justify-between items-center border-b border-white/5 pb-2">
+                                <span class="font-bold">${item.game}</span>
+                                <span class="text-gray-400 text-[10px]">${item.product}</span>
+                                <span class="text-[#bbffec] text-[10px] font-mono">${item.playerId}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleSearch() { 
+            const bar = document.getElementById('searchBar'); 
+            bar.classList.toggle('hidden'); 
+            if (!bar.classList.contains('hidden')) document.getElementById('gameSearch').focus();
+        }
+        function handleSearch(val) { renderGames(val); }
+        function showToast(msg, isError = false) {
+            const t = document.getElementById('toast');
+            t.innerText = msg; t.style.background = isError ? '#ff4466' : '#00ffbb'; t.style.color = '#000'; 
+            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2300);
+        }
+    </script>
+</body>
+</html>
