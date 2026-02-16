@@ -3,43 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>NickStore · clean & minimal</title>
+    <title>NickStore · compact & clean</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* clean minimal theme — inspired by kryxportfolio.vercel.app */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        /* clean minimal — compact mobile first */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background: #0a0c10;        /* deep charcoal */
+            background: #0a0c10;
             font-family: 'Inter', sans-serif;
             color: #e8edf2;
-            min-height: 100vh;
         }
 
-        /* subtle grey accents, no glow */
-        .border-subtle {
-            border: 1px solid #262b33;
+        /* compact game grid — professional density */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
         }
+        @media (min-width: 480px) { .game-grid { gap: 12px; } }
+        @media (min-width: 640px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(4, 1fr); } }
 
-        .card-base {
+        /* game tile — smaller padding, more compact */
+        .game-tile {
             background: #12161c;
             border: 1px solid #262b33;
-            border-radius: 24px;
-            transition: background 0.15s ease;
+            border-radius: 18px;
+            padding: 10px 8px 8px 8px;
+            transition: background 0.1s ease;
+            cursor: pointer;
+        }
+        .game-tile:active { background: #1a2028; }
+
+        .game-tile .thumbnail {
+            aspect-ratio: 1/1;
+            width: 100%;
+            border-radius: 14px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #2f3640;
+            margin-bottom: 8px;
         }
 
-        .card-base:active {
-            background: #1a2028;
+        .game-tile h4 {
+            font-weight: 600;
+            font-size: 0.85rem;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #e8edf2;
+            margin-bottom: 4px;
         }
 
-        /* navigation */
+        .game-tile .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+        }
+        .game-tile .price-from { color: #8a9bb5; }
+        .game-tile .price-value { 
+            font-weight: 700; 
+            color: #e8edf2;
+            font-size: 0.9rem;
+        }
+        .game-tile .margin-note {
+            font-size: 0.55rem;
+            color: #5f738f;
+            margin-top: 2px;
+            text-align: right;
+        }
+
+        /* navigation — slimmer */
         .nav-minimal {
             background: rgba(10, 12, 16, 0.98);
             backdrop-filter: blur(10px);
@@ -47,31 +86,17 @@
             position: sticky;
             top: 0;
             z-index: 100;
-        }
-
-        /* game tile — clean, no glow, subtle press */
-        .game-tile {
-            background: #12161c;
-            border: 1px solid #2a313b;
-            border-radius: 26px;
-            padding: 16px 12px 14px 12px;
-            transition: all 0.1s ease;
-            cursor: pointer;
-        }
-        .game-tile:active {
-            background: #1b222b;
-            transform: scale(0.99);
+            padding: 12px 16px;
         }
 
         .category-pill {
             background: #121a24;
             border: 1px solid #2e3947;
             color: #b0c0d4;
-            font-weight: 600;
-            padding: 12px 28px;
-            border-radius: 60px;
-            font-size: 0.95rem;
-            display: inline-block;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
             white-space: nowrap;
             transition: all 0.1s ease;
             cursor: pointer;
@@ -81,147 +106,65 @@
             color: #0a0c10;
             border-color: #e8edf2;
         }
-        .category-pill:active {
-            background: #c0ccdd;
-        }
 
-        /* reseller cards — minimal, subtle borders, no glow */
-        .reseller-card {
-            background: #11171f;
-            border: 1px solid #2d3846;
-            border-radius: 36px;
-            padding: 30px 24px;
-            transition: background 0.1s;
-        }
-        .reseller-card:active {
-            background: #1a232e;
-        }
-
-        .badge-minimal {
-            background: #262e3a;
-            color: #d1e0f0;
-            font-weight: 700;
-            font-size: 0.8rem;
-            padding: 6px 22px;
-            border-radius: 60px;
-            letter-spacing: 0.5px;
-            border: 1px solid #3e4b5d;
-        }
-
-        .priority-badge {
-            background: #e8edf2;
-            color: #0a0c10;
-            font-weight: 800;
-            font-size: 0.7rem;
-            padding: 4px 18px;
-            border-radius: 40px;
-            position: absolute;
-            top: -12px;
-            right: 20px;
-        }
-
-        /* bottom modal — clean sheet */
-        .modal-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
+        /* stats cards — compact */
+        .stat-card {
             background: #121a24;
-            border-top: 1px solid #3a4a5a;
-            border-radius: 32px 32px 0 0;
-            transform: translateY(100%);
-            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
-            z-index: 1001;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding-bottom: 30px;
-        }
-        .modal-sheet.active { transform: translateY(0); }
-
-        .cart-panel {
-            position: fixed;
-            top: 0; right: 0; bottom: 0;
-            width: 100%;
-            max-width: 420px;
-            background: #121a24;
-            border-left: 1px solid #3e5068;
-            transform: translateX(100%);
-            transition: transform 0.25s ease;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-        }
-        .cart-panel.active { transform: translateX(0); }
-
-        .overlay {
-            position: fixed; inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            display: none;
-        }
-        .overlay.active { display: block; }
-
-        .toast {
-            position: fixed; bottom: 30px; left: 20px; right: 20px;
-            background: #1e2a36;
-            border: 1px solid #4e6b88;
-            color: #f0f6fc;
-            padding: 18px 24px;
-            border-radius: 60px;
-            font-weight: 600;
+            border: 1px solid #2d3e54;
+            border-radius: 20px;
+            padding: 16px 8px;
             text-align: center;
-            transform: translateY(200%);
-            transition: transform 0.2s;
-            z-index: 10000;
-            backdrop-filter: blur(10px);
         }
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #d0e4ff;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #98aec9;
+        }
+
+        /* hero — smaller */
+        .hero-minimal {
+            background: #0f1620;
+            border: 1px solid #2c394b;
+            border-radius: 28px;
+            padding: 20px;
+            margin: 16px 0 24px 0;
+        }
+        .hero-minimal h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        /* rest remains similar but spacing tuned */
+        .category-scroll { overflow-x: auto; white-space: nowrap; scrollbar-width: none; margin-bottom: 16px; }
+        .category-scroll::-webkit-scrollbar { display: none; }
+
+        .modal-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #121a24; border-top: 1px solid #3a4a5a; border-radius: 28px 28px 0 0; transform: translateY(100%); transition: transform 0.25s ease; z-index: 1001; max-height: 85vh; overflow-y: auto; }
+        .modal-sheet.active { transform: translateY(0); }
+        .cart-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 400px; background: #121a24; border-left: 1px solid #3e5068; transform: translateX(100%); transition: transform 0.25s ease; z-index: 1001; display: flex; flex-direction: column; }
+        .cart-panel.active { transform: translateX(0); }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 1000; display: none; }
+        .overlay.active { display: block; }
+        .toast { position: fixed; bottom: 20px; left: 16px; right: 16px; background: #1e2a36; border: 1px solid #4e6b88; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; text-align: center; transform: translateY(200%); transition: transform 0.2s; z-index: 10000; font-size: 0.9rem; }
         .toast.show { transform: translateY(0); }
 
-        /* denom option */
-        .denom-opt {
-            background: #1b2533;
-            border: 1px solid #314153;
-            border-radius: 30px;
-            padding: 16px 6px;
-            text-align: center;
-            transition: 0.06s;
-            cursor: pointer;
-        }
-        .denom-opt.selected {
-            background: #29394d;
-            border-color: #90a9c7;
-        }
-        .denom-opt:active { background: #253141; }
+        .denom-opt { background: #1b2533; border: 1px solid #314153; border-radius: 24px; padding: 12px 4px; text-align: center; cursor: pointer; }
+        .denom-opt.selected { background: #29394d; border-color: #90a9c7; }
+        .input-minimal { background: #121b26; border: 1.5px solid #31445b; border-radius: 24px; padding: 16px 20px; font-size: 1rem; color: white; width: 100%; }
 
-        .input-minimal {
-            background: #121b26;
-            border: 1.5px solid #31445b;
-            border-radius: 30px;
-            padding: 20px 24px;
-            font-size: 1.2rem;
-            color: white;
-            width: 100%;
-        }
-        .input-minimal:focus { border-color: #90a9c7; outline: none; }
+        .btn-primary { background: #e8edf2; color: #0a0c10; font-weight: 600; padding: 16px; border-radius: 40px; width: 100%; font-size: 1rem; transition: background 0.1s; }
+        .btn-primary:active { background: #c0d0e5; }
 
-        .price-note {
-            font-size: 0.6rem;
-            color: #98aec9;
-            margin-top: 4px;
-        }
+        .reseller-card { background: #11171f; border: 1px solid #2d3846; border-radius: 28px; padding: 24px 20px; }
+        .badge-minimal { background: #262e3a; color: #d1e0f0; font-weight: 600; font-size: 0.7rem; padding: 4px 16px; border-radius: 40px; display: inline-block; }
 
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-        }
-        @media (min-width: 500px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(4, 1fr); } }
-
-        .category-scroll { overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
-        .category-scroll::-webkit-scrollbar { display: none; }
-        .safe-pb { padding-bottom: env(safe-area-inset-bottom, 16px); }
+        /* mobile adjustments */
+        .container-px { padding-left: 16px; padding-right: 16px; }
     </style>
 </head>
 <body>
@@ -229,172 +172,165 @@
     <!-- loading -->
     <div id="loading" style="position:fixed; inset:0; background:#0a0c10; z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
-            <div class="w-24 h-24 mx-auto rounded-3xl border border-[#3a4a5a] flex items-center justify-center">
-                <span class="font-bold text-5xl text-[#e8edf2]">N</span>
+            <div class="w-20 h-20 mx-auto rounded-2xl border border-[#3a4a5a] flex items-center justify-center">
+                <span class="font-bold text-3xl text-[#e8edf2]">N</span>
             </div>
-            <p class="mt-6 text-[#98aec9] text-sm">NickStore · loading</p>
+            <p class="mt-4 text-[#98aec9] text-xs">NickStore · loading</p>
         </div>
     </div>
 
     <!-- nav -->
-    <nav class="nav-minimal px-5 py-4">
+    <nav class="nav-minimal">
         <div class="flex items-center justify-between">
             <div onclick="showView('games')" class="flex items-center gap-2 cursor-pointer">
-                <span class="text-2xl font-black text-[#e8edf2]">NickStore</span>
-                <span class="bg-[#262e3a] text-[#b0c4de] text-[10px] font-bold px-3 py-1 rounded-full">topup</span>
+                <span class="text-xl font-bold text-[#e8edf2]">NickStore</span>
+                <span class="bg-[#262e3a] text-[#b0c4de] text-[9px] font-semibold px-2 py-1 rounded-full">topup</span>
             </div>
-            <div class="flex gap-4">
-                <button id="searchBtn" class="w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]"><i class="fas fa-search text-xl text-[#b0c4de]"></i></button>
-                <button onclick="openCart()" class="relative w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]">
-                    <i class="fas fa-shopping-cart text-xl text-[#b0c4de]"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-[#e8edf2] text-black text-sm font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+            <div class="flex gap-3">
+                <button id="searchBtn" class="w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center"><i class="fas fa-search text-sm text-[#b0c4de]"></i></button>
+                <button onclick="openCart()" class="relative w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center">
+                    <i class="fas fa-shopping-cart text-sm text-[#b0c4de]"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-[#e8edf2] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
                 </button>
                 <div class="relative">
-                    <button id="menuBtn" class="w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]"><i class="fas fa-bars text-xl text-[#b0c4de]"></i></button>
-                    <div id="menuDrop" class="absolute right-0 mt-3 w-44 bg-[#141e2b] border border-[#3e5368] rounded-2xl hidden z-50">
-                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0] rounded-t-2xl">🎮 store</button>
-                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0]">👑 reseller</button>
-                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0] rounded-b-2xl">📋 history</button>
+                    <button id="menuBtn" class="w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center"><i class="fas fa-bars text-sm text-[#b0c4de]"></i></button>
+                    <div id="menuDrop" class="absolute right-0 mt-2 w-36 bg-[#141e2b] border border-[#3e5368] rounded-xl hidden z-50 text-sm">
+                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f] rounded-t-xl">🎮 store</button>
+                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f]">👑 reseller</button>
+                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f] rounded-b-xl">📋 history</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="searchRow" class="hidden mt-4">
-            <input type="text" id="searchInput" placeholder="search game..." class="w-full bg-[#1b2533] border border-[#3f556b] rounded-2xl px-6 py-4 text-white placeholder:text-[#98aec9]">
+        <div id="searchRow" class="hidden mt-3">
+            <input type="text" id="searchInput" placeholder="search game..." class="w-full bg-[#1b2533] border border-[#3f556b] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#98aec9]">
         </div>
     </nav>
 
-    <!-- main scroll -->
-    <main class="h-[calc(100vh-90px)] overflow-y-auto px-5 pb-10">
+    <!-- main -->
+    <main class="h-[calc(100vh-70px)] overflow-y-auto container-px pb-6">
 
         <!-- GAMES VIEW -->
         <div id="gamesView">
-            <!-- hero minimal -->
-            <div class="bg-[#0f1620] border border-[#2c394b] rounded-[40px] p-8 my-5">
-                <h2 class="text-4xl font-black mb-3 text-[#e8edf2]">CLEAN<br>TOPUP</h2>
-                <p class="text-[#98aec9] max-w-xs">Mobile Legends · Genshin · Valorant</p>
-                <div class="flex gap-3 mt-6">
-                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-5 py-3 rounded-full text-sm font-medium"><i class="fas fa-bolt mr-2"></i>2min</span>
-                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-5 py-3 rounded-full text-sm font-medium"><i class="fas fa-shield mr-2"></i>secure</span>
+            <!-- hero compact -->
+            <div class="hero-minimal">
+                <h2 class="text-[#e8edf2]">CLEAN<br>TOPUP</h2>
+                <p class="text-[#98aec9] text-xs mt-1">ML · Genshin · Valorant</p>
+                <div class="flex gap-2 mt-4">
+                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-4 py-2 rounded-full text-xs"><i class="fas fa-bolt mr-1"></i>2min</span>
+                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-4 py-2 rounded-full text-xs"><i class="fas fa-shield mr-1"></i>secure</span>
                 </div>
             </div>
 
-            <!-- stats cards -->
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-[#121a24] border border-[#2d3e54] rounded-3xl p-6 text-center">
-                    <p class="text-3xl font-black text-[#d0e4ff]" id="gameCount">0</p>
-                    <p class="text-xs text-[#98aec9] mt-2">games</p>
+            <!-- stats compact -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="stat-card">
+                    <div class="stat-number" id="gameCount">0</div>
+                    <div class="stat-label">games</div>
                 </div>
-                <div class="bg-[#121a24] border border-[#2d3e54] rounded-3xl p-6 text-center">
-                    <p class="text-3xl font-black text-[#d0e4ff]" id="productCount">0</p>
-                    <p class="text-xs text-[#98aec9] mt-2">items</p>
+                <div class="stat-card">
+                    <div class="stat-number" id="productCount">0</div>
+                    <div class="stat-label">items</div>
                 </div>
             </div>
 
             <!-- categories -->
-            <div class="flex gap-2 overflow-x-auto pb-2 mb-6 category-scroll" id="catContainer"></div>
+            <div class="category-scroll flex gap-2 pb-1" id="catContainer"></div>
 
-            <!-- game grid -->
-            <div id="gameGrid" class="game-grid"></div>
-            <div id="emptyGrid" class="hidden text-center py-24">
-                <i class="fas fa-box-open text-6xl text-[#3a5068] mb-5"></i>
-                <p class="text-[#98aec9] text-xl">no games</p>
+            <!-- game grid — compact -->
+            <div id="gameGrid" class="game-grid mt-3"></div>
+            <div id="emptyGrid" class="hidden text-center py-16">
+                <i class="fas fa-box-open text-4xl text-[#3a5068] mb-3"></i>
+                <p class="text-[#98aec9] text-sm">no games</p>
             </div>
         </div>
 
-        <!-- RESELLER VIEW (minimal) -->
-        <div id="resellerView" class="hidden pb-12">
-            <div class="flex items-center gap-3 mb-8 mt-3">
-                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#1b2533] border border-[#3e5a78] flex items-center justify-center"><i class="fas fa-arrow-left text-[#b0c4de]"></i></button>
-                <h2 class="text-2xl font-black text-[#e8edf2]">RESELLER</h2>
-                <span class="bg-[#262e3a] text-[#b0c8e5] text-[10px] px-4 py-2 rounded-full border border-[#4a607c]">LIFETIME</span>
+        <!-- RESELLER VIEW -->
+        <div id="resellerView" class="hidden pb-8">
+            <div class="flex items-center gap-2 mb-5 mt-2">
+                <button onclick="showView('games')" class="w-9 h-9 rounded-xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm text-[#b0c4de]"></i></button>
+                <h2 class="text-xl font-bold text-[#e8edf2]">RESELLER</h2>
+                <span class="bg-[#262e3a] text-[#b0c8e5] text-[9px] px-3 py-1 rounded-full border border-[#4a607c]">LIFETIME</span>
             </div>
-
-            <div class="text-center mb-10">
-                <h3 class="text-4xl font-black leading-tight"><span class="text-[#d0e4ff]">ELITE</span> <span class="text-white">PARTNER</span></h3>
-                <p class="text-[#98aec9] max-w-md mx-auto mt-4">wholesale price · telegram bot · priority</p>
+            <div class="text-center mb-6">
+                <h3 class="text-2xl font-bold"><span class="text-[#d0e4ff]">ELITE</span> PARTNER</h3>
+                <p class="text-[#98aec9] text-xs mt-2">wholesale price · bot · priority</p>
             </div>
-
-            <div class="grid md:grid-cols-2 gap-7 max-w-3xl mx-auto">
-                <!-- grey card -->
-                <div class="reseller-card relative">
-                    <span class="badge-minimal inline-block mb-6"><i class="fas fa-crown mr-2"></i>GREY</span>
-                    <div class="text-4xl font-black text-[#d0e4ff] mb-5">RM15<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
-                    <ul class="space-y-4 mb-8 text-sm">
-                        <li class="flex gap-3"><i class="fas fa-check text-[#90a9c7] w-5"></i><span>cheaper than retail</span></li>
-                        <li class="flex gap-3"><i class="fas fa-robot text-[#90a9c7] w-5"></i><span>telegram bot access</span></li>
-                        <li class="flex gap-3"><i class="fas fa-infinity text-[#90a9c7] w-5"></i><span>lifetime validity</span></li>
+            <div class="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+                <div class="reseller-card">
+                    <span class="badge-minimal mb-4"><i class="fas fa-crown mr-1"></i>GREY</span>
+                    <div class="text-2xl font-bold text-[#d0e4ff] mb-4">RM15<span class="text-xs text-[#98aec9] ml-2">lifetime</span></div>
+                    <ul class="space-y-2 mb-6 text-xs">
+                        <li class="flex gap-2"><i class="fas fa-check text-[#90a9c7] w-4"></i><span>cheaper than retail</span></li>
+                        <li class="flex gap-2"><i class="fas fa-robot text-[#90a9c7] w-4"></i><span>telegram bot access</span></li>
+                        <li class="flex gap-2"><i class="fas fa-infinity text-[#90a9c7] w-4"></i><span>lifetime validity</span></li>
                     </ul>
-                    <button onclick="joinReseller('grey')" class="w-full py-5 bg-[#e8edf2] text-black font-bold rounded-full text-sm uppercase tracking-widest active:bg-[#c0d0e5]">join grey</button>
+                    <button onclick="joinReseller('grey')" class="w-full py-3 bg-[#e8edf2] text-black font-semibold rounded-full text-sm">join grey</button>
                 </div>
-                <!-- slate card -->
                 <div class="reseller-card relative">
-                    <span class="badge-minimal inline-block mb-6"><i class="fas fa-gem mr-2"></i>SLATE</span>
-                    <div class="priority-badge">PRIORITY</div>
-                    <div class="text-4xl font-black text-[#d0e4ff] mb-5">RM35<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
-                    <ul class="space-y-4 mb-8 text-sm">
-                        <li class="flex gap-3"><i class="fas fa-check text-[#90a9c7] w-5"></i><span>cheaper than grey</span></li>
-                        <li class="flex gap-3"><i class="fas fa-robot text-[#90a9c7] w-5"></i><span>full bot automation</span></li>
-                        <li class="flex gap-3"><i class="fas fa-headset text-[#90a9c7] w-5"></i><span>priority support</span></li>
+                    <span class="badge-minimal mb-4"><i class="fas fa-gem mr-1"></i>SLATE</span>
+                    <div class="absolute top-4 right-4 bg-[#e8edf2] text-black text-[9px] font-bold px-3 py-1 rounded-full">PRIORITY</div>
+                    <div class="text-2xl font-bold text-[#d0e4ff] mb-4">RM35<span class="text-xs text-[#98aec9] ml-2">lifetime</span></div>
+                    <ul class="space-y-2 mb-6 text-xs">
+                        <li class="flex gap-2"><i class="fas fa-check text-[#90a9c7] w-4"></i><span>cheaper than grey</span></li>
+                        <li class="flex gap-2"><i class="fas fa-robot text-[#90a9c7] w-4"></i><span>full bot automation</span></li>
+                        <li class="flex gap-2"><i class="fas fa-headset text-[#90a9c7] w-4"></i><span>priority support</span></li>
                     </ul>
-                    <button onclick="joinReseller('slate')" class="w-full py-5 bg-[#e8edf2] text-black font-bold rounded-full text-sm uppercase tracking-widest active:bg-[#c0d0e5]">join slate</button>
+                    <button onclick="joinReseller('slate')" class="w-full py-3 bg-[#e8edf2] text-black font-semibold rounded-full text-sm">join slate</button>
                 </div>
             </div>
-            <p class="text-center text-[#4a607c] text-xs mt-12">✦ one-time payment · lifetime ✦</p>
         </div>
 
         <!-- HISTORY VIEW -->
         <div id="historyView" class="hidden">
-            <div class="flex items-center gap-3 mb-8 mt-3">
-                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-[#b0c4de]"></i></button>
-                <h2 class="text-2xl font-bold text-[#e8edf2]">ORDER HISTORY</h2>
+            <div class="flex items-center gap-2 mb-5 mt-2">
+                <button onclick="showView('games')" class="w-9 h-9 rounded-xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
+                <h2 class="text-xl font-bold">ORDER HISTORY</h2>
             </div>
-            <div id="historyList" class="space-y-4"></div>
+            <div id="historyList" class="space-y-3"></div>
         </div>
     </main>
 
-    <!-- WhatsApp FAB (minimal) -->
-    <a href="https://wa.me/60137345871" target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#e8edf2] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition z-50"><i class="fab fa-whatsapp text-2xl text-[#0a0c10]"></i></a>
+    <!-- WhatsApp FAB (smaller) -->
+    <a href="https://wa.me/60137345871" target="_blank" class="fixed bottom-5 right-5 w-12 h-12 bg-[#e8edf2] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition z-50"><i class="fab fa-whatsapp text-lg text-[#0a0c10]"></i></a>
 
-    <!-- product modal -->
+    <!-- modals (same structure but compact) -->
     <div id="modalOverlay" class="overlay"></div>
     <div id="productModal" class="modal-sheet">
-        <div class="p-7">
-            <div class="flex justify-between items-start mb-7">
-                <div class="flex gap-4">
-                    <div id="modalImg" class="w-20 h-20 rounded-2xl bg-cover bg-center border border-[#4a6a8a]"></div>
-                    <div><h3 id="modalTitle" class="text-2xl font-black text-[#e8edf2]"></h3><p id="modalCategory" class="text-[#98aec9] text-sm mt-1"></p></div>
+        <div class="p-5">
+            <div class="flex justify-between items-start mb-5">
+                <div class="flex gap-3">
+                    <div id="modalImg" class="w-16 h-16 rounded-xl bg-cover bg-center border border-[#4a6a8a]"></div>
+                    <div><h3 id="modalTitle" class="text-lg font-bold"></h3><p id="modalCategory" class="text-xs text-[#98aec9] mt-0.5"></p></div>
                 </div>
-                <button onclick="closeModal()" class="w-12 h-12 rounded-full bg-[#26384f] border border-[#4a6a8a] flex items-center justify-center"><i class="fas fa-times text-[#b0c8e5]"></i></button>
+                <button onclick="closeModal()" class="w-9 h-9 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-sm"></i></button>
             </div>
-            <div class="mb-7"><label class="text-sm font-bold mb-3 block text-[#b0c8e5]">🆔 player id</label><input type="text" id="playerId" placeholder="12345678" class="input-minimal"></div>
-            <div class="mb-10"><label class="text-sm font-bold mb-4 block text-[#b0c8e5]">📦 package</label><div id="denomGrid" class="grid grid-cols-2 gap-4"></div></div>
-            <button onclick="addToCart()" class="w-full bg-[#e8edf2] text-black font-bold py-6 rounded-full text-xl active:bg-[#c0d0e5]">ADD TO CART</button>
-            <p class="text-xs text-center text-[#6a88aa] mt-5">+3% service</p>
+            <div class="mb-4"><label class="text-xs font-medium mb-2 block text-[#b0c8e5]">🆔 player id</label><input type="text" id="playerId" placeholder="12345678" class="input-minimal text-sm py-3"></div>
+            <div class="mb-5"><label class="text-xs font-medium mb-2 block text-[#b0c8e5]">📦 package</label><div id="denomGrid" class="grid grid-cols-2 gap-2"></div></div>
+            <button onclick="addToCart()" class="btn-primary">ADD TO CART</button>
+            <p class="text-[10px] text-center text-[#6a88aa] mt-3">+3% service</p>
         </div>
     </div>
 
-    <!-- cart panel -->
     <div id="cartOverlay" class="overlay"></div>
     <div id="cartPanel" class="cart-panel">
-        <div class="p-6 border-b border-[#3e5a78] flex justify-between">
-            <h3 class="text-2xl font-bold text-[#e8edf2]">CART</h3><button onclick="closeCart()" class="w-12 h-12 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-[#b0c8e5]"></i></button>
+        <div class="p-4 border-b border-[#3e5a78] flex justify-between items-center">
+            <h3 class="text-lg font-bold">CART</h3><button onclick="closeCart()" class="w-9 h-9 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-sm"></i></button>
         </div>
-        <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
-        <div class="p-6 border-t border-[#3e5a78]">
-            <div class="flex justify-between text-2xl font-black mb-6"><span class="text-[#b0c8e5]">total</span><span id="cartTotal" class="text-[#e8edf2]">RM0</span></div>
-            <button onclick="checkout()" class="w-full bg-[#e8edf2] text-black font-bold py-6 rounded-full text-xl active:bg-[#c0d0e5]">CHECKOUT WA</button>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+        <div class="p-4 border-t border-[#3e5a78]">
+            <div class="flex justify-between text-base font-bold mb-4"><span class="text-[#b0c8e5]">total</span><span id="cartTotal">RM0</span></div>
+            <button onclick="checkout()" class="btn-primary">CHECKOUT WA</button>
         </div>
     </div>
 
     <div id="toastMsg" class="toast">✅ added</div>
 
     <script>
-        // ========== NICKSTORE · MINIMAL · API INTEGRATION ==========
+        // ===== NICKSTORE COMPACT =====
         const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
-        const MARKUP = 0.03; // 3%
+        const MARKUP = 0.03;
 
-        // fallback demo (clean)
         const DEMO = [
             { id:'ml1', name:'86 Diamonds', game:'Mobile Legends', price:12.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
             { id:'ml2', name:'172 Diamonds', game:'Mobile Legends', price:24.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
@@ -404,37 +340,26 @@
             { id:'gi1', name:'60 Crystals', game:'Genshin', price:16.9, category:'RPG', img:'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=400&h=250&fit=crop' }
         ];
 
-        // state
-        let products = [];
-        let games = [];
-        let cart = [];
-        let history = [];
-        let currentCategory = 'all';
-        let selectedGameObj = null;
-        let selectedDenom = null;
-        let allGamesFromAPI = [];      // raw game list
-        let gameDetailsCache = {};      // cache for slug details
+        let products = [], games = [], cart = [], history = [], currentCategory = 'all', selectedGameObj = null, selectedDenom = null;
+        let allGamesFromAPI = [], gameDetailsCache = {};
 
         try { cart = JSON.parse(localStorage.nick_cart) || []; } catch { cart = []; }
         try { history = JSON.parse(localStorage.nick_history) || []; } catch { history = []; }
 
         window.onload = () => {
             document.getElementById('loading').style.display = 'none';
-            // try to fetch from API, otherwise load demo
             fetchGamesFromAPI();
             setupEvents();
             updateCartCount();
         };
 
-        // ----- API INTEGRATION (restored) -----
         async function fetchGamesFromAPI() {
             try {
                 const res = await fetch(`${API_BASE}/public/games`);
-                if (!res.ok) throw new Error('API not available');
+                if (!res.ok) throw new Error();
                 const data = await res.json();
                 if (data.success && data.games?.length) {
                     allGamesFromAPI = data.games;
-                    // create placeholder products for each game
                     products = allGamesFromAPI.map(game => ({
                         id: `game-${game.slug}`,
                         name: game.name,
@@ -445,57 +370,38 @@
                         slug: game.slug,
                         isPlaceholder: true
                     }));
-                    buildGamesFromProducts();
-                    // fetch details for first few games? we'll fetch on click
-                } else throw new Error('no games');
-            } catch (e) {
-                console.warn('API failed, using demo', e);
-                loadDemoData();
-            }
+                    buildGames();
+                } else throw new Error();
+            } catch { loadDemoData(); }
         }
 
         async function fetchGameDetails(slug) {
             if (gameDetailsCache[slug]) return gameDetailsCache[slug];
             try {
                 const res = await fetch(`${API_BASE}/public/games/${slug}`);
-                if (!res.ok) throw new Error();
+                if (!res.ok) return null;
                 const data = await res.json();
-                if (data.success) {
-                    gameDetailsCache[slug] = data.game;
-                    return data.game;
-                }
-            } catch (e) { return null; }
+                if (data.success) { gameDetailsCache[slug] = data.game; return data.game; }
+            } catch { return null; }
         }
 
         function loadDemoData() {
             products = DEMO.map(p => ({ ...p, price: Math.round(p.price*(1+MARKUP)*100)/100 }));
-            buildGamesFromProducts();
+            buildGames();
         }
 
-        function buildGamesFromProducts() {
+        function buildGames() {
             const map = new Map();
-            products.forEach(p => {
-                if (!map.has(p.game)) map.set(p.game, []);
-                map.get(p.game).push(p);
-            });
+            products.forEach(p => { if (!map.has(p.game)) map.set(p.game, []); map.get(p.game).push(p); });
             games = Array.from(map.entries()).map(([name, prods]) => ({
-                name,
-                products: prods.sort((a,b)=>a.price - b.price),
-                thumbnail: prods[0].img,
-                category: prods[0].category,
-                slug: prods[0].slug
-            })).sort((a,b)=> {
-                let aPrice = a.products.find(p=>p.price>0)?.price || 9999;
-                let bPrice = b.products.find(p=>p.price>0)?.price || 9999;
-                return aPrice - bPrice;
-            });
+                name, products: prods.sort((a,b)=>a.price - b.price), thumbnail: prods[0].img, category: prods[0].category, slug: prods[0].slug
+            })).sort((a,b) => (a.products.find(p=>p.price>0)?.price||9999) - (b.products.find(p=>p.price>0)?.price||9999));
             document.getElementById('gameCount').innerText = games.length;
             document.getElementById('productCount').innerText = products.length;
             renderCategories();
             renderGames();
         }
 
-        // ----- UI RENDERING -----
         function renderCategories() {
             const cats = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
             document.getElementById('catContainer').innerHTML = cats.map(c => 
@@ -517,93 +423,67 @@
             if (search) filtered = filtered.filter(g => g.name.toLowerCase().includes(search));
 
             const grid = document.getElementById('gameGrid');
-            if (!filtered.length) {
-                grid.innerHTML = '';
-                document.getElementById('emptyGrid').classList.remove('hidden');
-                return;
-            }
+            if (!filtered.length) { grid.innerHTML = ''; document.getElementById('emptyGrid').classList.remove('hidden'); return; }
             document.getElementById('emptyGrid').classList.add('hidden');
 
             grid.innerHTML = filtered.map(g => {
                 const valid = g.products.filter(p => p.price > 0);
                 const lowest = valid.length ? Math.min(...valid.map(p=>p.price)) : 0;
-                const priceDisplay = lowest ? `RM${lowest.toFixed(2)}` : 'check';
                 return `<div class="game-tile" onclick="openGame('${g.name}')">
-                    <div class="aspect-square bg-cover bg-center rounded-2xl mb-3 border border-[#3a5068]" style="background-image:url('${g.thumbnail}')"></div>
-                    <div class="font-bold text-lg truncate text-[#d0e4ff]">${g.name}</div>
-                    <div class="flex justify-between items-center mt-2"><span class="text-xs text-[#98aec9]">from</span><span class="text-xl font-black text-[#e8edf2]">${priceDisplay}</span></div>
-                    <div class="price-note">+3% margin</div>
+                    <div class="thumbnail" style="background-image:url('${g.thumbnail}')"></div>
+                    <h4>${g.name}</h4>
+                    <div class="price-row">
+                        <span class="price-from">${lowest?'from':''}</span>
+                        <span class="price-value">${lowest?`RM${lowest.toFixed(2)}`:'check'}</span>
+                    </div>
+                    <div class="margin-note">+3%</div>
                 </div>`;
             }).join('');
         }
 
-        // open game with lazy detail fetch
         window.openGame = async (gameName) => {
             const game = games.find(g => g.name === gameName);
             if (!game) return;
-
-            // if it's a placeholder (API) and has slug, fetch real services
             if (game.slug && game.products[0]?.isPlaceholder) {
-                showToast('loading details...');
+                showToast('loading...');
                 const details = await fetchGameDetails(game.slug);
-                if (details && details.services_by_type) {
+                if (details?.services_by_type) {
                     const newProds = [];
-                    Object.values(details.services_by_type).forEach(services => {
-                        services.forEach(s => {
-                            const base = parseFloat(s.price_myr) || 0;
-                            newProds.push({
-                                id: s.id,
-                                name: s.name,
-                                game: details.name,
-                                price: Math.round(base * (1+MARKUP) * 100)/100,
-                                originalPrice: base,
-                                category: details.category || 'Games',
-                                img: game.thumbnail
-                            });
-                        });
-                    });
+                    Object.values(details.services_by_type).forEach(services => services.forEach(s => {
+                        const base = parseFloat(s.price_myr) || 0;
+                        newProds.push({ id:s.id, name:s.name, game:details.name, price:Math.round(base*(1+MARKUP)*100)/100, originalPrice:base, category:details.category||'Games', img:game.thumbnail });
+                    }));
                     if (newProds.length) {
-                        // replace products for this game
                         products = products.filter(p => p.game !== gameName);
                         products.push(...newProds);
-                        buildGamesFromProducts();  // rebuild games
-                        // now open again with real products
+                        buildGames();
                         setTimeout(() => openGameModal(gameName), 100);
                         return;
                     }
                 }
             }
-            // otherwise just open modal with existing products
             openGameModal(gameName);
         };
 
         function openGameModal(gameName) {
             const game = games.find(g => g.name === gameName);
             if (!game) return;
-            const validProds = game.products.filter(p => p.price > 0);
-            if (!validProds.length) {
-                showToast('no packages', true);
-                return;
-            }
+            const valid = game.products.filter(p => p.price > 0);
+            if (!valid.length) return showToast('no packages', true);
             selectedGameObj = game;
-            selectedDenom = validProds[0];
-
+            selectedDenom = valid[0];
             document.getElementById('modalTitle').innerText = game.name;
             document.getElementById('modalCategory').innerText = game.category || 'Game';
             document.getElementById('modalImg').style.backgroundImage = `url('${game.thumbnail}')`;
-            document.getElementById('playerId').value = '';
-
             let html = '';
-            validProds.forEach((p,i) => {
-                const baseNote = p.originalPrice ? `base RM${p.originalPrice.toFixed(2)}` : '';
+            valid.forEach((p,i) => {
                 html += `<div class="denom-opt ${i===0?'selected':''}" onclick="selectDenom(${i})">
-                    <div class="font-bold text-base text-[#d0e4ff]">${p.name}</div>
-                    <div class="text-2xl font-black mt-1 text-[#e8edf2]">RM${p.price.toFixed(2)}</div>
-                    <div class="text-[9px] text-[#98aec9]">${baseNote}</div>
+                    <div class="font-semibold text-sm">${p.name}</div>
+                    <div class="font-bold text-base mt-1">RM${p.price.toFixed(2)}</div>
+                    ${p.originalPrice?`<div class="text-[8px] text-[#98aec9]">base RM${p.originalPrice.toFixed(2)}</div>`:''}
                 </div>`;
             });
             document.getElementById('denomGrid').innerHTML = html;
-
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('productModal').classList.add('active');
         }
@@ -618,41 +498,28 @@
             document.getElementById('productModal').classList.remove('active');
         };
 
-        // ----- CART & CHECKOUT -----
         window.addToCart = () => {
             const pid = document.getElementById('playerId').value.trim();
             if (!pid) return showToast('enter player id', true);
             if (!selectedDenom) return;
-            cart.push({
-                id: Date.now() + Math.random(),
-                game: selectedGameObj.name,
-                pack: selectedDenom.name,
-                price: selectedDenom.price,
-                playerId: pid,
-                thumb: selectedGameObj.thumbnail
-            });
+            cart.push({ id:Date.now(), game:selectedGameObj.name, pack:selectedDenom.name, price:selectedDenom.price, playerId:pid, thumb:selectedGameObj.thumbnail });
             localStorage.nick_cart = JSON.stringify(cart);
-            updateCartCount();
-            closeModal();
-            showToast('✅ added');
+            updateCartCount(); closeModal(); showToast('✅ added');
         };
 
-        function updateCartCount() {
-            document.getElementById('cartCount').innerText = cart.length;
-        }
+        function updateCartCount() { document.getElementById('cartCount').innerText = cart.length; }
 
         window.openCart = () => {
             const itemsDiv = document.getElementById('cartItems');
-            if (!cart.length) {
-                itemsDiv.innerHTML = '<div class="text-center py-16 text-[#98aec9]"><i class="fas fa-box-open text-5xl mb-4"></i><p>empty cart</p></div>';
-            } else {
+            if (!cart.length) itemsDiv.innerHTML = '<div class="text-center py-10 text-[#98aec9] text-sm"><i class="fas fa-box-open text-3xl mb-3"></i><p>empty cart</p></div>';
+            else {
                 let total = 0;
                 itemsDiv.innerHTML = cart.map((item,i) => {
                     total += item.price;
-                    return `<div class="flex gap-4 bg-[#1b2533] p-5 rounded-3xl border border-[#3e5a78]">
-                        <img src="${item.thumb}" class="w-16 h-16 rounded-xl object-cover border border-[#4a6a8a]">
-                        <div class="flex-1"><div class="font-bold text-[#d0e4ff]">${item.game}</div><div class="text-xs text-[#98aec9]">${item.pack}</div><div class="text-xs mt-2 bg-black/40 px-3 py-1 rounded-full text-[#b0c8e5]">${item.playerId}</div></div>
-                        <div class="text-right"><div class="text-xl font-black text-[#e8edf2]">RM${item.price.toFixed(2)}</div><button onclick="removeCartItem(${i})" class="text-red-400 mt-3 text-sm"><i class="fas fa-trash"></i></button></div>
+                    return `<div class="flex gap-3 bg-[#1b2533] p-3 rounded-xl border border-[#3e5a78]">
+                        <img src="${item.thumb}" class="w-12 h-12 rounded-lg object-cover border border-[#4a6a8a]">
+                        <div class="flex-1 text-xs"><div class="font-semibold">${item.game}</div><div class="text-[#98aec9]">${item.pack}</div><div class="mt-1 bg-black/40 px-2 py-0.5 rounded-full inline-block">${item.playerId}</div></div>
+                        <div class="text-right"><div class="font-bold">RM${item.price.toFixed(2)}</div><button onclick="removeCartItem(${i})" class="text-red-400 text-xs mt-2"><i class="fas fa-trash"></i></button></div>
                     </div>`;
                 }).join('');
                 document.getElementById('cartTotal').innerText = `RM${total.toFixed(2)}`;
@@ -662,47 +529,26 @@
         };
 
         window.removeCartItem = (idx) => { cart.splice(idx,1); localStorage.nick_cart = JSON.stringify(cart); updateCartCount(); openCart(); };
-        window.closeCart = () => {
-            document.getElementById('cartOverlay').classList.remove('active');
-            document.getElementById('cartPanel').classList.remove('active');
-        };
+        window.closeCart = () => { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartPanel').classList.remove('active'); };
 
         window.checkout = () => {
             if (!cart.length) return showToast('cart empty', true);
-            let msg = '*NICKSTORE ORDER*%0A';
-            let total = 0;
-            cart.forEach((c,i) => {
-                msg += `%0A${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A`;
-                total += c.price;
-            });
+            let msg = '*NICKSTORE ORDER*%0A', total = 0;
+            cart.forEach((c,i) => { msg += `%0A${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A`; total += c.price; });
             msg += `%0A*TOTAL: RM${total.toFixed(2)}* (incl. 3%)`;
-            const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString() };
-            history.unshift(order);
+            history.unshift({ id:Date.now(), items:[...cart], total, date:new Date().toLocaleDateString() });
             localStorage.nick_history = JSON.stringify(history);
-            cart = [];
-            localStorage.nick_cart = JSON.stringify(cart);
-            updateCartCount();
-            closeCart();
-            window.open(`https://wa.me/60137345871?text=${msg}`, '_blank');
-            showToast('order sent');
+            cart = []; localStorage.nick_cart = JSON.stringify(cart); updateCartCount(); closeCart();
+            window.open(`https://wa.me/60137345871?text=${msg}`,'_blank'); showToast('order sent');
         };
 
-        // reseller
         window.joinReseller = (lvl) => {
-            const fee = lvl === 'grey' ? 15 : 35;
-            const msg = `*RESELLER NICKSTORE*%0APackage : ${lvl.toUpperCase()} (lifetime)%0AFee : RM${fee}%0A%0ASaya nak daftar ${lvl}.`;
-            window.open(`https://wa.me/60137345871?text=${msg}`, '_blank');
-            showToast('opening wa...');
+            let msg = `*RESELLER NICKSTORE*%0APackage : ${lvl.toUpperCase()} (lifetime)%0AFee : RM${lvl==='grey'?15:35}%0A%0ASaya nak daftar ${lvl}.`;
+            window.open(`https://wa.me/60137345871?text=${msg}`,'_blank'); showToast('opening wa...');
         };
 
-        // history
-        function renderHistory() {
-            const cont = document.getElementById('historyList');
-            if (!history.length) cont.innerHTML = '<div class="text-center py-16 text-[#98aec9]"><i class="fas fa-history text-5xl mb-4"></i><p>no history</p></div>';
-            else cont.innerHTML = history.map(h => `<div class="bg-[#1b2533] p-6 rounded-3xl border border-[#3e5a78]"><div class="flex justify-between text-xs text-[#b0c8e5]"><span>${h.date}</span><span class="font-black">RM${h.total.toFixed(2)}</span></div>${h.items.map(i => `<div class="flex justify-between text-sm mt-2 border-b border-[#4a607c]/30 pb-1"><span>${i.game}</span><span>${i.playerId}</span></div>`).join('')}</div>`).join('');
-        }
+        function showToast(msg) { let t = document.getElementById('toastMsg'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
 
-        // view switching
         window.showView = (v) => {
             ['gamesView','resellerView','historyView'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(v+'View').classList.remove('hidden');
@@ -710,34 +556,18 @@
             toggleMenu();
         };
 
+        function renderHistory() {
+            const cont = document.getElementById('historyList');
+            if (!history.length) cont.innerHTML = '<div class="text-center py-12 text-[#98aec9] text-sm"><i class="fas fa-history text-3xl mb-3"></i><p>no history</p></div>';
+            else cont.innerHTML = history.map(h => `<div class="bg-[#1b2533] p-4 rounded-xl border border-[#3e5a78] text-xs"><div class="flex justify-between mb-2"><span>${h.date}</span><span class="font-bold">RM${h.total.toFixed(2)}</span></div>${h.items.map(i => `<div class="flex justify-between border-b border-[#4a607c]/20 py-1"><span>${i.game}</span><span>${i.playerId}</span></div>`).join('')}</div>`).join('');
+        }
+
         function toggleMenu() { document.getElementById('menuDrop').classList.add('hidden'); }
-
-        function showToast(msg) {
-            const t = document.getElementById('toastMsg');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2500);
-        }
-
         function setupEvents() {
-            document.getElementById('searchBtn').addEventListener('click', () => {
-                document.getElementById('searchRow').classList.toggle('hidden');
-            });
+            document.getElementById('searchBtn').addEventListener('click', ()=> document.getElementById('searchRow').classList.toggle('hidden'));
             document.getElementById('searchInput').addEventListener('input', renderGames);
-            document.getElementById('menuBtn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.getElementById('menuDrop').classList.toggle('hidden');
-            });
-            window.addEventListener('click', (e) => {
-                if (!document.getElementById('menuBtn').contains(e.target)) {
-                    document.getElementById('menuDrop').classList.add('hidden');
-                }
-            });
+            document.getElementById('menuBtn').addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('hidden'); });
         }
-
-        // expose
-        window.renderGames = renderGames;
-        window.toggleMenu = toggleMenu;
     </script>
 </body>
 </html>
