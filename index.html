@@ -2,117 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nick Store · premium game topup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>NICK · topup hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Inter', sans-serif;
-            background: #0b0f15;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #070b10;
             color: #fff;
             min-height: 100vh;
-            scroll-behavior: smooth;
         }
-        /* modern glass with depth */
-        .glass-deep {
-            background: rgba(18, 22, 30, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(63, 140, 255, 0.15);
-            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.8);
+
+        /* ===== MOBILE FIRST ===== */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
+
+        @media (min-width: 480px) {
+            .game-grid { gap: 16px; }
+        }
+
+        @media (min-width: 640px) {
+            .game-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* cards — fat, tappable, minimal */
         .game-card {
-            background: linear-gradient(145deg, #1c232d, #151b24);
-            border: 1px solid #2a3341;
-            border-radius: 28px;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-            box-shadow: 0 15px 25px -12px rgba(0,0,0,0.7);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .game-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 28px;
-            padding: 1px;
-            background: linear-gradient(145deg, #3f8cff00, #3f8cff30, #3f8cff00);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .game-card:hover::after {
-            opacity: 1;
-        }
-        .game-card:hover {
-            transform: translateY(-6px);
-            border-color: #3f8cff60;
-            box-shadow: 0 30px 40px -15px #3f8cff40;
-        }
-        .category-chip {
-            background: #1e2835;
-            border: 1px solid #2f3c4d;
-            color: #cddfff;
-            font-weight: 600;
-            padding: 10px 26px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-            cursor: pointer;
-            white-space: nowrap;
-            backdrop-filter: blur(4px);
-        }
-        .category-chip.active {
-            background: #3f8cff;
-            border-color: #7bb0ff;
-            color: white;
-            box-shadow: 0 10px 18px #3f8cff60;
-        }
-        .denom-card {
-            background: #1d2633;
-            border: 1.5px solid #2d3848;
+            background: #131a24;
             border-radius: 24px;
-            padding: 18px 10px;
-            transition: all 0.15s ease;
+            padding: 16px 12px 14px 12px;
+            border: 1px solid #253241;
+            box-shadow: 0 6px 0 #0b1117;
+            transition: 0.1s ease;
             cursor: pointer;
-            width: 100%;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 16px -8px black;
+        }
+
+        .game-card:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #0b1117;
+            background: #1a2431;
+        }
+
+        .denom-card {
+            background: #121b26;
+            border: 1.5px solid #283340;
+            border-radius: 22px;
+            padding: 18px 8px;
+            box-shadow: 0 5px 0 #0a1017;
+            transition: 0.08s linear;
+            cursor: pointer;
+        }
+        .denom-card:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #0a1017;
+            background: #1e2b3a;
         }
         .denom-card.selected {
-            background: linear-gradient(145deg, #263242, #1b2535);
-            border: 1.5px solid #3f8cff !important;
-            box-shadow: 0 12px 20px -8px #3f8cffb0;
-        }
-        .denom-card:hover {
-            border-color: #5f9eff;
-            background: #26323f;
+            background: #1f3145;
+            border-color: #3f8cff;
+            box-shadow: 0 5px 0 #1a3350;
         }
         .denom-card * { pointer-events: none; }
 
+        /* category pills – big friendly tap */
+        .cat-pill {
+            background: #131e2b;
+            border: 1px solid #2e3f52;
+            color: #deecff;
+            font-weight: 600;
+            padding: 14px 26px;
+            border-radius: 60px;
+            font-size: 1rem;
+            box-shadow: 0 4px 0 #0b121a;
+            transition: 0.1s;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        .cat-pill.active {
+            background: #3f8cff;
+            border-color: #90bdff;
+            color: white;
+            box-shadow: 0 4px 0 #2050a0;
+        }
+        .cat-pill:active { transform: translateY(3px); box-shadow: 0 1px 0 #0b121a; }
+
+        /* bottom modal (mobile optimized) */
         .modal-content {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #121a25;
-            border-radius: 40px 40px 0 0;
-            border-top: 2px solid #3f8cff;
-            max-height: 90vh;
+            background: #111b27;
+            border-radius: 38px 38px 0 0;
+            border-top: 3px solid #3f8cff;
+            max-height: 88vh;
             overflow-y: auto;
             transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
             z-index: 1001;
-            box-shadow: 0 -25px 50px -5px black;
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+            box-shadow: 0 -10px 40px black;
         }
         .modal-content.active { transform: translateY(0); }
 
@@ -122,221 +123,228 @@
             right: 0;
             bottom: 0;
             width: 100%;
-            max-width: 460px;
-            background: #101821;
-            border-left: 2px solid #3f8cff;
+            background: #0f1822;
+            border-left: 3px solid #3f8cff;
             transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
             z-index: 1001;
             display: flex;
             flex-direction: column;
-            box-shadow: -20px 0 50px black;
+            max-width: 100%;
         }
+        @media (min-width: 480px) { .cart-sidebar { max-width: 420px; } }
         .cart-sidebar.active { transform: translateX(0); }
 
         .modal-overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(4px);
             z-index: 1000;
             display: none;
         }
         .modal-overlay.active { display: block; }
 
         .toast {
-            position: fixed; bottom: 40px; left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: #1f2f40;
+            position: fixed; bottom: 30px; left: 16px; right: 16px;
+            background: #1d2d3f;
             color: white;
-            padding: 16px 36px;
+            padding: 18px 24px;
             border-radius: 60px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.2rem;
             z-index: 10000;
-            transition: transform 0.3s ease;
+            transform: translateY(150%);
+            transition: transform 0.25s;
             border: 1px solid #3f8cff;
-            box-shadow: 0 15px 35px #3f8cff50;
-            backdrop-filter: blur(16px);
-            white-space: nowrap;
+            box-shadow: 0 10px 30px black;
+            text-align: center;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.show { transform: translateY(0); }
 
-        .game-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
-        @media (min-width: 640px) { .game-grid { grid-template-columns: repeat(3,1fr); } }
-        @media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(4,1fr); } }
+        /* input big & friendly */
+        .input-big {
+            background: #1b2735;
+            border: 2px solid #2f4055;
+            border-radius: 36px;
+            padding: 20px 24px;
+            font-size: 1.2rem;
+            color: white;
+            width: 100%;
+        }
+        .input-big:focus {
+            border-color: #3f8cff;
+            outline: none;
+            background: #253342;
+        }
 
-        .category-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+        /* remove horizontal scroll */
+        .category-scroll {
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-padding: 0 16px;
+        }
         .category-scroll::-webkit-scrollbar { display: none; }
 
-        .hero-glow {
-            background: radial-gradient(circle at 30% 40%, #1e3347, #0c121b);
-            border: 1px solid #2f4b64;
-            border-radius: 40px;
-            box-shadow: 0 20px 30px -15px #00000080;
-        }
-        .input-premium {
-            background: #1b2532;
-            border: 1.5px solid #2f3f52;
-            border-radius: 26px;
-            padding: 18px 24px;
+        /* bottom safe area */
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 10px); }
+
+        /* big fat buttons */
+        .fat-button {
+            background: #3f8cff;
+            border: none;
+            border-radius: 34px;
+            padding: 22px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            box-shadow: 0 10px 0 #1b3d70;
+            transition: 0.08s;
+            width: 100%;
             color: white;
-            font-size: 1rem;
-            transition: 0.2s;
+            cursor: pointer;
         }
-        .input-premium:focus {
-            border-color: #3f8cff;
-            background: #1e2b3c;
-            outline: none;
-            box-shadow: 0 0 0 4px #3f8cff30;
+        .fat-button:active {
+            transform: translateY(6px);
+            box-shadow: 0 4px 0 #1b3d70;
         }
-        .badge-nick {
-            background: #3f8cff20;
-            border: 1px solid #3f8cffb0;
-            color: #d3e6ff;
-            padding: 6px 18px;
-            border-radius: 60px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            backdrop-filter: blur(4px);
+
+        .wa-button {
+            background: #25D366;
+            box-shadow: 0 8px 0 #128C7E;
+            border-radius: 34px;
+            padding: 22px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+            cursor: pointer;
         }
-        .price-note {
-            font-size: 0.6rem;
-            color: #8db2e8;
-            margin-top: 6px;
-            letter-spacing: 0.3px;
-        }
+        .wa-button:active { transform: translateY(5px); box-shadow: 0 3px 0 #0e6b5e; }
+
         .cart-item {
-            background: #1b2532;
+            background: #14202e;
             border-radius: 28px;
-            border: 1px solid #2b394a;
             padding: 18px;
-            transition: 0.15s;
+            border: 1px solid #26384b;
         }
     </style>
 </head>
 <body>
 
-    <!-- LOADING (polished) -->
-    <div id="loadingScreen" style="position:fixed; inset:0; background:#0b0f15; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <!-- LOADING (fast) -->
+    <div id="loadingScreen" style="position:fixed; inset:0; background:#070b10; z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
-            <div class="w-20 h-20 border-[3px] border-white/10 border-t-[#3f8cff] rounded-full animate-spin mx-auto mb-6 shadow-2xl"></div>
-            <h1 class="text-4xl font-black tracking-tight bg-gradient-to-r from-white via-blue-200 to-blue-300 bg-clip-text text-transparent">NICK·STORE</h1>
-            <p id="loadingText" class="text-sm text-gray-400 mt-5 animate-pulse">loading catalog ...</p>
+            <div class="w-24 h-24 border-4 border-white/10 border-t-[#3f8cff] rounded-full animate-spin mx-auto mb-7"></div>
+            <h1 class="text-5xl font-black tracking-tight text-white">NICK</h1>
+            <p class="text-gray-400 mt-5 text-lg">loading store...</p>
         </div>
     </div>
 
-    <!-- NAVIGATION (glass) -->
-    <nav class="glass-deep sticky top-0 z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-end gap-2 cursor-pointer group" onclick="showView('games')">
-                <span class="text-3xl font-black bg-gradient-to-r from-white via-blue-200 to-blue-300 bg-clip-text text-transparent">NICK·STORE</span>
-                <span class="text-xs font-bold px-4 py-1.5 rounded-full bg-[#3f8cff] text-white mb-1 shadow-lg shadow-[#3f8cff]/40">TOPUP</span>
+    <!-- TOP BAR (solid, sticky) -->
+    <div class="sticky top-0 z-50 bg-[#0a111a] border-b border-[#25394a] px-5 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-end gap-1" onclick="showView('games')">
+                <span class="text-3xl font-black text-white">NICK<span class="text-[#3f8cff]">·</span></span>
+                <span class="text-sm font-bold bg-[#3f8cff] text-white px-4 py-2 rounded-full">topup</span>
             </div>
-            <div class="flex items-center gap-3">
-                <button onclick="toggleSearch()" class="w-12 h-12 rounded-2xl bg-[#1f2b39] border border-[#3e5368] flex items-center justify-center hover:border-[#3f8cff] transition-all">
-                    <i class="fas fa-search text-white/90 text-lg"></i>
+            <div class="flex gap-4">
+                <button onclick="toggleSearch()" class="w-14 h-14 rounded-2xl bg-[#1f2e40] flex items-center justify-center active:bg-[#3f8cff]"><i class="fas fa-search text-2xl text-white/90"></i></button>
+                <button onclick="openCart()" class="relative w-14 h-14 rounded-2xl bg-[#1f2e40] flex items-center justify-center active:bg-[#3f8cff]">
+                    <i class="fas fa-shopping-cart text-2xl text-white/90"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-[#3f8cff] text-white text-sm font-bold w-7 h-7 flex items-center justify-center rounded-full border-2 border-[#0a111a]">0</span>
                 </button>
-                <button onclick="openCart()" class="relative w-12 h-12 rounded-2xl bg-[#1f2b39] border border-[#3e5368] flex items-center justify-center hover:border-[#3f8cff]">
-                    <i class="fas fa-shopping-cart text-white/90 text-lg"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-[#3f8cff] text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-[#0e1219] shadow-md">0</span>
-                </button>
-                <button onclick="showView('history')" class="w-12 h-12 rounded-2xl bg-[#1f2b39] border border-[#3e5368] flex items-center justify-center hover:border-[#3f8cff]">
-                    <i class="fas fa-clock text-white/90 text-lg"></i>
-                </button>
+                <button onclick="showView('history')" class="w-14 h-14 rounded-2xl bg-[#1f2e40] flex items-center justify-center active:bg-[#3f8cff]"><i class="fas fa-clock text-2xl text-white/90"></i></button>
             </div>
         </div>
-        <div id="searchBar" class="max-w-7xl mx-auto mt-5 hidden px-2">
-            <input type="text" id="gameSearch" oninput="handleSearch(this.value)" placeholder="🔍 search Mobile Legends, Genshin, Valorant ..." 
-                class="input-premium w-full">
+        <div id="searchBar" class="hidden mt-4">
+            <input type="text" id="gameSearch" oninput="handleSearch(this.value)" placeholder="🔍 search game" class="input-big">
         </div>
-    </nav>
+    </div>
 
     <main>
         <!-- GAMES VIEW -->
-        <div id="view-games" class="max-w-7xl mx-auto p-6">
-            <!-- HERO refined -->
-            <div class="hero-glow p-8 mb-12 flex items-center justify-between">
-                <div>
-                    <h2 class="text-4xl font-black text-white tracking-tight drop-shadow-md">⚡ instant top-up</h2>
-                    <p class="text-gray-300 text-lg mt-3 max-w-md">Mobile Legends · Genshin · Valorant · 800+ items</p>
-                    <div class="flex gap-4 mt-6">
-                        <span class="badge-nick"><i class="fas fa-bolt mr-2"></i> 2min delivery</span>
-                        <span class="badge-nick"><i class="fas fa-shield mr-2"></i> 100% secure</span>
-                    </div>
+        <div id="view-games" class="max-w-7xl mx-auto p-5">
+            <!-- simple hero -->
+            <div class="bg-gradient-to-br from-[#142433] to-[#0a131f] rounded-[40px] p-8 mb-8 border border-[#2f4a62]">
+                <h2 class="text-4xl font-black leading-tight">⚡ instant<br>top-up</h2>
+                <p class="text-gray-300 text-lg mt-2">ML · Genshin · Valorant</p>
+                <div class="flex gap-3 mt-6">
+                    <span class="bg-black/40 text-white px-5 py-3 rounded-full text-sm font-semibold border border-white/20"><i class="fas fa-bolt mr-2"></i>2min</span>
+                    <span class="bg-black/40 text-white px-5 py-3 rounded-full text-sm font-semibold border border-white/20"><i class="fas fa-shield mr-2"></i>secure</span>
                 </div>
-                <div class="hidden md:block text-8xl opacity-20"><i class="fas fa-gamepad"></i></div>
             </div>
 
-            <!-- CATEGORIES (sleek) -->
-            <div class="category-scroll overflow-x-auto flex gap-3 mb-9 pb-3" id="categoryContainer"></div>
+            <!-- categories (bigger touch) -->
+            <div class="category-scroll flex gap-3 mb-7 pb-2" id="categoryContainer"></div>
 
-            <!-- GAME GRID -->
+            <!-- game grid -->
             <div id="gameGrid" class="game-grid"></div>
-            <div id="emptyState" class="hidden text-center py-28">
-                <i class="fas fa-ghost text-6xl text-gray-700 mb-5"></i>
-                <p class="text-gray-400 text-xl font-medium">no games found</p>
+            <div id="emptyState" class="hidden text-center py-32">
+                <i class="fas fa-dragon text-7xl text-gray-700 mb-6"></i>
+                <p class="text-gray-400 text-2xl">nothing found</p>
             </div>
         </div>
 
-        <!-- HISTORY VIEW (clean) -->
-        <div id="view-history" class="hidden max-w-2xl mx-auto p-6">
-            <div class="flex items-center gap-5 mb-8">
-                <button onclick="showView('games')" class="w-12 h-12 rounded-xl bg-[#1e2a38] border border-[#3f536a] flex items-center justify-center hover:bg-[#3f8cff] transition-colors">
-                    <i class="fas fa-arrow-left text-white text-xl"></i>
-                </button>
-                <h2 class="text-3xl font-bold text-white">📋 order history</h2>
+        <!-- HISTORY VIEW (mobile tight) -->
+        <div id="view-history" class="hidden max-w-2xl mx-auto p-5">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="showView('games')" class="w-16 h-16 rounded-2xl bg-[#1f2e40] flex items-center justify-center active:bg-[#3f8cff]"><i class="fas fa-arrow-left text-3xl"></i></button>
+                <h2 class="text-3xl font-bold text-white">📋 history</h2>
             </div>
             <div id="historyList" class="space-y-5"></div>
         </div>
     </main>
 
-    <!-- PRODUCT MODAL (luxury) -->
+    <!-- PRODUCT MODAL (mobile big) -->
     <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
     <div id="productModal" class="modal-content">
-        <div class="p-8">
-            <div class="flex justify-between items-start mb-8">
-                <div class="flex gap-6">
-                    <div id="modalImg" class="w-24 h-24 rounded-3xl bg-cover bg-center border-2 border-[#3f8cff] shadow-2xl shadow-[#3f8cff]/30"></div>
+        <div class="p-6 pb-10">
+            <div class="flex justify-between items-start mb-7">
+                <div class="flex gap-5">
+                    <div id="modalImg" class="w-24 h-24 rounded-3xl bg-cover bg-center border-2 border-[#3f8cff] shadow-2xl"></div>
                     <div class="pt-3">
-                        <h3 id="modalTitle" class="text-3xl font-black text-white">Loading...</h3>
-                        <p id="modalCategory" class="text-sm text-gray-400 mt-2 flex items-center"><span class="w-2.5 h-2.5 bg-[#3f8cff] rounded-full mr-2"></span> game credits</p>
+                        <h3 id="modalTitle" class="text-2xl font-black">loading</h3>
+                        <p id="modalCategory" class="text-gray-400 mt-2 flex items-center"><span class="w-2 h-2 bg-[#3f8cff] rounded-full mr-2"></span> game</p>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-12 h-12 rounded-full bg-[#263341] flex items-center justify-center hover:bg-[#3f8cff] transition-colors"><i class="fas fa-times text-white text-xl"></i></button>
+                <button onclick="closeModal()" class="w-14 h-14 rounded-full bg-[#263c50] flex items-center justify-center active:bg-[#3f8cff]"><i class="fas fa-times text-2xl"></i></button>
             </div>
 
             <div class="mb-8">
-                <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-3 block">🆔 player ID / username</label>
-                <input type="text" id="playerId" placeholder="example: 12345678 (required)" class="input-premium w-full">
+                <label class="text-sm font-bold text-gray-300 uppercase mb-3 block">🆔 player id</label>
+                <input type="text" id="playerId" placeholder="e.g. 12345678" class="input-big">
             </div>
 
             <div class="mb-10">
-                <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-5 flex items-center gap-2"><i class="fas fa-cube text-[#3f8cff]"></i> select denomination</label>
+                <label class="text-sm font-bold text-gray-300 uppercase mb-5 flex items-center gap-2"><i class="fas fa-cube text-[#3f8cff] text-lg"></i> pick package</label>
                 <div id="denomGrid" class="grid grid-cols-2 gap-4"></div>
             </div>
 
-            <button onclick="addToCart()" class="w-full bg-[#3f8cff] hover:bg-[#2670e0] text-white font-extrabold py-6 rounded-2xl text-xl transition-all flex items-center justify-center gap-4 shadow-2xl shadow-[#3f8cff]/40">
-                <i class="fas fa-cart-plus text-2xl"></i> ADD TO CART
+            <button onclick="addToCart()" class="fat-button">
+                <i class="fas fa-cart-plus mr-3"></i> ADD TO CART
             </button>
-            <p class="text-xs text-center text-gray-500 mt-6">✔️ instant confirmation · secure payment</p>
+            <p class="text-xs text-center text-gray-500 mt-6">✔️ instant · secure</p>
         </div>
     </div>
 
-    <!-- CART SIDEBAR (polished) -->
+    <!-- CART (full width mobile) -->
     <div id="cartOverlay" class="modal-overlay" onclick="closeCart()"></div>
     <div id="cartSidebar" class="cart-sidebar">
-        <div class="p-7 border-b border-white/20 flex justify-between items-center bg-[#0e1a24]">
-            <h3 class="text-2xl font-bold text-white flex items-center gap-3"><i class="fas fa-shopping-bag text-[#3f8cff]"></i> your cart</h3>
-            <button onclick="closeCart()" class="w-11 h-11 rounded-full bg-[#253746] flex items-center justify-center hover:bg-[#3f8cff]"><i class="fas fa-times text-white"></i></button>
+        <div class="p-7 border-b border-white/20 flex justify-between items-center bg-[#0e1b28]">
+            <h3 class="text-2xl font-bold flex items-center gap-3"><i class="fas fa-shopping-bag text-[#3f8cff]"></i> cart</h3>
+            <button onclick="closeCart()" class="w-14 h-14 rounded-full bg-[#263c50] flex items-center justify-center active:bg-[#3f8cff]"><i class="fas fa-times text-2xl"></i></button>
         </div>
         <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
-        <div class="p-6 bg-[#0f1b27] border-t border-white/20">
+        <div class="p-6 bg-[#0f1a26] border-t border-white/20 safe-bottom">
             <div class="flex justify-between items-center mb-6">
-                <span class="text-gray-300 text-xl">total</span>
-                <span id="cartTotal" class="text-4xl font-black text-white">RM 0.00</span>
+                <span class="text-2xl text-gray-300">total</span>
+                <span id="cartTotal" class="text-4xl font-black text-white">RM 0</span>
             </div>
-            <button onclick="checkout()" class="w-full bg-[#25D366] hover:bg-[#20b95a] text-white font-bold py-6 rounded-2xl text-xl flex items-center justify-center gap-3 transition-all shadow-xl">
-                <i class="fab fa-whatsapp text-3xl"></i> CHECKOUT VIA WA
+            <button onclick="checkout()" class="wa-button w-full">
+                <i class="fab fa-whatsapp text-3xl"></i> WHATSAPP
             </button>
         </div>
     </div>
@@ -344,9 +352,9 @@
     <div id="toast" class="toast">✅ item added</div>
 
     <script>
-        // ========== NICK·STORE PREMIUM ==========
+        // === CONFIG ===
         const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
-        const MARKUP = 0.03;          // 3% markup (sleeker)
+        const MARKUP = 0.03;   // 3%
         const WA_NUMBER = '60197661697';
 
         let allProducts = [], gamesList = [], cart = [], history = [], selectedGame = null, selectedProduct = null, currentCategory = 'all';
@@ -399,7 +407,7 @@
         function renderCategories() {
             const cats = ['all', ...new Set(allProducts.map(p => p.category))];
             document.getElementById('categoryContainer').innerHTML = cats.map(cat => 
-                `<button onclick="setCategory('${cat}')" class="category-chip ${currentCategory===cat?'active':''}">${cat==='all'?'🏆 ALL GAMES':cat}</button>`
+                `<button onclick="setCategory('${cat}')" class="cat-pill ${currentCategory===cat?'active':''}">${cat==='all'?'🏆 ALL':cat}</button>`
             ).join('');
         }
         function setCategory(cat) { currentCategory=cat; renderCategories(); renderGames(); }
@@ -424,16 +432,14 @@
             document.getElementById('emptyState').classList.add('hidden');
 
             grid.innerHTML = gameEntries.map(game => `
-                <div class="game-card p-5 flex flex-col" onclick="openGame('${game.name.replace(/'/g, "\\'")}')">
-                    <div class="aspect-square w-full rounded-2xl bg-cover bg-center mb-5 border-2 border-white/10 shadow-xl" style="background-image: url('${game.image}')"></div>
-                    <div class="px-2">
-                        <h4 class="font-bold text-lg text-white truncate">${game.name}</h4>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="text-xl font-black text-[#3f8cff]">${game.minPrice ? 'RM '+game.minPrice.toFixed(2) : 'VIEW'}</span>
-                            <span class="text-xs text-gray-400"><i class="fas fa-bolt text-[#3f8cff] mr-1"></i> 2min</span>
-                        </div>
-                        <span class="price-note">+3% service</span>
+                <div class="game-card" onclick="openGame('${game.name.replace(/'/g, "\\'")}')">
+                    <div class="aspect-square w-full rounded-2xl bg-cover bg-center mb-4 border-2 border-white/20 shadow-xl" style="background-image: url('${game.image}')"></div>
+                    <div class="font-bold text-xl text-white truncate px-1">${game.name}</div>
+                    <div class="flex justify-between items-center mt-3 px-1">
+                        <span class="text-2xl font-black text-[#3f8cff]">${game.minPrice ? 'RM'+game.minPrice.toFixed(2) : '—'}</span>
+                        <span class="text-sm bg-black/40 px-4 py-2 rounded-full border border-white/10"><i class="fas fa-bolt text-[#3f8cff] mr-1"></i>fast</span>
                     </div>
+                    <span class="text-[0.6rem] text-gray-500 mt-2 block px-1">+3% service</span>
                 </div>
             `).join('');
         }
@@ -442,7 +448,7 @@
             const gameEntry = allProducts.find(p => p.game === gameName);
             if (!gameEntry) return;
             if (gameEntry.isPlaceholder && gameEntry.slug) {
-                showToast('loading denominations ...');
+                showToast('loading...');
                 const details = await fetchGameDetails(gameEntry.slug);
                 if (details) {
                     const newProducts = [];
@@ -466,7 +472,7 @@
 
         function openGameModal(gameName) {
             const variants = allProducts.filter(p => p.game === gameName && p.price > 0);
-            if (!variants.length) { showToast('no products','error'); return; }
+            if (!variants.length) { showToast('no products'); return; }
             selectedGame = gameName;
             const gameData = variants[0];
             document.getElementById('modalTitle').innerText = gameName;
@@ -477,11 +483,10 @@
             variants.sort((a,b) => a.price - b.price);
             let html = '';
             variants.forEach(p => {
-                const originalNote = p.originalPrice ? `<span class="text-[10px] text-gray-400">base RM ${p.originalPrice.toFixed(2)}</span>` : '';
                 html += `<div id="btn-${p.id}" class="denom-card" onclick="event.stopPropagation(); selectProduct('${p.id}');">`;
-                html += `<span class="text-base font-semibold text-gray-200 mb-2">${p.name}</span>`;
-                html += `<span class="text-2xl font-black text-white">RM ${p.price.toFixed(2)}</span>`;
-                html += `<span class="text-[10px] text-[#8cbaff] mt-2">${originalNote}</span>`;
+                html += `<span class="text-lg font-semibold text-white/90 mb-2">${p.name}</span>`;
+                html += `<span class="text-3xl font-black text-white">RM ${p.price.toFixed(2)}</span>`;
+                if(p.originalPrice) html += `<span class="text-[0.6rem] text-gray-400 mt-2">base RM${p.originalPrice.toFixed(2)}</span>`;
                 html += `</div>`;
             });
             document.getElementById('denomGrid').innerHTML = html;
@@ -500,26 +505,26 @@
 
         function addToCart() {
             const pid = document.getElementById('playerId').value.trim();
-            if (!pid) return showToast('❌ enter player ID');
-            if (!selectedProduct) return showToast('❌ select a package');
+            if (!pid) return showToast('❌ enter player id');
+            if (!selectedProduct) return showToast('❌ select package');
             cart.push({ cartId: Date.now() + Math.random(), game: selectedGame, product: selectedProduct.name, price: selectedProduct.price, playerId: pid, image: selectedProduct.image });
-            saveCart(); closeModal(); showToast('✅ added to cart'); updateCartUI();
+            saveCart(); closeModal(); showToast('✅ added'); updateCartUI();
         }
 
         function updateCartUI() {
             const container = document.getElementById('cartItems'), totalEl = document.getElementById('cartTotal');
             document.getElementById('cartCount').innerText = cart.length;
             if (!cart.length) {
-                container.innerHTML = `<div class="text-center py-20 text-gray-400 bg-[#1e293a] rounded-3xl"><i class="fas fa-shopping-cart text-6xl mb-5 opacity-40"></i><p class="text-xl">cart empty</p></div>`;
+                container.innerHTML = `<div class="text-center py-24 text-gray-400 bg-[#172433] rounded-3xl"><i class="fas fa-box-open text-7xl mb-5 opacity-40"></i><p class="text-2xl">empty</p></div>`;
                 totalEl.innerText = 'RM 0.00'; return;
             }
             let total = 0;
             container.innerHTML = cart.map(item => {
                 total += item.price;
-                return `<div class="cart-item flex gap-5">
-                    <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover border-2 border-[#3f8cff]/60">
-                    <div class="flex-1"><h5 class="font-bold text-white text-lg">${item.game}</h5><p class="text-sm text-gray-400 mt-1">${item.product}</p><p class="text-xs text-[#aac8ff] mt-3 bg-black/40 px-4 py-1.5 rounded-full inline-block">ID: ${item.playerId}</p></div>
-                    <div class="text-right flex flex-col justify-between"><span class="text-2xl font-black text-white">RM${item.price.toFixed(2)}</span><button onclick="removeFromCart(${item.cartId})" class="text-red-400 bg-white/5 p-3 rounded-full hover:bg-red-500/30 transition"><i class="fas fa-trash"></i></button></div>
+                return `<div class="cart-item flex gap-5 items-center">
+                    <img src="${item.image}" class="w-20 h-20 rounded-xl border-2 border-[#3f8cff]/60">
+                    <div class="flex-1"><div class="font-bold text-xl">${item.game}</div><div class="text-gray-400 text-base">${item.product}</div><div class="bg-black/30 text-[#b5d0ff] text-sm mt-3 px-5 py-2 rounded-full inline-block">${item.playerId}</div></div>
+                    <div class="text-right"><span class="text-2xl font-black text-white">RM${item.price.toFixed(2)}</span><button onclick="removeFromCart(${item.cartId})" class="block mt-5 text-red-400 text-2xl bg-white/5 p-3 rounded-full active:bg-red-500/40"><i class="fas fa-trash"></i></button></div>
                 </div>`;
             }).join('');
             totalEl.innerText = `RM ${total.toFixed(2)}`;
@@ -531,9 +536,9 @@
 
         function checkout() {
             if (!cart.length) return showToast('cart empty');
-            let msg = "*🛒 NICK·STORE ORDER*%0A"; let total = 0;
+            let msg = "*🛒 NICK ORDER*%0A"; let total = 0;
             cart.forEach((i,idx) => { msg += `%0A${idx+1}. *${i.game}*%0A   ➔ ${i.product}%0A   ➔ ID: ${i.playerId}%0A   ➔ RM ${i.price.toFixed(2)}%0A`; total += i.price; });
-            msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}* (incl. 3% margin)`;
+            msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}* (incl. 3%)`;
             const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString('en-MY') };
             history.unshift(order); localStorage.setItem('nick_history_api', JSON.stringify(history));
             cart = []; saveCart(); updateCartUI(); closeCart();
@@ -544,12 +549,12 @@
         function showView(view) { ['games','history'].forEach(v => document.getElementById(`view-${v}`).classList.add('hidden')); document.getElementById(`view-${view}`).classList.remove('hidden'); if(view==='history') renderHistory(); }
         function renderHistory() {
             const container = document.getElementById('historyList');
-            if (!history.length) { container.innerHTML = `<div class="text-center py-20 text-gray-400 bg-[#1e293a] rounded-3xl"><i class="fas fa-history text-6xl mb-5 opacity-40"></i><p class="text-xl">no history</p></div>`; return; }
-            container.innerHTML = history.map(o => `<div class="bg-[#1e2a39] p-7 rounded-3xl border border-white/10"><div class="flex justify-between items-center mb-5"><span class="text-xs text-gray-400 bg-black/40 px-5 py-2 rounded-full">📅 ${o.date}</span><span class="text-3xl font-black text-white">RM${o.total?.toFixed(2)}</span></div>${o.items?.map(item => `<div class="flex justify-between text-sm py-2 border-b border-white/5"><span>${item.game} · ${item.product}</span><span class="font-mono text-gray-400">${item.playerId}</span></div>`).join('')}</div>`).join('');
+            if (!history.length) { container.innerHTML = `<div class="text-center py-24 text-gray-400 bg-[#172433] rounded-3xl"><i class="fas fa-history text-7xl mb-5 opacity-40"></i><p class="text-2xl">no history</p></div>`; return; }
+            container.innerHTML = history.map(o => `<div class="bg-[#1b283a] p-6 rounded-3xl"><div class="flex justify-between items-center mb-4"><span class="text-sm bg-black/40 px-5 py-2 rounded-full">📅 ${o.date}</span><span class="text-3xl font-black">RM${o.total?.toFixed(2)}</span></div>${o.items?.map(item => `<div class="flex justify-between text-base py-2 border-b border-white/5"><span>${item.game} · ${item.product}</span><span class="text-gray-400">${item.playerId}</span></div>`).join('')}</div>`).join('');
         }
         function toggleSearch() { document.getElementById('searchBar').classList.toggle('hidden'); }
         function handleSearch(val) { renderGames(val); }
-        function showToast(msg) { let t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2300); }
+        function showToast(msg) { let t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
     </script>
 </body>
 </html>
