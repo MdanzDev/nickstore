@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>KRYZ·NET · green glow topup</title>
+    <title>NickStore · clean & minimal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ===== DARK GREEN GLOW ===== */
+        /* clean minimal theme — inspired by kryxportfolio.vercel.app */
         * {
             margin: 0;
             padding: 0;
@@ -17,147 +17,124 @@
         }
 
         body {
-            background: #030b0a;        /* deep forest black */
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #dcfce7;              /* soft mint */
+            background: #0a0c10;        /* deep charcoal */
+            font-family: 'Inter', sans-serif;
+            color: #e8edf2;
             min-height: 100vh;
         }
 
-        /* signature glow */
-        .glow-green {
-            text-shadow: 0 0 15px #00ff9d70, 0 0 30px #00ff9d30;
+        /* subtle grey accents, no glow */
+        .border-subtle {
+            border: 1px solid #262b33;
         }
-        .border-glow-green {
-            border-color: #00ff9d;
-            box-shadow: 0 0 20px #00ff9d60;
+
+        .card-base {
+            background: #12161c;
+            border: 1px solid #262b33;
+            border-radius: 24px;
+            transition: background 0.15s ease;
+        }
+
+        .card-base:active {
+            background: #1a2028;
         }
 
         /* navigation */
-        .nav-glass {
-            background: rgba(2, 18, 14, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #00ff9d40;
+        .nav-minimal {
+            background: rgba(10, 12, 16, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #262b33;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        /* cards with green undertone */
-        .kryz-card {
-            background: #0b1f19;
-            border: 1px solid #1e4d3a;
-            border-radius: 28px;
-            transition: 0.15s;
-        }
-        .kryz-card:active {
-            background: #0f2f25;
-        }
-
-        /* game tile — glowing green border on active */
+        /* game tile — clean, no glow, subtle press */
         .game-tile {
-            background: #0a1f18;
-            border: 1.5px solid #1f4d3a;
-            border-radius: 28px;
-            padding: 14px 10px 12px 10px;
-            box-shadow: 0 6px 0 #001a0f;
-            transition: 0.06s linear;
+            background: #12161c;
+            border: 1px solid #2a313b;
+            border-radius: 26px;
+            padding: 16px 12px 14px 12px;
+            transition: all 0.1s ease;
             cursor: pointer;
         }
         .game-tile:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #001a0f;
-            background: #0f2f22;
-            border-color: #22c55e;
+            background: #1b222b;
+            transform: scale(0.99);
         }
 
-        .category-chip {
-            background: #0b221c;
-            border: 1px solid #2d684b;
-            color: #b3f0cf;
-            font-weight: 700;
-            padding: 12px 26px;
+        .category-pill {
+            background: #121a24;
+            border: 1px solid #2e3947;
+            color: #b0c0d4;
+            font-weight: 600;
+            padding: 12px 28px;
             border-radius: 60px;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 0 #001f12;
+            font-size: 0.95rem;
             display: inline-block;
             white-space: nowrap;
-            transition: 0.06s linear;
+            transition: all 0.1s ease;
             cursor: pointer;
         }
-        .category-chip.active {
-            background: #00ff9d;
-            color: #03140e;
-            border-color: #b2ffcf;
-            box-shadow: 0 0 20px #00ff9d, 0 4px 0 #005f32;
+        .category-pill.active {
+            background: #e8edf2;
+            color: #0a0c10;
+            border-color: #e8edf2;
         }
-        .category-chip:active {
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #001f12;
+        .category-pill:active {
+            background: #c0ccdd;
         }
 
-        /* reseller cards — deep green glow */
-        .reseller-forest {
-            background: linear-gradient(165deg, #0b2f20, #031a12);
-            border: 2px solid #00cc7a;
-            border-radius: 42px;
-            padding: 28px 22px;
-            box-shadow: 0 0 35px #00ff9d40;
+        /* reseller cards — minimal, subtle borders, no glow */
+        .reseller-card {
+            background: #11171f;
+            border: 1px solid #2d3846;
+            border-radius: 36px;
+            padding: 30px 24px;
+            transition: background 0.1s;
         }
-        .reseller-emerald {
-            background: linear-gradient(165deg, #0f3d2a, #052016);
-            border: 2px solid #22dd88;
-            border-radius: 42px;
-            padding: 28px 22px;
-            box-shadow: 0 0 40px #22dd8860;
+        .reseller-card:active {
+            background: #1a232e;
         }
-        .gold-badge {
-            background: #00b368;
-            color: #010b07;
-            font-weight: 900;
+
+        .badge-minimal {
+            background: #262e3a;
+            color: #d1e0f0;
+            font-weight: 700;
             font-size: 0.8rem;
             padding: 6px 22px;
             border-radius: 60px;
-            letter-spacing: 2px;
-            box-shadow: 0 0 15px #00ffaa;
+            letter-spacing: 0.5px;
+            border: 1px solid #3e4b5d;
         }
-        .plat-badge {
-            background: #2af09f;
-            color: #031a0f;
-            font-weight: 900;
-            font-size: 0.8rem;
-            padding: 6px 22px;
-            border-radius: 60px;
-            letter-spacing: 2px;
-        }
-        .priority-flag {
-            background: #facc15;
-            color: #030f0a;
+
+        .priority-badge {
+            background: #e8edf2;
+            color: #0a0c10;
+            font-weight: 800;
             font-size: 0.7rem;
-            font-weight: 900;
-            padding: 6px 24px;
+            padding: 4px 18px;
             border-radius: 40px;
             position: absolute;
             top: -12px;
             right: 20px;
-            box-shadow: 0 0 30px #facc15;
         }
 
-        /* bottom sheet modal — dark green */
+        /* bottom modal — clean sheet */
         .modal-sheet {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #092116;
-            border-top: 3px solid #00ff9d;
-            border-radius: 38px 38px 0 0;
+            background: #121a24;
+            border-top: 1px solid #3a4a5a;
+            border-radius: 32px 32px 0 0;
             transform: translateY(100%);
-            transition: transform 0.25s cubic-bezier(0.2,0.9,0.3,1);
+            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1);
             z-index: 1001;
             max-height: 90vh;
             overflow-y: auto;
             padding-bottom: 30px;
-            box-shadow: 0 -10px 50px #00ff9d40;
         }
         .modal-sheet.active { transform: translateY(0); }
 
@@ -166,20 +143,19 @@
             top: 0; right: 0; bottom: 0;
             width: 100%;
             max-width: 420px;
-            background: #0b261d;
-            border-left: 3px solid #00ff9d;
+            background: #121a24;
+            border-left: 1px solid #3e5068;
             transform: translateX(100%);
             transition: transform 0.25s ease;
             z-index: 1001;
             display: flex;
             flex-direction: column;
-            box-shadow: -10px 0 40px #00ff9d40;
         }
         .cart-panel.active { transform: translateX(0); }
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(0, 20, 10, 0.9);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
             z-index: 1000;
             display: none;
@@ -188,9 +164,9 @@
 
         .toast {
             position: fixed; bottom: 30px; left: 20px; right: 20px;
-            background: #0e3929;
-            border: 1px solid #00ff9d;
-            color: #eafff0;
+            background: #1e2a36;
+            border: 1px solid #4e6b88;
+            color: #f0f6fc;
             padding: 18px 24px;
             border-radius: 60px;
             font-weight: 600;
@@ -198,46 +174,43 @@
             transform: translateY(200%);
             transition: transform 0.2s;
             z-index: 10000;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 40px #00ff9d;
+            backdrop-filter: blur(10px);
         }
         .toast.show { transform: translateY(0); }
 
-        /* denom cards */
+        /* denom option */
         .denom-opt {
-            background: #092f20;
-            border: 1.5px solid #1d754a;
-            border-radius: 32px;
+            background: #1b2533;
+            border: 1px solid #314153;
+            border-radius: 30px;
             padding: 16px 6px;
             text-align: center;
             transition: 0.06s;
             cursor: pointer;
         }
         .denom-opt.selected {
-            background: #1a553a;
-            border-color: #90ffb0;
-            box-shadow: 0 0 25px #00ff9d;
+            background: #29394d;
+            border-color: #90a9c7;
         }
-        .denom-opt:active { background: #0f422d; transform: scale(0.98); }
+        .denom-opt:active { background: #253141; }
 
-        .big-input {
-            background: #072116;
-            border: 2px solid #1d754a;
-            border-radius: 36px;
+        .input-minimal {
+            background: #121b26;
+            border: 1.5px solid #31445b;
+            border-radius: 30px;
             padding: 20px 24px;
             font-size: 1.2rem;
-            color: #e6ffee;
+            color: white;
             width: 100%;
         }
-        .big-input:focus { border-color: #6affb0; outline: none; box-shadow: 0 0 25px #6affb0; }
+        .input-minimal:focus { border-color: #90a9c7; outline: none; }
 
-        .price-mark {
-            font-size: 0.55rem;
-            color: #9bffc2;
+        .price-note {
+            font-size: 0.6rem;
+            color: #98aec9;
             margin-top: 4px;
         }
 
-        /* game grid */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -253,41 +226,41 @@
 </head>
 <body>
 
-    <!-- loading (glowing green) -->
-    <div id="loading" style="position:fixed; inset:0; background:#030b0a; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <!-- loading -->
+    <div id="loading" style="position:fixed; inset:0; background:#0a0c10; z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
-            <div class="w-28 h-28 mx-auto rounded-3xl border-2 border-[#00ff9d] flex items-center justify-center shadow-[0_0_60px_#00ff9d]">
-                <span class="font-['Orbitron'] text-7xl font-black text-[#00ff9d] glow-green">K</span>
+            <div class="w-24 h-24 mx-auto rounded-3xl border border-[#3a4a5a] flex items-center justify-center">
+                <span class="font-bold text-5xl text-[#e8edf2]">N</span>
             </div>
-            <p class="mt-6 text-[#a0f0c0] text-sm tracking-widest">KRYZ·NET</p>
+            <p class="mt-6 text-[#98aec9] text-sm">NickStore · loading</p>
         </div>
     </div>
 
     <!-- nav -->
-    <nav class="nav-glass px-5 py-4">
+    <nav class="nav-minimal px-5 py-4">
         <div class="flex items-center justify-between">
             <div onclick="showView('games')" class="flex items-center gap-2 cursor-pointer">
-                <span class="font-['Orbitron'] text-3xl font-black text-[#00ff9d] glow-green">K·NET</span>
-                <span class="bg-[#00ff9d] text-black text-[10px] font-black px-3 py-1 rounded-full">v2</span>
+                <span class="text-2xl font-black text-[#e8edf2]">NickStore</span>
+                <span class="bg-[#262e3a] text-[#b0c4de] text-[10px] font-bold px-3 py-1 rounded-full">topup</span>
             </div>
             <div class="flex gap-4">
-                <button id="searchBtn" class="w-12 h-12 rounded-2xl bg-[#0d2f21] border border-[#00ff9d]/40 flex items-center justify-center active:bg-[#00ff9d]/20"><i class="fas fa-search text-xl text-[#bbffdd]"></i></button>
-                <button onclick="openCart()" class="relative w-12 h-12 rounded-2xl bg-[#0d2f21] border border-[#00ff9d]/40 flex items-center justify-center active:bg-[#00ff9d]/20">
-                    <i class="fas fa-shopping-cart text-xl text-[#bbffdd]"></i>
-                    <span id="cartCount" class="absolute -top-2 -right-2 bg-[#00ff9d] text-black text-sm font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+                <button id="searchBtn" class="w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]"><i class="fas fa-search text-xl text-[#b0c4de]"></i></button>
+                <button onclick="openCart()" class="relative w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]">
+                    <i class="fas fa-shopping-cart text-xl text-[#b0c4de]"></i>
+                    <span id="cartCount" class="absolute -top-2 -right-2 bg-[#e8edf2] text-black text-sm font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
                 </button>
                 <div class="relative">
-                    <button id="menuBtn" class="w-12 h-12 rounded-2xl bg-[#0d2f21] border border-[#00ff9d]/40 flex items-center justify-center active:bg-[#00ff9d]/20"><i class="fas fa-bars text-xl text-[#bbffdd]"></i></button>
-                    <div id="menuDrop" class="absolute right-0 mt-3 w-44 bg-[#0b2f20] border border-[#00ff9d] rounded-2xl hidden z-50 shadow-2xl shadow-[#00ff9d]/40">
-                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#00ff9d]/10 text-[#dcfce7] rounded-t-2xl">🎮 store</button>
-                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#00ff9d]/10 text-[#dcfce7]">👑 reseller</button>
-                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#00ff9d]/10 text-[#dcfce7] rounded-b-2xl">📋 history</button>
+                    <button id="menuBtn" class="w-12 h-12 rounded-2xl bg-[#1b232f] border border-[#334152] flex items-center justify-center active:bg-[#263546]"><i class="fas fa-bars text-xl text-[#b0c4de]"></i></button>
+                    <div id="menuDrop" class="absolute right-0 mt-3 w-44 bg-[#141e2b] border border-[#3e5368] rounded-2xl hidden z-50">
+                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0] rounded-t-2xl">🎮 store</button>
+                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0]">👑 reseller</button>
+                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-5 py-4 text-sm hover:bg-[#1e2d3f] text-[#d0e0f0] rounded-b-2xl">📋 history</button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="searchRow" class="hidden mt-4">
-            <input type="text" id="searchInput" placeholder="search game..." class="w-full bg-[#0b2a1d] border border-[#00ff9d]/60 rounded-2xl px-6 py-4 text-white placeholder:text-[#a0f0c0]">
+            <input type="text" id="searchInput" placeholder="search game..." class="w-full bg-[#1b2533] border border-[#3f556b] rounded-2xl px-6 py-4 text-white placeholder:text-[#98aec9]">
         </div>
     </nav>
 
@@ -296,24 +269,25 @@
 
         <!-- GAMES VIEW -->
         <div id="gamesView">
-            <div class="bg-gradient-to-b from-[#0b3221] to-[#03140e] rounded-[40px] p-8 my-5 border border-[#00ff9d]/40 shadow-[0_0_40px_#00ff9d30]">
-                <h2 class="font-['Orbitron'] text-4xl font-black mb-3 text-[#b3ffd9] glow-green">GREEN<br>TOPUP</h2>
-                <p class="text-[#b0f0cd] max-w-xs">ML · Genshin · Valorant · FF</p>
+            <!-- hero minimal -->
+            <div class="bg-[#0f1620] border border-[#2c394b] rounded-[40px] p-8 my-5">
+                <h2 class="text-4xl font-black mb-3 text-[#e8edf2]">CLEAN<br>TOPUP</h2>
+                <p class="text-[#98aec9] max-w-xs">Mobile Legends · Genshin · Valorant</p>
                 <div class="flex gap-3 mt-6">
-                    <span class="bg-black/50 text-[#ccffdd] border border-[#00ff9d] px-5 py-3 rounded-full text-sm font-bold"><i class="fas fa-bolt mr-2 text-[#00ff9d]"></i>2min</span>
-                    <span class="bg-black/50 text-[#ccffdd] border border-[#00ff9d] px-5 py-3 rounded-full text-sm font-bold"><i class="fas fa-shield mr-2 text-[#00ff9d]"></i>secure</span>
+                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-5 py-3 rounded-full text-sm font-medium"><i class="fas fa-bolt mr-2"></i>2min</span>
+                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-5 py-3 rounded-full text-sm font-medium"><i class="fas fa-shield mr-2"></i>secure</span>
                 </div>
             </div>
 
-            <!-- stats -->
+            <!-- stats cards -->
             <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-[#0b251c] border border-[#00cc7a] rounded-3xl p-6 text-center shadow-[0_0_25px_#00ff9d30]">
-                    <p class="text-3xl font-black text-[#d5ffee]" id="gameCount">0</p>
-                    <p class="text-xs text-[#a0e6c0] mt-2">games</p>
+                <div class="bg-[#121a24] border border-[#2d3e54] rounded-3xl p-6 text-center">
+                    <p class="text-3xl font-black text-[#d0e4ff]" id="gameCount">0</p>
+                    <p class="text-xs text-[#98aec9] mt-2">games</p>
                 </div>
-                <div class="bg-[#0b251c] border border-[#00cc7a] rounded-3xl p-6 text-center shadow-[0_0_25px_#00ff9d30]">
-                    <p class="text-3xl font-black text-[#d5ffee]" id="productCount">0</p>
-                    <p class="text-xs text-[#a0e6c0] mt-2">items</p>
+                <div class="bg-[#121a24] border border-[#2d3e54] rounded-3xl p-6 text-center">
+                    <p class="text-3xl font-black text-[#d0e4ff]" id="productCount">0</p>
+                    <p class="text-xs text-[#98aec9] mt-2">items</p>
                 </div>
             </div>
 
@@ -323,64 +297,64 @@
             <!-- game grid -->
             <div id="gameGrid" class="game-grid"></div>
             <div id="emptyGrid" class="hidden text-center py-24">
-                <i class="fas fa-leaf text-6xl text-[#2f6b4f] mb-5"></i>
-                <p class="text-[#b0e0c0] text-xl">no games</p>
+                <i class="fas fa-box-open text-6xl text-[#3a5068] mb-5"></i>
+                <p class="text-[#98aec9] text-xl">no games</p>
             </div>
         </div>
 
-        <!-- RESELLER VIEW (green glow) -->
+        <!-- RESELLER VIEW (minimal) -->
         <div id="resellerView" class="hidden pb-12">
             <div class="flex items-center gap-3 mb-8 mt-3">
-                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#0d2f21] border border-[#00ff9d]/60 flex items-center justify-center"><i class="fas fa-arrow-left text-[#bbffdd]"></i></button>
-                <h2 class="font-['Orbitron'] text-2xl font-black text-[#bbffdd] glow-green">RESELLER</h2>
-                <span class="bg-[#00ff9d]/20 text-[#ccffdd] text-[10px] px-4 py-2 rounded-full border border-[#00ff9d]">LIFETIME</span>
+                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#1b2533] border border-[#3e5a78] flex items-center justify-center"><i class="fas fa-arrow-left text-[#b0c4de]"></i></button>
+                <h2 class="text-2xl font-black text-[#e8edf2]">RESELLER</h2>
+                <span class="bg-[#262e3a] text-[#b0c8e5] text-[10px] px-4 py-2 rounded-full border border-[#4a607c]">LIFETIME</span>
             </div>
 
             <div class="text-center mb-10">
-                <h3 class="text-4xl font-black leading-tight"><span class="text-[#00ff9d] glow-green">ELITE</span> <span class="text-white">PARTNER</span></h3>
-                <p class="text-[#b0f0cd] max-w-md mx-auto mt-4">harga gudang · bot telegram · priority</p>
+                <h3 class="text-4xl font-black leading-tight"><span class="text-[#d0e4ff]">ELITE</span> <span class="text-white">PARTNER</span></h3>
+                <p class="text-[#98aec9] max-w-md mx-auto mt-4">wholesale price · telegram bot · priority</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-7 max-w-3xl mx-auto">
-                <!-- forest card (gold equivalent but green) -->
-                <div class="reseller-forest relative">
-                    <span class="gold-badge inline-block mb-6"><i class="fas fa-crown mr-2"></i>FOREST</span>
-                    <div class="text-4xl font-black text-[#aaffcc] mb-5">RM15<span class="text-sm text-[#8fcfb0] ml-2">lifetime</span></div>
+                <!-- grey card -->
+                <div class="reseller-card relative">
+                    <span class="badge-minimal inline-block mb-6"><i class="fas fa-crown mr-2"></i>GREY</span>
+                    <div class="text-4xl font-black text-[#d0e4ff] mb-5">RM15<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
                     <ul class="space-y-4 mb-8 text-sm">
-                        <li class="flex gap-3"><i class="fas fa-check text-[#00ff9d] w-5"></i><span>cheaper than retail</span></li>
-                        <li class="flex gap-3"><i class="fas fa-robot text-[#00ff9d] w-5"></i><span>telegram bot access</span></li>
-                        <li class="flex gap-3"><i class="fas fa-infinity text-[#00ff9d] w-5"></i><span>lifetime validity</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check text-[#90a9c7] w-5"></i><span>cheaper than retail</span></li>
+                        <li class="flex gap-3"><i class="fas fa-robot text-[#90a9c7] w-5"></i><span>telegram bot access</span></li>
+                        <li class="flex gap-3"><i class="fas fa-infinity text-[#90a9c7] w-5"></i><span>lifetime validity</span></li>
                     </ul>
-                    <button onclick="joinReseller('forest')" class="w-full py-5 bg-[#00ff9d] text-black font-black rounded-full text-sm uppercase tracking-widest active:bg-[#88ffbb] shadow-[0_0_30px_#00ff9d]">join forest</button>
+                    <button onclick="joinReseller('grey')" class="w-full py-5 bg-[#e8edf2] text-black font-bold rounded-full text-sm uppercase tracking-widest active:bg-[#c0d0e5]">join grey</button>
                 </div>
-                <!-- emerald card (platinum) -->
-                <div class="reseller-emerald relative">
-                    <span class="plat-badge inline-block mb-6"><i class="fas fa-gem mr-2"></i>EMERALD</span>
-                    <div class="priority-flag" style="background:#b1ffb1; color:#021008; box-shadow:0 0 30px #aaffaa;">PRIORITY</div>
-                    <div class="text-4xl font-black text-[#ccffdd] mb-5">RM35<span class="text-sm text-[#a0e0ba] ml-2">lifetime</span></div>
+                <!-- slate card -->
+                <div class="reseller-card relative">
+                    <span class="badge-minimal inline-block mb-6"><i class="fas fa-gem mr-2"></i>SLATE</span>
+                    <div class="priority-badge">PRIORITY</div>
+                    <div class="text-4xl font-black text-[#d0e4ff] mb-5">RM35<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
                     <ul class="space-y-4 mb-8 text-sm">
-                        <li class="flex gap-3"><i class="fas fa-check text-[#5affb0] w-5"></i><span>cheaper than forest</span></li>
-                        <li class="flex gap-3"><i class="fas fa-robot text-[#5affb0] w-5"></i><span>full bot automation</span></li>
-                        <li class="flex gap-3"><i class="fas fa-headset text-[#5affb0] w-5"></i><span>priority support</span></li>
+                        <li class="flex gap-3"><i class="fas fa-check text-[#90a9c7] w-5"></i><span>cheaper than grey</span></li>
+                        <li class="flex gap-3"><i class="fas fa-robot text-[#90a9c7] w-5"></i><span>full bot automation</span></li>
+                        <li class="flex gap-3"><i class="fas fa-headset text-[#90a9c7] w-5"></i><span>priority support</span></li>
                     </ul>
-                    <button onclick="joinReseller('emerald')" class="w-full py-5 bg-[#aaffcc] text-black font-black rounded-full text-sm uppercase tracking-widest active:bg-[#ccffdd] shadow-[0_0_30px_#aaffcc]">join emerald</button>
+                    <button onclick="joinReseller('slate')" class="w-full py-5 bg-[#e8edf2] text-black font-bold rounded-full text-sm uppercase tracking-widest active:bg-[#c0d0e5]">join slate</button>
                 </div>
             </div>
-            <p class="text-center text-[#2f7553] text-xs mt-12">✦ bayar sekali · seumur hidup ✦</p>
+            <p class="text-center text-[#4a607c] text-xs mt-12">✦ one-time payment · lifetime ✦</p>
         </div>
 
         <!-- HISTORY VIEW -->
         <div id="historyView" class="hidden">
             <div class="flex items-center gap-3 mb-8 mt-3">
-                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#0d2f21] border border-[#00ff9d]/60"><i class="fas fa-arrow-left text-[#bbffdd]"></i></button>
-                <h2 class="text-2xl font-bold text-[#bbffdd]">ORDER HISTORY</h2>
+                <button onclick="showView('games')" class="w-12 h-12 rounded-2xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-[#b0c4de]"></i></button>
+                <h2 class="text-2xl font-bold text-[#e8edf2]">ORDER HISTORY</h2>
             </div>
             <div id="historyList" class="space-y-4"></div>
         </div>
     </main>
 
-    <!-- WhatsApp FAB (green glowing) -->
-    <a href="https://wa.me/60137345871" target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#00b368] rounded-full flex items-center justify-center shadow-[0_0_50px_#00ff9d] active:scale-90 transition z-50"><i class="fab fa-whatsapp text-2xl text-black"></i></a>
+    <!-- WhatsApp FAB (minimal) -->
+    <a href="https://wa.me/60137345871" target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-[#e8edf2] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition z-50"><i class="fab fa-whatsapp text-2xl text-[#0a0c10]"></i></a>
 
     <!-- product modal -->
     <div id="modalOverlay" class="overlay"></div>
@@ -388,37 +362,39 @@
         <div class="p-7">
             <div class="flex justify-between items-start mb-7">
                 <div class="flex gap-4">
-                    <div id="modalImg" class="w-20 h-20 rounded-2xl bg-cover bg-center border-2 border-[#00ff9d] shadow-[0_0_30px_#00ff9d]"></div>
-                    <div><h3 id="modalTitle" class="text-2xl font-black text-[#e6ffee]"></h3><p id="modalCategory" class="text-[#b0f0cd] text-sm mt-1"></p></div>
+                    <div id="modalImg" class="w-20 h-20 rounded-2xl bg-cover bg-center border border-[#4a6a8a]"></div>
+                    <div><h3 id="modalTitle" class="text-2xl font-black text-[#e8edf2]"></h3><p id="modalCategory" class="text-[#98aec9] text-sm mt-1"></p></div>
                 </div>
-                <button onclick="closeModal()" class="w-12 h-12 rounded-full bg-[#1e4d38] border border-[#00ff9d] flex items-center justify-center"><i class="fas fa-times text-[#bbffdd]"></i></button>
+                <button onclick="closeModal()" class="w-12 h-12 rounded-full bg-[#26384f] border border-[#4a6a8a] flex items-center justify-center"><i class="fas fa-times text-[#b0c8e5]"></i></button>
             </div>
-            <div class="mb-7"><label class="text-sm font-bold mb-3 block text-[#ccffdd]">🆔 player id</label><input type="text" id="playerId" placeholder="12345678" class="big-input"></div>
-            <div class="mb-10"><label class="text-sm font-bold mb-4 block text-[#ccffdd]">📦 package</label><div id="denomGrid" class="grid grid-cols-2 gap-4"></div></div>
-            <button onclick="addToCart()" class="w-full bg-[#00ff9d] text-black font-black py-6 rounded-full text-xl active:bg-[#88ffbb] shadow-[0_0_40px_#00ff9d]">ADD TO CART</button>
-            <p class="text-xs text-center text-[#70b893] mt-5">+3% service</p>
+            <div class="mb-7"><label class="text-sm font-bold mb-3 block text-[#b0c8e5]">🆔 player id</label><input type="text" id="playerId" placeholder="12345678" class="input-minimal"></div>
+            <div class="mb-10"><label class="text-sm font-bold mb-4 block text-[#b0c8e5]">📦 package</label><div id="denomGrid" class="grid grid-cols-2 gap-4"></div></div>
+            <button onclick="addToCart()" class="w-full bg-[#e8edf2] text-black font-bold py-6 rounded-full text-xl active:bg-[#c0d0e5]">ADD TO CART</button>
+            <p class="text-xs text-center text-[#6a88aa] mt-5">+3% service</p>
         </div>
     </div>
 
     <!-- cart panel -->
     <div id="cartOverlay" class="overlay"></div>
     <div id="cartPanel" class="cart-panel">
-        <div class="p-6 border-b border-[#00ff9d]/40 flex justify-between">
-            <h3 class="text-2xl font-bold text-[#bbffdd]">CART</h3><button onclick="closeCart()" class="w-12 h-12 rounded-full bg-[#1e4d38] border border-[#00ff9d]"><i class="fas fa-times text-[#bbffdd]"></i></button>
+        <div class="p-6 border-b border-[#3e5a78] flex justify-between">
+            <h3 class="text-2xl font-bold text-[#e8edf2]">CART</h3><button onclick="closeCart()" class="w-12 h-12 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-[#b0c8e5]"></i></button>
         </div>
         <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
-        <div class="p-6 border-t border-[#00ff9d]/40">
-            <div class="flex justify-between text-2xl font-black mb-6"><span class="text-[#ccffdd]">total</span><span id="cartTotal" class="text-[#eeffee]">RM0</span></div>
-            <button onclick="checkout()" class="w-full bg-[#00ff9d] text-black font-bold py-6 rounded-full text-xl active:bg-[#88ffbb] shadow-[0_0_40px_#00ff9d]">CHECKOUT WA</button>
+        <div class="p-6 border-t border-[#3e5a78]">
+            <div class="flex justify-between text-2xl font-black mb-6"><span class="text-[#b0c8e5]">total</span><span id="cartTotal" class="text-[#e8edf2]">RM0</span></div>
+            <button onclick="checkout()" class="w-full bg-[#e8edf2] text-black font-bold py-6 rounded-full text-xl active:bg-[#c0d0e5]">CHECKOUT WA</button>
         </div>
     </div>
 
     <div id="toastMsg" class="toast">✅ added</div>
 
     <script>
-        // === CONFIG ===
+        // ========== NICKSTORE · MINIMAL · API INTEGRATION ==========
         const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
-        const MARKUP = 0.03;
+        const MARKUP = 0.03; // 3%
+
+        // fallback demo (clean)
         const DEMO = [
             { id:'ml1', name:'86 Diamonds', game:'Mobile Legends', price:12.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
             { id:'ml2', name:'172 Diamonds', game:'Mobile Legends', price:24.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
@@ -428,114 +404,255 @@
             { id:'gi1', name:'60 Crystals', game:'Genshin', price:16.9, category:'RPG', img:'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=400&h=250&fit=crop' }
         ];
 
-        let products = [], games = [], cart = [], history = [], currentCategory = 'all', selectedGameObj = null, selectedDenom = null;
-        try { cart = JSON.parse(localStorage.kryz_cart) || []; } catch { cart = []; }
-        try { history = JSON.parse(localStorage.kryz_history) || []; } catch { history = []; }
+        // state
+        let products = [];
+        let games = [];
+        let cart = [];
+        let history = [];
+        let currentCategory = 'all';
+        let selectedGameObj = null;
+        let selectedDenom = null;
+        let allGamesFromAPI = [];      // raw game list
+        let gameDetailsCache = {};      // cache for slug details
 
-        window.onload = ()=>{
+        try { cart = JSON.parse(localStorage.nick_cart) || []; } catch { cart = []; }
+        try { history = JSON.parse(localStorage.nick_history) || []; } catch { history = []; }
+
+        window.onload = () => {
             document.getElementById('loading').style.display = 'none';
-            products = DEMO.map(p => ({ ...p, price: Math.round(p.price*(1+MARKUP)*100)/100 }));
-            buildGames(); setupEvents(); updateCartCount();
+            // try to fetch from API, otherwise load demo
+            fetchGamesFromAPI();
+            setupEvents();
+            updateCartCount();
         };
 
-        function buildGames() {
-            let map = new Map(); products.forEach(p=>{ if(!map.has(p.game)) map.set(p.game,[]); map.get(p.game).push(p); });
-            games = Array.from(map.entries()).map(([name, prods])=>({
-                name, products: prods.sort((a,b)=>a.price-b.price), thumbnail: prods[0].img, category: prods[0].category
-            })).sort((a,b)=>a.products[0].price - b.products[0].price);
-            document.getElementById('gameCount').innerText = games.length;
-            document.getElementById('productCount').innerText = products.length;
-            renderCategories(); renderGames();
+        // ----- API INTEGRATION (restored) -----
+        async function fetchGamesFromAPI() {
+            try {
+                const res = await fetch(`${API_BASE}/public/games`);
+                if (!res.ok) throw new Error('API not available');
+                const data = await res.json();
+                if (data.success && data.games?.length) {
+                    allGamesFromAPI = data.games;
+                    // create placeholder products for each game
+                    products = allGamesFromAPI.map(game => ({
+                        id: `game-${game.slug}`,
+                        name: game.name,
+                        game: game.name,
+                        price: 0,
+                        category: game.category || 'Games',
+                        img: `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=3f556b&color=fff&size=200&length=2`,
+                        slug: game.slug,
+                        isPlaceholder: true
+                    }));
+                    buildGamesFromProducts();
+                    // fetch details for first few games? we'll fetch on click
+                } else throw new Error('no games');
+            } catch (e) {
+                console.warn('API failed, using demo', e);
+                loadDemoData();
+            }
         }
 
+        async function fetchGameDetails(slug) {
+            if (gameDetailsCache[slug]) return gameDetailsCache[slug];
+            try {
+                const res = await fetch(`${API_BASE}/public/games/${slug}`);
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                if (data.success) {
+                    gameDetailsCache[slug] = data.game;
+                    return data.game;
+                }
+            } catch (e) { return null; }
+        }
+
+        function loadDemoData() {
+            products = DEMO.map(p => ({ ...p, price: Math.round(p.price*(1+MARKUP)*100)/100 }));
+            buildGamesFromProducts();
+        }
+
+        function buildGamesFromProducts() {
+            const map = new Map();
+            products.forEach(p => {
+                if (!map.has(p.game)) map.set(p.game, []);
+                map.get(p.game).push(p);
+            });
+            games = Array.from(map.entries()).map(([name, prods]) => ({
+                name,
+                products: prods.sort((a,b)=>a.price - b.price),
+                thumbnail: prods[0].img,
+                category: prods[0].category,
+                slug: prods[0].slug
+            })).sort((a,b)=> {
+                let aPrice = a.products.find(p=>p.price>0)?.price || 9999;
+                let bPrice = b.products.find(p=>p.price>0)?.price || 9999;
+                return aPrice - bPrice;
+            });
+            document.getElementById('gameCount').innerText = games.length;
+            document.getElementById('productCount').innerText = products.length;
+            renderCategories();
+            renderGames();
+        }
+
+        // ----- UI RENDERING -----
         function renderCategories() {
-            let cats = ['all', ...new Set(products.map(p=>p.category))];
-            document.getElementById('catContainer').innerHTML = cats.map(c=> 
-                `<button onclick="setCat('${c}', this)" class="category-chip ${c===currentCategory?'active':''}">${c==='all'?'ALL':c}</button>`
+            const cats = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
+            document.getElementById('catContainer').innerHTML = cats.map(c => 
+                `<button onclick="setCat('${c}', this)" class="category-pill ${c===currentCategory?'active':''}">${c==='all'?'ALL':c}</button>`
             ).join('');
         }
 
-        function setCat(cat, btn) {
-            document.querySelectorAll('.category-chip').forEach(c=>c.classList.remove('active')); btn.classList.add('active');
-            currentCategory = cat; renderGames();
-        }
-        window.setCat = setCat;
+        window.setCat = (cat, btn) => {
+            document.querySelectorAll('.category-pill').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = cat;
+            renderGames();
+        };
 
         function renderGames() {
             let filtered = games;
-            if(currentCategory !== 'all') filtered = filtered.filter(g => g.category === currentCategory);
-            let search = document.getElementById('searchInput')?.value.toLowerCase() || '';
-            if(search) filtered = filtered.filter(g => g.name.toLowerCase().includes(search));
+            if (currentCategory !== 'all') filtered = filtered.filter(g => g.category === currentCategory);
+            const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            if (search) filtered = filtered.filter(g => g.name.toLowerCase().includes(search));
 
-            let grid = document.getElementById('gameGrid');
-            if(!filtered.length) { grid.innerHTML=''; document.getElementById('emptyGrid').classList.remove('hidden'); return; }
+            const grid = document.getElementById('gameGrid');
+            if (!filtered.length) {
+                grid.innerHTML = '';
+                document.getElementById('emptyGrid').classList.remove('hidden');
+                return;
+            }
             document.getElementById('emptyGrid').classList.add('hidden');
 
-            grid.innerHTML = filtered.map(g=>{
-                let low = g.products[0].price;
+            grid.innerHTML = filtered.map(g => {
+                const valid = g.products.filter(p => p.price > 0);
+                const lowest = valid.length ? Math.min(...valid.map(p=>p.price)) : 0;
+                const priceDisplay = lowest ? `RM${lowest.toFixed(2)}` : 'check';
                 return `<div class="game-tile" onclick="openGame('${g.name}')">
-                    <div class="aspect-square bg-cover bg-center rounded-2xl mb-3 border border-[#00ff9d]/50" style="background-image:url('${g.thumbnail}')"></div>
-                    <div class="font-bold text-lg truncate text-[#e4ffee]">${g.name}</div>
-                    <div class="flex justify-between items-center mt-2"><span class="text-xs text-[#b0f0cd]">from</span><span class="text-xl font-black text-[#ccffdd]">RM${low.toFixed(2)}</span></div>
-                    <div class="price-mark">+3% margin</div>
+                    <div class="aspect-square bg-cover bg-center rounded-2xl mb-3 border border-[#3a5068]" style="background-image:url('${g.thumbnail}')"></div>
+                    <div class="font-bold text-lg truncate text-[#d0e4ff]">${g.name}</div>
+                    <div class="flex justify-between items-center mt-2"><span class="text-xs text-[#98aec9]">from</span><span class="text-xl font-black text-[#e8edf2]">${priceDisplay}</span></div>
+                    <div class="price-note">+3% margin</div>
                 </div>`;
             }).join('');
         }
-        window.renderGames = renderGames;
 
-        // events
-        function setupEvents() {
-            document.getElementById('searchBtn').addEventListener('click', ()=> document.getElementById('searchRow').classList.toggle('hidden'));
-            document.getElementById('searchInput').addEventListener('input', renderGames);
-            document.getElementById('menuBtn').addEventListener('click', (e)=>{ e.stopPropagation(); document.getElementById('menuDrop').classList.toggle('hidden'); });
-        }
-        window.toggleMenu = ()=> document.getElementById('menuDrop').classList.add('hidden');
+        // open game with lazy detail fetch
+        window.openGame = async (gameName) => {
+            const game = games.find(g => g.name === gameName);
+            if (!game) return;
 
-        // modal
-        window.openGame = (name)=>{
-            let g = games.find(g=>g.name===name); if(!g) return;
-            selectedGameObj = g; selectedDenom = g.products[0];
-            document.getElementById('modalTitle').innerText = g.name;
-            document.getElementById('modalCategory').innerText = g.category;
-            document.getElementById('modalImg').style.backgroundImage = `url('${g.thumbnail}')`;
+            // if it's a placeholder (API) and has slug, fetch real services
+            if (game.slug && game.products[0]?.isPlaceholder) {
+                showToast('loading details...');
+                const details = await fetchGameDetails(game.slug);
+                if (details && details.services_by_type) {
+                    const newProds = [];
+                    Object.values(details.services_by_type).forEach(services => {
+                        services.forEach(s => {
+                            const base = parseFloat(s.price_myr) || 0;
+                            newProds.push({
+                                id: s.id,
+                                name: s.name,
+                                game: details.name,
+                                price: Math.round(base * (1+MARKUP) * 100)/100,
+                                originalPrice: base,
+                                category: details.category || 'Games',
+                                img: game.thumbnail
+                            });
+                        });
+                    });
+                    if (newProds.length) {
+                        // replace products for this game
+                        products = products.filter(p => p.game !== gameName);
+                        products.push(...newProds);
+                        buildGamesFromProducts();  // rebuild games
+                        // now open again with real products
+                        setTimeout(() => openGameModal(gameName), 100);
+                        return;
+                    }
+                }
+            }
+            // otherwise just open modal with existing products
+            openGameModal(gameName);
+        };
+
+        function openGameModal(gameName) {
+            const game = games.find(g => g.name === gameName);
+            if (!game) return;
+            const validProds = game.products.filter(p => p.price > 0);
+            if (!validProds.length) {
+                showToast('no packages', true);
+                return;
+            }
+            selectedGameObj = game;
+            selectedDenom = validProds[0];
+
+            document.getElementById('modalTitle').innerText = game.name;
+            document.getElementById('modalCategory').innerText = game.category || 'Game';
+            document.getElementById('modalImg').style.backgroundImage = `url('${game.thumbnail}')`;
+            document.getElementById('playerId').value = '';
+
             let html = '';
-            g.products.forEach((p,i)=>{
+            validProds.forEach((p,i) => {
+                const baseNote = p.originalPrice ? `base RM${p.originalPrice.toFixed(2)}` : '';
                 html += `<div class="denom-opt ${i===0?'selected':''}" onclick="selectDenom(${i})">
-                    <div class="font-bold text-base text-[#dcfce7]">${p.name}</div>
-                    <div class="text-2xl font-black mt-1 text-[#e5ffea]">RM${p.price.toFixed(2)}</div>
-                    <div class="text-[9px] text-[#b0f0cd]">base ${(p.price/(1+MARKUP)).toFixed(2)}</div>
+                    <div class="font-bold text-base text-[#d0e4ff]">${p.name}</div>
+                    <div class="text-2xl font-black mt-1 text-[#e8edf2]">RM${p.price.toFixed(2)}</div>
+                    <div class="text-[9px] text-[#98aec9]">${baseNote}</div>
                 </div>`;
             });
             document.getElementById('denomGrid').innerHTML = html;
-            document.getElementById('playerId').value = '';
+
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('productModal').classList.add('active');
-        };
-        window.selectDenom = (idx)=>{ selectedDenom = selectedGameObj.products[idx]; document.querySelectorAll('.denom-opt').forEach((d,i)=> d.classList.toggle('selected', i===idx)); };
-        window.closeModal = ()=> { document.getElementById('modalOverlay').classList.remove('active'); document.getElementById('productModal').classList.remove('active'); };
+        }
 
-        // cart
-        window.addToCart = ()=>{
-            let pid = document.getElementById('playerId').value.trim();
-            if(!pid) return showToast('enter player id', true);
-            if(!selectedDenom) return;
-            cart.push({ id:Date.now()+Math.random(), game:selectedGameObj.name, pack:selectedDenom.name, price:selectedDenom.price, playerId:pid, thumb:selectedGameObj.thumbnail });
-            localStorage.kryz_cart = JSON.stringify(cart);
-            updateCartCount(); closeModal(); showToast('✅ added');
+        window.selectDenom = (idx) => {
+            const valid = selectedGameObj.products.filter(p=>p.price>0);
+            selectedDenom = valid[idx];
+            document.querySelectorAll('.denom-opt').forEach((d,i) => d.classList.toggle('selected', i===idx));
         };
-        function updateCartCount() { document.getElementById('cartCount').innerText = cart.length; }
+        window.closeModal = () => {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('productModal').classList.remove('active');
+        };
 
-        window.openCart = ()=>{
-            let itemsDiv = document.getElementById('cartItems');
-            if(!cart.length) itemsDiv.innerHTML = '<div class="text-center py-16 text-[#b0f0cd]"><i class="fas fa-box-open text-5xl mb-4"></i><p>empty cart</p></div>';
-            else {
+        // ----- CART & CHECKOUT -----
+        window.addToCart = () => {
+            const pid = document.getElementById('playerId').value.trim();
+            if (!pid) return showToast('enter player id', true);
+            if (!selectedDenom) return;
+            cart.push({
+                id: Date.now() + Math.random(),
+                game: selectedGameObj.name,
+                pack: selectedDenom.name,
+                price: selectedDenom.price,
+                playerId: pid,
+                thumb: selectedGameObj.thumbnail
+            });
+            localStorage.nick_cart = JSON.stringify(cart);
+            updateCartCount();
+            closeModal();
+            showToast('✅ added');
+        };
+
+        function updateCartCount() {
+            document.getElementById('cartCount').innerText = cart.length;
+        }
+
+        window.openCart = () => {
+            const itemsDiv = document.getElementById('cartItems');
+            if (!cart.length) {
+                itemsDiv.innerHTML = '<div class="text-center py-16 text-[#98aec9]"><i class="fas fa-box-open text-5xl mb-4"></i><p>empty cart</p></div>';
+            } else {
                 let total = 0;
-                itemsDiv.innerHTML = cart.map((item,i)=>{
+                itemsDiv.innerHTML = cart.map((item,i) => {
                     total += item.price;
-                    return `<div class="flex gap-4 bg-[#0d2f21] p-5 rounded-3xl border border-[#00ff9d]/50">
-                        <img src="${item.thumb}" class="w-16 h-16 rounded-xl object-cover border border-[#00ff9d]">
-                        <div class="flex-1"><div class="font-bold text-[#e0ffed]">${item.game}</div><div class="text-xs text-[#b0f0cd]">${item.pack}</div><div class="text-xs mt-2 bg-black/40 px-3 py-1 rounded-full text-[#d0ffdd]">${item.playerId}</div></div>
-                        <div class="text-right"><div class="text-xl font-black text-[#ccffdd]">RM${item.price.toFixed(2)}</div><button onclick="removeCartItem(${i})" class="text-red-400 mt-3 text-sm"><i class="fas fa-trash"></i></button></div>
+                    return `<div class="flex gap-4 bg-[#1b2533] p-5 rounded-3xl border border-[#3e5a78]">
+                        <img src="${item.thumb}" class="w-16 h-16 rounded-xl object-cover border border-[#4a6a8a]">
+                        <div class="flex-1"><div class="font-bold text-[#d0e4ff]">${item.game}</div><div class="text-xs text-[#98aec9]">${item.pack}</div><div class="text-xs mt-2 bg-black/40 px-3 py-1 rounded-full text-[#b0c8e5]">${item.playerId}</div></div>
+                        <div class="text-right"><div class="text-xl font-black text-[#e8edf2]">RM${item.price.toFixed(2)}</div><button onclick="removeCartItem(${i})" class="text-red-400 mt-3 text-sm"><i class="fas fa-trash"></i></button></div>
                     </div>`;
                 }).join('');
                 document.getElementById('cartTotal').innerText = `RM${total.toFixed(2)}`;
@@ -543,38 +660,84 @@
             document.getElementById('cartOverlay').classList.add('active');
             document.getElementById('cartPanel').classList.add('active');
         };
-        window.removeCartItem = (idx)=>{ cart.splice(idx,1); localStorage.kryz_cart = JSON.stringify(cart); updateCartCount(); openCart(); };
-        window.closeCart = ()=> { document.getElementById('cartOverlay').classList.remove('active'); document.getElementById('cartPanel').classList.remove('active'); };
 
-        window.checkout = ()=>{
-            if(!cart.length) return showToast('cart empty', true);
-            let msg = '*KRYZ·NET ORDER*%0A'; let total=0;
-            cart.forEach((c,i)=>{ msg+=`%0A${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A`; total+=c.price; });
-            msg+=`%0A*TOTAL: RM${total.toFixed(2)}* (incl. 3%)`;
-            let order = { id:Date.now(), items:[...cart], total, date:new Date().toLocaleDateString() };
-            history.unshift(order); localStorage.kryz_history = JSON.stringify(history);
-            cart = []; localStorage.kryz_cart = JSON.stringify(cart); updateCartCount(); closeCart();
-            window.open(`https://wa.me/60137345871?text=${msg}`,'_blank'); showToast('order sent');
+        window.removeCartItem = (idx) => { cart.splice(idx,1); localStorage.nick_cart = JSON.stringify(cart); updateCartCount(); openCart(); };
+        window.closeCart = () => {
+            document.getElementById('cartOverlay').classList.remove('active');
+            document.getElementById('cartPanel').classList.remove('active');
         };
 
-        window.joinReseller = (lvl)=>{
-            let msg = `*RESELLER KRYZ·NET*%0APackage : ${lvl.toUpperCase()} (lifetime)%0AFee : RM${lvl==='forest'?15:35}%0A%0ASaya nak jadi reseller ${lvl}.`;
-            window.open(`https://wa.me/60137345871?text=${msg}`,'_blank'); showToast('opening wa...');
+        window.checkout = () => {
+            if (!cart.length) return showToast('cart empty', true);
+            let msg = '*NICKSTORE ORDER*%0A';
+            let total = 0;
+            cart.forEach((c,i) => {
+                msg += `%0A${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A`;
+                total += c.price;
+            });
+            msg += `%0A*TOTAL: RM${total.toFixed(2)}* (incl. 3%)`;
+            const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString() };
+            history.unshift(order);
+            localStorage.nick_history = JSON.stringify(history);
+            cart = [];
+            localStorage.nick_cart = JSON.stringify(cart);
+            updateCartCount();
+            closeCart();
+            window.open(`https://wa.me/60137345871?text=${msg}`, '_blank');
+            showToast('order sent');
         };
 
-        function showToast(t) { let to = document.getElementById('toastMsg'); to.innerText=t; to.classList.add('show'); setTimeout(()=>to.classList.remove('show'),2500); }
+        // reseller
+        window.joinReseller = (lvl) => {
+            const fee = lvl === 'grey' ? 15 : 35;
+            const msg = `*RESELLER NICKSTORE*%0APackage : ${lvl.toUpperCase()} (lifetime)%0AFee : RM${fee}%0A%0ASaya nak daftar ${lvl}.`;
+            window.open(`https://wa.me/60137345871?text=${msg}`, '_blank');
+            showToast('opening wa...');
+        };
 
-        window.showView = (v)=>{
-            ['gamesView','resellerView','historyView'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+        // history
+        function renderHistory() {
+            const cont = document.getElementById('historyList');
+            if (!history.length) cont.innerHTML = '<div class="text-center py-16 text-[#98aec9]"><i class="fas fa-history text-5xl mb-4"></i><p>no history</p></div>';
+            else cont.innerHTML = history.map(h => `<div class="bg-[#1b2533] p-6 rounded-3xl border border-[#3e5a78]"><div class="flex justify-between text-xs text-[#b0c8e5]"><span>${h.date}</span><span class="font-black">RM${h.total.toFixed(2)}</span></div>${h.items.map(i => `<div class="flex justify-between text-sm mt-2 border-b border-[#4a607c]/30 pb-1"><span>${i.game}</span><span>${i.playerId}</span></div>`).join('')}</div>`).join('');
+        }
+
+        // view switching
+        window.showView = (v) => {
+            ['gamesView','resellerView','historyView'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(v+'View').classList.remove('hidden');
-            if(v==='history') renderHistory();
+            if (v === 'history') renderHistory();
             toggleMenu();
         };
-        function renderHistory() {
-            let cont = document.getElementById('historyList');
-            if(!history.length) cont.innerHTML = '<div class="text-center py-16 text-[#b0f0cd]"><i class="fas fa-history text-5xl mb-4"></i><p>no history</p></div>';
-            else cont.innerHTML = history.map(h=>`<div class="bg-[#0d2f21] p-6 rounded-3xl border border-[#00ff9d]/50"><div class="flex justify-between text-xs text-[#ccffdd]"><span>${h.date}</span><span class="font-black">RM${h.total.toFixed(2)}</span></div>${h.items.map(i=>`<div class="flex justify-between text-sm mt-2 border-b border-[#00ff9d]/20 pb-1"><span>${i.game}</span><span>${i.playerId}</span></div>`).join('')}</div>`).join('');
+
+        function toggleMenu() { document.getElementById('menuDrop').classList.add('hidden'); }
+
+        function showToast(msg) {
+            const t = document.getElementById('toastMsg');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
         }
+
+        function setupEvents() {
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                document.getElementById('searchRow').classList.toggle('hidden');
+            });
+            document.getElementById('searchInput').addEventListener('input', renderGames);
+            document.getElementById('menuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.getElementById('menuDrop').classList.toggle('hidden');
+            });
+            window.addEventListener('click', (e) => {
+                if (!document.getElementById('menuBtn').contains(e.target)) {
+                    document.getElementById('menuDrop').classList.add('hidden');
+                }
+            });
+        }
+
+        // expose
+        window.renderGames = renderGames;
+        window.toggleMenu = toggleMenu;
     </script>
 </body>
 </html>
