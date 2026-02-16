@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nick-Store · game topup center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -34,6 +33,7 @@
             border-radius: 24px;
             transition: all 0.25s ease;
             box-shadow: 0 10px 20px -8px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
 
         .game-card:hover {
@@ -52,6 +52,8 @@
             font-size: 13px;
             transition: all 0.15s;
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         .category-btn.active {
@@ -61,7 +63,6 @@
             box-shadow: 0 8px 16px rgba(63,140,255,0.35);
         }
 
-        /* FIXED: Denomination cards - 100% CLICKABLE, PERFECT HITBOX */
         .denom-card {
             background: #1e252f;
             border: 1.5px solid #2d3541;
@@ -88,7 +89,6 @@
             background: #262f3b;
         }
 
-        /* Ensure click target is exact */
         .denom-card * {
             pointer-events: none;
         }
@@ -176,20 +176,13 @@
         }
 
         @media (min-width: 640px) {
-            .game-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            .game-grid { grid-template-columns: repeat(3, 1fr); }
         }
-
         @media (min-width: 1024px) {
-            .game-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
-        .category-scroll::-webkit-scrollbar {
-            display: none;
-        }
+        .category-scroll::-webkit-scrollbar { display: none; }
 
         .hero-gradient {
             background: radial-gradient(circle at 30% 30%, #1f3545, #0e1219);
@@ -205,10 +198,6 @@
             border-radius: 100px;
             font-size: 12px;
             font-weight: 600;
-        }
-
-        button, .denom-card, .game-card {
-            -webkit-tap-highlight-color: transparent;
         }
 
         input {
@@ -227,16 +216,23 @@
             outline: none;
             box-shadow: 0 0 0 3px #3f8cff20;
         }
+
+        .price-markup-note {
+            font-size: 0.65rem;
+            color: #8ba9d4;
+            display: block;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
 
     <!-- LOADING SCREEN -->
-    <div id="loadingScreen" class="loading-screen" style="position:fixed; inset:0; background:#0a0e12; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <div id="loadingScreen" style="position:fixed; inset:0; background:#0a0e12; z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
             <div class="w-20 h-20 border-4 border-white/10 border-t-[#3f8cff] rounded-full animate-spin mx-auto mb-5"></div>
             <h1 class="text-3xl font-black tracking-tight" style="background: linear-gradient(to right, #fff, #b0d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NICK·STORE</h1>
-            <p id="loadingText" class="text-sm text-gray-400 mt-4">loading inventory ...</p>
+            <p id="loadingText" class="text-sm text-gray-400 mt-4">connecting to API ...</p>
         </div>
     </div>
 
@@ -247,7 +243,6 @@
                 <span class="text-3xl font-black" style="background: linear-gradient(135deg, #fff, #aad0ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">NICK·STORE</span>
                 <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-[#3f8cff] text-white mb-1">TOPUP</span>
             </div>
-
             <div class="flex items-center gap-3">
                 <button onclick="toggleSearch()" class="w-11 h-11 rounded-2xl bg-[#1e293b] border border-[#3f4b5a] flex items-center justify-center hover:border-[#3f8cff]">
                     <i class="fas fa-search text-white/80"></i>
@@ -274,7 +269,7 @@
             <div class="hero-gradient p-7 mb-9 flex items-center justify-between">
                 <div>
                     <h2 class="text-3xl font-black text-white tracking-tight">🔥 Instant top-up</h2>
-                    <p class="text-gray-300 text-base mt-2 max-w-md">Mobile Legends • Genshin • Valorant • Fortnite • 500+ items</p>
+                    <p class="text-gray-300 text-base mt-2 max-w-md">Mobile Legends • Genshin • Valorant • 500+ items</p>
                     <div class="flex gap-3 mt-5">
                         <span class="nick-badge"><i class="fas fa-bolt mr-1"></i> 2min delivery</span>
                         <span class="nick-badge"><i class="fas fa-shield mr-1"></i> secure</span>
@@ -308,11 +303,10 @@
         </div>
     </main>
 
-    <!-- PRODUCT MODAL - COMPLETELY FIXED HITBOX & HIGHLIGHTING -->
+    <!-- PRODUCT MODAL -->
     <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
     <div id="productModal" class="modal-content">
         <div class="p-7">
-            <!-- HEADER -->
             <div class="flex justify-between items-start mb-7">
                 <div class="flex gap-5">
                     <div id="modalImg" class="w-20 h-20 rounded-2xl bg-cover bg-center border-2 border-[#3f8cff] shadow-2xl"></div>
@@ -326,13 +320,11 @@
                 </button>
             </div>
 
-            <!-- PLAYER ID -->
             <div class="mb-7">
                 <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-2 block">🆔 Player ID / User</label>
                 <input type="text" id="playerId" placeholder="example: 12345678 (required)" class="w-full">
             </div>
 
-            <!-- DENOM GRID - ABSOLUTELY FIXED HITBOX -->
             <div class="mb-8">
                 <label class="text-sm font-bold text-gray-300 uppercase tracking-wider mb-4 block flex items-center gap-2">
                     <i class="fas fa-cube text-[#3f8cff]"></i> Select denomination
@@ -340,7 +332,6 @@
                 <div id="denomGrid" class="grid grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- ADD TO CART BUTTON -->
             <button onclick="addToCart()" class="w-full bg-[#3f8cff] hover:bg-[#2a6fd6] text-white font-extrabold py-5 rounded-2xl text-lg transition flex items-center justify-center gap-3 shadow-xl shadow-[#3f8cff]/30">
                 <i class="fas fa-cart-plus text-xl"></i> ADD TO CART
             </button>
@@ -372,64 +363,95 @@
     <div id="toast" class="toast">✅ item added</div>
 
     <script>
-        // *****************************************************
-        // NICK·STORE - COMPLETELY FIXED DENOMINATION CLICK
-        // PROBLEM: Hitbox was across the screen
-        // FIX: Each button has its own inline click handler with stopPropagation
-        // *****************************************************
-
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSEzcyRUGrj5Z6kL-2Ms19p_Kwi-hcdHp1SAMG9XcxA7dNbih2PyB1l8uQamxpEP3NVSuN1aJj4_oi1/pub?output=csv';
+        // =====================================================
+        // NICK·STORE - INTEGRATED WITH BACKEND API
+        // Base URL: https://api-kryz-net-space.onrender.com/api/v1
+        // Markup: 20% added to all prices
+        // =====================================================
+        const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
+        const MARKUP = 0.20; // 20% markup
         const WA_NUMBER = '60137345871';
 
+        // Global state
         let allProducts = [];
-        let cart = JSON.parse(localStorage.getItem('nick_cart_hitfix')) || [];
-        let history = JSON.parse(localStorage.getItem('nick_history_hitfix')) || [];
+        let gamesList = [];
+        let cart = JSON.parse(localStorage.getItem('nick_cart_api')) || [];
+        let history = JSON.parse(localStorage.getItem('nick_history_api')) || [];
         let selectedGame = null;
         let selectedProduct = null;
         let currentCategory = 'all';
 
-        window.onload = () => { fetchData(); updateCartUI(); };
+        // Init
+        window.addEventListener('load', () => {
+            fetchGames();
+            updateCartUI();
+        });
 
-        async function fetchData() {
-            const loadingText = document.getElementById('loadingText');
+        // Helper: apply markup and round
+        function applyMarkup(price) {
+            return Math.round(price * (1 + MARKUP) * 100) / 100;
+        }
+
+        // Fetch games from API
+        async function fetchGames() {
             try {
-                const response = await fetch(SHEET_URL);
-                const csvData = await response.text();
+                const res = await fetch(`${API_BASE}/public/games`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
                 
-                Papa.parse(csvData, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        allProducts = results.data.map((item, idx) => ({
-                            id: item.id || `nick-${idx}-${Date.now()}`,
-                            name: item.name || 'Diamonds',
-                            game: item.game || 'Game',
-                            price: parseFloat(String(item.price || '10').replace(/[^\d.-]/g, '')) || 19.99,
-                            category: item.cat || 'Popular',
-                            image: item.thumbnail || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.game || 'G')}&background=3f8cff&color=fff&size=200&bold=true`
-                        }));
-                        renderCategories();
-                        renderGames();
-                        document.getElementById('loadingScreen').style.display = 'none';
-                    }
-                });
-            } catch (e) {
-                // RICH FALLBACK DATA
-                allProducts = [
-                    { id: 'ml1', name: '86 Diamonds', game: 'Mobile Legends', price: 12.90, category: 'MOBA', image: 'https://ui-avatars.com/api/?name=ML&background=3f8cff&color=fff&size=200' },
-                    { id: 'ml2', name: '172 Diamonds + bonus', game: 'Mobile Legends', price: 24.90, category: 'MOBA', image: 'https://ui-avatars.com/api/?name=ML&background=3f8cff&color=fff' },
-                    { id: 'ml3', name: '257 Diamonds', game: 'Mobile Legends', price: 36.90, category: 'MOBA', image: 'https://ui-avatars.com/api/?name=ML&background=3f8cff&color=fff' },
-                    { id: 'gi1', name: '60 Genesis Crystals', game: 'Genshin Impact', price: 16.90, category: 'RPG', image: 'https://ui-avatars.com/api/?name=GI&background=3f8cff&color=fff' },
-                    { id: 'gi2', name: '300 Genesis Crystals', game: 'Genshin Impact', price: 32.90, category: 'RPG', image: 'https://ui-avatars.com/api/?name=GI&background=3f8cff&color=fff' },
-                    { id: 'fn1', name: '1000 V-Bucks', game: 'Fortnite', price: 35.00, category: 'Battle', image: 'https://ui-avatars.com/api/?name=FN&background=3f8cff&color=fff' },
-                    { id: 'val1', name: 'Valorant Points 475', game: 'Valorant', price: 25.00, category: 'FPS', image: 'https://ui-avatars.com/api/?name=VAL&background=3f8cff&color=fff' }
-                ];
-                renderCategories();
-                renderGames();
+                if (data.success && data.games?.length) {
+                    gamesList = data.games;
+                    // Create lightweight product placeholders for grid
+                    allProducts = gamesList.map(game => ({
+                        id: `game-${game.slug}`,
+                        name: game.name,
+                        game: game.name,
+                        price: 0, // will be updated when details fetched
+                        category: game.category || 'Games',
+                        image: `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=3f8cff&color=fff&size=200&bold=true`,
+                        slug: game.slug,
+                        isPlaceholder: true
+                    }));
+                    renderCategories();
+                    renderGames();
+                } else {
+                    throw new Error('No games data');
+                }
+            } catch (err) {
+                console.warn('API failed, using demo data', err);
+                loadDemoData();
+            } finally {
                 document.getElementById('loadingScreen').style.display = 'none';
             }
         }
 
+        // Demo fallback
+        function loadDemoData() {
+            allProducts = [
+                { id: 'ml1', name: '86 Diamonds', game: 'Mobile Legends', price: 12.90, category: 'MOBA', image: 'https://ui-avatars.com/api/?name=ML&background=3f8cff&color=fff&size=200' },
+                { id: 'ml2', name: '172 Diamonds', game: 'Mobile Legends', price: 24.90, category: 'MOBA', image: 'https://ui-avatars.com/api/?name=ML&background=3f8cff&color=fff' },
+                { id: 'gi1', name: '60 Crystals', game: 'Genshin Impact', price: 16.90, category: 'RPG', image: 'https://ui-avatars.com/api/?name=GI&background=3f8cff&color=fff' }
+            ];
+            renderCategories();
+            renderGames();
+        }
+
+        // Fetch detailed services for a game
+        async function fetchGameDetails(slug) {
+            try {
+                const res = await fetch(`${API_BASE}/public/games/${slug}`);
+                if (!res.ok) throw new Error('Details failed');
+                const data = await res.json();
+                if (data.success && data.game) {
+                    return data.game;
+                }
+            } catch (err) {
+                console.warn('Could not fetch details for', slug);
+            }
+            return null;
+        }
+
+        // Render category buttons
         function renderCategories() {
             const cats = ['all', ...new Set(allProducts.map(p => p.category))];
             const container = document.getElementById('categoryContainer');
@@ -438,106 +460,157 @@
             ).join('');
         }
 
-        function setCategory(cat) { currentCategory = cat; renderCategories(); renderGames(); }
+        function setCategory(cat) { 
+            currentCategory = cat; 
+            renderCategories(); 
+            renderGames(); 
+        }
 
+        // Render game grid (grouped by game, sorted by lowest price)
         function renderGames(search = '') {
             const grid = document.getElementById('gameGrid');
-            const uniqueGames = [...new Set(allProducts.map(p => p.game))];
-            const filtered = uniqueGames.filter(gameName => {
-                const gameProducts = allProducts.filter(p => p.game === gameName);
-                const matchesCat = currentCategory === 'all' || (gameProducts[0]?.category === currentCategory);
-                const matchesSearch = gameName.toLowerCase().includes(search.toLowerCase());
-                return matchesCat && matchesSearch;
+            
+            // Group by game name
+            const gameMap = new Map();
+            allProducts.forEach(p => {
+                if (!gameMap.has(p.game)) gameMap.set(p.game, []);
+                gameMap.get(p.game).push(p);
             });
 
-            if (filtered.length === 0) {
+            // Filter and map to game entries
+            let gameEntries = Array.from(gameMap.entries()).map(([gameName, products]) => {
+                const validPrices = products.filter(p => p.price > 0).map(p => p.price);
+                const minPrice = validPrices.length ? Math.min(...validPrices) : 0;
+                const first = products[0];
+                return {
+                    name: gameName,
+                    products,
+                    minPrice,
+                    image: first.image,
+                    category: first.category,
+                    slug: first.slug
+                };
+            });
+
+            // Apply category filter
+            if (currentCategory !== 'all') {
+                gameEntries = gameEntries.filter(g => g.category === currentCategory);
+            }
+
+            // Apply search
+            if (search) {
+                gameEntries = gameEntries.filter(g => g.name.toLowerCase().includes(search.toLowerCase()));
+            }
+
+            // Sort by min price
+            gameEntries.sort((a, b) => a.minPrice - b.minPrice);
+
+            if (!gameEntries.length) {
                 grid.innerHTML = '';
                 document.getElementById('emptyState').classList.remove('hidden');
                 return;
             }
             document.getElementById('emptyState').classList.add('hidden');
-            
-            grid.innerHTML = filtered.map(gameName => {
-                const gameData = allProducts.find(p => p.game === gameName);
-                const prices = allProducts.filter(p => p.game === gameName).map(p => p.price);
-                const minPrice = Math.min(...prices);
-                return `
-                    <div class="game-card p-4 flex flex-col cursor-pointer transition" onclick="openGame('${gameName.replace(/'/g, "\\'")}')">
-                        <div class="aspect-square w-full rounded-2xl bg-cover bg-center mb-4 border-2 border-white/10" style="background-image: url('${gameData.image}')"></div>
-                        <div class="px-1">
-                            <h4 class="font-bold text-base text-white truncate">${gameName}</h4>
-                            <div class="flex justify-between items-center mt-2">
-                                <span class="text-sm font-bold text-[#3f8cff]">RM ${minPrice.toFixed(2)}</span>
-                                <span class="text-xs text-gray-400"><i class="fas fa-bolt"></i> instant</span>
-                            </div>
+
+            grid.innerHTML = gameEntries.map(game => `
+                <div class="game-card p-4 flex flex-col" onclick="openGame('${game.name.replace(/'/g, "\\'")}')">
+                    <div class="aspect-square w-full rounded-2xl bg-cover bg-center mb-4 border-2 border-white/10" style="background-image: url('${game.image}')"></div>
+                    <div class="px-1">
+                        <h4 class="font-bold text-base text-white truncate">${game.name}</h4>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-sm font-bold text-[#3f8cff]">${game.minPrice ? 'RM ' + game.minPrice.toFixed(2) : 'Check'}</span>
+                            <span class="text-xs text-gray-400"><i class="fas fa-bolt"></i> instant</span>
                         </div>
+                        <span class="price-markup-note">includes 20% margin</span>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `).join('');
         }
 
-        // ===========================================
-        // CRITICAL FIX: DENOMINATION CLICK HANDLER
-        // Each button gets its own isolated click handler
-        // Hitbox is EXACTLY the button area
-        // ===========================================
-        function openGame(gameName) {
-            selectedGame = gameName;
-            const variants = allProducts.filter(p => p.game === gameName);
-            if (!variants.length) return;
+        // Open game modal – load real services if needed
+        async function openGame(gameName) {
+            const gameEntry = allProducts.find(p => p.game === gameName);
+            if (!gameEntry) return;
 
+            // If placeholder, fetch real details
+            if (gameEntry.isPlaceholder && gameEntry.slug) {
+                showToast('Loading denominations...');
+                const details = await fetchGameDetails(gameEntry.slug);
+                if (details) {
+                    // Convert services to products
+                    const newProducts = [];
+                    if (details.services_by_type) {
+                        Object.values(details.services_by_type).forEach(services => {
+                            services.forEach(s => {
+                                const base = parseFloat(s.price_myr) || 0;
+                                newProducts.push({
+                                    id: s.id,
+                                    name: s.name,
+                                    game: details.name,
+                                    price: applyMarkup(base),
+                                    category: details.category || 'Games',
+                                    image: gameEntry.image,
+                                    originalPrice: base
+                                });
+                            });
+                        });
+                    }
+                    if (newProducts.length) {
+                        // Remove old placeholders for this game
+                        allProducts = allProducts.filter(p => p.game !== gameName);
+                        allProducts.push(...newProducts);
+                        renderGames();
+                        // Now open with real products
+                        setTimeout(() => openGameModal(gameName), 100);
+                        return;
+                    }
+                }
+            }
+            openGameModal(gameName);
+        }
+
+        function openGameModal(gameName) {
+            const variants = allProducts.filter(p => p.game === gameName && p.price > 0);
+            if (!variants.length) {
+                showToast('No products available', 'error');
+                return;
+            }
+
+            selectedGame = gameName;
             const gameData = variants[0];
             document.getElementById('modalTitle').innerText = gameName;
             document.getElementById('modalCategory').innerText = gameData.category;
             document.getElementById('modalImg').style.backgroundImage = `url('${gameData.image}')`;
             document.getElementById('playerId').value = '';
 
-            // Clear selected product
-            selectedProduct = null;
-            
-            // Build denomination grid with DIRECT click handlers
-            // Each button has its own onclick function that calls selectProduct with its ID
-            // No event bubbling, no weird hitbox issues
+            // Sort variants by price low to high
+            variants.sort((a, b) => a.price - b.price);
+
             const denomGrid = document.getElementById('denomGrid');
             let html = '';
-            
             variants.forEach(p => {
+                const originalNote = p.originalPrice ? `<span class="text-[9px] text-gray-500">base RM ${p.originalPrice.toFixed(2)}</span>` : '';
                 html += `<div id="btn-${p.id}" class="denom-card" onclick="event.stopPropagation(); selectProduct('${p.id}');">`;
                 html += `<span class="text-sm font-semibold text-gray-300 mb-1">${p.name}</span>`;
                 html += `<span class="text-xl font-black text-white">RM ${p.price.toFixed(2)}</span>`;
-                html += `<span class="text-[10px] text-[#3f8cff] mt-2">⚡ ready</span>`;
+                html += `<span class="text-[9px] text-[#8cbaff] mt-1">${originalNote}</span>`;
                 html += `</div>`;
             });
-            
             denomGrid.innerHTML = html;
 
-            // Auto select first product
-            if (variants.length > 0) {
-                selectProduct(variants[0].id);
-            }
+            // Auto-select first
+            if (variants.length) selectProduct(variants[0].id);
 
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('productModal').classList.add('active');
         }
 
-        // SELECTION - absolutely clean, no cross-contamination
         function selectProduct(id) {
-            // Prevent any event weirdness
-            if (event) {
-                event.stopPropagation();
-            }
-            
-            // Remove selected class from ALL denomination cards
-            const allCards = document.querySelectorAll('.denom-card');
-            allCards.forEach(card => {
-                card.classList.remove('selected');
-            });
-            
-            // Add selected class ONLY to the clicked card
-            const targetCard = document.getElementById(`btn-${id}`);
-            if (targetCard) {
-                targetCard.classList.add('selected');
-                // Find and store the selected product
+            if (event) event.stopPropagation();
+            document.querySelectorAll('.denom-card').forEach(c => c.classList.remove('selected'));
+            const card = document.getElementById(`btn-${id}`);
+            if (card) {
+                card.classList.add('selected');
                 selectedProduct = allProducts.find(p => p.id === id);
             }
         }
@@ -549,14 +622,8 @@
 
         function addToCart() {
             const pid = document.getElementById('playerId').value.trim();
-            if (!pid) {
-                showToast('❌ Please enter Player ID');
-                return;
-            }
-            if (!selectedProduct) {
-                showToast('❌ Select a package');
-                return;
-            }
+            if (!pid) return showToast('❌ Enter Player ID');
+            if (!selectedProduct) return showToast('❌ Select a package');
 
             cart.push({
                 cartId: Date.now() + Math.random(),
@@ -566,7 +633,6 @@
                 playerId: pid,
                 image: selectedProduct.image
             });
-
             saveCart();
             closeModal();
             showToast('✅ Added to cart');
@@ -578,7 +644,7 @@
             const totalEl = document.getElementById('cartTotal');
             document.getElementById('cartCount').innerText = cart.length;
 
-            if (cart.length === 0) {
+            if (!cart.length) {
                 container.innerHTML = `<div class="text-center py-16 text-gray-400 bg-[#1b232e] rounded-2xl"><i class="fas fa-shopping-cart text-5xl mb-4 opacity-40"></i><p class="text-lg">Cart empty</p></div>`;
                 totalEl.innerText = 'RM 0.00';
                 return;
@@ -611,16 +677,16 @@
             updateCartUI(); 
             showToast('🗑️ Removed'); 
         }
-        
+
         function saveCart() { 
-            localStorage.setItem('nick_cart_hitfix', JSON.stringify(cart)); 
+            localStorage.setItem('nick_cart_api', JSON.stringify(cart)); 
         }
-        
+
         function openCart() { 
             document.getElementById('cartOverlay').classList.add('active'); 
             document.getElementById('cartSidebar').classList.add('active'); 
         }
-        
+
         function closeCart() { 
             document.getElementById('cartOverlay').classList.remove('active'); 
             document.getElementById('cartSidebar').classList.remove('active'); 
@@ -634,14 +700,13 @@
                 msg += `%0A${idx+1}. *${i.game}*%0A   ➔ ${i.product}%0A   ➔ ID: ${i.playerId}%0A   ➔ RM ${i.price.toFixed(2)}%0A`;
                 total += i.price;
             });
-            msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}*`;
+            msg += `%0A*💰 TOTAL: RM ${total.toFixed(2)}* (includes 20% margin)`;
+            
             const order = { id: Date.now(), items: [...cart], total, date: new Date().toLocaleDateString('en-MY') };
             history.unshift(order);
-            localStorage.setItem('nick_history_hitfix', JSON.stringify(history));
-            cart = []; 
-            saveCart(); 
-            updateCartUI(); 
-            closeCart();
+            localStorage.setItem('nick_history_api', JSON.stringify(history));
+            
+            cart = []; saveCart(); updateCartUI(); closeCart();
             window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
             showToast('📲 Order sent');
         }
@@ -672,11 +737,11 @@
         function toggleSearch() { 
             document.getElementById('searchBar').classList.toggle('hidden'); 
         }
-        
+
         function handleSearch(val) { 
             renderGames(val); 
         }
-        
+
         function showToast(msg) { 
             let t = document.getElementById('toast'); 
             t.innerText = msg; 
