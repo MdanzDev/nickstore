@@ -6,27 +6,109 @@
     <title>NickStore · 60+ Games</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            background: #0b0f15;
-            font-family: 'Inter', sans-serif;
-            color: #f0f4fa;
+        
+        /* Root color system - fixed professional palette */
+        :root {
+            /* Light mode */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-tertiary: #64748b;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #2563eb;
+            --accent-soft: #dbeafe;
+            --card-bg: #ffffff;
+            --hover-bg: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --ripple-color: rgba(59, 130, 246, 0.3);
         }
+
+        /* Dark mode */
+        .dark {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-light: #334155;
+            --border-medium: #475569;
+            --accent-primary: #60a5fa;
+            --accent-secondary: #3b82f6;
+            --accent-soft: #1e293b;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+            --ripple-color: rgba(96, 165, 250, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Smooth transitions */
+        .bg-primary { background-color: var(--bg-primary); }
+        .bg-secondary { background-color: var(--bg-secondary); }
+        .bg-tertiary { background-color: var(--bg-tertiary); }
+        .text-primary { color: var(--text-primary); }
+        .text-secondary { color: var(--text-secondary); }
+        .text-tertiary { color: var(--text-tertiary); }
+        .border-custom { border-color: var(--border-light); }
+        .border-custom-medium { border-color: var(--border-medium); }
+        .accent-bg { background-color: var(--accent-soft); }
+        .accent-text { color: var(--accent-primary); }
+        .accent-border { border-color: var(--accent-primary); }
+        .card-bg { background-color: var(--card-bg); }
+        .hover-bg:hover { background-color: var(--hover-bg); }
+
+        /* Layout */
         html { scroll-behavior: smooth; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1e2732; }
-        ::-webkit-scrollbar-thumb { background: #3e5368; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-tertiary); }
+        ::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 10px; }
         
+        /* Game Card with Ripple Effect */
         .game-card {
+            position: relative;
+            overflow: hidden;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
         }
         .game-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
         }
         
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: var(--ripple-color);
+            transform: scale(0);
+            animation: ripple-animation 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Featured Scroll */
         .featured-scroll {
             overflow-x: auto;
             scrollbar-width: thin;
@@ -34,20 +116,30 @@
             padding-bottom: 8px;
         }
         
+        /* Category Pills */
+        .category-pill {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
         .category-pill.active {
-            background: linear-gradient(135deg, #4f7eb3 0%, #2c4b78 100%);
+            background-color: var(--accent-primary);
             color: white;
-            border-color: transparent;
+            border-color: var(--accent-primary);
         }
         
         .hero-gradient {
-            background: linear-gradient(135deg, #0f1a24 0%, #1a2a38 100%);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 1px solid var(--border-light);
         }
         
         .glass-modal {
-            background: rgba(20, 30, 40, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
         }
         
         .game-logo {
@@ -55,7 +147,7 @@
             height: 120px;
             object-fit: contain;
             padding: 16px;
-            background: #121c28;
+            background-color: var(--bg-tertiary);
             border-radius: 16px 16px 0 0;
         }
         
@@ -64,53 +156,134 @@
             height: 140px;
             object-fit: contain;
             padding: 20px;
-            background: #121c28;
+            background-color: var(--bg-tertiary);
             border-radius: 20px;
-            border: 1px solid #2d4057;
+            border: 1px solid var(--border-light);
         }
+
+        /* Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                var(--bg-tertiary) 25%,
+                var(--border-light) 50%,
+                var(--bg-tertiary) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .skeleton-image {
+            width: 100%;
+            height: 120px;
+            background: var(--bg-tertiary);
+        }
+
+        .skeleton-line {
+            height: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin: 8px;
+        }
+
+        .skeleton-line.short {
+            width: 60%;
+        }
+
+        /* Fast Loading Optimizations */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .icon-sm { width: 16px; height: 16px; }
+        .icon-lg { width: 24px; height: 24px; }
     </style>
 </head>
-<body>
+<body class="bg-primary text-primary">
 
     <!-- loading screen -->
-    <div id="loading" style="position:fixed; inset:0; background:#0a0c10; z-index:9999; display:flex; align-items:center; justify-content:center;">
+    <div id="loading" style="position:fixed; inset:0; background:var(--bg-primary); z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
-            <div class="w-20 h-20 mx-auto rounded-2xl border border-[#3a4a5a] flex items-center justify-center">
-                <span class="font-bold text-3xl text-[#e8edf2]">N</span>
+            <div class="w-20 h-20 mx-auto rounded-2xl border border-custom flex items-center justify-center">
+                <span class="font-bold text-3xl accent-text">N</span>
             </div>
-            <p class="mt-4 text-[#98aec9] text-xs">NickStore · 60+ games</p>
+            <p class="mt-4 text-tertiary text-xs">NickStore · 60+ games</p>
         </div>
     </div>
 
     <!-- header -->
-    <header class="sticky top-0 z-50 bg-[#0b0f15]/90 backdrop-blur-md border-b border-[#2a3545] px-4 py-3">
+    <header class="sticky top-0 z-50 bg-primary/90 backdrop-blur-md border-b border-custom px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div onclick="showView('games')" class="flex items-center gap-2 cursor-pointer">
-                <span class="text-2xl font-extrabold bg-gradient-to-r from-[#a0c0f0] to-[#e0eaff] text-transparent bg-clip-text">NICKSTORE</span>
-                <span class="bg-[#2e3b4e] text-[#b0d0f0] text-[10px] font-semibold px-2 py-1 rounded-full">60+ GAMES</span>
+                <span class="text-2xl font-extrabold accent-text">NICKSTORE</span>
+                <span class="bg-tertiary text-tertiary text-[10px] font-semibold px-2 py-1 rounded-full">60+ GAMES</span>
             </div>
             <div class="flex items-center gap-4">
-                <button id="searchBtn" class="lg:hidden w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center"><i class="fas fa-search text-sm text-[#b0c4de]"></i></button>
+                <!-- Theme Toggle -->
+                <button id="themeToggle" class="w-9 h-9 rounded-full bg-tertiary flex items-center justify-center relative overflow-hidden">
+                    <svg class="icon" id="themeIcon">
+                        <use href="#sun-icon" class="dark:hidden"/>
+                        <use href="#moon-icon" class="hidden dark:block"/>
+                    </svg>
+                </button>
+
+                <button id="searchBtn" class="lg:hidden w-9 h-9 rounded-full bg-tertiary flex items-center justify-center relative overflow-hidden">
+                    <svg class="icon"><use href="#search-icon"/></svg>
+                </button>
                 <div class="hidden lg:block relative">
-                    <input type="text" id="searchInputDesktop" placeholder="Search 60+ games..." class="w-64 bg-[#1f2a36] border border-[#3e556e] rounded-full py-2 px-4 pl-10 text-sm text-white placeholder:text-[#98aec9] focus:outline-none focus:ring-2 focus:ring-[#4f7eb3]">
-                    <i class="fas fa-search absolute left-3 top-3 text-[#98aec9] text-sm"></i>
+                    <input type="text" id="searchInputDesktop" placeholder="Search 60+ games..." class="w-64 bg-tertiary border border-custom rounded-full py-2 px-4 pl-10 text-sm text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary">
+                    <svg class="icon absolute left-3 top-2.5 text-tertiary"><use href="#search-icon"/></svg>
                 </div>
-                <button onclick="openCart()" class="relative w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center">
-                    <i class="fas fa-shopping-cart text-sm text-[#b0c4de]"></i>
-                    <span id="cartCount" class="absolute -top-1 -right-1 bg-[#e8edf2] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                <button onclick="openCart()" class="relative w-9 h-9 rounded-full bg-tertiary flex items-center justify-center overflow-hidden">
+                    <svg class="icon"><use href="#cart-icon"/></svg>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-accent-primary text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
                 </button>
                 <div class="relative">
-                    <button id="menuBtn" class="w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center"><i class="fas fa-user text-sm text-[#b0c4de]"></i></button>
-                    <div id="menuDrop" class="absolute right-0 mt-2 w-40 bg-[#1e2a38] border border-[#3e5368] rounded-xl hidden z-50 text-sm">
-                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055] rounded-t-xl">🎮 Store</button>
-                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055]">👑 Reseller</button>
-                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055] rounded-b-xl">📋 History</button>
+                    <button id="menuBtn" class="w-9 h-9 rounded-full bg-tertiary flex items-center justify-center overflow-hidden">
+                        <svg class="icon"><use href="#user-icon"/></svg>
+                    </button>
+                    <div id="menuDrop" class="absolute right-0 mt-2 w-40 bg-secondary border border-custom rounded-xl hidden z-50 text-sm">
+                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-4 py-3 hover-bg rounded-t-xl relative overflow-hidden">
+                            <svg class="icon inline mr-2"><use href="#grid-icon"/></svg>Store
+                        </button>
+                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-4 py-3 hover-bg relative overflow-hidden">
+                            <svg class="icon inline mr-2"><use href="#crown-icon"/></svg>Reseller
+                        </button>
+                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-4 py-3 hover-bg rounded-b-xl relative overflow-hidden">
+                            <svg class="icon inline mr-2"><use href="#history-icon"/></svg>History
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="searchRow" class="lg:hidden mt-3 hidden">
-            <input type="text" id="searchInputMobile" placeholder="search 60+ games..." class="w-full bg-[#1f2a36] border border-[#3e556e] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#98aec9]">
+            <input type="text" id="searchInputMobile" placeholder="search 60+ games..." class="w-full bg-tertiary border border-custom rounded-xl px-4 py-3 text-sm text-primary placeholder:text-tertiary">
         </div>
     </header>
 
@@ -120,42 +293,45 @@
         <div id="gamesView">
             <!-- HERO SECTION -->
             <section class="hero-gradient rounded-3xl p-6 md:p-10 my-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-[#3e68a0] opacity-10 rounded-full blur-3xl"></div>
                 <div class="relative z-10">
                     <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b0d0ff] to-[#ffffff]">60+ Games · One Store</span>
+                        <span class="accent-text">60+ Games</span><br>
+                        <span class="text-primary">One Store</span>
                     </h1>
-                    <p class="text-[#b0c8e5] mt-2 max-w-lg">MLBB · Genshin · Valorant · CODM · Free Fire & more</p>
+                    <p class="text-secondary mt-2 max-w-lg">MLBB · Genshin · Valorant · CODM · Free Fire & more</p>
                     <div class="mt-6 flex flex-col sm:flex-row gap-3">
                         <div class="relative flex-1">
-                            <i class="fas fa-search absolute left-4 top-3.5 text-[#98aec9]"></i>
-                            <input type="text" id="heroSearch" placeholder="Search Mobile Legends, Genshin, Valorant..." class="w-full bg-[#1f2e40] border border-[#4a6c8f] rounded-full py-3 pl-12 pr-4 text-white placeholder:text-[#8aa5c2] focus:outline-none focus:ring-2 focus:ring-[#5f8bc9]">
+                            <svg class="icon absolute left-4 top-3.5 text-tertiary"><use href="#search-icon"/></svg>
+                            <input type="text" id="heroSearch" placeholder="Search Mobile Legends, Genshin, Valorant..." class="w-full bg-tertiary border border-custom rounded-full py-3 pl-12 pr-4 text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary">
                         </div>
-                        <button onclick="triggerSearch()" class="bg-[#e8edf2] text-[#0b0f15] font-semibold px-8 py-3 rounded-full hover:bg-white transition">Search</button>
+                        <button onclick="triggerSearch()" class="bg-accent-primary text-white font-semibold px-8 py-3 rounded-full hover:opacity-90 transition relative overflow-hidden">Search</button>
                     </div>
                 </div>
             </section>
 
             <!-- STATS CARDS -->
             <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="bg-[#121c28] border border-[#2d4057] rounded-2xl p-4 text-center">
-                    <div class="text-3xl font-bold text-[#b0d0ff]" id="gameCount">0</div>
-                    <div class="text-xs text-[#98b1cf]">games available</div>
+                <div class="card-bg border border-custom rounded-2xl p-4 text-center">
+                    <div class="text-3xl font-bold accent-text" id="gameCount">0</div>
+                    <div class="text-xs text-tertiary">games available</div>
                 </div>
-                <div class="bg-[#121c28] border border-[#2d4057] rounded-2xl p-4 text-center">
-                    <div class="text-3xl font-bold text-[#b0d0ff]" id="productCount">0</div>
-                    <div class="text-xs text-[#98b1cf]">top-up items</div>
+                <div class="card-bg border border-custom rounded-2xl p-4 text-center">
+                    <div class="text-3xl font-bold accent-text" id="productCount">0</div>
+                    <div class="text-xs text-tertiary">top-up items</div>
                 </div>
             </div>
 
             <!-- CATEGORIES -->
             <div class="category-scroll flex gap-2 pb-2 mb-6 overflow-x-auto" id="catContainer"></div>
 
-            <!-- FEATURED GAMES (horizontal scroll) -->
+            <!-- FEATURED GAMES -->
             <section class="mb-10">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold"><i class="fas fa-fire text-[#f97316] mr-2"></i>Featured Games</h2>
-                    <span class="text-sm text-[#98b1cf]">60+ titles</span>
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <svg class="icon-lg text-warning"><use href="#fire-icon"/></svg>
+                        Featured Games
+                    </h2>
+                    <span class="text-sm text-tertiary" id="featuredCount">60+ titles</span>
                 </div>
                 <div class="featured-scroll flex gap-4 pb-2" id="featuredContainer"></div>
             </section>
@@ -163,13 +339,16 @@
             <!-- ALL GAMES GRID -->
             <section>
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold"><i class="fas fa-gamepad mr-2"></i>All Games</h2>
-                    <span class="text-sm text-[#98b1cf]" id="showingCount">showing 0 games</span>
+                    <h2 class="text-xl font-bold flex items-center gap-2">
+                        <svg class="icon-lg"><use href="#grid-icon"/></svg>
+                        All Games
+                    </h2>
+                    <span class="text-sm text-tertiary" id="showingCount">showing 0 games</span>
                 </div>
                 <div id="gameGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
                 <div id="emptyGrid" class="hidden text-center py-20">
-                    <i class="fas fa-box-open text-5xl text-[#3a5068] mb-4"></i>
-                    <p class="text-[#98aec9]">No games found</p>
+                    <svg class="icon-lg mx-auto mb-4 text-tertiary" style="width:48px;height:48px"><use href="#box-icon"/></svg>
+                    <p class="text-tertiary">No games found</p>
                 </div>
             </section>
         </div>
@@ -177,31 +356,37 @@
         <!-- RESELLER VIEW -->
         <div id="resellerView" class="hidden py-6">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-[#1f2a36] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
+                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-tertiary border border-custom flex items-center justify-center relative overflow-hidden">
+                    <svg class="icon"><use href="#arrow-left-icon"/></svg>
+                </button>
                 <h2 class="text-2xl font-bold">Reseller Program</h2>
-                <span class="bg-[#2e3b4e] text-xs px-3 py-1 rounded-full border border-[#4a607c]">LIFETIME</span>
+                <span class="bg-tertiary text-tertiary text-xs px-3 py-1 rounded-full border border-custom">LIFETIME</span>
             </div>
             <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <div class="bg-[#121c28] border border-[#2d4057] rounded-3xl p-6">
-                    <span class="inline-block bg-[#2a384b] text-xs font-bold px-4 py-1 rounded-full mb-4"><i class="fas fa-crown mr-1"></i>GREY</span>
-                    <div class="text-3xl font-bold text-[#b0d0ff] mb-2">RM15<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
+                <div class="card-bg border border-custom rounded-3xl p-6">
+                    <span class="inline-block bg-tertiary text-secondary text-xs font-bold px-4 py-1 rounded-full mb-4 flex items-center gap-1 w-fit">
+                        <svg class="icon-sm"><use href="#crown-icon"/></svg>GREY
+                    </span>
+                    <div class="text-3xl font-bold accent-text mb-2">RM15<span class="text-sm text-tertiary ml-2">lifetime</span></div>
                     <ul class="space-y-3 my-6 text-sm">
-                        <li class="flex gap-2"><i class="fas fa-check text-[#6d9eff] w-5"></i>Cheaper than retail</li>
-                        <li class="flex gap-2"><i class="fas fa-robot text-[#6d9eff] w-5"></i>Telegram bot access</li>
-                        <li class="flex gap-2"><i class="fas fa-infinity text-[#6d9eff] w-5"></i>Lifetime validity</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#check-icon"/></svg>Cheaper than retail</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#bot-icon"/></svg>Telegram bot access</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#infinity-icon"/></svg>Lifetime validity</li>
                     </ul>
-                    <button onclick="joinReseller('grey')" class="w-full py-3 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-semibold rounded-full text-sm">Join Grey</button>
+                    <button onclick="joinReseller('grey')" class="w-full py-3 bg-accent-primary text-white font-semibold rounded-full text-sm hover:opacity-90 transition relative overflow-hidden">Join Grey</button>
                 </div>
-                <div class="bg-[#121c28] border-2 border-[#5f8bc9] rounded-3xl p-6 relative">
-                    <span class="absolute top-4 right-4 bg-[#e8edf2] text-black text-xs font-bold px-3 py-1 rounded-full">POPULAR</span>
-                    <span class="inline-block bg-[#2a384b] text-xs font-bold px-4 py-1 rounded-full mb-4"><i class="fas fa-gem mr-1"></i>SLATE</span>
-                    <div class="text-3xl font-bold text-[#b0d0ff] mb-2">RM35<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
+                <div class="card-bg border-2 border-accent-primary rounded-3xl p-6 relative">
+                    <span class="absolute top-4 right-4 bg-accent-primary text-white text-xs font-bold px-3 py-1 rounded-full">POPULAR</span>
+                    <span class="inline-block bg-tertiary text-secondary text-xs font-bold px-4 py-1 rounded-full mb-4 flex items-center gap-1 w-fit">
+                        <svg class="icon-sm"><use href="#gem-icon"/></svg>SLATE
+                    </span>
+                    <div class="text-3xl font-bold accent-text mb-2">RM35<span class="text-sm text-tertiary ml-2">lifetime</span></div>
                     <ul class="space-y-3 my-6 text-sm">
-                        <li class="flex gap-2"><i class="fas fa-check text-[#6d9eff] w-5"></i>Cheaper than grey</li>
-                        <li class="flex gap-2"><i class="fas fa-robot text-[#6d9eff] w-5"></i>Full bot automation</li>
-                        <li class="flex gap-2"><i class="fas fa-headset text-[#6d9eff] w-5"></i>Priority support</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#check-icon"/></svg>Cheaper than grey</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#bot-icon"/></svg>Full bot automation</li>
+                        <li class="flex gap-2"><svg class="icon-sm text-success"><use href="#headset-icon"/></svg>Priority support</li>
                     </ul>
-                    <button onclick="joinReseller('slate')" class="w-full py-3 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-semibold rounded-full text-sm">Join Slate</button>
+                    <button onclick="joinReseller('slate')" class="w-full py-3 bg-accent-primary text-white font-semibold rounded-full text-sm hover:opacity-90 transition relative overflow-hidden">Join Slate</button>
                 </div>
             </div>
         </div>
@@ -209,7 +394,9 @@
         <!-- HISTORY VIEW -->
         <div id="historyView" class="hidden py-6">
             <div class="flex items-center gap-3 mb-6">
-                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-[#1f2a36] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
+                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-tertiary border border-custom flex items-center justify-center relative overflow-hidden">
+                    <svg class="icon"><use href="#arrow-left-icon"/></svg>
+                </button>
                 <h2 class="text-2xl font-bold">Order History</h2>
             </div>
             <div id="historyList" class="space-y-3"></div>
@@ -217,177 +404,479 @@
     </main>
 
     <!-- WhatsApp FAB -->
-    <a href="https://wa.me/60197661697" target="_blank" class="fixed bottom-5 right-5 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition z-50"><i class="fab fa-whatsapp text-2xl text-white"></i></a>
+    <a href="https://wa.me/60197661697" target="_blank" class="fixed bottom-5 right-5 w-14 h-14 bg-success rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition z-50 relative overflow-hidden">
+        <svg class="icon-lg text-white"><use href="#whatsapp-icon"/></svg>
+    </a>
 
     <!-- MODALS -->
-    <div id="modalOverlay" class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] hidden" onclick="closeModal()"></div>
+    <div id="modalOverlay" class="overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] hidden" onclick="closeModal()"></div>
     <div id="productModal" class="modal-sheet fixed bottom-0 left-0 right-0 glass-modal rounded-t-3xl transform translate-y-full transition-transform duration-300 z-[1001] max-h-[85vh] overflow-y-auto hidden">
         <div class="p-6">
             <div class="flex justify-between items-start mb-6">
                 <div class="flex gap-4">
-                    <img id="modalImg" class="w-20 h-20 rounded-2xl bg-[#1f2e40] object-contain p-2 border border-[#4a6a8a]" src="" alt="">
+                    <img id="modalImg" class="w-20 h-20 rounded-2xl bg-tertiary object-contain p-2 border border-custom" src="" alt="">
                     <div>
                         <h3 id="modalTitle" class="text-xl font-bold"></h3>
-                        <p id="modalCategory" class="text-sm text-[#98aec9] mt-1"></p>
+                        <p id="modalCategory" class="text-sm text-tertiary mt-1"></p>
                     </div>
                 </div>
-                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-[#26384f] flex items-center justify-center"><i class="fas fa-times text-lg"></i></button>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center relative overflow-hidden">
+                    <svg class="icon"><use href="#x-icon"/></svg>
+                </button>
             </div>
             <div class="mb-5">
-                <label class="text-sm font-medium mb-2 block text-[#b0c8e5]">Player ID / Account</label>
-                <input type="text" id="playerId" placeholder="Enter your player ID" class="w-full bg-[#1b2a38] border border-[#3e5a78] rounded-2xl px-5 py-4 text-white placeholder:text-[#6a88aa] focus:outline-none focus:ring-2 focus:ring-[#5f8bc9]">
+                <label class="text-sm font-medium mb-2 block text-secondary">Player ID / Account</label>
+                <input type="text" id="playerId" placeholder="Enter your player ID" class="w-full bg-tertiary border border-custom rounded-2xl px-5 py-4 text-primary placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-accent-primary">
             </div>
             <div class="mb-6">
-                <label class="text-sm font-medium mb-2 block text-[#b0c8e5]">Select Package</label>
+                <label class="text-sm font-medium mb-2 block text-secondary">Select Package</label>
                 <div id="denomGrid" class="grid grid-cols-2 gap-3"></div>
             </div>
-            <button onclick="addToCart()" class="w-full py-4 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-bold rounded-2xl text-lg">Add to Cart</button>
-            <p class="text-xs text-center text-[#6a88aa] mt-4">🔒 Secure checkout via WhatsApp</p>
+            <button onclick="addToCart()" class="w-full py-4 bg-accent-primary text-white font-bold rounded-2xl text-lg hover:opacity-90 transition relative overflow-hidden">Add to Cart</button>
+            <p class="text-xs text-center text-tertiary mt-4">🔒 Secure checkout via WhatsApp</p>
         </div>
     </div>
 
-    <div id="cartOverlay" class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] hidden" onclick="closeCart()"></div>
+    <div id="cartOverlay" class="overlay fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000] hidden" onclick="closeCart()"></div>
     <div id="cartPanel" class="cart-panel fixed top-0 right-0 bottom-0 w-full max-w-md glass-modal transform translate-x-full transition-transform duration-300 z-[1001] flex flex-col">
-        <div class="p-5 border-b border-[#3e5a78] flex justify-between items-center">
+        <div class="p-5 border-b border-custom flex justify-between items-center">
             <h3 class="text-xl font-bold">Your Cart</h3>
-            <button onclick="closeCart()" class="w-10 h-10 rounded-full bg-[#26384f] flex items-center justify-center"><i class="fas fa-times"></i></button>
+            <button onclick="closeCart()" class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center relative overflow-hidden">
+                <svg class="icon"><use href="#x-icon"/></svg>
+            </button>
         </div>
         <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
-        <div class="p-5 border-t border-[#3e5a78]">
+        <div class="p-5 border-t border-custom">
             <div class="flex justify-between text-lg font-bold mb-4">
-                <span class="text-[#b0c8e5]">Total</span>
-                <span id="cartTotal">RM0</span>
+                <span class="text-secondary">Total</span>
+                <span id="cartTotal" class="accent-text">RM0</span>
             </div>
-            <button onclick="checkout()" class="w-full py-4 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-bold rounded-2xl">Checkout via WhatsApp</button>
+            <button onclick="checkout()" class="w-full py-4 bg-accent-primary text-white font-bold rounded-2xl hover:opacity-90 transition relative overflow-hidden">Checkout via WhatsApp</button>
         </div>
     </div>
 
-    <div id="toastMsg" class="toast fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#1e2a36] border border-[#4e6b88] text-white px-6 py-3 rounded-full shadow-lg transform translate-y-[200%] transition-transform duration-200 z-[10000] text-sm font-medium">✅ added</div>
+    <div id="toastMsg" class="toast fixed bottom-5 left-1/2 -translate-x-1/2 bg-secondary border border-custom text-primary px-6 py-3 rounded-full shadow-lg transform translate-y-[200%] transition-transform duration-200 z-[10000] text-sm font-medium">✅ added</div>
+
+    <!-- SVG Sprite -->
+    <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <!-- Sun Icon -->
+            <symbol id="sun-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </symbol>
+            <!-- Moon Icon -->
+            <symbol id="moon-icon" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </symbol>
+            <!-- Search Icon -->
+            <symbol id="search-icon" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+            </symbol>
+            <!-- Cart Icon -->
+            <symbol id="cart-icon" viewBox="0 0 24 24">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </symbol>
+            <!-- User Icon -->
+            <symbol id="user-icon" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </symbol>
+            <!-- Grid Icon -->
+            <symbol id="grid-icon" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+            </symbol>
+            <!-- Crown Icon -->
+            <symbol id="crown-icon" viewBox="0 0 24 24">
+                <path d="M2 4l3 12h14l3-12-6 5-5-8-5 8-6-5z"/>
+            </symbol>
+            <!-- History Icon -->
+            <symbol id="history-icon" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </symbol>
+            <!-- Fire Icon -->
+            <symbol id="fire-icon" viewBox="0 0 24 24">
+                <path d="M8.5 14.5A4.5 4.5 0 0 1 13 10M13 2c-2 3-3 5-3 8 0 3 2 5 5 5 3 0 5-3 5-7 0-3-2-5-3-6-1 2-2 4-4 4-2 0-3-2-3-4 0-2 1-3 1-4-1 0-3 1-4 3 0 2 1 4 1 5"/>
+            </symbol>
+            <!-- Check Icon -->
+            <symbol id="check-icon" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+            </symbol>
+            <!-- Bot Icon -->
+            <symbol id="bot-icon" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/>
+                <path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/>
+            </symbol>
+            <!-- Infinity Icon -->
+            <symbol id="infinity-icon" viewBox="0 0 24 24">
+                <path d="M18.178 8c5.096 0 5.096 8 0 8-5.096 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.643-8 12.739-8z"/>
+            </symbol>
+            <!-- Gem Icon -->
+            <symbol id="gem-icon" viewBox="0 0 24 24">
+                <polygon points="6 3 18 3 22 9 12 22 2 9 6 3"/><path d="M12 22l4-13-4-6-4 6 4 13z"/>
+            </symbol>
+            <!-- Headset Icon -->
+            <symbol id="headset-icon" viewBox="0 0 24 24">
+                <path d="M3 12h2v6H3zM19 12h2v6h-2zM4 12c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                <path d="M4 18v2c0 1.1.9 2 2 2h3"/>
+                <path d="M20 18v2c0 1.1-.9 2-2 2h-3"/>
+            </symbol>
+            <!-- Arrow Left Icon -->
+            <symbol id="arrow-left-icon" viewBox="0 0 24 24">
+                <path d="M19 12H5M12 5l-7 7 7 7"/>
+            </symbol>
+            <!-- X Icon -->
+            <symbol id="x-icon" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </symbol>
+            <!-- Box Icon -->
+            <symbol id="box-icon" viewBox="0 0 24 24">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.29 7 12 12 20.71 7"/><line x1="12" y1="22" x2="12" y2="12"/>
+            </symbol>
+            <!-- WhatsApp Icon -->
+            <symbol id="whatsapp-icon" viewBox="0 0 24 24">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </symbol>
+        </defs>
+    </svg>
 
     <script>
         // === CONFIG ===
         const WHATSAPP_NUMBER = '60197661697';
-        const MARKUP = 0.03;
+        const MARKUP = 0.05;
+        const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
 
-        // === GAME LOGOS (official sources where available) ===
+        // === GAME LOGOS ===
         const GAME_LOGOS = {
-            // Official logos from Wikimedia / brand sources
             'Mobile Legends': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends (Brazil)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends (Global x Try)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends (Vilog)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends Fast': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends MY/SG': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends PH': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends Rusia': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'Mobile Legends Singapore': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            'MLBB Gift Item': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
-            
             'Genshin Impact': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Genshin_Impact_logo.svg',
             'Honkai Impact Asia': 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Honkai_Impact_3rd_logo.svg',
             'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
-            
-            'Valorant': 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fassets.brandfetch.io%2FidVL3oJmXw%2FidX4rqOJ_8.png&w=3840&q=75',
-            
+            'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
             'Free Fire (ID)': 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Garena_Free_Fire_Logo.png',
             'Free Fire (MY/SG)': 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Garena_Free_Fire_Logo.png',
-            
             'Call Of Duty Mobile': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Call_of_Duty_Mobile_logo.png/640px-Call_of_Duty_Mobile_logo.png',
-            
             'Arena of Valor': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Arena_of_Valor_logo.png',
-            
             'PUBG Mobile Global': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
             'PUBG Mobile ID': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
             'PUBG Mobile Code': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
-            
             'Delta Force (Global)': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Delta_Force_Logo_CN.png/640px-Delta_Force_Logo_CN.png',
             'Garena Delta Force': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Delta_Force_Logo_CN.png/640px-Delta_Force_Logo_CN.png',
-            
-            'Eggy party': 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fassets.brandfetch.io%2FidVL3oJmXw%2FidX4rqOJ_8.png&w=3840&q=75',
-            
             'Wuthering Waves': 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Wuthering_Waves_logo.png',
             'ZZZ Zenless Zone Zero': 'https://upload.wikimedia.org/wikipedia/commons/8/86/Zenless_Zone_Zero_logo.png',
-            
             'Roblox Via-Login': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Roblox_logo.svg/640px-Roblox_logo.svg.png',
             'Voucher Roblox': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Roblox_logo.svg/640px-Roblox_logo.svg.png',
-            
             'League of Legends: Wild Rift': 'https://upload.wikimedia.org/wikipedia/commons/6/69/League_of_Legends_Wild_Rift_logo.png',
-            
             'Honor of Kings': 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Honor_of_Kings_logo.png'
         };
 
-        // === 60 GAMES LIST (based on user input) ===
+        // === GAMES LIST (cached for instant loading) ===
         const GAMES_LIST = [
-            { name: 'Ace Racer', slug: 'ace-racer', category: 'Racing', services: 12 },
-            { name: 'Arena Breakout', slug: 'ab', category: 'Shooter', services: 35 },
-            { name: 'Arena of Valor', slug: 'arena-of-valor', category: 'MOBA', services: 29 },
-            { name: 'Axis', slug: 'axis', category: 'Action', services: 6 },
-            { name: 'Blood Strike', slug: 'bs', category: 'Shooter', services: 53 },
-            { name: 'Byu', slug: 'byu', category: 'RPG', services: 7 },
-            { name: 'Call Of Duty Mobile', slug: 'codm', category: 'Shooter', services: 53 },
-            { name: 'Crystal of Atlan', slug: 'crystal-of-atlan', category: 'RPG', services: 48 },
-            { name: 'Delta Force (Global)', slug: 'delta-force-global', category: 'Shooter', services: 22 },
-            { name: 'Dragon Nest M Classic (SEA)', slug: 'dragon-nest-m-classic-sea', category: 'RPG', services: 6 },
-            { name: 'Dragon Raja (SEA)', slug: 'dragon-raja-sea', category: 'RPG', services: 21 },
-            { name: 'Eggy party', slug: 'eggy-party', category: 'Party', services: 27 },
-            { name: 'FC Mobile', slug: 'fc-mobile', category: 'Sports', services: 27 },
-            { name: 'Free Fire (ID)', slug: 'free-fire-id', category: 'Battle Royale', services: 158 },
-            { name: 'Free Fire (MY/SG)', slug: 'ffsgmy', category: 'Battle Royale', services: 53 },
-            { name: 'Garena Delta Force', slug: 'garena-delta-force', category: 'Shooter', services: 28 },
-            { name: 'Genshin Impact', slug: 'gi', category: 'RPG', services: 16 },
-            { name: 'HaikYu Fly High (SEA)', slug: 'haikyu-fly-high-sea', category: 'Sports', services: 23 },
-            { name: 'Honkai Impact Asia', slug: 'honkai-impact-asia', category: 'RPG', services: 15 },
-            { name: 'Honkai: Star Rail', slug: 'honkai-star-rail', category: 'RPG', services: 23 },
-            { name: 'Honor of Kings', slug: 'hok', category: 'MOBA', services: 34 },
-            { name: 'Hyper Front', slug: 'hyper-front', category: 'Shooter', services: 18 },
-            { name: 'Identity V', slug: 'identity-v-', category: 'Horror', services: 10 },
-            { name: 'Indosat', slug: 'indosat', category: 'Telco', services: 7 },
-            { name: 'League of Legends: Wild Rift', slug: 'league-of-legends-wild-rift', category: 'MOBA', services: 12 },
-            { name: 'Life After', slug: 'life-after', category: 'Survival', services: 8 },
-            { name: 'Lita', slug: 'lita', category: 'RPG', services: 6 },
-            { name: 'Love and Deepspace', slug: 'love-and-deepspace', category: 'RPG', services: 18 },
-            { name: 'Magic Chess : Go Go', slug: 'magic-chess-go-go', category: 'Strategy', services: 83 },
-            { name: 'Metal Slug: Awakening (SEA)', slug: 'metal-slug-awakening-sea', category: 'Action', services: 26 },
-            { name: 'MLBB Gift Item', slug: 'mlbb-gift-item', category: 'MOBA', services: 1 },
-            { name: 'Mobile Legends', slug: 'mlid', category: 'MOBA', services: 163 },
-            { name: 'Mobile Legends (Brazil)', slug: 'mlbr', category: 'MOBA', services: 70 },
-            { name: 'Mobile Legends (Global x Try)', slug: 'mobile-legends-global-x-try', category: 'MOBA', services: 81 },
-            { name: 'Mobile Legends (Vilog)', slug: 'mobile-legends-vilog', category: 'MOBA', services: 6 },
-            { name: 'Mobile Legends Fast', slug: 'mobile-legends-fast', category: 'MOBA', services: 185 },
-            { name: 'Mobile Legends MY/SG', slug: 'mlmy', category: 'MOBA', services: 92 },
-            { name: 'Mobile Legends PH', slug: 'mlph', category: 'MOBA', services: 116 },
-            { name: 'Mobile Legends Rusia', slug: 'mobile-legends-rusia', category: 'MOBA', services: 24 },
-            { name: 'Mobile Legends Singapore', slug: 'mobile-legends-singapore', category: 'MOBA', services: 19 },
-            { name: 'MYTOPUPKU COINS', slug: 'mytopupku-coins', category: 'Coins', services: 1 },
-            { name: 'Point Blank', slug: 'point-blank', category: 'Shooter', services: 7 },
-            { name: 'PUBG Mobile Code', slug: 'pubg-mobile-code', category: 'Battle Royale', services: 6 },
-            { name: 'PUBG Mobile Global', slug: 'pubgg', category: 'Battle Royale', services: 37 },
-            { name: 'PUBG Mobile ID', slug: 'pubg-mobile-id', category: 'Battle Royale', services: 30 },
-            { name: 'Roblox Via-Login', slug: 'roblox-via-login', category: 'Platform', services: 22 },
-            { name: 'Sausage Man', slug: 'sausage-man', category: 'Party', services: 8 },
-            { name: 'Smartfren', slug: 'smartfren', category: 'Telco', services: 6 },
-            { name: 'Super Sus', slug: 'super-sus', category: 'Social', services: 22 },
-            { name: 'Telkomsel', slug: 'telkomsel', category: 'Telco', services: 6 },
-            { name: 'Three', slug: 'three', category: 'Telco', services: 8 },
-            { name: 'Token Listrik', slug: 'token-listrik', category: 'Utility', services: 6 },
-            { name: 'Tokyo Beast', slug: 'tokyo-beast', category: 'RPG', services: 9 },
-            { name: 'Undawn', slug: 'undawn', category: 'Survival', services: 28 },
-            { name: 'Valorant', slug: 'valorant', category: 'Shooter', services: 24 },
-            { name: 'Voucher Roblox', slug: 'voucher-roblox', category: 'Voucher', services: 13 },
-            { name: 'Wuthering Waves', slug: 'wuwa', category: 'RPG', services: 19 },
-            { name: 'Xl Axiata', slug: 'xl-axiata', category: 'Telco', services: 8 },
-            { name: 'Zepeto', slug: 'zepeto', category: 'Social', services: 26 },
-            { name: 'ZZZ Zenless Zone Zero', slug: 'zzz-zenless-zone-zero', category: 'RPG', services: 21 }
+            { name: 'Mobile Legends', slug: 'mlid', category: 'MOBA' },
+            { name: 'Mobile Legends (Brazil)', slug: 'mlbr', category: 'MOBA' },
+            { name: 'Mobile Legends (Global x Try)', slug: 'mobile-legends-global-x-try', category: 'MOBA' },
+            { name: 'Mobile Legends (Vilog)', slug: 'mobile-legends-vilog', category: 'MOBA' },
+            { name: 'Mobile Legends Fast', slug: 'mobile-legends-fast', category: 'MOBA' },
+            { name: 'Mobile Legends MY/SG', slug: 'mlmy', category: 'MOBA' },
+            { name: 'Mobile Legends PH', slug: 'mlph', category: 'MOBA' },
+            { name: 'Mobile Legends Rusia', slug: 'mobile-legends-rusia', category: 'MOBA' },
+            { name: 'Mobile Legends Singapore', slug: 'mobile-legends-singapore', category: 'MOBA' },
+            { name: 'MLBB Gift Item', slug: 'mlbb-gift-item', category: 'MOBA' },
+            { name: 'Genshin Impact', slug: 'gi', category: 'RPG' },
+            { name: 'Honkai Impact Asia', slug: 'honkai-impact-asia', category: 'RPG' },
+            { name: 'Honkai: Star Rail', slug: 'honkai-star-rail', category: 'RPG' },
+            { name: 'Valorant', slug: 'valorant', category: 'Shooter' },
+            { name: 'Free Fire (ID)', slug: 'free-fire-id', category: 'Battle Royale' },
+            { name: 'Free Fire (MY/SG)', slug: 'ffsgmy', category: 'Battle Royale' },
+            { name: 'Call Of Duty Mobile', slug: 'codm', category: 'Shooter' },
+            { name: 'Arena of Valor', slug: 'arena-of-valor', category: 'MOBA' },
+            { name: 'PUBG Mobile Global', slug: 'pubgg', category: 'Battle Royale' },
+            { name: 'PUBG Mobile ID', slug: 'pubg-mobile-id', category: 'Battle Royale' },
+            { name: 'PUBG Mobile Code', slug: 'pubg-mobile-code', category: 'Battle Royale' },
+            { name: 'Delta Force (Global)', slug: 'delta-force-global', category: 'Shooter' },
+            { name: 'Garena Delta Force', slug: 'garena-delta-force', category: 'Shooter' },
+            { name: 'Wuthering Waves', slug: 'wuwa', category: 'RPG' },
+            { name: 'ZZZ Zenless Zone Zero', slug: 'zzz-zenless-zone-zero', category: 'RPG' },
+            { name: 'Roblox Via-Login', slug: 'roblox-via-login', category: 'Platform' },
+            { name: 'Voucher Roblox', slug: 'voucher-roblox', category: 'Voucher' },
+            { name: 'League of Legends: Wild Rift', slug: 'league-of-legends-wild-rift', category: 'MOBA' },
+            { name: 'Honor of Kings', slug: 'hok', category: 'MOBA' },
+            { name: 'Ace Racer', slug: 'ace-racer', category: 'Racing' },
+            { name: 'Arena Breakout', slug: 'ab', category: 'Shooter' },
+            { name: 'Axis', slug: 'axis', category: 'Action' },
+            { name: 'Blood Strike', slug: 'bs', category: 'Shooter' },
+            { name: 'Byu', slug: 'byu', category: 'RPG' },
+            { name: 'Crystal of Atlan', slug: 'crystal-of-atlan', category: 'RPG' },
+            { name: 'Dragon Nest M Classic (SEA)', slug: 'dragon-nest-m-classic-sea', category: 'RPG' },
+            { name: 'Dragon Raja (SEA)', slug: 'dragon-raja-sea', category: 'RPG' },
+            { name: 'Eggy party', slug: 'eggy-party', category: 'Party' },
+            { name: 'FC Mobile', slug: 'fc-mobile', category: 'Sports' },
+            { name: 'HaikYu Fly High (SEA)', slug: 'haikyu-fly-high-sea', category: 'Sports' },
+            { name: 'Hyper Front', slug: 'hyper-front', category: 'Shooter' },
+            { name: 'Identity V', slug: 'identity-v-', category: 'Horror' },
+            { name: 'Indosat', slug: 'indosat', category: 'Telco' },
+            { name: 'Life After', slug: 'life-after', category: 'Survival' },
+            { name: 'Lita', slug: 'lita', category: 'RPG' },
+            { name: 'Love and Deepspace', slug: 'love-and-deepspace', category: 'RPG' },
+            { name: 'Magic Chess : Go Go', slug: 'magic-chess-go-go', category: 'Strategy' },
+            { name: 'Metal Slug: Awakening (SEA)', slug: 'metal-slug-awakening-sea', category: 'Action' },
+            { name: 'MYTOPUPKU COINS', slug: 'mytopupku-coins', category: 'Coins' },
+            { name: 'Point Blank', slug: 'point-blank', category: 'Shooter' },
+            { name: 'Sausage Man', slug: 'sausage-man', category: 'Party' },
+            { name: 'Smartfren', slug: 'smartfren', category: 'Telco' },
+            { name: 'Super Sus', slug: 'super-sus', category: 'Social' },
+            { name: 'Telkomsel', slug: 'telkomsel', category: 'Telco' },
+            { name: 'Three', slug: 'three', category: 'Telco' },
+            { name: 'Token Listrik', slug: 'token-listrik', category: 'Utility' },
+            { name: 'Tokyo Beast', slug: 'tokyo-beast', category: 'RPG' },
+            { name: 'Undawn', slug: 'undawn', category: 'Survival' },
+            { name: 'Xl Axiata', slug: 'xl-axiata', category: 'Telco' },
+            { name: 'Zepeto', slug: 'zepeto', category: 'Social' }
         ];
 
-        // Generate demo products for each game
+        // === STATE ===
+        let products = [];
+        let games = [];
+        let cart = [];
+        let history = [];
+        let currentCategory = 'all';
+        let selectedGameObj = null;
+        let selectedDenom = null;
+        let gameDetailsCache = {};
+
+        try { cart = JSON.parse(localStorage.nick_cart) || []; } catch { cart = []; }
+        try { history = JSON.parse(localStorage.nick_history) || []; } catch { history = []; }
+
+        // === THEME TOGGLE ===
+        function initTheme() {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // === RIPPLE EFFECT ===
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Add ripple effect to all clickable elements
+        function addRippleEffect() {
+            const clickableElements = document.querySelectorAll('button, .game-card, .category-pill, .featured-item');
+            clickableElements.forEach(el => {
+                el.addEventListener('click', createRipple);
+            });
+        }
+
+        // === SKELETON LOADING ===
+        function showSkeletonLoading() {
+            const gameGrid = document.getElementById('gameGrid');
+            const featuredContainer = document.getElementById('featuredContainer');
+            
+            // Show skeleton for game grid
+            let skeletonHTML = '';
+            for (let i = 0; i < 8; i++) {
+                skeletonHTML += `
+                    <div class="skeleton-card">
+                        <div class="skeleton-image skeleton"></div>
+                        <div class="p-3">
+                            <div class="skeleton-line skeleton"></div>
+                            <div class="flex justify-between mt-2">
+                                <div class="skeleton-line short skeleton"></div>
+                                <div class="skeleton-line short skeleton"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            gameGrid.innerHTML = skeletonHTML;
+
+            // Show skeleton for featured
+            let featuredSkeleton = '';
+            for (let i = 0; i < 6; i++) {
+                featuredSkeleton += `
+                    <div class="inline-block mr-4">
+                        <div class="featured-logo skeleton"></div>
+                        <div class="skeleton-line skeleton mt-2" style="width:100px"></div>
+                    </div>
+                `;
+            }
+            featuredContainer.innerHTML = featuredSkeleton;
+        }
+
+        // === FAST LOADING OPTIMIZATION ===
+        function preloadImages() {
+            // Preload common game logos
+            const imagesToPreload = Object.values(GAME_LOGOS).slice(0, 10);
+            imagesToPreload.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        // Cache API responses in sessionStorage
+        async function fetchWithCache(url, cacheKey, cacheTime = 300000) { // 5 minutes default
+            const cached = sessionStorage.getItem(cacheKey);
+            if (cached) {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < cacheTime) {
+                    return data;
+                }
+            }
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                sessionStorage.setItem(cacheKey, JSON.stringify({
+                    data,
+                    timestamp: Date.now()
+                }));
+                return data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // === INIT ===
+        window.onload = () => {
+            initTheme();
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Show skeleton immediately
+            showSkeletonLoading();
+            
+            // Preload images
+            preloadImages();
+            
+            // Load data
+            loadInitialData();
+            
+            setupEvents();
+            updateCartCount();
+            
+            // Add ripple effect after DOM is ready
+            setTimeout(addRippleEffect, 500);
+        };
+
+        async function loadInitialData() {
+            // First, load demo data instantly for immediate display
+            generateDemoProducts();
+            buildGames();
+            
+            // Then try to fetch from API in background
+            fetchGamesFromAPI();
+        }
+
+        async function fetchGamesFromAPI() {
+            try {
+                const data = await fetchWithCache(`${API_BASE}/public/games`, 'games-cache', 300000);
+                
+                if (data.success && data.games?.length) {
+                    products = data.games.map(game => ({
+                        id: `game-${game.slug}`,
+                        name: game.name,
+                        game: game.name,
+                        price: 0,
+                        category: game.category || 'Games',
+                        img: GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`,
+                        slug: game.slug,
+                        isPlaceholder: true,
+                        services: Math.floor(Math.random() * 50) + 10
+                    }));
+                    
+                    buildGames();
+                    
+                    // Fetch details for each game in parallel
+                    const fetchPromises = data.games.map(game => fetchGameDetails(game.slug));
+                    await Promise.all(fetchPromises);
+                }
+            } catch (err) {
+                console.warn('API failed, using demo data');
+                // Demo data already loaded
+            }
+        }
+
+        async function fetchGameDetails(slug) {
+            if (gameDetailsCache[slug]) return gameDetailsCache[slug];
+            
+            try {
+                const data = await fetchWithCache(`${API_BASE}/public/games/${slug}`, `game-${slug}`, 300000);
+                
+                if (data.success && data.game) {
+                    gameDetailsCache[slug] = data.game;
+                    
+                    if (data.game.services_by_type) {
+                        const newProducts = [];
+                        const gameName = data.game.name;
+                        
+                        Object.entries(data.game.services_by_type).forEach(([type, services]) => {
+                            services.forEach(service => {
+                                const basePrice = parseFloat(service.price_myr) || 0;
+                                if (basePrice > 0) {
+                                    newProducts.push({
+                                        id: service.id || `${slug}-${type}-${service.name}`,
+                                        name: service.name,
+                                        game: gameName,
+                                        price: Math.round(basePrice * (1 + MARKUP) * 100) / 100,
+                                        originalPrice: basePrice,
+                                        category: data.game.category || 'Games',
+                                        img: GAME_LOGOS[gameName] || `https://ui-avatars.com/api/?name=${encodeURIComponent(gameName)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`,
+                                        slug: slug,
+                                        isPlaceholder: false,
+                                        type: type
+                                    });
+                                }
+                            });
+                        });
+                        
+                        if (newProducts.length > 0) {
+                            // Remove old placeholders for this game
+                            products = products.filter(p => p.game !== gameName);
+                            products.push(...newProducts);
+                            buildGames();
+                        }
+                    }
+                }
+            } catch (err) {
+                console.warn(`Failed to fetch details for ${slug}`);
+            }
+        }
+
         function generateDemoProducts() {
-            const products = [];
+            products = [];
             GAMES_LIST.forEach(game => {
-                // Create 3-5 random packages per game
-                const numPackages = Math.floor(Math.random() * 4) + 3;
+                const numPackages = Math.floor(Math.random() * 8) + 5;
                 for (let i = 1; i <= numPackages; i++) {
-                    const basePrice = (Math.random() * 50 + 5).toFixed(2);
+                    const basePrice = (Math.random() * 100 + 5).toFixed(2);
                     products.push({
                         id: `${game.slug}-${i}`,
                         name: `${i * 10} ${game.category === 'MOBA' ? 'Diamonds' : 'Credits'}`,
@@ -395,34 +884,14 @@
                         price: Math.round(parseFloat(basePrice) * (1 + MARKUP) * 100) / 100,
                         originalPrice: parseFloat(basePrice),
                         category: game.category,
-                        img: GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=2d4057&color=fff&size=200&length=2&bold=true&format=png`,
+                        img: GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`,
                         slug: game.slug,
-                        services: game.services
+                        isPlaceholder: false,
+                        services: numPackages
                     });
                 }
             });
-            return products;
         }
-
-        // === STATE ===
-        let products = generateDemoProducts();
-        let games = [];
-        let cart = [];
-        let history = [];
-        let currentCategory = 'all';
-        let selectedGameObj = null;
-        let selectedDenom = null;
-
-        try { cart = JSON.parse(localStorage.nick_cart) || []; } catch { cart = []; }
-        try { history = JSON.parse(localStorage.nick_history) || []; } catch { history = []; }
-
-        // === INIT ===
-        window.onload = () => {
-            document.getElementById('loading').style.display = 'none';
-            buildGames();
-            setupEvents();
-            updateCartCount();
-        };
 
         function buildGames() {
             const map = new Map();
@@ -437,12 +906,13 @@
                 thumbnail: prods[0].img,
                 category: prods[0].category,
                 slug: prods[0].slug,
-                services: prods[0].services
+                services: prods.length
             })).sort((a,b) => a.name.localeCompare(b.name));
 
             document.getElementById('gameCount').innerText = games.length;
             document.getElementById('productCount').innerText = products.length;
             document.getElementById('showingCount').innerText = `showing ${games.length} games`;
+            document.getElementById('featuredCount').innerText = `${games.length} titles`;
             
             renderCategories();
             renderGames();
@@ -452,7 +922,7 @@
         function renderCategories() {
             const cats = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
             document.getElementById('catContainer').innerHTML = cats.map(c => 
-                `<button onclick="setCat('${c}', this)" class="category-pill flex-shrink-0 px-5 py-2 rounded-full border border-[#3e556e] text-sm ${c===currentCategory?'active':''}">${c==='all'?'ALL GAMES':c}</button>`
+                `<button onclick="setCat('${c}', this)" class="category-pill flex-shrink-0 px-5 py-2 rounded-full text-sm ${c===currentCategory?'active':''}">${c==='all'?'ALL GAMES':c}</button>`
             ).join('');
         }
 
@@ -484,15 +954,17 @@
             document.getElementById('emptyGrid').classList.add('hidden');
 
             grid.innerHTML = filtered.map(g => {
-                const lowest = g.products.length ? Math.min(...g.products.map(p=>p.price)) : 0;
-                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
-                return `<div class="game-card bg-[#121c28] border border-[#2d4057] rounded-2xl overflow-hidden cursor-pointer" onclick="openGame('${g.name}')">
-                    <img src="${logoUrl}" class="game-logo" alt="${g.name}">
+                const validPrices = g.products.filter(p => p.price > 0).map(p => p.price);
+                const lowest = validPrices.length ? Math.min(...validPrices) : 0;
+                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`;
+                
+                return `<div class="game-card rounded-2xl overflow-hidden cursor-pointer" onclick="openGame('${g.name}')">
+                    <img src="${logoUrl}" class="game-logo" alt="${g.name}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true'">
                     <div class="p-3">
                         <h4 class="font-bold text-sm truncate">${g.name}</h4>
                         <div class="flex justify-between items-center mt-2">
-                            <span class="text-xs text-[#98aec9]">${g.services} items</span>
-                            <span class="font-bold text-[#b0d0ff]">RM${lowest.toFixed(2)}</span>
+                            <span class="text-xs text-tertiary">${g.products.length} items</span>
+                            <span class="font-bold accent-text">RM${lowest.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>`;
@@ -500,12 +972,12 @@
         }
 
         function renderFeatured() {
-            const featured = games.slice(0, 10); // Show first 10 games as featured
+            const featured = games.slice(0, 12);
             const container = document.getElementById('featuredContainer');
             container.innerHTML = featured.map(g => {
-                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
+                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`;
                 return `<div class="featured-item inline-block mr-4 text-center cursor-pointer" onclick="openGame('${g.name}')">
-                    <img src="${logoUrl}" class="featured-logo" alt="${g.name}">
+                    <img src="${logoUrl}" class="featured-logo" alt="${g.name}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true'">
                     <p class="text-xs mt-2 font-medium max-w-[140px] truncate">${g.name}</p>
                 </div>`;
             }).join('');
@@ -521,15 +993,16 @@
             selectedDenom = valid[0];
 
             document.getElementById('modalTitle').innerText = game.name;
-            document.getElementById('modalCategory').innerText = `${game.services} packages available`;
-            document.getElementById('modalImg').src = GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
+            document.getElementById('modalCategory').innerText = `${valid.length} packages available`;
+            document.getElementById('modalImg').src = GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`;
 
+            // Show ALL packages, no limit
             let html = '';
-            valid.slice(0, 4).forEach((p,i) => { // Show max 4 packages
-                html += `<div class="denom-opt ${i===0?'selected':''} bg-[#1b2a38] border border-[#3e5a78] rounded-2xl p-4 text-center cursor-pointer hover:border-[#6d9eff]" onclick="selectDenom(${i})">
-                    <div class="font-semibold">${p.name}</div>
-                    <div class="font-bold text-lg mt-1 text-[#b0d0ff]">RM${p.price.toFixed(2)}</div>
-                    ${p.originalPrice ? `<div class="text-[10px] text-[#98aec9]">base RM${p.originalPrice.toFixed(2)}</div>` : ''}
+            valid.forEach((p,i) => {
+                html += `<div class="denom-opt ${i===0?'selected border-accent-primary':''} bg-tertiary border border-custom rounded-2xl p-4 text-center cursor-pointer hover:border-accent-primary" onclick="selectDenom(${i})">
+                    <div class="font-semibold text-sm">${p.name}</div>
+                    <div class="font-bold text-lg mt-1 accent-text">RM${p.price.toFixed(2)}</div>
+                    ${p.originalPrice ? `<div class="text-[10px] text-tertiary">base RM${p.originalPrice.toFixed(2)}</div>` : ''}
                 </div>`;
             });
             document.getElementById('denomGrid').innerHTML = html;
@@ -545,8 +1018,11 @@
             const valid = selectedGameObj.products.filter(p=>p.price>0);
             selectedDenom = valid[idx];
             document.querySelectorAll('.denom-opt').forEach((d,i) => {
-                if (i === idx) d.classList.add('selected', 'border-[#6d9eff]');
-                else d.classList.remove('selected', 'border-[#6d9eff]');
+                if (i === idx) {
+                    d.classList.add('selected', 'border-accent-primary');
+                } else {
+                    d.classList.remove('selected', 'border-accent-primary');
+                }
             });
         };
 
@@ -569,7 +1045,7 @@
                 pack: selectedDenom.name,
                 price: selectedDenom.price,
                 playerId: pid,
-                thumb: GAME_LOGOS[selectedGameObj.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedGameObj.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`
+                thumb: GAME_LOGOS[selectedGameObj.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedGameObj.name)}&background=334155&color=f1f5f9&size=200&length=2&bold=true`
             });
             localStorage.nick_cart = JSON.stringify(cart);
             updateCartCount();
@@ -584,22 +1060,22 @@
         window.openCart = () => {
             const itemsDiv = document.getElementById('cartItems');
             if (!cart.length) {
-                itemsDiv.innerHTML = '<div class="text-center py-10 text-[#98aec9]"><i class="fas fa-shopping-cart text-4xl mb-3 opacity-30"></i><p>Your cart is empty</p></div>';
+                itemsDiv.innerHTML = '<div class="text-center py-10 text-tertiary"><svg class="icon-lg mx-auto mb-3 opacity-30" style="width:48px;height:48px"><use href="#cart-icon"/></svg><p>Your cart is empty</p></div>';
                 document.getElementById('cartTotal').innerText = 'RM0';
             } else {
                 let total = 0;
                 itemsDiv.innerHTML = cart.map((item,i) => {
                     total += item.price;
-                    return `<div class="flex gap-3 bg-[#1b2a38] p-3 rounded-xl border border-[#3e5a78]">
-                        <img src="${item.thumb}" class="w-14 h-14 rounded-lg bg-[#121c28] object-contain p-2">
+                    return `<div class="flex gap-3 bg-tertiary p-3 rounded-xl border border-custom">
+                        <img src="${item.thumb}" class="w-14 h-14 rounded-lg bg-secondary object-contain p-2" loading="lazy" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(item.game)}&background=334155&color=f1f5f9&size=200&length=2&bold=true'">
                         <div class="flex-1 text-sm">
                             <div class="font-semibold">${item.game}</div>
-                            <div class="text-[#98aec9] text-xs">${item.pack}</div>
-                            <div class="text-xs mt-1 bg-black/30 px-2 py-0.5 rounded-full inline-block">ID: ${item.playerId}</div>
+                            <div class="text-tertiary text-xs">${item.pack}</div>
+                            <div class="text-xs mt-1 bg-secondary/50 px-2 py-0.5 rounded-full inline-block">ID: ${item.playerId}</div>
                         </div>
                         <div class="text-right">
-                            <div class="font-bold text-[#b0d0ff]">RM${item.price.toFixed(2)}</div>
-                            <button onclick="removeCartItem(${i})" class="text-red-400 text-xs mt-2"><i class="fas fa-trash"></i></button>
+                            <div class="font-bold accent-text">RM${item.price.toFixed(2)}</div>
+                            <button onclick="removeCartItem(${i})" class="text-error text-xs mt-2"><svg class="icon-sm"><use href="#x-icon"/></svg></button>
                         </div>
                     </div>`;
                 }).join('');
@@ -616,7 +1092,7 @@
             cart.splice(idx, 1);
             localStorage.nick_cart = JSON.stringify(cart);
             updateCartCount();
-            openCart(); // refresh
+            openCart();
         };
 
         window.closeCart = () => {
@@ -635,7 +1111,7 @@
                 msg += `${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A%0A`;
                 total += c.price;
             });
-            msg += `*TOTAL: RM${total.toFixed(2)}* (incl. 3% fee)`;
+            msg += `*TOTAL: RM${total.toFixed(2)}* (incl. 5% fee)`;
 
             history.unshift({
                 id: Date.now(),
@@ -672,16 +1148,16 @@
         function renderHistory() {
             const container = document.getElementById('historyList');
             if (!history.length) {
-                container.innerHTML = '<div class="text-center py-12 text-[#98aec9]"><i class="fas fa-history text-4xl mb-3 opacity-30"></i><p>No order history</p></div>';
+                container.innerHTML = '<div class="text-center py-12 text-tertiary"><svg class="icon-lg mx-auto mb-3 opacity-30" style="width:48px;height:48px"><use href="#history-icon"/></svg><p>No order history</p></div>';
                 return;
             }
             container.innerHTML = history.map(h => `
-                <div class="bg-[#121c28] border border-[#2d4057] rounded-xl p-4">
+                <div class="bg-secondary border border-custom rounded-xl p-4">
                     <div class="flex justify-between mb-2 text-sm">
                         <span>${h.date}</span>
-                        <span class="font-bold text-[#b0d0ff]">RM${h.total.toFixed(2)}</span>
+                        <span class="font-bold accent-text">RM${h.total.toFixed(2)}</span>
                     </div>
-                    <div class="text-xs text-[#98aec9] space-y-1">
+                    <div class="text-xs text-tertiary space-y-1">
                         ${h.items.map(i => `<div>${i.game} · ${i.pack} · ID: ${i.playerId}</div>`).join('')}
                     </div>
                 </div>
@@ -702,6 +1178,10 @@
             document.getElementById('searchInputMobile').value = searchVal;
             document.getElementById('searchInputDesktop').value = searchVal;
             renderGames();
+        }
+
+        function toggleMenu() {
+            document.getElementById('menuDrop').classList.toggle('hidden');
         }
 
         function setupEvents() {
