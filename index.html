@@ -3,407 +3,456 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>NickStore · compact & clean</title>
+    <title>NickStore · 60+ Games</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* clean minimal — compact mobile first */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            background: #0a0c10;
+            background: #0b0f15;
             font-family: 'Inter', sans-serif;
-            color: #e8edf2;
+            color: #f0f4fa;
         }
-
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1e2732; }
+        ::-webkit-scrollbar-thumb { background: #3e5368; border-radius: 10px; }
+        
+        .game-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        @media (min-width: 480px) { .game-grid { gap: 12px; } }
-        @media (min-width: 640px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { .game-grid { grid-template-columns: repeat(4, 1fr); } }
-
-        .game-tile {
-            background: #12161c;
-            border: 1px solid #262b33;
-            border-radius: 18px;
-            padding: 10px 8px 8px 8px;
-            transition: background 0.1s ease;
-            cursor: pointer;
+        .game-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
         }
-        .game-tile:active { background: #1a2028; }
-
-        .game-tile .thumbnail {
-            aspect-ratio: 1/1;
-            width: 100%;
-            border-radius: 14px;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid #2f3640;
-            margin-bottom: 8px;
-        }
-
-        .game-tile h4 {
-            font-weight: 600;
-            font-size: 0.85rem;
-            line-height: 1.3;
+        
+        .featured-scroll {
+            overflow-x: auto;
+            scrollbar-width: thin;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #e8edf2;
-            margin-bottom: 4px;
+            padding-bottom: 8px;
         }
-
-        .game-tile .price-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.7rem;
-        }
-        .game-tile .price-from { color: #8a9bb5; }
-        .game-tile .price-value { 
-            font-weight: 700; 
-            color: #e8edf2;
-            font-size: 0.9rem;
-        }
-        .game-tile .margin-note {
-            font-size: 0.55rem;
-            color: #5f738f;
-            margin-top: 2px;
-            text-align: right;
-        }
-
-        .nav-minimal {
-            background: rgba(10, 12, 16, 0.98);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #262b33;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            padding: 12px 16px;
-        }
-
-        .category-pill {
-            background: #121a24;
-            border: 1px solid #2e3947;
-            color: #b0c0d4;
-            font-weight: 500;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            transition: all 0.1s ease;
-            cursor: pointer;
-        }
+        
         .category-pill.active {
-            background: #e8edf2;
-            color: #0a0c10;
-            border-color: #e8edf2;
+            background: linear-gradient(135deg, #4f7eb3 0%, #2c4b78 100%);
+            color: white;
+            border-color: transparent;
         }
-
-        .stat-card {
-            background: #121a24;
-            border: 1px solid #2d3e54;
-            border-radius: 20px;
-            padding: 16px 8px;
-            text-align: center;
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f1a24 0%, #1a2a38 100%);
         }
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #d0e4ff;
-            line-height: 1.2;
+        
+        .glass-modal {
+            background: rgba(20, 30, 40, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .stat-label {
-            font-size: 0.7rem;
-            color: #98aec9;
+        
+        .game-logo {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            padding: 16px;
+            background: #121c28;
+            border-radius: 16px 16px 0 0;
         }
-
-        .hero-minimal {
-            background: #0f1620;
-            border: 1px solid #2c394b;
-            border-radius: 28px;
+        
+        .featured-logo {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
             padding: 20px;
-            margin: 16px 0 24px 0;
+            background: #121c28;
+            border-radius: 20px;
+            border: 1px solid #2d4057;
         }
-        .hero-minimal h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            line-height: 1.2;
-        }
-
-        .category-scroll { overflow-x: auto; white-space: nowrap; scrollbar-width: none; margin-bottom: 16px; }
-        .category-scroll::-webkit-scrollbar { display: none; }
-
-        .modal-sheet { position: fixed; bottom: 0; left: 0; right: 0; background: #121a24; border-top: 1px solid #3a4a5a; border-radius: 28px 28px 0 0; transform: translateY(100%); transition: transform 0.25s ease; z-index: 1001; max-height: 85vh; overflow-y: auto; }
-        .modal-sheet.active { transform: translateY(0); }
-        .cart-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 400px; background: #121a24; border-left: 1px solid #3e5068; transform: translateX(100%); transition: transform 0.25s ease; z-index: 1001; display: flex; flex-direction: column; }
-        .cart-panel.active { transform: translateX(0); }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 1000; display: none; }
-        .overlay.active { display: block; }
-        .toast { position: fixed; bottom: 20px; left: 16px; right: 16px; background: #1e2a36; border: 1px solid #4e6b88; color: white; padding: 14px 20px; border-radius: 40px; font-weight: 500; text-align: center; transform: translateY(200%); transition: transform 0.2s; z-index: 10000; font-size: 0.9rem; }
-        .toast.show { transform: translateY(0); }
-
-        .denom-opt { background: #1b2533; border: 1px solid #314153; border-radius: 24px; padding: 12px 4px; text-align: center; cursor: pointer; }
-        .denom-opt.selected { background: #29394d; border-color: #90a9c7; }
-        .input-minimal { background: #121b26; border: 1.5px solid #31445b; border-radius: 24px; padding: 16px 20px; font-size: 1rem; color: white; width: 100%; }
-
-        .btn-primary { background: #e8edf2; color: #0a0c10; font-weight: 600; padding: 16px; border-radius: 40px; width: 100%; font-size: 1rem; transition: background 0.1s; }
-        .btn-primary:active { background: #c0d0e5; }
-
-        .reseller-card { background: #11171f; border: 1px solid #2d3846; border-radius: 28px; padding: 24px 20px; }
-        .badge-minimal { background: #262e3a; color: #d1e0f0; font-weight: 600; font-size: 0.7rem; padding: 4px 16px; border-radius: 40px; display: inline-block; }
-
-        .container-px { padding-left: 16px; padding-right: 16px; }
-        .spinner { border: 2px solid #3a4a5a; border-top-color: #e8edf2; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; margin: 20px auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <!-- loading -->
+    <!-- loading screen -->
     <div id="loading" style="position:fixed; inset:0; background:#0a0c10; z-index:9999; display:flex; align-items:center; justify-content:center;">
         <div class="text-center">
             <div class="w-20 h-20 mx-auto rounded-2xl border border-[#3a4a5a] flex items-center justify-center">
                 <span class="font-bold text-3xl text-[#e8edf2]">N</span>
             </div>
-            <p class="mt-4 text-[#98aec9] text-xs">NickStore · loading</p>
+            <p class="mt-4 text-[#98aec9] text-xs">NickStore · 60+ games</p>
         </div>
     </div>
 
-    <!-- nav -->
-    <nav class="nav-minimal">
-        <div class="flex items-center justify-between">
+    <!-- header -->
+    <header class="sticky top-0 z-50 bg-[#0b0f15]/90 backdrop-blur-md border-b border-[#2a3545] px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div onclick="showView('games')" class="flex items-center gap-2 cursor-pointer">
-                <span class="text-xl font-bold text-[#e8edf2]">NickStore</span>
-                <span class="bg-[#262e3a] text-[#b0c4de] text-[9px] font-semibold px-2 py-1 rounded-full">topup</span>
+                <span class="text-2xl font-extrabold bg-gradient-to-r from-[#a0c0f0] to-[#e0eaff] text-transparent bg-clip-text">NICKSTORE</span>
+                <span class="bg-[#2e3b4e] text-[#b0d0f0] text-[10px] font-semibold px-2 py-1 rounded-full">60+ GAMES</span>
             </div>
-            <div class="flex gap-3">
-                <button id="searchBtn" class="w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center"><i class="fas fa-search text-sm text-[#b0c4de]"></i></button>
-                <button onclick="openCart()" class="relative w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center">
+            <div class="flex items-center gap-4">
+                <button id="searchBtn" class="lg:hidden w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center"><i class="fas fa-search text-sm text-[#b0c4de]"></i></button>
+                <div class="hidden lg:block relative">
+                    <input type="text" id="searchInputDesktop" placeholder="Search 60+ games..." class="w-64 bg-[#1f2a36] border border-[#3e556e] rounded-full py-2 px-4 pl-10 text-sm text-white placeholder:text-[#98aec9] focus:outline-none focus:ring-2 focus:ring-[#4f7eb3]">
+                    <i class="fas fa-search absolute left-3 top-3 text-[#98aec9] text-sm"></i>
+                </div>
+                <button onclick="openCart()" class="relative w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center">
                     <i class="fas fa-shopping-cart text-sm text-[#b0c4de]"></i>
                     <span id="cartCount" class="absolute -top-1 -right-1 bg-[#e8edf2] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
                 </button>
                 <div class="relative">
-                    <button id="menuBtn" class="w-10 h-10 rounded-xl bg-[#1b232f] border border-[#334152] flex items-center justify-center"><i class="fas fa-bars text-sm text-[#b0c4de]"></i></button>
-                    <div id="menuDrop" class="absolute right-0 mt-2 w-36 bg-[#141e2b] border border-[#3e5368] rounded-xl hidden z-50 text-sm">
-                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f] rounded-t-xl">🎮 store</button>
-                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f]">👑 reseller</button>
-                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#1e2d3f] rounded-b-xl">📋 history</button>
+                    <button id="menuBtn" class="w-9 h-9 rounded-full bg-[#1f2a36] flex items-center justify-center"><i class="fas fa-user text-sm text-[#b0c4de]"></i></button>
+                    <div id="menuDrop" class="absolute right-0 mt-2 w-40 bg-[#1e2a38] border border-[#3e5368] rounded-xl hidden z-50 text-sm">
+                        <button onclick="showView('games');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055] rounded-t-xl">🎮 Store</button>
+                        <button onclick="showView('reseller');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055]">👑 Reseller</button>
+                        <button onclick="showView('history');toggleMenu()" class="block w-full text-left px-4 py-3 hover:bg-[#2d4055] rounded-b-xl">📋 History</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="searchRow" class="hidden mt-3">
-            <input type="text" id="searchInput" placeholder="search game..." class="w-full bg-[#1b2533] border border-[#3f556b] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#98aec9]">
+        <div id="searchRow" class="lg:hidden mt-3 hidden">
+            <input type="text" id="searchInputMobile" placeholder="search 60+ games..." class="w-full bg-[#1f2a36] border border-[#3e556e] rounded-xl px-4 py-3 text-sm text-white placeholder:text-[#98aec9]">
         </div>
-    </nav>
+    </header>
 
-    <!-- main -->
-    <main class="h-[calc(100vh-70px)] overflow-y-auto container-px pb-6">
+    <main class="max-w-7xl mx-auto px-4 pb-8">
 
         <!-- GAMES VIEW -->
         <div id="gamesView">
-            <!-- hero compact — updated text -->
-            <div class="hero-minimal">
-                <h2 class="text-[#e8edf2]">Top Up<br>Any Game</h2>
-                <p class="text-[#98aec9] text-xs mt-1">ML · Genshin · Valorant</p>
-                <div class="flex gap-2 mt-4">
-                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-4 py-2 rounded-full text-xs"><i class="fas fa-bolt mr-1"></i>2min</span>
-                    <span class="bg-[#1b2533] text-[#b0c8e5] border border-[#3e5a78] px-4 py-2 rounded-full text-xs"><i class="fas fa-shield mr-1"></i>secure</span>
+            <!-- HERO SECTION -->
+            <section class="hero-gradient rounded-3xl p-6 md:p-10 my-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-[#3e68a0] opacity-10 rounded-full blur-3xl"></div>
+                <div class="relative z-10">
+                    <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#b0d0ff] to-[#ffffff]">60+ Games · One Store</span>
+                    </h1>
+                    <p class="text-[#b0c8e5] mt-2 max-w-lg">MLBB · Genshin · Valorant · CODM · Free Fire & more</p>
+                    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                        <div class="relative flex-1">
+                            <i class="fas fa-search absolute left-4 top-3.5 text-[#98aec9]"></i>
+                            <input type="text" id="heroSearch" placeholder="Search Mobile Legends, Genshin, Valorant..." class="w-full bg-[#1f2e40] border border-[#4a6c8f] rounded-full py-3 pl-12 pr-4 text-white placeholder:text-[#8aa5c2] focus:outline-none focus:ring-2 focus:ring-[#5f8bc9]">
+                        </div>
+                        <button onclick="triggerSearch()" class="bg-[#e8edf2] text-[#0b0f15] font-semibold px-8 py-3 rounded-full hover:bg-white transition">Search</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STATS CARDS -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-[#121c28] border border-[#2d4057] rounded-2xl p-4 text-center">
+                    <div class="text-3xl font-bold text-[#b0d0ff]" id="gameCount">0</div>
+                    <div class="text-xs text-[#98b1cf]">games available</div>
+                </div>
+                <div class="bg-[#121c28] border border-[#2d4057] rounded-2xl p-4 text-center">
+                    <div class="text-3xl font-bold text-[#b0d0ff]" id="productCount">0</div>
+                    <div class="text-xs text-[#98b1cf]">top-up items</div>
                 </div>
             </div>
 
-            <!-- stats compact -->
-            <div class="grid grid-cols-2 gap-3 mb-5">
-                <div class="stat-card">
-                    <div class="stat-number" id="gameCount">0</div>
-                    <div class="stat-label">games</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="productCount">0</div>
-                    <div class="stat-label">items</div>
-                </div>
-            </div>
+            <!-- CATEGORIES -->
+            <div class="category-scroll flex gap-2 pb-2 mb-6 overflow-x-auto" id="catContainer"></div>
 
-            <!-- categories -->
-            <div class="category-scroll flex gap-2 pb-1" id="catContainer"></div>
+            <!-- FEATURED GAMES (horizontal scroll) -->
+            <section class="mb-10">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold"><i class="fas fa-fire text-[#f97316] mr-2"></i>Featured Games</h2>
+                    <span class="text-sm text-[#98b1cf]">60+ titles</span>
+                </div>
+                <div class="featured-scroll flex gap-4 pb-2" id="featuredContainer"></div>
+            </section>
 
-            <!-- game grid — compact -->
-            <div id="gameGrid" class="game-grid mt-3"></div>
-            <div id="emptyGrid" class="hidden text-center py-16">
-                <i class="fas fa-box-open text-4xl text-[#3a5068] mb-3"></i>
-                <p class="text-[#98aec9] text-sm">no games</p>
-            </div>
+            <!-- ALL GAMES GRID -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold"><i class="fas fa-gamepad mr-2"></i>All Games</h2>
+                    <span class="text-sm text-[#98b1cf]" id="showingCount">showing 0 games</span>
+                </div>
+                <div id="gameGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+                <div id="emptyGrid" class="hidden text-center py-20">
+                    <i class="fas fa-box-open text-5xl text-[#3a5068] mb-4"></i>
+                    <p class="text-[#98aec9]">No games found</p>
+                </div>
+            </section>
         </div>
 
         <!-- RESELLER VIEW -->
-        <div id="resellerView" class="hidden pb-8">
-            <div class="flex items-center gap-2 mb-5 mt-2">
-                <button onclick="showView('games')" class="w-9 h-9 rounded-xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm text-[#b0c4de]"></i></button>
-                <h2 class="text-xl font-bold text-[#e8edf2]">RESELLER</h2>
-                <span class="bg-[#262e3a] text-[#b0c8e5] text-[9px] px-3 py-1 rounded-full border border-[#4a607c]">LIFETIME</span>
+        <div id="resellerView" class="hidden py-6">
+            <div class="flex items-center gap-3 mb-6">
+                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-[#1f2a36] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
+                <h2 class="text-2xl font-bold">Reseller Program</h2>
+                <span class="bg-[#2e3b4e] text-xs px-3 py-1 rounded-full border border-[#4a607c]">LIFETIME</span>
             </div>
-            <div class="text-center mb-6">
-                <h3 class="text-2xl font-bold"><span class="text-[#d0e4ff]">ELITE</span> PARTNER</h3>
-                <p class="text-[#98aec9] text-xs mt-2">wholesale price · bot · priority</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-                <div class="reseller-card">
-                    <span class="badge-minimal mb-4"><i class="fas fa-crown mr-1"></i>GREY</span>
-                    <div class="text-2xl font-bold text-[#d0e4ff] mb-4">RM15<span class="text-xs text-[#98aec9] ml-2">lifetime</span></div>
-                    <ul class="space-y-2 mb-6 text-xs">
-                        <li class="flex gap-2"><i class="fas fa-check text-[#90a9c7] w-4"></i><span>cheaper than retail</span></li>
-                        <li class="flex gap-2"><i class="fas fa-robot text-[#90a9c7] w-4"></i><span>telegram bot access</span></li>
-                        <li class="flex gap-2"><i class="fas fa-infinity text-[#90a9c7] w-4"></i><span>lifetime validity</span></li>
+            <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <div class="bg-[#121c28] border border-[#2d4057] rounded-3xl p-6">
+                    <span class="inline-block bg-[#2a384b] text-xs font-bold px-4 py-1 rounded-full mb-4"><i class="fas fa-crown mr-1"></i>GREY</span>
+                    <div class="text-3xl font-bold text-[#b0d0ff] mb-2">RM15<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
+                    <ul class="space-y-3 my-6 text-sm">
+                        <li class="flex gap-2"><i class="fas fa-check text-[#6d9eff] w-5"></i>Cheaper than retail</li>
+                        <li class="flex gap-2"><i class="fas fa-robot text-[#6d9eff] w-5"></i>Telegram bot access</li>
+                        <li class="flex gap-2"><i class="fas fa-infinity text-[#6d9eff] w-5"></i>Lifetime validity</li>
                     </ul>
-                    <button onclick="joinReseller('grey')" class="w-full py-3 bg-[#e8edf2] text-black font-semibold rounded-full text-sm">join grey</button>
+                    <button onclick="joinReseller('grey')" class="w-full py-3 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-semibold rounded-full text-sm">Join Grey</button>
                 </div>
-                <div class="reseller-card relative">
-                    <span class="badge-minimal mb-4"><i class="fas fa-gem mr-1"></i>SLATE</span>
-                    <div class="absolute top-4 right-4 bg-[#e8edf2] text-black text-[9px] font-bold px-3 py-1 rounded-full">PRIORITY</div>
-                    <div class="text-2xl font-bold text-[#d0e4ff] mb-4">RM35<span class="text-xs text-[#98aec9] ml-2">lifetime</span></div>
-                    <ul class="space-y-2 mb-6 text-xs">
-                        <li class="flex gap-2"><i class="fas fa-check text-[#90a9c7] w-4"></i><span>cheaper than grey</span></li>
-                        <li class="flex gap-2"><i class="fas fa-robot text-[#90a9c7] w-4"></i><span>full bot automation</span></li>
-                        <li class="flex gap-2"><i class="fas fa-headset text-[#90a9c7] w-4"></i><span>priority support</span></li>
+                <div class="bg-[#121c28] border-2 border-[#5f8bc9] rounded-3xl p-6 relative">
+                    <span class="absolute top-4 right-4 bg-[#e8edf2] text-black text-xs font-bold px-3 py-1 rounded-full">POPULAR</span>
+                    <span class="inline-block bg-[#2a384b] text-xs font-bold px-4 py-1 rounded-full mb-4"><i class="fas fa-gem mr-1"></i>SLATE</span>
+                    <div class="text-3xl font-bold text-[#b0d0ff] mb-2">RM35<span class="text-sm text-[#98aec9] ml-2">lifetime</span></div>
+                    <ul class="space-y-3 my-6 text-sm">
+                        <li class="flex gap-2"><i class="fas fa-check text-[#6d9eff] w-5"></i>Cheaper than grey</li>
+                        <li class="flex gap-2"><i class="fas fa-robot text-[#6d9eff] w-5"></i>Full bot automation</li>
+                        <li class="flex gap-2"><i class="fas fa-headset text-[#6d9eff] w-5"></i>Priority support</li>
                     </ul>
-                    <button onclick="joinReseller('slate')" class="w-full py-3 bg-[#e8edf2] text-black font-semibold rounded-full text-sm">join slate</button>
+                    <button onclick="joinReseller('slate')" class="w-full py-3 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-semibold rounded-full text-sm">Join Slate</button>
                 </div>
             </div>
         </div>
 
         <!-- HISTORY VIEW -->
-        <div id="historyView" class="hidden">
-            <div class="flex items-center gap-2 mb-5 mt-2">
-                <button onclick="showView('games')" class="w-9 h-9 rounded-xl bg-[#1b2533] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
-                <h2 class="text-xl font-bold">ORDER HISTORY</h2>
+        <div id="historyView" class="hidden py-6">
+            <div class="flex items-center gap-3 mb-6">
+                <button onclick="showView('games')" class="w-10 h-10 rounded-full bg-[#1f2a36] border border-[#3e5a78]"><i class="fas fa-arrow-left text-sm"></i></button>
+                <h2 class="text-2xl font-bold">Order History</h2>
             </div>
             <div id="historyList" class="space-y-3"></div>
         </div>
     </main>
 
-    <!-- WhatsApp FAB — consistent number -->
-    <a href="https://wa.me/60197661697" target="_blank" class="fixed bottom-5 right-5 w-12 h-12 bg-[#e8edf2] rounded-full flex items-center justify-center shadow-lg active:scale-90 transition z-50"><i class="fab fa-whatsapp text-lg text-[#0a0c10]"></i></a>
+    <!-- WhatsApp FAB -->
+    <a href="https://wa.me/60197661697" target="_blank" class="fixed bottom-5 right-5 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition z-50"><i class="fab fa-whatsapp text-2xl text-white"></i></a>
 
-    <!-- modals -->
-    <div id="modalOverlay" class="overlay"></div>
-    <div id="productModal" class="modal-sheet">
-        <div class="p-5">
-            <div class="flex justify-between items-start mb-5">
-                <div class="flex gap-3">
-                    <div id="modalImg" class="w-16 h-16 rounded-xl bg-cover bg-center border border-[#4a6a8a]"></div>
-                    <div><h3 id="modalTitle" class="text-lg font-bold"></h3><p id="modalCategory" class="text-xs text-[#98aec9] mt-0.5"></p></div>
+    <!-- MODALS -->
+    <div id="modalOverlay" class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] hidden" onclick="closeModal()"></div>
+    <div id="productModal" class="modal-sheet fixed bottom-0 left-0 right-0 glass-modal rounded-t-3xl transform translate-y-full transition-transform duration-300 z-[1001] max-h-[85vh] overflow-y-auto hidden">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex gap-4">
+                    <img id="modalImg" class="w-20 h-20 rounded-2xl bg-[#1f2e40] object-contain p-2 border border-[#4a6a8a]" src="" alt="">
+                    <div>
+                        <h3 id="modalTitle" class="text-xl font-bold"></h3>
+                        <p id="modalCategory" class="text-sm text-[#98aec9] mt-1"></p>
+                    </div>
                 </div>
-                <button onclick="closeModal()" class="w-9 h-9 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-sm"></i></button>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-[#26384f] flex items-center justify-center"><i class="fas fa-times text-lg"></i></button>
             </div>
-            <div class="mb-4"><label class="text-xs font-medium mb-2 block text-[#b0c8e5]">Player ID</label><input type="text" id="playerId" placeholder="min 4 characters" class="input-minimal text-sm py-3"></div>
-            <div class="mb-5"><label class="text-xs font-medium mb-2 block text-[#b0c8e5]">Package</label><div id="denomGrid" class="grid grid-cols-2 gap-2"></div></div>
-            <button onclick="addToCart()" class="btn-primary">ADD TO CART</button>
-            <p class="text-[10px] text-center text-[#6a88aa] mt-3">fast service</p>
+            <div class="mb-5">
+                <label class="text-sm font-medium mb-2 block text-[#b0c8e5]">Player ID / Account</label>
+                <input type="text" id="playerId" placeholder="Enter your player ID" class="w-full bg-[#1b2a38] border border-[#3e5a78] rounded-2xl px-5 py-4 text-white placeholder:text-[#6a88aa] focus:outline-none focus:ring-2 focus:ring-[#5f8bc9]">
+            </div>
+            <div class="mb-6">
+                <label class="text-sm font-medium mb-2 block text-[#b0c8e5]">Select Package</label>
+                <div id="denomGrid" class="grid grid-cols-2 gap-3"></div>
+            </div>
+            <button onclick="addToCart()" class="w-full py-4 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-bold rounded-2xl text-lg">Add to Cart</button>
+            <p class="text-xs text-center text-[#6a88aa] mt-4">🔒 Secure checkout via WhatsApp</p>
         </div>
     </div>
 
-    <div id="cartOverlay" class="overlay"></div>
-    <div id="cartPanel" class="cart-panel">
-        <div class="p-4 border-b border-[#3e5a78] flex justify-between items-center">
-            <h3 class="text-lg font-bold">CART</h3><button onclick="closeCart()" class="w-9 h-9 rounded-full bg-[#26384f] border border-[#4a6a8a]"><i class="fas fa-times text-sm"></i></button>
+    <div id="cartOverlay" class="overlay fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] hidden" onclick="closeCart()"></div>
+    <div id="cartPanel" class="cart-panel fixed top-0 right-0 bottom-0 w-full max-w-md glass-modal transform translate-x-full transition-transform duration-300 z-[1001] flex flex-col">
+        <div class="p-5 border-b border-[#3e5a78] flex justify-between items-center">
+            <h3 class="text-xl font-bold">Your Cart</h3>
+            <button onclick="closeCart()" class="w-10 h-10 rounded-full bg-[#26384f] flex items-center justify-center"><i class="fas fa-times"></i></button>
         </div>
-        <div id="cartItems" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-        <div class="p-4 border-t border-[#3e5a78]">
-            <div class="flex justify-between text-base font-bold mb-4"><span class="text-[#b0c8e5]">total</span><span id="cartTotal">RM0</span></div>
-            <button onclick="checkout()" class="btn-primary">CHECKOUT WA</button>
+        <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+        <div class="p-5 border-t border-[#3e5a78]">
+            <div class="flex justify-between text-lg font-bold mb-4">
+                <span class="text-[#b0c8e5]">Total</span>
+                <span id="cartTotal">RM0</span>
+            </div>
+            <button onclick="checkout()" class="w-full py-4 bg-gradient-to-r from-[#4f7eb3] to-[#2c4b78] text-white font-bold rounded-2xl">Checkout via WhatsApp</button>
         </div>
     </div>
 
-    <div id="toastMsg" class="toast">✅ added</div>
+    <div id="toastMsg" class="toast fixed bottom-5 left-1/2 -translate-x-1/2 bg-[#1e2a36] border border-[#4e6b88] text-white px-6 py-3 rounded-full shadow-lg transform translate-y-[200%] transition-transform duration-200 z-[10000] text-sm font-medium">✅ added</div>
 
     <script>
-        // ===== NICKSTORE COMPACT — FIXED =====
-        const API_BASE = 'https://api-kryz-net-space.onrender.com/api/v1';
-        const MARKUP = 0.03; // 3% markup
-        const WHATSAPP_NUMBER = '60197661697'; // consistent number
+        // === CONFIG ===
+        const WHATSAPP_NUMBER = '60197661697';
+        const MARKUP = 0.03;
 
-        // Demo fallback data (with markup applied)
-        const DEMO = [
-            { id:'ml1', name:'86 Diamonds', game:'Mobile Legends', price:12.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
-            { id:'ml2', name:'172 Diamonds', game:'Mobile Legends', price:24.9, category:'MOBA', img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop' },
-            { id:'ff1', name:'70 Diamonds', game:'Free Fire', price:8.9, category:'Battle Royale', img:'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=250&fit=crop' },
-            { id:'ff2', name:'140 Diamonds', game:'Free Fire', price:15.9, category:'Battle Royale', img:'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=250&fit=crop' },
-            { id:'val1', name:'575 Points', game:'Valorant', price:45, category:'Shooter', img:'https://images.unsplash.com/photo-1611301736576-7b6d1d4e1d7d?w=400&h=250&fit=crop' },
-            { id:'gi1', name:'60 Crystals', game:'Genshin Impact', price:16.9, category:'RPG', img:'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=400&h=250&fit=crop' }
+        // === GAME LOGOS (official sources where available) ===
+        const GAME_LOGOS = {
+            // Official logos from Wikimedia / brand sources
+            'Mobile Legends': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends (Brazil)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends (Global x Try)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends (Vilog)': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends Fast': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends MY/SG': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends PH': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends Rusia': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'Mobile Legends Singapore': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            'MLBB Gift Item': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+            
+            'Genshin Impact': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Genshin_Impact_logo.svg',
+            'Honkai Impact Asia': 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Honkai_Impact_3rd_logo.svg',
+            'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
+            
+            'Valorant': 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fassets.brandfetch.io%2FidVL3oJmXw%2FidX4rqOJ_8.png&w=3840&q=75',
+            
+            'Free Fire (ID)': 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Garena_Free_Fire_Logo.png',
+            'Free Fire (MY/SG)': 'https://upload.wikimedia.org/wikipedia/commons/e/e3/Garena_Free_Fire_Logo.png',
+            
+            'Call Of Duty Mobile': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Call_of_Duty_Mobile_logo.png/640px-Call_of_Duty_Mobile_logo.png',
+            
+            'Arena of Valor': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Arena_of_Valor_logo.png',
+            
+            'PUBG Mobile Global': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
+            'PUBG Mobile ID': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
+            'PUBG Mobile Code': 'https://upload.wikimedia.org/wikipedia/commons/6/6c/PUBG_Mobile_Logo.jpg',
+            
+            'Delta Force (Global)': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Delta_Force_Logo_CN.png/640px-Delta_Force_Logo_CN.png',
+            'Garena Delta Force': 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Delta_Force_Logo_CN.png/640px-Delta_Force_Logo_CN.png',
+            
+            'Eggy party': 'https://brandfetch.com/_next/image?url=https%3A%2F%2Fassets.brandfetch.io%2FidVL3oJmXw%2FidX4rqOJ_8.png&w=3840&q=75',
+            
+            'Wuthering Waves': 'https://upload.wikimedia.org/wikipedia/commons/f/f2/Wuthering_Waves_logo.png',
+            'ZZZ Zenless Zone Zero': 'https://upload.wikimedia.org/wikipedia/commons/8/86/Zenless_Zone_Zero_logo.png',
+            
+            'Roblox Via-Login': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Roblox_logo.svg/640px-Roblox_logo.svg.png',
+            'Voucher Roblox': 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Roblox_logo.svg/640px-Roblox_logo.svg.png',
+            
+            'League of Legends: Wild Rift': 'https://upload.wikimedia.org/wikipedia/commons/6/69/League_of_Legends_Wild_Rift_logo.png',
+            
+            'Honor of Kings': 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Honor_of_Kings_logo.png'
+        };
+
+        // === 60 GAMES LIST (based on user input) ===
+        const GAMES_LIST = [
+            { name: 'Ace Racer', slug: 'ace-racer', category: 'Racing', services: 12 },
+            { name: 'Arena Breakout', slug: 'ab', category: 'Shooter', services: 35 },
+            { name: 'Arena of Valor', slug: 'arena-of-valor', category: 'MOBA', services: 29 },
+            { name: 'Axis', slug: 'axis', category: 'Action', services: 6 },
+            { name: 'Blood Strike', slug: 'bs', category: 'Shooter', services: 53 },
+            { name: 'Byu', slug: 'byu', category: 'RPG', services: 7 },
+            { name: 'Call Of Duty Mobile', slug: 'codm', category: 'Shooter', services: 53 },
+            { name: 'Crystal of Atlan', slug: 'crystal-of-atlan', category: 'RPG', services: 48 },
+            { name: 'Delta Force (Global)', slug: 'delta-force-global', category: 'Shooter', services: 22 },
+            { name: 'Dragon Nest M Classic (SEA)', slug: 'dragon-nest-m-classic-sea', category: 'RPG', services: 6 },
+            { name: 'Dragon Raja (SEA)', slug: 'dragon-raja-sea', category: 'RPG', services: 21 },
+            { name: 'Eggy party', slug: 'eggy-party', category: 'Party', services: 27 },
+            { name: 'FC Mobile', slug: 'fc-mobile', category: 'Sports', services: 27 },
+            { name: 'Free Fire (ID)', slug: 'free-fire-id', category: 'Battle Royale', services: 158 },
+            { name: 'Free Fire (MY/SG)', slug: 'ffsgmy', category: 'Battle Royale', services: 53 },
+            { name: 'Garena Delta Force', slug: 'garena-delta-force', category: 'Shooter', services: 28 },
+            { name: 'Genshin Impact', slug: 'gi', category: 'RPG', services: 16 },
+            { name: 'HaikYu Fly High (SEA)', slug: 'haikyu-fly-high-sea', category: 'Sports', services: 23 },
+            { name: 'Honkai Impact Asia', slug: 'honkai-impact-asia', category: 'RPG', services: 15 },
+            { name: 'Honkai: Star Rail', slug: 'honkai-star-rail', category: 'RPG', services: 23 },
+            { name: 'Honor of Kings', slug: 'hok', category: 'MOBA', services: 34 },
+            { name: 'Hyper Front', slug: 'hyper-front', category: 'Shooter', services: 18 },
+            { name: 'Identity V', slug: 'identity-v-', category: 'Horror', services: 10 },
+            { name: 'Indosat', slug: 'indosat', category: 'Telco', services: 7 },
+            { name: 'League of Legends: Wild Rift', slug: 'league-of-legends-wild-rift', category: 'MOBA', services: 12 },
+            { name: 'Life After', slug: 'life-after', category: 'Survival', services: 8 },
+            { name: 'Lita', slug: 'lita', category: 'RPG', services: 6 },
+            { name: 'Love and Deepspace', slug: 'love-and-deepspace', category: 'RPG', services: 18 },
+            { name: 'Magic Chess : Go Go', slug: 'magic-chess-go-go', category: 'Strategy', services: 83 },
+            { name: 'Metal Slug: Awakening (SEA)', slug: 'metal-slug-awakening-sea', category: 'Action', services: 26 },
+            { name: 'MLBB Gift Item', slug: 'mlbb-gift-item', category: 'MOBA', services: 1 },
+            { name: 'Mobile Legends', slug: 'mlid', category: 'MOBA', services: 163 },
+            { name: 'Mobile Legends (Brazil)', slug: 'mlbr', category: 'MOBA', services: 70 },
+            { name: 'Mobile Legends (Global x Try)', slug: 'mobile-legends-global-x-try', category: 'MOBA', services: 81 },
+            { name: 'Mobile Legends (Vilog)', slug: 'mobile-legends-vilog', category: 'MOBA', services: 6 },
+            { name: 'Mobile Legends Fast', slug: 'mobile-legends-fast', category: 'MOBA', services: 185 },
+            { name: 'Mobile Legends MY/SG', slug: 'mlmy', category: 'MOBA', services: 92 },
+            { name: 'Mobile Legends PH', slug: 'mlph', category: 'MOBA', services: 116 },
+            { name: 'Mobile Legends Rusia', slug: 'mobile-legends-rusia', category: 'MOBA', services: 24 },
+            { name: 'Mobile Legends Singapore', slug: 'mobile-legends-singapore', category: 'MOBA', services: 19 },
+            { name: 'MYTOPUPKU COINS', slug: 'mytopupku-coins', category: 'Coins', services: 1 },
+            { name: 'Point Blank', slug: 'point-blank', category: 'Shooter', services: 7 },
+            { name: 'PUBG Mobile Code', slug: 'pubg-mobile-code', category: 'Battle Royale', services: 6 },
+            { name: 'PUBG Mobile Global', slug: 'pubgg', category: 'Battle Royale', services: 37 },
+            { name: 'PUBG Mobile ID', slug: 'pubg-mobile-id', category: 'Battle Royale', services: 30 },
+            { name: 'Roblox Via-Login', slug: 'roblox-via-login', category: 'Platform', services: 22 },
+            { name: 'Sausage Man', slug: 'sausage-man', category: 'Party', services: 8 },
+            { name: 'Smartfren', slug: 'smartfren', category: 'Telco', services: 6 },
+            { name: 'Super Sus', slug: 'super-sus', category: 'Social', services: 22 },
+            { name: 'Telkomsel', slug: 'telkomsel', category: 'Telco', services: 6 },
+            { name: 'Three', slug: 'three', category: 'Telco', services: 8 },
+            { name: 'Token Listrik', slug: 'token-listrik', category: 'Utility', services: 6 },
+            { name: 'Tokyo Beast', slug: 'tokyo-beast', category: 'RPG', services: 9 },
+            { name: 'Undawn', slug: 'undawn', category: 'Survival', services: 28 },
+            { name: 'Valorant', slug: 'valorant', category: 'Shooter', services: 24 },
+            { name: 'Voucher Roblox', slug: 'voucher-roblox', category: 'Voucher', services: 13 },
+            { name: 'Wuthering Waves', slug: 'wuwa', category: 'RPG', services: 19 },
+            { name: 'Xl Axiata', slug: 'xl-axiata', category: 'Telco', services: 8 },
+            { name: 'Zepeto', slug: 'zepeto', category: 'Social', services: 26 },
+            { name: 'ZZZ Zenless Zone Zero', slug: 'zzz-zenless-zone-zero', category: 'RPG', services: 21 }
         ];
 
-        let products = [], games = [], cart = [], history = [], currentCategory = 'all', selectedGameObj = null, selectedDenom = null;
-        let allGamesFromAPI = [], gameDetailsCache = {};
+        // Generate demo products for each game
+        function generateDemoProducts() {
+            const products = [];
+            GAMES_LIST.forEach(game => {
+                // Create 3-5 random packages per game
+                const numPackages = Math.floor(Math.random() * 4) + 3;
+                for (let i = 1; i <= numPackages; i++) {
+                    const basePrice = (Math.random() * 50 + 5).toFixed(2);
+                    products.push({
+                        id: `${game.slug}-${i}`,
+                        name: `${i * 10} ${game.category === 'MOBA' ? 'Diamonds' : 'Credits'}`,
+                        game: game.name,
+                        price: Math.round(parseFloat(basePrice) * (1 + MARKUP) * 100) / 100,
+                        originalPrice: parseFloat(basePrice),
+                        category: game.category,
+                        img: GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=2d4057&color=fff&size=200&length=2&bold=true&format=png`,
+                        slug: game.slug,
+                        services: game.services
+                    });
+                }
+            });
+            return products;
+        }
+
+        // === STATE ===
+        let products = generateDemoProducts();
+        let games = [];
+        let cart = [];
+        let history = [];
+        let currentCategory = 'all';
+        let selectedGameObj = null;
+        let selectedDenom = null;
 
         try { cart = JSON.parse(localStorage.nick_cart) || []; } catch { cart = []; }
         try { history = JSON.parse(localStorage.nick_history) || []; } catch { history = []; }
 
+        // === INIT ===
         window.onload = () => {
             document.getElementById('loading').style.display = 'none';
-            fetchGamesFromAPI();
+            buildGames();
             setupEvents();
             updateCartCount();
         };
 
-        async function fetchGamesFromAPI() {
-            try {
-                const res = await fetch(`${API_BASE}/public/games`);
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                if (data.success && data.games?.length) {
-                    allGamesFromAPI = data.games;
-                    products = allGamesFromAPI.map(game => ({
-                        id: `game-${game.slug}`,
-                        name: game.name,
-                        game: game.name,
-                        price: 0,
-                        category: game.category || 'Games',
-                        img: `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=3f556b&color=fff&size=200&length=2`,
-                        slug: game.slug,
-                        isPlaceholder: true
-                    }));
-                    buildGames();
-                } else throw new Error();
-            } catch { loadDemoData(); }
-        }
-
-        async function fetchGameDetails(slug) {
-            if (gameDetailsCache[slug]) return gameDetailsCache[slug];
-            try {
-                const res = await fetch(`${API_BASE}/public/games/${slug}`);
-                if (!res.ok) return null;
-                const data = await res.json();
-                if (data.success) { gameDetailsCache[slug] = data.game; return data.game; }
-            } catch { return null; }
-        }
-
-        function loadDemoData() {
-            // Apply markup to demo data
-            products = DEMO.map(p => ({ ...p, price: Math.round(p.price*(1+MARKUP)*100)/100 }));
-            buildGames();
-        }
-
         function buildGames() {
             const map = new Map();
-            products.forEach(p => { if (!map.has(p.game)) map.set(p.game, []); map.get(p.game).push(p); });
+            products.forEach(p => {
+                if (!map.has(p.game)) map.set(p.game, []);
+                map.get(p.game).push(p);
+            });
+            
             games = Array.from(map.entries()).map(([name, prods]) => ({
-                name, products: prods.sort((a,b)=>a.price - b.price), thumbnail: prods[0].img, category: prods[0].category, slug: prods[0].slug
-            })).sort((a,b) => (a.products.find(p=>p.price>0)?.price||9999) - (b.products.find(p=>p.price>0)?.price||9999));
+                name,
+                products: prods.sort((a,b) => a.price - b.price),
+                thumbnail: prods[0].img,
+                category: prods[0].category,
+                slug: prods[0].slug,
+                services: prods[0].services
+            })).sort((a,b) => a.name.localeCompare(b.name));
+
             document.getElementById('gameCount').innerText = games.length;
             document.getElementById('productCount').innerText = products.length;
+            document.getElementById('showingCount').innerText = `showing ${games.length} games`;
+            
             renderCategories();
             renderGames();
+            renderFeatured();
         }
 
         function renderCategories() {
             const cats = ['all', ...new Set(products.map(p => p.category).filter(Boolean))];
             document.getElementById('catContainer').innerHTML = cats.map(c => 
-                `<button onclick="setCat('${c}', this)" class="category-pill ${c===currentCategory?'active':''}">${c==='all'?'ALL':c}</button>`
+                `<button onclick="setCat('${c}', this)" class="category-pill flex-shrink-0 px-5 py-2 rounded-full border border-[#3e556e] text-sm ${c===currentCategory?'active':''}">${c==='all'?'ALL GAMES':c}</button>`
             ).join('');
         }
 
@@ -411,228 +460,265 @@
             document.querySelectorAll('.category-pill').forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
             currentCategory = cat;
-            // Clear search input when changing category to avoid confusion
-            document.getElementById('searchInput').value = '';
+            document.getElementById('heroSearch').value = '';
+            document.getElementById('searchInputMobile').value = '';
+            document.getElementById('searchInputDesktop').value = '';
             renderGames();
         };
 
         function renderGames() {
             let filtered = games;
             if (currentCategory !== 'all') filtered = filtered.filter(g => g.category === currentCategory);
-            const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            
+            const search = document.getElementById('heroSearch')?.value.toLowerCase() || 
+                          document.getElementById('searchInputMobile')?.value.toLowerCase() ||
+                          document.getElementById('searchInputDesktop')?.value.toLowerCase() || '';
             if (search) filtered = filtered.filter(g => g.name.toLowerCase().includes(search));
 
             const grid = document.getElementById('gameGrid');
-            if (!filtered.length) { 
-                grid.innerHTML = ''; 
-                document.getElementById('emptyGrid').classList.remove('hidden'); 
-                return; 
+            if (!filtered.length) {
+                grid.innerHTML = '';
+                document.getElementById('emptyGrid').classList.remove('hidden');
+                return;
             }
             document.getElementById('emptyGrid').classList.add('hidden');
 
             grid.innerHTML = filtered.map(g => {
-                const valid = g.products.filter(p => p.price > 0);
-                const lowest = valid.length ? Math.min(...valid.map(p=>p.price)) : 0;
-                return `<div class="game-tile" onclick="openGame('${g.name}')">
-                    <div class="thumbnail" style="background-image:url('${g.thumbnail}')"></div>
-                    <h4>${g.name}</h4>
-                    <div class="price-row">
-                        <span class="price-from">${lowest?'from':''}</span>
-                        <span class="price-value">${lowest?`RM${lowest.toFixed(2)}`:'check'}</span>
+                const lowest = g.products.length ? Math.min(...g.products.map(p=>p.price)) : 0;
+                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
+                return `<div class="game-card bg-[#121c28] border border-[#2d4057] rounded-2xl overflow-hidden cursor-pointer" onclick="openGame('${g.name}')">
+                    <img src="${logoUrl}" class="game-logo" alt="${g.name}">
+                    <div class="p-3">
+                        <h4 class="font-bold text-sm truncate">${g.name}</h4>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs text-[#98aec9]">${g.services} items</span>
+                            <span class="font-bold text-[#b0d0ff]">RM${lowest.toFixed(2)}</span>
+                        </div>
                     </div>
-                    <div class="margin-note">+3%</div>
                 </div>`;
             }).join('');
         }
 
-        window.openGame = async (gameName) => {
-            const game = games.find(g => g.name === gameName);
-            if (!game) return;
-            if (game.slug && game.products[0]?.isPlaceholder) {
-                showToast('loading...');
-                const details = await fetchGameDetails(game.slug);
-                if (details?.services_by_type) {
-                    const newProds = [];
-                    Object.values(details.services_by_type).forEach(services => services.forEach(s => {
-                        const base = parseFloat(s.price_myr) || 0;
-                        newProds.push({ 
-                            id:s.id, 
-                            name:s.name, 
-                            game:details.name, 
-                            price:Math.round(base*(1+MARKUP)*100)/100, 
-                            originalPrice:base, 
-                            category:details.category||'Games', 
-                            img:game.thumbnail 
-                        });
-                    }));
-                    if (newProds.length) {
-                        // Remove placeholder products for this game
-                        products = products.filter(p => p.game !== gameName);
-                        products.push(...newProds);
-                        buildGames();
-                        setTimeout(() => openGameModal(gameName), 100);
-                        return;
-                    }
-                }
-            }
-            openGameModal(gameName);
-        };
+        function renderFeatured() {
+            const featured = games.slice(0, 10); // Show first 10 games as featured
+            const container = document.getElementById('featuredContainer');
+            container.innerHTML = featured.map(g => {
+                const logoUrl = GAME_LOGOS[g.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(g.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
+                return `<div class="featured-item inline-block mr-4 text-center cursor-pointer" onclick="openGame('${g.name}')">
+                    <img src="${logoUrl}" class="featured-logo" alt="${g.name}">
+                    <p class="text-xs mt-2 font-medium max-w-[140px] truncate">${g.name}</p>
+                </div>`;
+            }).join('');
+        }
 
-        function openGameModal(gameName) {
+        window.openGame = (gameName) => {
             const game = games.find(g => g.name === gameName);
             if (!game) return;
-            const valid = game.products.filter(p => p.price > 0);
-            if (!valid.length) return showToast('no packages', true);
+            
             selectedGameObj = game;
+            const valid = game.products.filter(p => p.price > 0);
+            if (!valid.length) return showToast('No packages available', true);
             selectedDenom = valid[0];
+
             document.getElementById('modalTitle').innerText = game.name;
-            document.getElementById('modalCategory').innerText = game.category || 'Game';
-            document.getElementById('modalImg').style.backgroundImage = `url('${game.thumbnail}')`;
+            document.getElementById('modalCategory').innerText = `${game.services} packages available`;
+            document.getElementById('modalImg').src = GAME_LOGOS[game.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(game.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`;
+
             let html = '';
-            valid.forEach((p,i) => {
-                html += `<div class="denom-opt ${i===0?'selected':''}" onclick="selectDenom(${i})">
-                    <div class="font-semibold text-sm">${p.name}</div>
-                    <div class="font-bold text-base mt-1">RM${p.price.toFixed(2)}</div>
-                    ${p.originalPrice?`<div class="text-[8px] text-[#98aec9]">base RM${p.originalPrice.toFixed(2)}</div>`:''}
+            valid.slice(0, 4).forEach((p,i) => { // Show max 4 packages
+                html += `<div class="denom-opt ${i===0?'selected':''} bg-[#1b2a38] border border-[#3e5a78] rounded-2xl p-4 text-center cursor-pointer hover:border-[#6d9eff]" onclick="selectDenom(${i})">
+                    <div class="font-semibold">${p.name}</div>
+                    <div class="font-bold text-lg mt-1 text-[#b0d0ff]">RM${p.price.toFixed(2)}</div>
+                    ${p.originalPrice ? `<div class="text-[10px] text-[#98aec9]">base RM${p.originalPrice.toFixed(2)}</div>` : ''}
                 </div>`;
             });
             document.getElementById('denomGrid').innerHTML = html;
-            document.getElementById('modalOverlay').classList.add('active');
-            document.getElementById('productModal').classList.add('active');
-        }
+
+            document.getElementById('modalOverlay').classList.remove('hidden');
+            document.getElementById('productModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('productModal').style.transform = 'translateY(0)';
+            }, 10);
+        };
 
         window.selectDenom = (idx) => {
             const valid = selectedGameObj.products.filter(p=>p.price>0);
             selectedDenom = valid[idx];
-            document.querySelectorAll('.denom-opt').forEach((d,i) => d.classList.toggle('selected', i===idx));
+            document.querySelectorAll('.denom-opt').forEach((d,i) => {
+                if (i === idx) d.classList.add('selected', 'border-[#6d9eff]');
+                else d.classList.remove('selected', 'border-[#6d9eff]');
+            });
         };
+
         window.closeModal = () => {
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.getElementById('productModal').classList.remove('active');
+            document.getElementById('productModal').style.transform = 'translateY(100%)';
+            setTimeout(() => {
+                document.getElementById('modalOverlay').classList.add('hidden');
+                document.getElementById('productModal').classList.add('hidden');
+            }, 300);
         };
 
         window.addToCart = () => {
             const pid = document.getElementById('playerId').value.trim();
-            if (!pid || pid.length < 4) return showToast('enter valid ID (min 4)', true);
+            if (!pid || pid.length < 3) return showToast('Enter valid player ID', true);
             if (!selectedDenom) return;
-            cart.push({ 
-                id:Date.now(), 
-                game:selectedGameObj.name, 
-                pack:selectedDenom.name, 
-                price:selectedDenom.price, 
-                playerId:pid, 
-                thumb:selectedGameObj.thumbnail 
+
+            cart.push({
+                id: Date.now(),
+                game: selectedGameObj.name,
+                pack: selectedDenom.name,
+                price: selectedDenom.price,
+                playerId: pid,
+                thumb: GAME_LOGOS[selectedGameObj.name] || `https://ui-avatars.com/api/?name=${encodeURIComponent(selectedGameObj.name)}&background=2d4057&color=fff&size=200&length=2&bold=true`
             });
             localStorage.nick_cart = JSON.stringify(cart);
-            updateCartCount(); 
-            closeModal(); 
-            showToast('✅ added to cart');
+            updateCartCount();
+            closeModal();
+            showToast('Added to cart');
         };
 
-        function updateCartCount() { 
-            document.getElementById('cartCount').innerText = cart.length; 
+        function updateCartCount() {
+            document.getElementById('cartCount').innerText = cart.length;
         }
 
         window.openCart = () => {
             const itemsDiv = document.getElementById('cartItems');
             if (!cart.length) {
-                itemsDiv.innerHTML = '<div class="text-center py-10 text-[#98aec9] text-sm"><i class="fas fa-box-open text-3xl mb-3"></i><p>empty cart</p></div>';
+                itemsDiv.innerHTML = '<div class="text-center py-10 text-[#98aec9]"><i class="fas fa-shopping-cart text-4xl mb-3 opacity-30"></i><p>Your cart is empty</p></div>';
                 document.getElementById('cartTotal').innerText = 'RM0';
             } else {
                 let total = 0;
                 itemsDiv.innerHTML = cart.map((item,i) => {
                     total += item.price;
-                    return `<div class="flex gap-3 bg-[#1b2533] p-3 rounded-xl border border-[#3e5a78]">
-                        <img src="${item.thumb}" class="w-12 h-12 rounded-lg object-cover border border-[#4a6a8a]">
-                        <div class="flex-1 text-xs"><div class="font-semibold">${item.game}</div><div class="text-[#98aec9]">${item.pack}</div><div class="mt-1 bg-black/40 px-2 py-0.5 rounded-full inline-block">${item.playerId}</div></div>
-                        <div class="text-right"><div class="font-bold">RM${item.price.toFixed(2)}</div><button onclick="removeCartItem(${i})" class="text-red-400 text-xs mt-2"><i class="fas fa-trash"></i></button></div>
+                    return `<div class="flex gap-3 bg-[#1b2a38] p-3 rounded-xl border border-[#3e5a78]">
+                        <img src="${item.thumb}" class="w-14 h-14 rounded-lg bg-[#121c28] object-contain p-2">
+                        <div class="flex-1 text-sm">
+                            <div class="font-semibold">${item.game}</div>
+                            <div class="text-[#98aec9] text-xs">${item.pack}</div>
+                            <div class="text-xs mt-1 bg-black/30 px-2 py-0.5 rounded-full inline-block">ID: ${item.playerId}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-[#b0d0ff]">RM${item.price.toFixed(2)}</div>
+                            <button onclick="removeCartItem(${i})" class="text-red-400 text-xs mt-2"><i class="fas fa-trash"></i></button>
+                        </div>
                     </div>`;
                 }).join('');
                 document.getElementById('cartTotal').innerText = `RM${total.toFixed(2)}`;
             }
-            document.getElementById('cartOverlay').classList.add('active');
-            document.getElementById('cartPanel').classList.add('active');
+            document.getElementById('cartOverlay').classList.remove('hidden');
+            document.getElementById('cartPanel').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('cartPanel').style.transform = 'translateX(0)';
+            }, 10);
         };
 
-        window.removeCartItem = (idx) => { 
-            cart.splice(idx,1); 
-            localStorage.nick_cart = JSON.stringify(cart); 
-            updateCartCount(); 
-            openCart(); // refresh cart view
+        window.removeCartItem = (idx) => {
+            cart.splice(idx, 1);
+            localStorage.nick_cart = JSON.stringify(cart);
+            updateCartCount();
+            openCart(); // refresh
         };
-        window.closeCart = () => { 
-            document.getElementById('cartOverlay').classList.remove('active'); 
-            document.getElementById('cartPanel').classList.remove('active'); 
+
+        window.closeCart = () => {
+            document.getElementById('cartPanel').style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                document.getElementById('cartOverlay').classList.add('hidden');
+                document.getElementById('cartPanel').classList.add('hidden');
+            }, 300);
         };
 
         window.checkout = () => {
-            if (!cart.length) return showToast('cart empty', true);
-            let msg = '*NICKSTORE ORDER*%0A', total = 0;
-            cart.forEach((c,i) => { 
-                msg += `%0A${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A`; 
-                total += c.price; 
+            if (!cart.length) return showToast('Cart empty', true);
+            let msg = '*NICKSTORE ORDER*%0A%0A';
+            let total = 0;
+            cart.forEach((c,i) => {
+                msg += `${i+1}. ${c.game} - ${c.pack}%0A   ID: ${c.playerId}%0A   RM${c.price.toFixed(2)}%0A%0A`;
+                total += c.price;
             });
-            msg += `%0A*TOTAL: RM${total.toFixed(2)}* (incl. 3%)`;
-            history.unshift({ id:Date.now(), items:[...cart], total, date:new Date().toLocaleDateString() });
+            msg += `*TOTAL: RM${total.toFixed(2)}* (incl. 3% fee)`;
+
+            history.unshift({
+                id: Date.now(),
+                items: [...cart],
+                total,
+                date: new Date().toLocaleDateString('en-MY')
+            });
             localStorage.nick_history = JSON.stringify(history);
-            cart = []; 
-            localStorage.nick_cart = JSON.stringify(cart); 
-            updateCartCount(); 
+
+            cart = [];
+            localStorage.nick_cart = JSON.stringify(cart);
+            updateCartCount();
             closeCart();
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank'); 
-            showToast('order sent');
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+            showToast('Order sent to WhatsApp');
         };
 
-        window.joinReseller = (lvl) => {
-            let msg = `*RESELLER NICKSTORE*%0APackage : ${lvl.toUpperCase()} (lifetime)%0AFee : RM${lvl==='grey'?15:35}%0A%0ASaya nak daftar ${lvl}.`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`,'_blank'); 
-            showToast('opening wa...');
+        window.joinReseller = (level) => {
+            const fee = level === 'grey' ? 15 : 35;
+            const msg = `*RESELLER REGISTRATION*%0A%0APackage: ${level.toUpperCase()}%0AFee: RM${fee} (lifetime)%0A%0AI want to join as ${level} reseller.`;
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+            showToast('Opening WhatsApp...');
         };
 
-        function showToast(msg, isError = false) { 
-            let t = document.getElementById('toastMsg'); 
-            t.innerText = isError ? '❌ ' + msg : '✅ ' + msg; 
-            t.classList.add('show'); 
-            setTimeout(()=>t.classList.remove('show'), 2000); 
-        }
-
-        window.showView = (v) => {
-            ['gamesView','resellerView','historyView'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById(v+'View').classList.remove('hidden');
-            if (v === 'history') renderHistory();
-            // Close menu after navigation
+        window.showView = (view) => {
+            ['gamesView', 'resellerView', 'historyView'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(view + 'View').classList.remove('hidden');
+            if (view === 'history') renderHistory();
             document.getElementById('menuDrop').classList.add('hidden');
         };
 
         function renderHistory() {
-            const cont = document.getElementById('historyList');
+            const container = document.getElementById('historyList');
             if (!history.length) {
-                cont.innerHTML = '<div class="text-center py-12 text-[#98aec9] text-sm"><i class="fas fa-history text-3xl mb-3"></i><p>no history</p></div>';
-            } else {
-                cont.innerHTML = history.map(h => `<div class="bg-[#1b2533] p-4 rounded-xl border border-[#3e5a78] text-xs"><div class="flex justify-between mb-2"><span>${h.date}</span><span class="font-bold">RM${h.total.toFixed(2)}</span></div>${h.items.map(i => `<div class="flex justify-between border-b border-[#4a607c]/20 py-1"><span>${i.game}</span><span>${i.playerId}</span></div>`).join('')}</div>`).join('');
+                container.innerHTML = '<div class="text-center py-12 text-[#98aec9]"><i class="fas fa-history text-4xl mb-3 opacity-30"></i><p>No order history</p></div>';
+                return;
             }
+            container.innerHTML = history.map(h => `
+                <div class="bg-[#121c28] border border-[#2d4057] rounded-xl p-4">
+                    <div class="flex justify-between mb-2 text-sm">
+                        <span>${h.date}</span>
+                        <span class="font-bold text-[#b0d0ff]">RM${h.total.toFixed(2)}</span>
+                    </div>
+                    <div class="text-xs text-[#98aec9] space-y-1">
+                        ${h.items.map(i => `<div>${i.game} · ${i.pack} · ID: ${i.playerId}</div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function toggleMenu() { 
-            // This function is called from navigation buttons, which already hide the menu.
-            // Keep it to avoid errors, but we'll handle hiding in showView.
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = (isError ? '❌ ' : '✅ ') + msg;
+            toast.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                toast.style.transform = 'translateY(200%)';
+            }, 2000);
+        }
+
+        function triggerSearch() {
+            const searchVal = document.getElementById('heroSearch').value;
+            document.getElementById('searchInputMobile').value = searchVal;
+            document.getElementById('searchInputDesktop').value = searchVal;
+            renderGames();
         }
 
         function setupEvents() {
-            document.getElementById('searchBtn').addEventListener('click', ()=> {
+            document.getElementById('searchBtn').addEventListener('click', () => {
                 document.getElementById('searchRow').classList.toggle('hidden');
             });
-            document.getElementById('searchInput').addEventListener('input', renderGames);
-            
-            // Menu toggle: click button toggles dropdown, click outside closes it
+
+            ['heroSearch', 'searchInputMobile', 'searchInputDesktop'].forEach(id => {
+                document.getElementById(id)?.addEventListener('input', renderGames);
+            });
+
             const menuBtn = document.getElementById('menuBtn');
             const menuDrop = document.getElementById('menuDrop');
-            
-            menuBtn.addEventListener('click', (e) => { 
-                e.stopPropagation(); 
-                menuDrop.classList.toggle('hidden'); 
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuDrop.classList.toggle('hidden');
             });
-            
             document.addEventListener('click', (e) => {
                 if (!menuBtn.contains(e.target) && !menuDrop.contains(e.target)) {
                     menuDrop.classList.add('hidden');
