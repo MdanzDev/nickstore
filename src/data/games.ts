@@ -12,10 +12,11 @@ export const categories: Category[] = [
 ];
 
 export const gameLogos: Record<string, string> = {
-  'Mobile Legends MY': 'https://files.catbox.moe/hhow5f.jpg',
-  'Mobile Legends PH': 'https://files.catbox.moe/hhow5f.jpg',
-  'Mobile Legends ID': 'https://files.catbox.moe/hhow5f.jpg',
-  'Mobile Legends Brazil': 'https://files.catbox.moe/hhow5f.jpg',
+  'Mobile Legends MY': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
+  'Mobile Legends PH': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
+  'Mobile Legends ID': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
+  'Mobile Legends Brazil': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
+   'Mobile Legends': 'https://files.catbox.moe/hhow5f.jpg', //sementara
   'Genshin Impact': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Genshin_Impact_logo.svg',
   'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
   'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
