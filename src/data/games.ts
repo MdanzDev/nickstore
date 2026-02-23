@@ -12,7 +12,7 @@ export const categories: Category[] = [
 ];
 
 export const gameLogos: Record<string, string> = {
-  'Mobile Legends': 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Mobile_Legends_Bang_Bang_2025_logo.png',
+  'Mobile Legends': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKlcXioZeHP5exB5_Jz_MH14I4T0niQtFd7A&s',
   'Genshin Impact': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Genshin_Impact_logo.svg',
   'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
   'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
