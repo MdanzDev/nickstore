@@ -18,12 +18,12 @@ export const gameLogos: Record<string, string> = {
   'Mobile Legends Brazil': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
    'Mobile Legends': 'https://files.catbox.moe/hhow5f.jpg', //sementara
   'Genshin Impact': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/86944cb0b9a2e1da465a844f.jpg',
-  'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
-  'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
+  'Honkai: Star Rail': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/430898453fa44f27c147821d.jpg',
+  'Valorant': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/06dfcdc1676b7fe3b82756b0.jpg',
   'PUBG Mobile': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/132a9dfd29a9c36178e6331b.jpg',
   'Free Fire': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/092a0c2f4f9b33e91c516b2e.jpg',
-  'Honor of Kings': 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Honor_of_Kings_logo.png',
-  'Arena of Valor': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Arena_of_Valor_logo.png',
+  'Honor of Kings': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/b8cfeaa898581654c807b129.jpg',
+  'Arena of Valor': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/5d6012f30a6e07acfe345e63.jpg',
   'Call of Duty Mobile': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/4f9036f5f3f598f84a2b686a.jpg',
   'Wuthering Waves': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/a33573103ce1402e2784b036.jpg',
   'ZZZ Zenless Zone Zero': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/2e5c06f3a846f254a57875d7.jpg',
