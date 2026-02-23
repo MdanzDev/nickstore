@@ -17,18 +17,18 @@ export const gameLogos: Record<string, string> = {
   'Mobile Legends ID': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
   'Mobile Legends Brazil': 'https://files.catbox.moe/hhow5f.jpg',  // Add this
    'Mobile Legends': 'https://files.catbox.moe/hhow5f.jpg', //sementara
-  'Genshin Impact': 'https://files.catbox.moe/2qhd91.jpg',
+  'Genshin Impact': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/86944cb0b9a2e1da465a844f.jpg',
   'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
   'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
-  'PUBG Mobile': 'https://files.catbox.moe/gusnqn.jpg',
-  'Free Fire': 'https://files.catbox.moe/72n5g0.jpg',
+  'PUBG Mobile': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/132a9dfd29a9c36178e6331b.jpg',
+  'Free Fire': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/092a0c2f4f9b33e91c516b2e.jpg',
   'Honor of Kings': 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Honor_of_Kings_logo.png',
   'Arena of Valor': 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Arena_of_Valor_logo.png',
-  'Call of Duty Mobile': 'https://files.catbox.moe/qxsc1f.jpg',
-  'Wuthering Waves': 'https://files.catbox.moe/71ff5b.jpg',
-  'ZZZ Zenless Zone Zero': 'https://files.catbox.moe/kgs6lu.jpg',
-  'Roblox': 'https://files.catbox.moe/zh9c7c.jpg',
-  'League of Legends: Wild Rift': 'https://files.catbox.moe/rl3x6e.jpg',
+  'Call of Duty Mobile': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/4f9036f5f3f598f84a2b686a.jpg',
+  'Wuthering Waves': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/a33573103ce1402e2784b036.jpg',
+  'ZZZ Zenless Zone Zero': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/2e5c06f3a846f254a57875d7.jpg',
+  'Roblox': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/fa21db45714f7553808a28b3.jpg',
+  'League of Legends: Wild Rift': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/d3964354acdd834df8ab27cd.jpg',
 };
 
 export const games: Game[] = [
