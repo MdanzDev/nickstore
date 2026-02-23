@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Codashop-inspired Dark Purple Theme */
+    --background: 280 75% 8%;
+    --foreground: 0 0% 98%;
+    --card: 280 60% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 280 60% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 280 40% 18%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 280 30% 20%;
+    --muted-foreground: 280 10% 60%;
+    --accent: 330 80% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 280 30% 20%;
+    --input: 280 30% 18%;
+    --ring: 262 83% 58%;
+    --radius: 0.75rem;
+    --sidebar-background: 280 75% 8%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 262 83% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 280 40% 18%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 280 30% 20%;
+    --sidebar-ring: 262 83% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Glass morphism header */
+  .glass-header {
+    @apply bg-background/80 backdrop-blur-xl border-b border-white/10;
+  }
+  
+  /* Game card styles */
+  .game-card {
+    @apply relative overflow-hidden rounded-2xl bg-card border border-border/50 transition-all duration-300;
+  }
+  
+  .game-card:hover {
+    @apply border-primary/50 shadow-glow;
+    transform: translateY(-4px);
+  }
+  
+  /* Category chip styles */
+  .category-chip {
+    @apply px-5 py-2.5 rounded-full font-semibold text-sm whitespace-nowrap transition-all duration-200;
+    @apply bg-secondary text-muted-foreground hover:bg-secondary/80;
+  }
+  
+  .category-chip.active {
+    @apply bg-primary text-primary-foreground shadow-glow;
+  }
+  
+  /* Step indicator */
+  .step-indicator {
+    @apply flex items-center gap-3;
+  }
+  
+  .step-number {
+    @apply w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm;
+  }
+  
+  .step-number.completed {
+    @apply bg-green-500;
+  }
+  
+  /* Product denomination card */
+  .denom-card {
+    @apply relative p-4 rounded-xl border-2 border-border/50 bg-card cursor-pointer transition-all duration-200;
+  }
+  
+  .denom-card:hover {
+    @apply border-primary/50;
+  }
+  
+  .denom-card.selected {
+    @apply border-primary bg-primary/10;
+  }
+  
+  .denom-card.best-seller::before {
+    content: 'BEST SELLER';
+    @apply absolute -top-2 left-3 px-2 py-0.5 bg-accent text-white text-[10px] font-bold rounded-full;
+  }
+  
+  /* Price styling */
+  .price-current {
+    @apply text-lg font-black text-primary;
+  }
+  
+  .price-original {
+    @apply text-sm text-muted-foreground line-through;
+  }
+  
+  .discount-badge {
+    @apply px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-bold rounded-full;
+  }
+  
+  /* Section title */
+  .section-title {
+    @apply text-xl font-black tracking-tight uppercase;
+    background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Hero gradient text */
+  .gradient-text {
+    @apply font-black;
+    background: linear-gradient(135deg, #fff 0%, #c084fc 50%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+  
+  /* Hide scrollbar for mobile */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:200%_100%];
+    animation: shimmer 1.5s infinite;
+  }
+  
+  /* Cart badge pulse */
+  .cart-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  /* Toast notification */
+  .toast {
+    @apply fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-2xl bg-foreground text-background text-sm font-bold shadow-2xl;
+  }
+  
+  /* Mobile bottom nav */
+  .mobile-nav-item {
+    @apply flex flex-col items-center gap-1 p-2 text-muted-foreground transition-colors;
+  }
+  
+  .mobile-nav-item.active {
+    @apply text-primary;
+  }
+  
+  /* Input styling */
+  .input-codashop {
+    @apply w-full px-4 py-4 bg-secondary border border-border rounded-xl text-foreground placeholder:text-muted-foreground;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all;
+  }
+  
+  /* Button variants */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl;
+    @apply hover:bg-primary/90 active:scale-95 transition-all;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-secondary text-secondary-foreground font-bold rounded-xl;
+    @apply hover:bg-secondary/80 active:scale-95 transition-all;
+  }
+  
+  .btn-ghost {
+    @apply px-6 py-3 bg-transparent text-foreground font-bold rounded-xl;
+    @apply hover:bg-secondary active:scale-95 transition-all;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+}
