@@ -12,10 +12,10 @@ export const categories: Category[] = [
 ];
 
 export const gameLogos: Record<string, string> = {
-  'Mobile Legends MY': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/7d61bdab5b0c25a90256f097.jpg',
-  'Mobile Legends PH': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/7d61bdab5b0c25a90256f097.jpg',
-  'Mobile Legends ID': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/7d61bdab5b0c25a90256f097.jpg',
-  'Mobile Legends Brazil': 'https://s3.ryzumi.net/ShirokamiRyzen/ryzumi-temp/ryzumi-api/7d61bdab5b0c25a90256f097.jpg',
+  'Mobile Legends MY': 'https://files.catbox.moe/hhow5f.jpg',
+  'Mobile Legends PH': 'https://files.catbox.moe/hhow5f.jpg',
+  'Mobile Legends ID': 'https://files.catbox.moe/hhow5f.jpg',
+  'Mobile Legends Brazil': 'https://files.catbox.moe/hhow5f.jpg',
   'Genshin Impact': 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Genshin_Impact_logo.svg',
   'Honkai: Star Rail': 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Honkai_Star_Rail_logo.svg',
   'Valorant': 'https://upload.wikimedia.org/wikipedia/commons/f/fc/Valorant_logo.svg',
