@@ -78,9 +78,9 @@ const Payment: React.FC = () => {
     try {
       const result = await createOrder(orderData, receiptFile || undefined);
       if (result && result.orderNumber) {
-        // Use window.location for Android PWA to avoid white screen
-        // This forces a full page navigation instead of client-side routing
-        window.location.href = `/order-success?order=${result.orderNumber}`;
+        // IMPORTANT: Use window.location for full page navigation
+        // This avoids the DataCloneError and works better on Android PWA
+        window.location.href = `/order-success?order=${encodeURIComponent(result.orderNumber)}`;
       } else {
         throw new Error('Order creation failed');
       }
