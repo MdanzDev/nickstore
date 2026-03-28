@@ -11,6 +11,7 @@ import GameDetail from '@/pages/public/GameDetail';
 import OrderForm from '@/pages/public/OrderForm';
 import Payment from '@/pages/public/Payment';
 import OrderStatus from '@/pages/public/OrderStatus';
+import OrderSuccess from '@/pages/public/OrderSuccess'; // Add this import
 
 // Admin Pages
 import AdminLogin from '@/pages/admin/Login';
@@ -38,9 +39,7 @@ function App() {
   };
 
   // Request notification permission on app load (only for desktop)
-  // On mobile, permission will be requested when user clicks the bell
   useEffect(() => {
-    // Only request immediately on desktop
     if (!isMobile() && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
@@ -58,6 +57,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/track-order" element={<OrderStatus />} />
           <Route path="/order-status/:orderNumber" element={<OrderStatus />} />
+          <Route path="/order-success" element={<OrderSuccess />} /> {/* Add this route */}
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
