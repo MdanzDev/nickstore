@@ -104,11 +104,6 @@ const OrderSuccess: React.FC = () => {
     : `Hi, I just placed order *${orderNumber}*. Please process it ASAP.`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-  // Custom loading spinner component inline
-  const LoadingSpinnerInline = () => (
-    <div className="w-12 h-12 border-4 border-violet-500/20 border-t-violet-500 rounded-full animate-spin"></div>
-  );
-
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950">
