@@ -11,12 +11,8 @@ import {
   Users,
   Calendar,
   RefreshCw,
-  ArrowUp,
-  ArrowDown,
   Sparkles,
-  Zap,
   Award,
-  Target,
 } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { StatCard } from '@/components/admin/StatCard';
@@ -25,22 +21,32 @@ import { useOrderStats, useAdminOrders } from '@/hooks/useOrders';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
-  BarChart,
-  Bar,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Cell,
-  AreaChart,
-  Area,
 } from 'recharts';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+
+interface ChartDataPoint {
+  name: string;
+  orders: number;
+  revenue: number;
+  trend: number;
+}
+
+interface StatusDataPoint {
+  name: string;
+  value: number;
+  color: string;
+  icon: string;
+}
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -83,9 +89,9 @@ const Dashboard: React.FC = () => {
   };
 
   // Prepare chart data with trend indicators
-  const chartData = useMemo(() => {
+  const chartData: ChartDataPoint[] = useMemo(() => {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const data = [];
+    const result: ChartDataPoint[] = [];
     
     for (let i = 6; i >= 0; i--) {
       const date = new Date();
@@ -101,20 +107,21 @@ const Dashboard: React.FC = () => {
         .filter(o => o.status === 'success')
         .reduce((sum, o) => sum + toNumber(o.total_amount), 0);
       
-      data.push({
+      const previousOrders = i > 0 ? result[i - 1]?.orders || 0 : 0;
+      
+      result.push({
         name: dayName,
         orders: dayOrders.length,
         revenue: revenue,
-        // Add trend indicator
-        trend: i > 0 ? (dayOrders.length - (data[i-1]?.orders || 0)) : 0,
+        trend: dayOrders.length - previousOrders,
       });
     }
     
-    return data;
+    return result;
   }, [orders]);
 
   // Status distribution
-  const statusData = useMemo(() => {
+  const statusData: StatusDataPoint[] = useMemo(() => {
     const pending = orders.filter(o => o.status === 'pending').length;
     const success = orders.filter(o => o.status === 'success').length;
     const failed = orders.filter(o => o.status === 'failed').length;
@@ -146,48 +153,15 @@ const Dashboard: React.FC = () => {
       return orderDate < sevenDaysAgo;
     });
     
-    const previousSuccessOrders = previousOrders.filter(o => o.status === 'success');
-    const previousRevenue = previousSuccessOrders.reduce((sum, o) => sum + toNumber(o.total_amount), 0);
-    
     return {
       totalOrders: previousOrders.length,
       pendingOrders: previousOrders.filter(o => o.status === 'pending').length,
       todayOrders: 0,
-      todayRevenue: previousRevenue,
+      todayRevenue: 0,
     };
   };
 
   const previousStats = getPreviousStats();
-
-  // Animation for numbers
-  const AnimatedNumber = ({ value }: { value: number }) => {
-    const [displayValue, setDisplayValue] = useState(0);
-    
-    useEffect(() => {
-      if (animateNumbers) {
-        let start = 0;
-        const end = value;
-        const duration = 800;
-        const increment = end / (duration / 16);
-        
-        const timer = setInterval(() => {
-          start += increment;
-          if (start >= end) {
-            setDisplayValue(end);
-            clearInterval(timer);
-          } else {
-            setDisplayValue(Math.floor(start));
-          }
-        }, 16);
-        
-        return () => clearInterval(timer);
-      } else {
-        setDisplayValue(value);
-      }
-    }, [value, animateNumbers]);
-    
-    return <span>{displayValue.toLocaleString()}</span>;
-  };
 
   if (!isAuthenticated) return null;
 
@@ -312,64 +286,37 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                {activeChart === 'orders' ? (
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="orderGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="name" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#0f172a',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                      }}
-                      labelStyle={{ color: '#fff' }}
-                      formatter={(value: number) => [`${value} orders`, 'Orders']}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="orders"
-                      stroke="#8b5cf6"
-                      strokeWidth={2}
-                      fill="url(#orderGradient)"
-                    />
-                    <Bar dataKey="orders" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-                  </AreaChart>
-                ) : (
-                  <AreaChart data={chartData}>
-                    <defs>
-                      <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#d946ef" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#d946ef" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="name" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#0f172a',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                      }}
-                      labelStyle={{ color: '#fff' }}
-                      formatter={(value: number) => [`RM ${value.toFixed(2)}`, 'Revenue']}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="revenue"
-                      stroke="#d946ef"
-                      strokeWidth={2}
-                      fill="url(#revenueGradient)"
-                    />
-                  </AreaChart>
-                )}
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={activeChart === 'orders' ? '#8b5cf6' : '#d946ef'} stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor={activeChart === 'orders' ? '#8b5cf6' : '#d946ef'} stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                  <XAxis dataKey="name" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#0f172a',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                    }}
+                    labelStyle={{ color: '#fff' }}
+                    formatter={(value: number) => 
+                      activeChart === 'orders' 
+                        ? [`${value} orders`, 'Orders']
+                        : [`RM ${value.toFixed(2)}`, 'Revenue']
+                    }
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey={activeChart === 'orders' ? 'orders' : 'revenue'}
+                    stroke={activeChart === 'orders' ? '#8b5cf6' : '#d946ef'}
+                    strokeWidth={2}
+                    fill="url(#gradient)"
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
           </div>
