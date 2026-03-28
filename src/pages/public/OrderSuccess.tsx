@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock } from 'lucide-react';
+import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock, RefreshCw } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,8 @@ const OrderSuccess: React.FC = () => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 5;
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -26,32 +28,59 @@ const OrderSuccess: React.FC = () => {
       }
 
       try {
+        console.log(`Fetching order ${orderNumber} (attempt ${retryCount + 1})...`);
         const orderData = await getOrderByNumber(orderNumber);
+        
         if (orderData) {
+          console.log('Order found!', orderData);
           setOrder(orderData);
+          setError(null);
+          setLoading(false);
+        } else if (retryCount < maxRetries) {
+          // Order not found yet, retry after delay
+          console.log(`Order not found, retrying in 1 second...`);
+          const timer = setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 1000);
+          return () => clearTimeout(timer);
         } else {
-          setError('Order not found');
+          setError('Order not found after multiple attempts');
+          setLoading(false);
         }
       } catch (err) {
         console.error('Error fetching order:', err);
-        setError('Failed to fetch order details');
-      } finally {
-        setLoading(false);
+        if (retryCount < maxRetries) {
+          // Error occurred, retry
+          const timer = setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 1000);
+          return () => clearTimeout(timer);
+        } else {
+          setError('Failed to fetch order details');
+          setLoading(false);
+        }
       }
     };
 
     fetchOrder();
-  }, [orderNumber, getOrderByNumber]);
+  }, [orderNumber, getOrderByNumber, retryCount, maxRetries]);
 
-  // Redirect to games if error after 3 seconds
+  // Manual retry button
+  const handleRetry = () => {
+    setRetryCount(0);
+    setLoading(true);
+    setError(null);
+  };
+
+  // Redirect to games if error after manual retry
   useEffect(() => {
-    if (error) {
+    if (error && retryCount >= maxRetries) {
       const timer = setTimeout(() => {
         navigate('/games');
-      }, 3000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [error, navigate]);
+  }, [error, retryCount, navigate]);
 
   const copyOrderNumber = () => {
     if (order?.order_number) {
@@ -68,10 +97,10 @@ const OrderSuccess: React.FC = () => {
   const whatsappNumber = '60137345871';
   const whatsappMessage = order 
     ? `Hi, I just placed order *${order.order_number}*. Please process it ASAP.`
-    : 'Hi, I need assistance with my order.';
+    : `Hi, I just placed order *${orderNumber}*. Please process it ASAP.`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-  // Show loading state
+  // Show loading state with retry count
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950">
@@ -80,6 +109,11 @@ const OrderSuccess: React.FC = () => {
           <div className="text-center">
             <LoadingSpinner size="lg" className="text-violet-500 mx-auto mb-4" />
             <p className="text-slate-400">Loading order details...</p>
+            {retryCount > 0 && (
+              <p className="text-slate-500 text-sm mt-2">
+                Attempt {retryCount} of {maxRetries}...
+              </p>
+            )}
           </div>
         </div>
         <Footer />
@@ -87,18 +121,44 @@ const OrderSuccess: React.FC = () => {
     );
   }
 
-  // Show error state
+  // Show error state with retry button
   if (error || !order) {
     return (
       <div className="min-h-screen bg-slate-950">
         <Navbar />
         <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
+          <div className="text-center max-w-md mx-auto px-4">
             <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
               <Clock className="w-8 h-8 text-red-400" />
             </div>
             <p className="text-red-400 mb-2">{error || 'Order not found'}</p>
-            <p className="text-slate-500 text-sm">Redirecting to games page...</p>
+            <p className="text-slate-500 text-sm mb-6">
+              Your order has been placed but we're having trouble loading the details.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={handleRetry}
+                className="bg-violet-500 hover:bg-violet-600 text-white"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+              <Button
+                onClick={() => navigate('/games')}
+                variant="outline"
+                className="border-slate-700 text-slate-300"
+              >
+                Continue Shopping
+              </Button>
+              <a 
+                href={whatsappLink} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-sm text-violet-400 hover:text-violet-300"
+              >
+                Or contact admin on WhatsApp
+              </a>
+            </div>
           </div>
         </div>
         <Footer />
