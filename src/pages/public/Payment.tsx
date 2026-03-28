@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Upload, MessageCircle, CheckCircle } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
@@ -21,7 +21,7 @@ const Payment: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { game, product, userDetails } = location.state || {};
-  const { paymentMethods, loading: methodsLoading } = usePaymentMethods(); // Removed the true parameter
+  const { paymentMethods, loading: methodsLoading } = usePaymentMethods();
   const { createOrder, loading: creatingOrder } = useCreateOrder();
 
   const [selectedMethod, setSelectedMethod] = useState<any>(null);
@@ -29,9 +29,10 @@ const Payment: React.FC = () => {
   const [receiptPreview, setReceiptPreview] = useState<string>('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdOrder, setCreatedOrder] = useState<any>(null);
+  const [error, setError] = useState<string>('');
 
   // Redirect if no game/product
-  React.useEffect(() => {
+  useEffect(() => {
     if (!game || !product) {
       navigate('/games');
     }
@@ -56,7 +57,12 @@ const Payment: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedMethod) return;
+    if (!selectedMethod) {
+      setError('Please select a payment method');
+      return;
+    }
+
+    setError('');
 
     const orderData = {
       game_id: game.$id,
@@ -78,11 +84,15 @@ const Payment: React.FC = () => {
 
     try {
       const result = await createOrder(orderData, receiptFile || undefined);
-      setCreatedOrder(result.order);
-      setShowSuccessModal(true);
-    } catch (err) {
+      if (result && result.order) {
+        setCreatedOrder(result.order);
+        setShowSuccessModal(true);
+      } else {
+        throw new Error('Order creation failed');
+      }
+    } catch (err: any) {
       console.error('Error creating order:', err);
-      alert(err instanceof Error ? err.message : 'Failed to create order. Please try again.');
+      setError(err.message || 'Failed to create order. Please try again.');
     }
   };
 
@@ -91,11 +101,11 @@ const Payment: React.FC = () => {
     if (createdOrder?.order_number) {
       navigate(`/order-status/${createdOrder.order_number}`);
     } else {
-      navigate('/order-status');
+      navigate('/games');
     }
   };
 
-  const whatsappNumber = '60197661697';
+  const whatsappNumber = '60137345871';
   const whatsappMessage = createdOrder 
     ? `Hi, I just placed order *${createdOrder.order_number}*. Please process it ASAP.`
     : 'Hi, I need assistance with my order.';
@@ -115,6 +125,13 @@ const Payment: React.FC = () => {
             <ArrowLeft className="w-5 h-5" />
             Back
           </button>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+              {error}
+            </div>
+          )}
 
           {/* Progress */}
           <div className="flex items-center gap-4 mb-8">
@@ -178,6 +195,10 @@ const Payment: React.FC = () => {
                       src={selectedMethod.qr_image_url}
                       alt="Payment QR Code"
                       className="w-64 h-64 object-contain rounded-xl border border-slate-700"
+                      onError={(e) => {
+                        console.error('QR image failed to load');
+                        e.currentTarget.style.display = 'none';
+                      }}
                     />
                     <p className="text-slate-400 text-sm mt-4 text-center">
                       Scan the QR code with your {selectedMethod.name} app to complete payment
