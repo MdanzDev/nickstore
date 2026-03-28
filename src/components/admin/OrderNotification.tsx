@@ -63,7 +63,7 @@ const OrderNotification: React.FC = () => {
     }
   }, []);
 
-  const handleNotificationClick = (orderNumber: string) => {
+  const handleNotificationClick = () => {
     setShowDropdown(false);
     navigate(`/admin/orders`);
   };
@@ -126,7 +126,7 @@ const OrderNotification: React.FC = () => {
                   <div
                     key={notif.id}
                     className="p-3 border-b border-slate-800 hover:bg-slate-800/50 cursor-pointer transition-colors group"
-                    onClick={() => handleNotificationClick(notif.orderNumber)}
+                    onClick={handleNotificationClick}
                   >
                     <div className="flex items-start gap-3">
                       <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
