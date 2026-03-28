@@ -6,7 +6,6 @@ import Footer from '@/components/public/Footer';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { useOrders } from '@/hooks/useOrders';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 const OrderSuccess: React.FC = () => {
   const navigate = useNavigate();
@@ -105,6 +104,11 @@ const OrderSuccess: React.FC = () => {
     : `Hi, I just placed order *${orderNumber}*. Please process it ASAP.`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
+  // Custom loading spinner component inline
+  const LoadingSpinnerInline = () => (
+    <div className="w-12 h-12 border-4 border-violet-500/20 border-t-violet-500 rounded-full animate-spin"></div>
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-950">
@@ -112,7 +116,7 @@ const OrderSuccess: React.FC = () => {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center animate-pulse">
             <div className="w-20 h-20 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-4 animate-bounce">
-              <Sparkles className="w-10 h-10 text-violet-400 animate-spin" />
+              <Sparkles className="w-10 h-10 text-violet-400 animate-spin-slow" />
             </div>
             <p className="text-slate-400 animate-pulse">Loading order details...</p>
             {retryCount > 0 && (
@@ -222,7 +226,7 @@ const OrderSuccess: React.FC = () => {
             {/* Status Badge with pulse animation */}
             <div className="inline-flex items-center gap-2 mb-6 animate-fade-in-up animation-delay-300">
               <StatusBadge status={order.status} />
-              <span className="text-slate-500 text-sm animate-pulse">
+              <span className="text-slate-500 text-sm animate-pulse-slow">
                 {order.status === 'pending' ? 'Waiting for payment confirmation' : 'Order completed'}
               </span>
             </div>
@@ -290,8 +294,31 @@ const OrderSuccess: React.FC = () => {
               </div>
             </div>
 
+            {/* Payment Info */}
+            <div className="bg-slate-800/50 rounded-xl p-5 mb-6 text-left animate-fade-in-up animation-delay-600">
+              <h3 className="text-white font-semibold mb-3">Payment Information</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Payment Method</span>
+                  <span className="text-white">{order.payment_method_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-400">Order Date</span>
+                  <span className="text-white">
+                    {new Date(order.created_at).toLocaleString('en-MY', {
+                      day: '2-digit',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </span>
+                </div>
+              </div>
+            </div>
+
             {/* Action Buttons with hover animations */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6 animate-fade-in-up animation-delay-600">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 animate-fade-in-up animation-delay-700">
               <a 
                 href={whatsappLink} 
                 target="_blank" 
@@ -312,7 +339,7 @@ const OrderSuccess: React.FC = () => {
             </div>
 
             {/* Continue Shopping link with hover animation */}
-            <div className="pt-4 border-t border-slate-800 animate-fade-in-up animation-delay-700">
+            <div className="pt-4 border-t border-slate-800 animate-fade-in-up animation-delay-800">
               <button
                 onClick={() => navigate('/games')}
                 className="text-slate-400 hover:text-white text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:gap-3 group"
@@ -324,7 +351,7 @@ const OrderSuccess: React.FC = () => {
           </div>
 
           {/* Help Text with fade in */}
-          <div className="text-center mt-6 animate-fade-in-up animation-delay-800">
+          <div className="text-center mt-6 animate-fade-in-up animation-delay-900">
             <p className="text-xs text-slate-500">
               A confirmation has been sent to your email.
               <br />
