@@ -57,7 +57,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/track-order" element={<OrderStatus />} />
           <Route path="/order-status/:orderNumber" element={<OrderStatus />} />
-          <Route path="/order-success" element={<OrderSuccess />} /> {/* Add this route */}
+     <Route path="/order-success" element={<OrderSuccess />} />
 
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
