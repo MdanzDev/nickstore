@@ -30,6 +30,7 @@ const Payment: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdOrder, setCreatedOrder] = useState<any>(null);
   const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Redirect if no game/product
   useEffect(() => {
@@ -38,7 +39,33 @@ const Payment: React.FC = () => {
     }
   }, [game, product, navigate]);
 
-  if (!game || !product) return null;
+  // Close modal and navigate after it's fully closed
+  const handleCloseSuccess = () => {
+    setShowSuccessModal(false);
+    // Use setTimeout to ensure modal animation completes before navigation
+    setTimeout(() => {
+      if (createdOrder?.order_number) {
+        navigate(`/order-status/${createdOrder.order_number}`);
+      } else {
+        navigate('/games');
+      }
+    }, 100);
+  };
+
+  // Handle navigation after modal closes
+  useEffect(() => {
+    if (!showSuccessModal && createdOrder) {
+      // If modal closed and we have an order, navigate
+      const timer = setTimeout(() => {
+        if (createdOrder?.order_number) {
+          navigate(`/order-status/${createdOrder.order_number}`);
+        } else {
+          navigate('/games');
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessModal, createdOrder, navigate]);
 
   const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -62,7 +89,10 @@ const Payment: React.FC = () => {
       return;
     }
 
+    if (isSubmitting) return;
+    
     setError('');
+    setIsSubmitting(true);
 
     const orderData = {
       game_id: game.$id,
@@ -86,6 +116,7 @@ const Payment: React.FC = () => {
       const result = await createOrder(orderData, receiptFile || undefined);
       if (result && result.order) {
         setCreatedOrder(result.order);
+        // Show modal immediately
         setShowSuccessModal(true);
       } else {
         throw new Error('Order creation failed');
@@ -93,15 +124,8 @@ const Payment: React.FC = () => {
     } catch (err: any) {
       console.error('Error creating order:', err);
       setError(err.message || 'Failed to create order. Please try again.');
-    }
-  };
-
-  const handleCloseSuccess = () => {
-    setShowSuccessModal(false);
-    if (createdOrder?.order_number) {
-      navigate(`/order-status/${createdOrder.order_number}`);
-    } else {
-      navigate('/games');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -110,6 +134,8 @@ const Payment: React.FC = () => {
     ? `Hi, I just placed order *${createdOrder.order_number}*. Please process it ASAP.`
     : 'Hi, I need assistance with my order.';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+  if (!game || !product) return null;
 
   return (
     <div className="min-h-screen bg-slate-950">
@@ -245,10 +271,10 @@ const Payment: React.FC = () => {
 
               <Button
                 onClick={handleSubmit}
-                disabled={!selectedMethod || creatingOrder}
+                disabled={!selectedMethod || creatingOrder || isSubmitting}
                 className="w-full bg-violet-500 hover:bg-violet-600 text-white py-6"
               >
-                {creatingOrder ? (
+                {(creatingOrder || isSubmitting) ? (
                   <>
                     <LoadingSpinner size="sm" className="mr-2" />
                     Processing...
@@ -323,7 +349,7 @@ const Payment: React.FC = () => {
       <Footer />
 
       {/* Success Modal */}
-      <Dialog open={showSuccessModal} onOpenChange={handleCloseSuccess}>
+      <Dialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
         <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-md">
           <DialogHeader>
             <DialogTitle className="text-center">
