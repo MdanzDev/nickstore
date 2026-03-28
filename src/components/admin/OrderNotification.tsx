@@ -5,7 +5,7 @@ import { useAdminOrders } from '@/hooks/useOrders';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-interface OrderNotification {
+interface OrderNotificationItem {
   id: string;
   orderNumber: string;
   gameName: string;
@@ -15,22 +15,30 @@ interface OrderNotification {
 
 const OrderNotification: React.FC = () => {
   const navigate = useNavigate();
-  const { orders } = useAdminOrders();
-  const [notifications, setNotifications] = useState<OrderNotification[]>([]);
+  const { orders, refresh } = useAdminOrders();
+  const [notifications, setNotifications] = useState<OrderNotificationItem[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [previousOrdersCount, setPreviousOrdersCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Refresh orders periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refresh();
+    }, 10000); // Refresh every 10 seconds
+    
+    return () => clearInterval(interval);
+  }, [refresh]);
 
   // Check for new orders
   useEffect(() => {
     const currentCount = orders.length;
     
     if (currentCount > previousOrdersCount && previousOrdersCount > 0) {
-      // New orders detected!
       const newOrders = orders.slice(0, currentCount - previousOrdersCount);
       
       newOrders.forEach(order => {
-        const notification: OrderNotification = {
+        const notification: OrderNotificationItem = {
           id: order.$id!,
           orderNumber: order.order_number,
           gameName: order.game_name,
@@ -47,7 +55,6 @@ const OrderNotification: React.FC = () => {
             body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
             icon: '/icon-192.png',
             badge: '/icon-192.png',
-            silent: false,
           });
         }
       });
@@ -65,10 +72,10 @@ const OrderNotification: React.FC = () => {
 
   const handleNotificationClick = () => {
     setShowDropdown(false);
-    navigate(`/admin/orders`);
+    navigate('/admin/orders');
   };
 
-  const clearNotifications = () => {
+  const clearAllNotifications = () => {
     setNotifications([]);
     setUnreadCount(0);
   };
@@ -107,7 +114,7 @@ const OrderNotification: React.FC = () => {
               <h3 className="font-semibold text-white">New Orders</h3>
               {unreadCount > 0 && (
                 <button
-                  onClick={clearNotifications}
+                  onClick={clearAllNotifications}
                   className="text-xs text-slate-400 hover:text-white transition-colors"
                 >
                   Clear all
