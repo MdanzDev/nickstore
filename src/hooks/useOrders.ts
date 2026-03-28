@@ -85,10 +85,10 @@ export const useCreateOrder = () => {
       
       let receiptImageId = '';
       if (receiptFile) {
-        console.log('Uploading receipt image...');
+        console.log('📤 Uploading receipt image...');
         const upload = await storageHelpers.uploadFile(receiptFile, 'receipt');
         receiptImageId = upload.$id;
-        console.log('Receipt uploaded with ID:', receiptImageId);
+        console.log('✅ Receipt uploaded with ID:', receiptImageId);
       }
 
       const orderNumber = generateOrderNumber();
@@ -112,11 +112,12 @@ export const useCreateOrder = () => {
         user_game_server: orderData.user_game_server && orderData.user_game_server.trim() !== '' ? orderData.user_game_server : null,
       };
       
-      console.log('Creating order with payload:', orderPayload);
+      console.log('📝 Creating order with payload:', orderPayload);
       
       const newOrder = await ordersCollection.create(orderPayload);
+      console.log('✅ Order created successfully:', newOrder.order_number);
       
-      // Send Telegram notification in background
+      // Prepare order for Telegram notification
       const orderForNotification = {
         order_number: newOrder.order_number,
         game_name: newOrder.game_name,
@@ -131,11 +132,23 @@ export const useCreateOrder = () => {
         created_at: newOrder.created_at,
       };
       
-      sendTelegramNotification(orderForNotification).catch(console.error);
+      console.log('📱 Attempting to send Telegram notification for order:', newOrder.order_number);
+      
+      // Send Telegram notification with proper error handling
+      try {
+        const telegramSent = await sendTelegramNotification(orderForNotification);
+        if (telegramSent) {
+          console.log('✅ Telegram notification sent for order:', newOrder.order_number);
+        } else {
+          console.warn('⚠️ Telegram notification failed for order:', newOrder.order_number);
+        }
+      } catch (telegramError) {
+        console.error('❌ Telegram notification error:', telegramError);
+      }
 
       return { order: newOrder as unknown as Order, orderNumber };
     } catch (err: any) {
-      console.error('Error creating order:', err);
+      console.error('❌ Error creating order:', err);
       setError(err.message || 'Failed to create order');
       throw err;
     } finally {
@@ -216,6 +229,8 @@ export const useAdminOrders = () => {
           payment_method_name: order.payment_method_name,
           created_at: order.created_at!,
         };
+        
+        console.log('📱 Sending status update notification for order:', order.order_number);
         sendTelegramNotification(orderForNotification).catch(console.error);
       }
       
