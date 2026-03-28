@@ -111,11 +111,11 @@ const Orders: React.FC = () => {
         <div className="h-16 lg:hidden" />
 
         <div className="p-6">
-          {/* Header with animations */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 animate-slide-up">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center animate-pulse-slow">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold text-white">Orders</h1>
@@ -126,21 +126,21 @@ const Orders: React.FC = () => {
               variant="outline"
               onClick={() => refresh()}
               disabled={loading}
-              className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-300 hover:scale-105"
+              className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800"
             >
               <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
 
-          {/* Filters with animations */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6 animate-fade-in-up animation-delay-100">
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 transition-all duration-300" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
               <Input
                 placeholder="Search by order number, game name, game ID, or email..."
                 onChange={handleSearchChange}
-                className="pl-12 py-6 bg-slate-900/50 border-slate-700 text-white text-base rounded-xl transition-all duration-300 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+                className="pl-12 py-6 bg-slate-900/50 border-slate-700 text-white text-base rounded-xl"
               />
               {isSearching && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -149,7 +149,7 @@ const Orders: React.FC = () => {
               )}
             </div>
             <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as OrderStatus | 'all')}>
-              <SelectTrigger className="w-full sm:w-48 bg-slate-900/50 border-slate-700 text-white rounded-xl transition-all duration-300 focus:border-violet-500">
+              <SelectTrigger className="w-full sm:w-48 bg-slate-900/50 border-slate-700 text-white rounded-xl">
                 <Filter className="w-4 h-4 mr-2" />
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -166,21 +166,21 @@ const Orders: React.FC = () => {
 
           {/* Results count */}
           {!loading && filteredOrders.length > 0 && (
-            <div className="mb-4 text-sm text-slate-500 animate-fade-in-up animation-delay-200">
+            <div className="mb-4 text-sm text-slate-500">
               Found {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}
             </div>
           )}
 
           {/* Orders Table */}
           {loading ? (
-            <div className="flex items-center justify-center py-20 animate-fade-in-up">
+            <div className="flex items-center justify-center py-20">
               <div className="relative">
                 <LoadingSpinner size="lg" className="text-violet-500" />
                 <div className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
               </div>
             </div>
           ) : (
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden animate-fade-in-up animation-delay-300 hover:border-violet-500/30 transition-all duration-300">
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden">
               <OrderTable
                 orders={filteredOrders}
                 loading={loading}
@@ -191,7 +191,7 @@ const Orders: React.FC = () => {
           )}
 
           {/* Status Summary Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-8 animate-fade-in-up animation-delay-400">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-8">
             {Object.entries(statusCounts).map(([status, count]) => {
               const { icon: Icon, color, bg, border } = statusIcons[status as OrderStatus];
               return (
@@ -211,7 +211,7 @@ const Orders: React.FC = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 animate-fade-in-up animation-delay-500 hover:border-violet-500/30 transition-all duration-300">
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 hover:border-violet-500/30 transition-all duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-emerald-400" />
@@ -226,7 +226,7 @@ const Orders: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 animate-fade-in-up animation-delay-600 hover:border-violet-500/30 transition-all duration-300">
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 hover:border-violet-500/30 transition-all duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
                   <Package className="w-5 h-5 text-violet-400" />
@@ -237,7 +237,7 @@ const Orders: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 animate-fade-in-up animation-delay-700 hover:border-violet-500/30 transition-all duration-300">
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4 hover:border-violet-500/30 transition-all duration-300">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Clock className="w-5 h-5 text-amber-400" />
@@ -252,7 +252,7 @@ const Orders: React.FC = () => {
         </div>
       </main>
 
-      {/* Order Detail Modal */}
+      {/* Order Detail Modal - Simplified */}
       <OrderDetailModal
         order={selectedOrder}
         open={detailOpen}
