@@ -1,5 +1,5 @@
 import React from 'react';
-import { Eye, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { Eye, CheckCircle, XCircle, Clock, Package, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -31,19 +31,24 @@ export const OrderTable: React.FC<OrderTableProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <LoadingSpinner size="lg" className="text-violet-500" />
+      <div className="flex items-center justify-center py-20 animate-fade-in-up">
+        <div className="relative">
+          <LoadingSpinner size="lg" className="text-violet-500" />
+          <div className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
+        </div>
       </div>
     );
   }
 
   if (orders.length === 0) {
     return (
-      <EmptyState
-        title="No orders found"
-        description="There are no orders to display at the moment."
-        icon={<Clock className="w-8 h-8 text-slate-400" />}
-      />
+      <div className="animate-fade-in-up">
+        <EmptyState
+          title="No orders found"
+          description="There are no orders to display at the moment."
+          icon={<Clock className="w-8 h-8 text-slate-400" />}
+        />
+      </div>
     );
   }
 
@@ -59,7 +64,6 @@ export const OrderTable: React.FC<OrderTableProps> = ({
   };
 
   const formatCurrency = (amount: number | string) => {
-    // Convert string to number if needed
     const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     if (isNaN(numericAmount)) return 'RM 0.00';
     return `RM ${numericAmount.toFixed(2)}`;
@@ -80,12 +84,20 @@ export const OrderTable: React.FC<OrderTableProps> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {orders.map((order) => (
-            <TableRow key={order.$id} className="border-slate-800">
-              <TableCell className="font-medium text-white">{order.order_number}</TableCell>
+          {orders.map((order, index) => (
+            <TableRow 
+              key={order.$id} 
+              className="border-slate-800 hover:bg-slate-800/30 transition-all duration-300 animate-fade-in-up"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <TableCell className="font-medium text-white font-mono text-sm">
+                {order.order_number}
+              </TableCell>
               <TableCell className="text-slate-300">{order.game_name}</TableCell>
               <TableCell className="text-slate-300">{order.product_name}</TableCell>
-              <TableCell className="text-white font-medium">{formatCurrency(order.total_amount)}</TableCell>
+              <TableCell className="text-white font-medium">
+                {formatCurrency(order.total_amount)}
+              </TableCell>
               <TableCell>
                 <StatusBadge status={order.status} />
               </TableCell>
@@ -96,7 +108,7 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-slate-400 hover:text-white"
+                      className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-700 transition-all duration-300 hover:scale-110"
                       onClick={() => onViewOrder(order)}
                     >
                       <Eye className="w-4 h-4" />
@@ -106,16 +118,18 @@ export const OrderTable: React.FC<OrderTableProps> = ({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                          className="h-8 w-8 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-all duration-300 hover:scale-110"
                           onClick={() => onUpdateStatus(order.$id!, 'success')}
+                          title="Mark as Success"
                         >
                           <CheckCircle className="w-4 h-4" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                          className="h-8 w-8 text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-300 hover:scale-110"
                           onClick={() => onUpdateStatus(order.$id!, 'failed')}
+                          title="Mark as Failed"
                         >
                           <XCircle className="w-4 h-4" />
                         </Button>
