@@ -55,7 +55,6 @@ const Dashboard: React.FC = () => {
   const { orders, loading: ordersLoading, updateOrderStatus, refresh: refreshOrders } = useAdminOrders();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeChart, setActiveChart] = useState<'orders' | 'revenue'>('orders');
-  const [animateNumbers, setAnimateNumbers] = useState(false);
 
   // Redirect if not authenticated
   React.useEffect(() => {
@@ -63,15 +62,6 @@ const Dashboard: React.FC = () => {
       navigate('/admin/login');
     }
   }, [isAuthenticated, navigate]);
-
-  // Trigger number animation when stats load
-  useEffect(() => {
-    if (!statsLoading) {
-      setAnimateNumbers(true);
-      const timer = setTimeout(() => setAnimateNumbers(false), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [statsLoading]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
