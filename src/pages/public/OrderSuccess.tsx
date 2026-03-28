@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock, RefreshCw, Sparkles, PartyPopper } from 'lucide-react';
+import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock, RefreshCw, Sparkles, PartyPopper, XCircle, Loader2, AlertTriangle } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { Button } from '@/components/ui/button';
@@ -11,22 +11,53 @@ const OrderSuccess: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderNumber = searchParams.get('order');
-  const { getOrderByNumber } = useOrders();
+  const { getOrderByNumber, orders } = useOrders();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
-  const maxRetries = 5;
+  const maxRetries = 10; // Increased for auto-refresh
+
+  // Auto-refresh effect - checks for order status changes every 3 seconds
+  useEffect(() => {
+    if (!orderNumber) return;
+
+    const interval = setInterval(async () => {
+      if (orderNumber) {
+        try {
+          const freshOrder = await getOrderByNumber(orderNumber);
+          if (freshOrder) {
+            // Check if status changed
+            if (order && freshOrder.status !== order.status) {
+              console.log(`Order status changed from ${order.status} to ${freshOrder.status}`);
+              setOrder(freshOrder);
+              // If status changed to success, show confetti again
+              if (freshOrder.status === 'success') {
+                setShowConfetti(true);
+                setTimeout(() => setShowConfetti(false), 3000);
+              }
+            } else if (!order) {
+              setOrder(freshOrder);
+            }
+          }
+        } catch (err) {
+          console.error('Auto-refresh error:', err);
+        }
+      }
+    }, 3000); // Refresh every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [orderNumber, getOrderByNumber, order]);
 
   useEffect(() => {
-    // Trigger confetti effect on success
-    if (order) {
+    // Trigger confetti effect only on success
+    if (order?.status === 'success') {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 3000);
       return () => clearTimeout(timer);
     }
-  }, [order]);
+  }, [order?.status]);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -100,9 +131,58 @@ const OrderSuccess: React.FC = () => {
 
   const whatsappNumber = '60137345871';
   const whatsappMessage = order 
-    ? `Hi, I just placed order *${order.order_number}*. Please process it ASAP.`
+    ? `Hi, I'm inquiring about my order *${order.order_number}* (Status: ${order.status}).`
     : `Hi, I just placed order *${orderNumber}*. Please process it ASAP.`;
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+  // Status-based UI configuration
+  const getStatusConfig = () => {
+    switch (order?.status) {
+      case 'success':
+        return {
+          icon: CheckCircle,
+          iconColor: 'text-emerald-500',
+          bgColor: 'bg-emerald-500/20',
+          title: 'Order Completed Successfully!',
+          subtitle: 'Thank you for your purchase! Your order has been processed.',
+          buttonVariant: 'bg-violet-500 hover:bg-violet-600',
+          showConfetti: true,
+        };
+      case 'pending':
+        return {
+          icon: Clock,
+          iconColor: 'text-amber-500',
+          bgColor: 'bg-amber-500/20',
+          title: 'Order Pending',
+          subtitle: 'Your order is being processed. We\'ll update the status once payment is confirmed.',
+          buttonVariant: 'bg-amber-500 hover:bg-amber-600',
+          showConfetti: false,
+        };
+      case 'failed':
+        return {
+          icon: XCircle,
+          iconColor: 'text-red-500',
+          bgColor: 'bg-red-500/20',
+          title: 'Order Failed',
+          subtitle: 'There was an issue with your order. Please contact us for assistance.',
+          buttonVariant: 'bg-red-500 hover:bg-red-600',
+          showConfetti: false,
+        };
+      default:
+        return {
+          icon: Clock,
+          iconColor: 'text-slate-500',
+          bgColor: 'bg-slate-500/20',
+          title: 'Order Status Unknown',
+          subtitle: 'Please contact support for assistance.',
+          buttonVariant: 'bg-violet-500 hover:bg-violet-600',
+          showConfetti: false,
+        };
+    }
+  };
+
+  const statusConfig = getStatusConfig();
+  const StatusIcon = statusConfig.icon;
 
   if (loading) {
     return (
@@ -111,7 +191,7 @@ const OrderSuccess: React.FC = () => {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center animate-pulse">
             <div className="w-20 h-20 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-4 animate-bounce">
-              <Sparkles className="w-10 h-10 text-violet-400 animate-spin-slow" />
+              <Loader2 className="w-10 h-10 text-violet-400 animate-spin" />
             </div>
             <p className="text-slate-400 animate-pulse">Loading order details...</p>
             {retryCount > 0 && (
@@ -133,7 +213,7 @@ const OrderSuccess: React.FC = () => {
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center max-w-md mx-auto px-4">
             <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4 animate-shake">
-              <Clock className="w-10 h-10 text-red-400" />
+              <AlertTriangle className="w-10 h-10 text-red-400" />
             </div>
             <p className="text-red-400 mb-2 animate-pulse">{error || 'Order not found'}</p>
             <p className="text-slate-500 text-sm mb-6">
@@ -172,8 +252,8 @@ const OrderSuccess: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* Confetti effect overlay */}
-      {showConfetti && (
+      {/* Confetti effect overlay - only on success */}
+      {showConfetti && statusConfig.showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
           <div className="absolute inset-0 overflow-hidden">
             {[...Array(50)].map((_, i) => (
@@ -201,30 +281,42 @@ const OrderSuccess: React.FC = () => {
 
       <main className="pt-20 pb-20">
         <div className="container mx-auto px-4 max-w-2xl">
-          {/* Success Card with animations */}
-          <div className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-8 text-center animate-slide-up">
-            {/* Success Icon with bounce animation */}
-            <div className="w-24 h-24 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6 animate-bounce-in">
+          {/* Success Card with status-based styling */}
+          <div className={`bg-slate-900/50 border border-slate-800 rounded-2xl p-6 md:p-8 text-center animate-slide-up`}>
+            {/* Status Icon with bounce animation */}
+            <div className={`w-24 h-24 rounded-full ${statusConfig.bgColor} flex items-center justify-center mx-auto mb-6 animate-bounce-in`}>
               <div className="relative">
-                <CheckCircle className="w-12 h-12 text-emerald-500 animate-scale-pulse" />
-                <PartyPopper className="w-6 h-6 text-yellow-500 absolute -top-2 -right-2 animate-wiggle" />
+                <StatusIcon className={`w-12 h-12 ${statusConfig.iconColor} ${order.status === 'pending' ? 'animate-pulse-slow' : 'animate-scale-pulse'}`} />
+                {order.status === 'pending' && (
+                  <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-amber-500 animate-ping" />
+                )}
               </div>
             </div>
             
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 animate-fade-in-up">
-              Order Placed Successfully!
+            <h1 className={`text-2xl md:text-3xl font-bold mb-3 animate-fade-in-up ${statusConfig.iconColor}`}>
+              {statusConfig.title}
             </h1>
             <p className="text-slate-400 mb-6 animate-fade-in-up animation-delay-200">
-              Your order has been submitted and is being processed.
+              {statusConfig.subtitle}
             </p>
 
             {/* Status Badge with pulse animation */}
             <div className="inline-flex items-center gap-2 mb-6 animate-fade-in-up animation-delay-300">
               <StatusBadge status={order.status} />
               <span className="text-slate-500 text-sm animate-pulse-slow">
-                {order.status === 'pending' ? 'Waiting for payment confirmation' : 'Order completed'}
+                {order.status === 'pending' && 'Waiting for payment confirmation'}
+                {order.status === 'success' && 'Order completed successfully'}
+                {order.status === 'failed' && 'Order failed - contact support'}
               </span>
             </div>
+
+            {/* Auto-refresh indicator for pending orders */}
+            {order.status === 'pending' && (
+              <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-full px-3 py-1 mb-4 animate-pulse-slow">
+                <Loader2 className="w-3 h-3 text-amber-400 animate-spin" />
+                <span className="text-xs text-amber-400">Auto-refreshing status...</span>
+              </div>
+            )}
 
             {/* Order Number with hover animation */}
             <div className="bg-slate-800/50 rounded-xl p-5 mb-6 transition-all duration-300 hover:bg-slate-800/70 hover:scale-[1.02] animate-fade-in-up animation-delay-400">
@@ -246,7 +338,7 @@ const OrderSuccess: React.FC = () => {
               </p>
             </div>
 
-            {/* Order Details with staggered animation */}
+            {/* Order Details */}
             <div className="bg-slate-800/50 rounded-xl p-5 mb-6 text-left animate-fade-in-up animation-delay-500">
               <h3 className="text-white font-semibold mb-4 pb-2 border-b border-slate-700">
                 Order Summary
@@ -282,7 +374,7 @@ const OrderSuccess: React.FC = () => {
                 )}
                 <div className="flex justify-between pt-2 border-t border-slate-700 mt-2">
                   <span className="text-slate-400 font-semibold">Total Amount</span>
-                  <span className="text-xl font-bold text-violet-400 animate-glow">
+                  <span className={`text-xl font-bold ${order.status === 'success' ? 'text-emerald-400' : 'text-violet-400'} animate-glow`}>
                     {formatCurrency(order.total_amount)}
                   </span>
                 </div>
@@ -309,10 +401,24 @@ const OrderSuccess: React.FC = () => {
                     })}
                   </span>
                 </div>
+                {order.completed_at && (
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Completed Date</span>
+                    <span className="text-white">
+                      {new Date(order.completed_at).toLocaleString('en-MY', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* Action Buttons with hover animations */}
+            {/* Action Buttons with status-based styling */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6 animate-fade-in-up animation-delay-700">
               <a 
                 href={whatsappLink} 
@@ -327,7 +433,7 @@ const OrderSuccess: React.FC = () => {
               </a>
               <Button
                 onClick={() => navigate(`/order-status/${order.order_number}`)}
-                className="flex-1 bg-violet-500 hover:bg-violet-600 text-white transition-all duration-300 hover:scale-105 active:scale-95"
+                className={`flex-1 ${statusConfig.buttonVariant} text-white transition-all duration-300 hover:scale-105 active:scale-95`}
               >
                 Track Order
               </Button>
@@ -345,7 +451,7 @@ const OrderSuccess: React.FC = () => {
             </div>
           </div>
 
-          {/* Help Text with fade in */}
+          {/* Help Text */}
           <div className="text-center mt-6 animate-fade-in-up animation-delay-900">
             <p className="text-xs text-slate-500">
               A confirmation has been sent to your email.
