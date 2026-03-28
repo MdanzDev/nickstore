@@ -17,6 +17,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import OrderNotification from '@/components/admin/OrderNotification';
 
 interface AdminSidebarProps {
   className?: string;
@@ -38,13 +39,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) =>
 
   const NavContent = () => (
     <>
-      <div className="flex items-center justify-center h-16 border-b border-slate-800">
+      <div className="flex items-center justify-between h-16 border-b border-slate-800 px-4">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
             <Gamepad2 className="w-5 h-5 text-white" />
           </div>
           <span className="text-lg font-bold text-white">NickStore</span>
         </div>
+        <OrderNotification />
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1">
@@ -97,18 +99,64 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) =>
           </div>
           <span className="text-lg font-bold text-white">NickStore</span>
         </div>
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-slate-400">
-              <Menu className="w-6 h-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 bg-slate-950 border-r border-slate-800 p-0">
-            <div className="flex flex-col h-full">
-              <NavContent />
-            </div>
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2">
+          <OrderNotification />
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-slate-400">
+                <Menu className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 bg-slate-950 border-r border-slate-800 p-0">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between h-16 border-b border-slate-800 px-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center">
+                      <Gamepad2 className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg font-bold text-white">NickStore</span>
+                  </div>
+                </div>
+                <nav className="flex-1 px-3 py-4 space-y-1">
+                  {navItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <NavLink
+                        key={item.path}
+                        to={item.path}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                          isActive
+                            ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        {item.label}
+                        {item.path === '/admin/orders' && unreadCount > 0 && (
+                          <span className="ml-auto bg-violet-500 text-white text-xs font-medium px-2 py-0.5 rounded-full">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </NavLink>
+                    );
+                  })}
+                </nav>
+                <div className="p-3 border-t border-slate-800">
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-3 text-slate-400 hover:text-red-400 hover:bg-red-500/10"
+                    onClick={logout}
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
 
       {/* Desktop Sidebar */}
