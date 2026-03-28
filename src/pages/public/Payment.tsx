@@ -88,7 +88,10 @@ const Payment: React.FC = () => {
       const result = await createOrder(orderData, receiptFile || undefined);
       if (result && result.order) {
         setCreatedOrder(result.order);
-        setShowSuccessModal(true);
+        // Small delay to ensure state is set before showing modal
+        setTimeout(() => {
+          setShowSuccessModal(true);
+        }, 100);
       } else {
         throw new Error('Order creation failed');
       }
@@ -101,25 +104,16 @@ const Payment: React.FC = () => {
   };
 
   const handleTrackOrder = () => {
+    // Close modal first
     setShowSuccessModal(false);
-    // Small delay to ensure modal animation completes before navigation
+    // Use longer delay for Android PWA to ensure modal fully closes
     setTimeout(() => {
       if (createdOrder?.order_number) {
         navigate(`/order-status/${createdOrder.order_number}`);
       } else {
         navigate('/games');
       }
-    }, 100);
-  };
-
-  const handleModalClose = (open: boolean) => {
-    setShowSuccessModal(open);
-    // If closing without tracking, go to games after modal closes
-    if (!open && createdOrder) {
-      setTimeout(() => {
-        navigate('/games');
-      }, 100);
-    }
+    }, 300);
   };
 
   const whatsappNumber = '60137345871';
@@ -341,9 +335,27 @@ const Payment: React.FC = () => {
 
       <Footer />
 
-      {/* Success Modal */}
-      <Dialog open={showSuccessModal} onOpenChange={handleModalClose}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-md">
+      {/* Success Modal - Fixed for Android PWA */}
+      <Dialog open={showSuccessModal} onOpenChange={(open) => {
+        // Prevent automatic closing on Android PWA
+        if (!open && createdOrder) {
+          // Only navigate if user intentionally closed
+          setTimeout(() => {
+            navigate(`/order-status/${createdOrder.order_number}`);
+          }, 100);
+        }
+      }}>
+        <DialogContent 
+          className="bg-slate-950 border-slate-800 text-white max-w-md"
+          onInteractOutside={(e) => {
+            // Prevent closing when clicking outside on Android
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            // Prevent closing with escape key on Android
+            e.preventDefault();
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="text-center">
               <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
@@ -359,10 +371,19 @@ const Payment: React.FC = () => {
             <p className="text-slate-400 mb-2">Your order number is:</p>
             <p className="text-2xl font-bold text-violet-400 mb-4 font-mono">{createdOrder?.order_number}</p>
             <p className="text-sm text-slate-400 mb-6">
-              Please save this number to track your order status. We'll process your order as soon as possible.
+              Please save this number to track your order status.
             </p>
             <div className="flex gap-3">
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="flex-1">
+              <a 
+                href={whatsappLink} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(whatsappLink, '_blank');
+                }}
+              >
                 <Button variant="outline" className="w-full border-green-500 text-green-400 hover:bg-green-500/10">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Contact Admin
