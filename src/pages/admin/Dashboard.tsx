@@ -33,6 +33,7 @@ import {
   Cell,
 } from 'recharts';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { sendTestTelegramMessage } from '@/lib/telegram';
 
 interface ChartDataPoint {
   name: string;
@@ -151,6 +152,8 @@ const Dashboard: React.FC = () => {
     };
   };
 
+
+
   const previousStats = getPreviousStats();
 
   if (!isAuthenticated) return null;
@@ -193,6 +196,23 @@ const Dashboard: React.FC = () => {
               </Button>
             </div>
           </div>
+
+          // Add this button next to the refresh button
+<Button
+  onClick={async () => {
+    const success = await sendTestTelegramMessage();
+    if (success) {
+      alert('✅ Test message sent to Telegram!');
+    } else {
+      alert('❌ Failed to send test message. Check console.');
+    }
+  }}
+  variant="outline"
+  className="border-green-500 text-green-400 hover:bg-green-500/10"
+>
+  Test Telegram
+</Button>
+  
 
           {/* Stats Grid with animations */}
           {statsLoading ? (
