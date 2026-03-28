@@ -10,7 +10,6 @@ import {
   Menu,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNotifications } from '@/contexts/NotificationContext';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -33,11 +32,8 @@ const navItems = [
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) => {
   const { logout } = useAuth();
-  const { unreadCount } = useNotifications();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  console.log('AdminSidebar - unreadCount:', unreadCount);
 
   const NavContent = () => (
     <>
@@ -68,11 +64,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) =>
             >
               <Icon className="w-5 h-5" />
               {item.label}
-              {item.path === '/admin/orders' && unreadCount > 0 && (
-                <span className="ml-auto bg-violet-500 text-white text-xs font-medium px-2 py-0.5 rounded-full">
-                  {unreadCount}
-                </span>
-              )}
             </NavLink>
           );
         })}
@@ -136,11 +127,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) =>
                       >
                         <Icon className="w-5 h-5" />
                         {item.label}
-                        {item.path === '/admin/orders' && unreadCount > 0 && (
-                          <span className="ml-auto bg-violet-500 text-white text-xs font-medium px-2 py-0.5 rounded-full">
-                            {unreadCount}
-                          </span>
-                        )}
                       </NavLink>
                     );
                   })}
