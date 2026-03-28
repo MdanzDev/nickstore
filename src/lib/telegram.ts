@@ -20,13 +20,14 @@ interface OrderData {
 
 export const sendTelegramNotification = async (order: OrderData): Promise<boolean> => {
   console.log('📱 Telegram: Starting to send notification...');
-  console.log('📱 Telegram Bot Token exists:', !!TELEGRAM_BOT_TOKEN);
-  console.log('📱 Telegram Chat ID exists:', !!TELEGRAM_CHAT_ID);
+  console.log('📱 Bot Token exists:', !!TELEGRAM_BOT_TOKEN);
+  console.log('📱 Chat ID exists:', !!TELEGRAM_CHAT_ID);
   
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.warn('⚠️ Telegram bot not configured. Skipping notification.');
-    console.warn('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN ? '✓ Set' : '✗ Missing');
-    console.warn('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID ? '✓ Set' : '✗ Missing');
+    console.error('❌ Telegram bot not configured. Missing:', {
+      token: TELEGRAM_BOT_TOKEN ? '✓' : '✗',
+      chatId: TELEGRAM_CHAT_ID ? '✓' : '✗',
+    });
     return false;
   }
 
@@ -36,13 +37,17 @@ export const sendTelegramNotification = async (order: OrderData): Promise<boolea
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-MY', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    try {
+      return new Date(dateString).toLocaleString('en-MY', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch (e) {
+      return dateString;
+    }
   };
 
   const message = `
@@ -66,9 +71,6 @@ ${order.user_game_server ? `*Server:* ${order.user_game_server}\n` : ''}${order.
 
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
   
-  console.log('📱 Sending to Telegram URL:', url.replace(TELEGRAM_BOT_TOKEN, '***HIDDEN***'));
-  console.log('📱 Message length:', message.length);
-  
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -84,7 +86,6 @@ ${order.user_game_server ? `*Server:* ${order.user_game_server}\n` : ''}${order.
     });
 
     const data = await response.json();
-    console.log('📱 Telegram API Response:', data);
     
     if (data.ok) {
       console.log('✅ Telegram notification sent successfully');
@@ -105,9 +106,7 @@ export const sendTestTelegramMessage = async (): Promise<boolean> => {
   console.log('📱 Sending test Telegram message...');
   
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.warn('⚠️ Telegram bot not configured.');
-    console.warn('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN ? '✓ Set' : '✗ Missing');
-    console.warn('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID ? '✓ Set' : '✗ Missing');
+    console.error('❌ Telegram bot not configured');
     return false;
   }
 
@@ -118,8 +117,6 @@ Your Telegram bot is configured correctly!
 You will now receive order notifications here.
 
 *Time:* ${new Date().toLocaleString()}
-*Bot Token:* ${TELEGRAM_BOT_TOKEN.substring(0, 10)}... (hidden)
-*Chat ID:* ${TELEGRAM_CHAT_ID}
   `;
 
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -138,10 +135,16 @@ You will now receive order notifications here.
     });
 
     const data = await response.json();
-    console.log('📱 Test response:', data);
-    return data.ok;
+    
+    if (data.ok) {
+      console.log('✅ Test message sent successfully');
+      return true;
+    } else {
+      console.error('❌ Test message failed:', data);
+      return false;
+    }
   } catch (error) {
-    console.error('❌ Failed to send test message:', error);
+    console.error('❌ Test message error:', error);
     return false;
   }
 };
