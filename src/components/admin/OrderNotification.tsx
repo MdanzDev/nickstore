@@ -20,12 +20,34 @@ const OrderNotification: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [previousOrdersCount, setPreviousOrdersCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationSupported, setNotificationSupported] = useState(true);
+
+  // Check if notifications are supported on this device
+  useEffect(() => {
+    const isSupported = 'Notification' in window;
+    setNotificationSupported(isSupported);
+    
+    if (isSupported && Notification.permission === 'default') {
+      // For mobile, we need user interaction to request permission
+      // We'll request when user clicks the bell
+    }
+  }, []);
+
+  // Function to request notification permission (requires user interaction on mobile)
+  const requestNotificationPermission = () => {
+    if (notificationSupported && Notification.permission === 'default') {
+      Notification.requestPermission().then(permission => {
+        console.log('Notification permission:', permission);
+      });
+    }
+  };
 
   // Refresh orders periodically
   useEffect(() => {
+    refresh();
     const interval = setInterval(() => {
       refresh();
-    }, 10000); // Refresh every 10 seconds
+    }, 10000);
     
     return () => clearInterval(interval);
   }, [refresh]);
@@ -49,26 +71,43 @@ const OrderNotification: React.FC = () => {
         setNotifications(prev => [notification, ...prev].slice(0, 10));
         setUnreadCount(prev => prev + 1);
         
-        // Show browser notification
-        if (Notification.permission === 'granted') {
-          new Notification('New Order!', {
-            body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
-            icon: '/icon-192.png',
-            badge: '/icon-192.png',
-          });
+        // Show browser notification - works on both desktop and mobile
+        if (notificationSupported) {
+          if (Notification.permission === 'granted') {
+            // Create notification
+            const notificationObj = new Notification('New Order!', {
+              body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
+              icon: '/icon-192.png',
+              badge: '/icon-192.png',
+              vibrate: [200, 100, 200], // For mobile vibration
+              silent: false,
+            });
+            
+            // Handle notification click
+            notificationObj.onclick = () => {
+              window.focus();
+              navigate('/admin/orders');
+              notificationObj.close();
+            };
+          } else if (Notification.permission === 'default') {
+            // On mobile, we need user interaction to request permission
+            // We'll show a small prompt
+            console.log('Notification permission not granted yet');
+          }
         }
       });
     }
     
     setPreviousOrdersCount(currentCount);
-  }, [orders, previousOrdersCount]);
+  }, [orders, previousOrdersCount, notificationSupported, navigate]);
 
-  // Request notification permission on mount
-  useEffect(() => {
-    if (Notification.permission === 'default') {
-      Notification.requestPermission();
+  const handleBellClick = () => {
+    // Request permission on mobile when user clicks bell
+    if (notificationSupported && Notification.permission === 'default') {
+      requestNotificationPermission();
     }
-  }, []);
+    setShowDropdown(!showDropdown);
+  };
 
   const handleNotificationClick = () => {
     setShowDropdown(false);
@@ -92,7 +131,7 @@ const OrderNotification: React.FC = () => {
   return (
     <div className="relative">
       <button
-        onClick={() => setShowDropdown(!showDropdown)}
+        onClick={handleBellClick}
         className="relative p-2 rounded-lg hover:bg-slate-800 transition-colors"
       >
         <Bell className="w-5 h-5 text-slate-400" />
@@ -127,6 +166,14 @@ const OrderNotification: React.FC = () => {
                   <Check className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
                   <p className="text-slate-400 text-sm">All caught up!</p>
                   <p className="text-slate-500 text-xs mt-1">No new orders yet</p>
+                  {notificationSupported && Notification.permission === 'default' && (
+                    <button
+                      onClick={requestNotificationPermission}
+                      className="mt-4 text-xs text-violet-400 hover:text-violet-300"
+                    >
+                      Enable notifications
+                    </button>
+                  )}
                 </div>
               ) : (
                 notifications.map((notif) => (
