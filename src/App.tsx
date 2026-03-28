@@ -32,9 +32,16 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function App() {
-  // Request notification permission on app load
+  // Check if we're on mobile device
+  const isMobile = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
+
+  // Request notification permission on app load (only for desktop)
+  // On mobile, permission will be requested when user clicks the bell
   useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
+    // Only request immediately on desktop
+    if (!isMobile() && 'Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
     }
   }, []);
