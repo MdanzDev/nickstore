@@ -1,25 +1,57 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
+import { useOrders } from '@/hooks/useOrders';
+import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 
 const OrderSuccess: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { order } = location.state || {};
+  const [searchParams] = useSearchParams();
+  const orderNumber = searchParams.get('order');
+  const { getOrderByNumber } = useOrders();
+  const [order, setOrder] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If no order data, redirect to games page after a short delay
-    if (!order) {
+    const fetchOrder = async () => {
+      if (!orderNumber) {
+        setError('No order number provided');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const orderData = await getOrderByNumber(orderNumber);
+        if (orderData) {
+          setOrder(orderData);
+        } else {
+          setError('Order not found');
+        }
+      } catch (err) {
+        console.error('Error fetching order:', err);
+        setError('Failed to fetch order details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrder();
+  }, [orderNumber, getOrderByNumber]);
+
+  // Redirect to games if error after 3 seconds
+  useEffect(() => {
+    if (error) {
       const timer = setTimeout(() => {
         navigate('/games');
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [order, navigate]);
+  }, [error, navigate]);
 
   const copyOrderNumber = () => {
     if (order?.order_number) {
@@ -39,18 +71,34 @@ const OrderSuccess: React.FC = () => {
     : 'Hi, I need assistance with my order.';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
-  // Show loading state while redirecting
-  if (!order) {
+  // Show loading state
+  if (loading) {
     return (
       <div className="min-h-screen bg-slate-950">
         <Navbar />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <div className="w-16 h-16 rounded-full bg-violet-500/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <Clock className="w-8 h-8 text-violet-400" />
-            </div>
+            <LoadingSpinner size="lg" className="text-violet-500 mx-auto mb-4" />
             <p className="text-slate-400">Loading order details...</p>
-            <p className="text-slate-500 text-sm mt-2">Redirecting in a moment</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error || !order) {
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-8 h-8 text-red-400" />
+            </div>
+            <p className="text-red-400 mb-2">{error || 'Order not found'}</p>
+            <p className="text-slate-500 text-sm">Redirecting to games page...</p>
           </div>
         </div>
         <Footer />
@@ -80,8 +128,10 @@ const OrderSuccess: React.FC = () => {
 
             {/* Order Status Badge */}
             <div className="inline-flex items-center gap-2 mb-6">
-              <StatusBadge status="pending" />
-              <span className="text-slate-500 text-sm">Waiting for payment confirmation</span>
+              <StatusBadge status={order.status} />
+              <span className="text-slate-500 text-sm">
+                {order.status === 'pending' ? 'Waiting for payment confirmation' : 'Order completed'}
+              </span>
             </div>
 
             {/* Order Number */}
@@ -206,7 +256,7 @@ const OrderSuccess: React.FC = () => {
           {/* Help Text */}
           <div className="text-center mt-6">
             <p className="text-xs text-slate-500">
-              A confirmation email has been sent to your email address.
+              A confirmation has been sent to your email.
               <br />
               Need help? Contact us on WhatsApp.
             </p>
