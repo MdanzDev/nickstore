@@ -31,7 +31,6 @@ const Payment: React.FC = () => {
   const [createdOrder, setCreatedOrder] = useState<any>(null);
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
   // Redirect if no game/product
   useEffect(() => {
@@ -90,7 +89,6 @@ const Payment: React.FC = () => {
       if (result && result.order) {
         setCreatedOrder(result.order);
         setShowSuccessModal(true);
-        setModalOpen(true);
       } else {
         throw new Error('Order creation failed');
       }
@@ -104,25 +102,23 @@ const Payment: React.FC = () => {
 
   const handleTrackOrder = () => {
     setShowSuccessModal(false);
-    setModalOpen(false);
-    // Use setTimeout to ensure modal is fully closed before navigation
+    // Small delay to ensure modal animation completes before navigation
     setTimeout(() => {
       if (createdOrder?.order_number) {
         navigate(`/order-status/${createdOrder.order_number}`);
       } else {
         navigate('/games');
       }
-    }, 50);
+    }, 100);
   };
 
   const handleModalClose = (open: boolean) => {
     setShowSuccessModal(open);
-    setModalOpen(open);
-    // If closing without tracking, go to games
+    // If closing without tracking, go to games after modal closes
     if (!open && createdOrder) {
       setTimeout(() => {
         navigate('/games');
-      }, 50);
+      }, 100);
     }
   };
 
