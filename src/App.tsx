@@ -97,5 +97,11 @@ function App() {
     </AuthProvider>
   );
 }
+// In App.tsx, add this useEffect
+useEffect(() => {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}, []);
 
 export default App;
