@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Gamepad2, Phone, MessageCircle } from 'lucide-react';
 
 const Footer: React.FC = () => {
-  const whatsappNumber = '60137345871';
+  const whatsappNumber = '60197661697';
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
 
   return (
@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-center gap-2 text-slate-400 text-sm">
                 <Phone className="w-4 h-4" />
-                +60 13-734 5871
+                +60 19-7661 697
               </li>
             </ul>
           </div>

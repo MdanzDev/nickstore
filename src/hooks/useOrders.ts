@@ -53,25 +53,17 @@ export const useOrders = () => {
     if (!orderNumber) return null;
     
     try {
-      console.log('Looking for order with number:', orderNumber);
-      
       const response = await ordersCollection.list();
       const allOrders = response.documents;
-      
       const foundOrder = allOrders.find((doc: any) => doc.order_number === orderNumber);
       
       if (foundOrder) {
-        console.log('Order found:', foundOrder.order_number);
         const order = foundOrder as unknown as Order;
-        
         if (order.receipt_image_id) {
           order.receipt_image_url = storageHelpers.getFileView(order.receipt_image_id);
         }
-        
         return order;
       }
-      
-      console.log('Order not found for number:', orderNumber);
       return null;
     } catch (err: any) {
       console.error('Get order by number error:', err);
@@ -102,7 +94,6 @@ export const useCreateOrder = () => {
       const now = new Date();
       const formattedDate = now.toISOString().slice(0, 19);
       
-      // Handle optional fields: convert empty strings to null
       const orderPayload = {
         ...orderData,
         order_number: orderNumber,
@@ -114,7 +105,6 @@ export const useCreateOrder = () => {
         created_at: formattedDate,
         updated_at: formattedDate,
         completed_at: null,
-        // Convert empty strings to null for optional fields
         user_email: orderData.user_email && orderData.user_email.trim() !== '' ? orderData.user_email : null,
         user_phone: orderData.user_phone && orderData.user_phone.trim() !== '' ? orderData.user_phone : null,
         user_nickname: orderData.user_nickname && orderData.user_nickname.trim() !== '' ? orderData.user_nickname : null,
@@ -210,14 +200,11 @@ export const useAdminOrders = () => {
   }, [fetchOrders]);
 
   useEffect(() => {
-    const unsubscribe = ordersCollection.subscribe((payload) => {
-      console.log('Order update received:', payload);
+    const unsubscribe = ordersCollection.subscribe(() => {
+      // Just refresh orders, no need to use the payload
       fetchOrders();
     });
-
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, [fetchOrders]);
 
   useEffect(() => {
@@ -237,6 +224,13 @@ export const useOrderStats = () => {
   });
   const [loading, setLoading] = useState(true);
 
+  const toNumber = (value: number | string): number => {
+    if (typeof value === 'string') {
+      return parseFloat(value) || 0;
+    }
+    return value || 0;
+  };
+
   const fetchStats = useCallback(async () => {
     try {
       const response = await ordersCollection.list();
@@ -254,19 +248,8 @@ export const useOrderStats = () => {
       const completedOrders = allOrders.filter(order => order.status === 'success');
       const todayCompleted = todayOrders.filter(order => order.status === 'success');
 
-      const totalRevenue = completedOrders.reduce((sum, order) => {
-        const amount = typeof order.total_amount === 'string' 
-          ? parseFloat(order.total_amount) 
-          : (order.total_amount || 0);
-        return sum + amount;
-      }, 0);
-      
-      const todayRevenue = todayCompleted.reduce((sum, order) => {
-        const amount = typeof order.total_amount === 'string' 
-          ? parseFloat(order.total_amount) 
-          : (order.total_amount || 0);
-        return sum + amount;
-      }, 0);
+      const totalRevenue = completedOrders.reduce((sum, order) => sum + toNumber(order.total_amount), 0);
+      const todayRevenue = todayCompleted.reduce((sum, order) => sum + toNumber(order.total_amount), 0);
 
       setStats({
         totalOrders: allOrders.length,
@@ -284,11 +267,9 @@ export const useOrderStats = () => {
 
   useEffect(() => {
     fetchStats();
-    
     const unsubscribe = ordersCollection.subscribe(() => {
       fetchStats();
     });
-
     return () => unsubscribe();
   }, [fetchStats]);
 

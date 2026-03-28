@@ -95,7 +95,7 @@ const Payment: React.FC = () => {
     }
   };
 
-  const whatsappNumber = '60137345871';
+  const whatsappNumber = '60197661697';
   const whatsappMessage = createdOrder 
     ? `Hi, I just placed order *${createdOrder.order_number}*. Please process it ASAP.`
     : 'Hi, I need assistance with my order.';

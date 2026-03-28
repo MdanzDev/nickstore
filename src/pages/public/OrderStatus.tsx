@@ -87,7 +87,7 @@ const OrderStatus: React.FC = () => {
     return `RM ${numericAmount.toFixed(2)}`;
   };
 
-  const whatsappNumber = '60137345871';
+  const whatsappNumber = '60197661697';
   const whatsappMessage = selectedOrder
     ? `Hi, I'm inquiring about my order *${selectedOrder.order_number}* (Status: ${selectedOrder.status}).`
     : '';

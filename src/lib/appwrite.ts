@@ -30,7 +30,7 @@ export const account = new Account(client);
 const DATABASE_ID = appwriteConfig.databaseId;
 
 //
-// 🔐 Permission Helper
+// 🔐 Permission Helper (For Admin Operations)
 //
 const getPermissions = async () => {
   try {
@@ -105,9 +105,7 @@ export const gamesCollection = {
       if (!gameId || gameId.trim() === '') {
         throw new Error('Invalid game ID');
       }
-      
       console.log('Deleting game with ID:', gameId);
-      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.games,
@@ -180,9 +178,7 @@ export const productsCollection = {
       if (!productId || productId.trim() === '') {
         throw new Error('Invalid product ID');
       }
-      
       console.log('Deleting product with ID:', productId);
-      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.products,
@@ -196,7 +192,7 @@ export const productsCollection = {
 };
 
 //
-// 📦 Orders Collection
+// 📦 Orders Collection - FIXED FOR PUBLIC ORDER CREATION
 //
 export const ordersCollection = {
   list: async (status?: string) => {
@@ -232,9 +228,17 @@ export const ordersCollection = {
     }
   },
 
+  // PUBLIC ORDER CREATION - No authentication required
   create: async (data: any) => {
     try {
-      const permissions = await getPermissions();
+      // Use public permissions so anyone can create orders
+      const permissions = [
+        'read("any")',
+        'write("any")',
+        'update("any")',
+        'delete("any")'
+      ];
+      
       return await databases.createDocument(
         DATABASE_ID,
         appwriteConfig.collections.orders,
@@ -248,6 +252,7 @@ export const ordersCollection = {
     }
   },
 
+  // ADMIN UPDATE - Requires authentication
   update: async (orderId: string, data: any) => {
     try {
       const permissions = await getPermissions();
@@ -264,14 +269,13 @@ export const ordersCollection = {
     }
   },
 
+  // ADMIN DELETE - Requires authentication
   delete: async (orderId: string) => {
     try {
       if (!orderId || orderId.trim() === '') {
         throw new Error('Invalid order ID');
       }
-      
       console.log('Deleting order with ID:', orderId);
-      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.orders,
@@ -351,9 +355,7 @@ export const paymentMethodsCollection = {
       if (!methodId || methodId.trim() === '') {
         throw new Error('Invalid payment method ID');
       }
-      
       console.log('Deleting payment method with ID:', methodId);
-      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.paymentMethods,
@@ -367,7 +369,7 @@ export const paymentMethodsCollection = {
 };
 
 //
-// 📁 Storage Helpers - Fixed unused parameters
+// 📁 Storage Helpers
 //
 export const storageHelpers = {
   uploadFile: async (file: File, prefix?: string) => {
@@ -392,7 +394,6 @@ export const storageHelpers = {
     }
   },
 
-  // Removed unused parameters - free plan doesn't support transformations anyway
   getFilePreview: (fileId: string) => {
     return storageHelpers.getFileView(fileId);
   },
