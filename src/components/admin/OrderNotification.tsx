@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bell, X, ShoppingCart, Check } from 'lucide-react';
 import { useAdminOrders } from '@/hooks/useOrders';
@@ -15,51 +15,45 @@ interface OrderNotification {
 
 const OrderNotification: React.FC = () => {
   const navigate = useNavigate();
-  const { orders, refresh } = useAdminOrders();
+  const { orders } = useAdminOrders();
   const [notifications, setNotifications] = useState<OrderNotification[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [previousOrdersCount, setPreviousOrdersCount] = useState(0);
-  const [audio] = useState(new Audio('/notification.mp3')); // Optional sound
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Check for new orders
   useEffect(() => {
-    const checkNewOrders = () => {
-      const currentCount = orders.length;
-      
-      if (currentCount > previousOrdersCount && previousOrdersCount > 0) {
-        // New orders detected!
-        const newOrders = orders.slice(0, currentCount - previousOrdersCount);
-        
-        newOrders.forEach(order => {
-          const notification: OrderNotification = {
-            id: order.$id!,
-            orderNumber: order.order_number,
-            gameName: order.game_name,
-            totalAmount: typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount,
-            timestamp: new Date(),
-          };
-          
-          setNotifications(prev => [notification, ...prev].slice(0, 10));
-          
-          // Show browser notification
-          if (Notification.permission === 'granted') {
-            new Notification('New Order!', {
-              body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
-              icon: '/icon-192.png',
-              badge: '/icon-192.png',
-              silent: false,
-            });
-          }
-          
-          // Play sound (optional)
-           audio.play().catch(e => console.log('Audio play failed:', e));
-        });
-      }
-      
-      setPreviousOrdersCount(currentCount);
-    };
+    const currentCount = orders.length;
     
-    checkNewOrders();
+    if (currentCount > previousOrdersCount && previousOrdersCount > 0) {
+      // New orders detected!
+      const newOrders = orders.slice(0, currentCount - previousOrdersCount);
+      
+      newOrders.forEach(order => {
+        const notification: OrderNotification = {
+          id: order.$id!,
+          orderNumber: order.order_number,
+          gameName: order.game_name,
+          totalAmount: typeof order.total_amount === 'string' ? parseFloat(order.total_amount) : order.total_amount,
+          timestamp: new Date(),
+        };
+        
+        setNotifications(prev => [notification, ...prev].slice(0, 10));
+        setUnreadCount(prev => prev + 1);
+        
+        // Show browser notification
+        if (Notification.permission === 'granted') {
+          new Notification('New Order!', {
+            body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
+            icon: '/icon-192.png',
+            badge: '/icon-192.png',
+            silent: false,
+          });
+        }
+      });
+    }
+    
+    setPreviousOrdersCount(currentCount);
   }, [orders, previousOrdersCount]);
 
   // Request notification permission on mount
@@ -76,13 +70,17 @@ const OrderNotification: React.FC = () => {
 
   const clearNotifications = () => {
     setNotifications([]);
+    setUnreadCount(0);
   };
 
   const removeNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+    setUnreadCount(prev => Math.max(0, prev - 1));
   };
 
-  const unreadCount = notifications.length;
+  const formatCurrency = (amount: number) => {
+    return `RM ${amount.toFixed(2)}`;
+  };
 
   return (
     <div className="relative">
@@ -139,7 +137,7 @@ const OrderNotification: React.FC = () => {
                           {notif.gameName}
                         </p>
                         <p className="text-slate-400 text-xs">
-                          #{notif.orderNumber} · RM {notif.totalAmount.toFixed(2)}
+                          #{notif.orderNumber} · {formatCurrency(notif.totalAmount)}
                         </p>
                         <p className="text-slate-500 text-xs mt-1">
                           {new Date(notif.timestamp).toLocaleTimeString()}
