@@ -81,6 +81,7 @@ const Games: React.FC = () => {
   }, [games, searchQuery]);
 
   const handleOpenModal = (game?: Game) => {
+    console.log('Opening modal', game);
     if (game) {
       setEditingGame(game);
       setFormData({
@@ -307,9 +308,9 @@ const Games: React.FC = () => {
         </div>
       </main>
 
-      {/* Add/Edit Modal */}
+      {/* Add/Edit Modal - Fixed to ensure visibility */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto animate-slide-up">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto z-[100]">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
               {editingGame ? 'Edit Game' : 'Add New Game'}
@@ -320,7 +321,7 @@ const Games: React.FC = () => {
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-slate-300">Game Name</Label>
+              <Label htmlFor="name" className="text-slate-300">Game Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -376,8 +377,8 @@ const Games: React.FC = () => {
                     />
                   </label>
                 )}
-                <p className="text-xs text-slate-500">PNG, JPG up to 2MB</p>
               </div>
+              <p className="text-xs text-slate-500">PNG, JPG up to 2MB (optional)</p>
             </div>
 
             <div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg">
@@ -421,7 +422,7 @@ const Games: React.FC = () => {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <AlertDialogContent className="bg-slate-950 border-slate-800 text-white animate-slide-up">
+        <AlertDialogContent className="bg-slate-950 border-slate-800 text-white">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-400">Delete Game</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-400">
