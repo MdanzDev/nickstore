@@ -19,8 +19,14 @@ interface OrderData {
 }
 
 export const sendTelegramNotification = async (order: OrderData): Promise<boolean> => {
+  console.log('📱 Telegram: Starting to send notification...');
+  console.log('📱 Telegram Bot Token exists:', !!TELEGRAM_BOT_TOKEN);
+  console.log('📱 Telegram Chat ID exists:', !!TELEGRAM_CHAT_ID);
+  
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.warn('Telegram bot not configured. Skipping notification.');
+    console.warn('⚠️ Telegram bot not configured. Skipping notification.');
+    console.warn('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN ? '✓ Set' : '✗ Missing');
+    console.warn('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID ? '✓ Set' : '✗ Missing');
     return false;
   }
 
@@ -60,6 +66,9 @@ ${order.user_game_server ? `*Server:* ${order.user_game_server}\n` : ''}${order.
 
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
   
+  console.log('📱 Sending to Telegram URL:', url.replace(TELEGRAM_BOT_TOKEN, '***HIDDEN***'));
+  console.log('📱 Message length:', message.length);
+  
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -75,24 +84,30 @@ ${order.user_game_server ? `*Server:* ${order.user_game_server}\n` : ''}${order.
     });
 
     const data = await response.json();
+    console.log('📱 Telegram API Response:', data);
     
     if (data.ok) {
-      console.log('Telegram notification sent successfully');
+      console.log('✅ Telegram notification sent successfully');
       return true;
     } else {
-      console.error('Telegram API error:', data);
+      console.error('❌ Telegram API error:', data);
+      console.error('Error description:', data.description);
       return false;
     }
   } catch (error) {
-    console.error('Failed to send Telegram notification:', error);
+    console.error('❌ Failed to send Telegram notification:', error);
     return false;
   }
 };
 
 // Send a test message to verify configuration
 export const sendTestTelegramMessage = async (): Promise<boolean> => {
+  console.log('📱 Sending test Telegram message...');
+  
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.warn('Telegram bot not configured.');
+    console.warn('⚠️ Telegram bot not configured.');
+    console.warn('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN ? '✓ Set' : '✗ Missing');
+    console.warn('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID ? '✓ Set' : '✗ Missing');
     return false;
   }
 
@@ -103,6 +118,8 @@ Your Telegram bot is configured correctly!
 You will now receive order notifications here.
 
 *Time:* ${new Date().toLocaleString()}
+*Bot Token:* ${TELEGRAM_BOT_TOKEN.substring(0, 10)}... (hidden)
+*Chat ID:* ${TELEGRAM_CHAT_ID}
   `;
 
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -121,9 +138,10 @@ You will now receive order notifications here.
     });
 
     const data = await response.json();
+    console.log('📱 Test response:', data);
     return data.ok;
   } catch (error) {
-    console.error('Failed to send test message:', error);
+    console.error('❌ Failed to send test message:', error);
     return false;
   }
 };
