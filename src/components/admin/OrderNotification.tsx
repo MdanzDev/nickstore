@@ -26,20 +26,16 @@ const OrderNotification: React.FC = () => {
   useEffect(() => {
     const isSupported = 'Notification' in window;
     setNotificationSupported(isSupported);
-    
-    if (isSupported && Notification.permission === 'default') {
-      // For mobile, we need user interaction to request permission
-      // We'll request when user clicks the bell
-    }
   }, []);
 
   // Function to request notification permission (requires user interaction on mobile)
-  const requestNotificationPermission = () => {
+  const requestNotificationPermission = async () => {
     if (notificationSupported && Notification.permission === 'default') {
-      Notification.requestPermission().then(permission => {
-        console.log('Notification permission:', permission);
-      });
+      const permission = await Notification.requestPermission();
+      console.log('Notification permission:', permission);
+      return permission === 'granted';
     }
+    return Notification.permission === 'granted';
   };
 
   // Refresh orders periodically
@@ -59,7 +55,7 @@ const OrderNotification: React.FC = () => {
     if (currentCount > previousOrdersCount && previousOrdersCount > 0) {
       const newOrders = orders.slice(0, currentCount - previousOrdersCount);
       
-      newOrders.forEach(order => {
+      newOrders.forEach(async (order) => {
         const notification: OrderNotificationItem = {
           id: order.$id!,
           orderNumber: order.order_number,
@@ -71,28 +67,27 @@ const OrderNotification: React.FC = () => {
         setNotifications(prev => [notification, ...prev].slice(0, 10));
         setUnreadCount(prev => prev + 1);
         
-        // Show browser notification - works on both desktop and mobile
+        // Show browser notification
         if (notificationSupported) {
-          if (Notification.permission === 'granted') {
-            // Create notification
-            const notificationObj = new Notification('New Order!', {
-              body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
-              icon: '/icon-192.png',
-              badge: '/icon-192.png',
-              vibrate: [200, 100, 200], // For mobile vibration
-              silent: false,
-            });
-            
-            // Handle notification click
-            notificationObj.onclick = () => {
-              window.focus();
-              navigate('/admin/orders');
-              notificationObj.close();
-            };
-          } else if (Notification.permission === 'default') {
-            // On mobile, we need user interaction to request permission
-            // We'll show a small prompt
-            console.log('Notification permission not granted yet');
+          const hasPermission = await requestNotificationPermission();
+          
+          if (hasPermission) {
+            try {
+              const notificationObj = new Notification('New Order!', {
+                body: `Order #${order.order_number} - ${order.game_name} - RM ${notification.totalAmount.toFixed(2)}`,
+                icon: '/icon-192.png',
+                badge: '/icon-192.png',
+                silent: false,
+              });
+              
+              notificationObj.onclick = () => {
+                window.focus();
+                navigate('/admin/orders');
+                notificationObj.close();
+              };
+            } catch (error) {
+              console.error('Error creating notification:', error);
+            }
           }
         }
       });
@@ -101,10 +96,9 @@ const OrderNotification: React.FC = () => {
     setPreviousOrdersCount(currentCount);
   }, [orders, previousOrdersCount, notificationSupported, navigate]);
 
-  const handleBellClick = () => {
-    // Request permission on mobile when user clicks bell
+  const handleBellClick = async () => {
     if (notificationSupported && Notification.permission === 'default') {
-      requestNotificationPermission();
+      await requestNotificationPermission();
     }
     setShowDropdown(!showDropdown);
   };
