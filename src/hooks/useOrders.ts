@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ordersCollection, storageHelpers, generateOrderNumber } from '@/lib/appwrite';
+import { sendTelegramNotification } from '@/lib/telegram';
 import type { Order, OrderStatus } from '@/types';
 
 export const useOrders = () => {
@@ -114,6 +115,23 @@ export const useCreateOrder = () => {
       console.log('Creating order with payload:', orderPayload);
       
       const newOrder = await ordersCollection.create(orderPayload);
+      
+      // Send Telegram notification in background
+      const orderForNotification = {
+        order_number: newOrder.order_number,
+        game_name: newOrder.game_name,
+        product_name: newOrder.product_name,
+        total_amount: newOrder.total_amount,
+        user_game_id: newOrder.user_game_id,
+        user_game_server: newOrder.user_game_server,
+        user_nickname: newOrder.user_nickname,
+        user_email: newOrder.user_email,
+        user_phone: newOrder.user_phone,
+        payment_method_name: newOrder.payment_method_name,
+        created_at: newOrder.created_at,
+      };
+      
+      sendTelegramNotification(orderForNotification).catch(console.error);
 
       return { order: newOrder as unknown as Order, orderNumber };
     } catch (err: any) {
@@ -181,13 +199,33 @@ export const useAdminOrders = () => {
 
       console.log('Updating order with data:', updateData);
       const updated = await ordersCollection.update(orderId, updateData);
+      
+      // Send Telegram notification for status change
+      const order = orders.find(o => o.$id === orderId);
+      if (order && (status === 'success' || status === 'failed')) {
+        const orderForNotification = {
+          order_number: order.order_number,
+          game_name: order.game_name,
+          product_name: order.product_name,
+          total_amount: order.total_amount,
+          user_game_id: order.user_game_id,
+          user_game_server: order.user_game_server,
+          user_nickname: order.user_nickname,
+          user_email: order.user_email,
+          user_phone: order.user_phone,
+          payment_method_name: order.payment_method_name,
+          created_at: order.created_at!,
+        };
+        sendTelegramNotification(orderForNotification).catch(console.error);
+      }
+      
       await fetchOrders();
       return updated as unknown as Order;
     } catch (err: any) {
       console.error('Update error:', err);
       throw new Error(err.message || 'Failed to update order');
     }
-  }, [fetchOrders]);
+  }, [fetchOrders, orders]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     try {
@@ -201,7 +239,6 @@ export const useAdminOrders = () => {
 
   useEffect(() => {
     const unsubscribe = ordersCollection.subscribe(() => {
-      // Just refresh orders, no need to use the payload
       fetchOrders();
     });
     return () => unsubscribe();
