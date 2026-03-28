@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Pencil, Trash2, Search, Upload, Sparkles, Image as ImageIcon, X } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
@@ -33,7 +33,7 @@ import type { Game } from '@/types';
 const Games: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { games, loading, createGame, updateGame, deleteGame, refresh } = useAdminGames();
+  const { games, loading, createGame, updateGame, deleteGame } = useAdminGames();
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
@@ -49,6 +49,7 @@ const Games: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
 
   React.useEffect(() => {
     if (!isAuthenticated) {
@@ -57,20 +58,20 @@ const Games: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   // Debounced search
-  const debouncedSearch = useMemo(() => {
-    let timeoutId: NodeJS.Timeout;
-    return (value: string) => {
-      setIsSearching(true);
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setSearchQuery(value);
-        setIsSearching(false);
-      }, 300);
-    };
-  }, []);
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(e.target.value);
+    const value = e.target.value;
+    setIsSearching(true);
+    
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    const timeout = setTimeout(() => {
+      setSearchQuery(value);
+      setIsSearching(false);
+    }, 300);
+    
+    setSearchTimeout(timeout);
   };
 
   const filteredGames = useMemo(() => {
@@ -128,7 +129,6 @@ const Games: React.FC = () => {
         await createGame(formData, imageFile || undefined);
       }
       setIsModalOpen(false);
-      // Reset form
       setImageFile(null);
       setImagePreview('');
     } catch (err) {
@@ -307,7 +307,7 @@ const Games: React.FC = () => {
         </div>
       </main>
 
-      {/* Add/Edit Modal with animations */}
+      {/* Add/Edit Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto animate-slide-up">
           <DialogHeader>
@@ -419,7 +419,7 @@ const Games: React.FC = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation with animations */}
+      {/* Delete Confirmation */}
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent className="bg-slate-950 border-slate-800 text-white animate-slide-up">
           <AlertDialogHeader>
