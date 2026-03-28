@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Sparkles,
   Award,
+  Send,
 } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { StatCard } from '@/components/admin/StatCard';
@@ -56,6 +57,7 @@ const Dashboard: React.FC = () => {
   const { orders, loading: ordersLoading, updateOrderStatus, refresh: refreshOrders } = useAdminOrders();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeChart, setActiveChart] = useState<'orders' | 'revenue'>('orders');
+  const [sendingTest, setSendingTest] = useState(false);
 
   // Redirect if not authenticated
   React.useEffect(() => {
@@ -68,6 +70,17 @@ const Dashboard: React.FC = () => {
     setIsRefreshing(true);
     await Promise.all([refreshStats(), refreshOrders()]);
     setIsRefreshing(false);
+  };
+
+  const handleTestTelegram = async () => {
+    setSendingTest(true);
+    const success = await sendTestTelegramMessage();
+    if (success) {
+      alert('✅ Test message sent to Telegram!');
+    } else {
+      alert('❌ Failed to send test message. Check console for details.');
+    }
+    setSendingTest(false);
   };
 
   const recentOrders = orders.slice(0, 5);
@@ -152,8 +165,6 @@ const Dashboard: React.FC = () => {
     };
   };
 
-
-
   const previousStats = getPreviousStats();
 
   if (!isAuthenticated) return null;
@@ -179,6 +190,15 @@ const Dashboard: React.FC = () => {
             </div>
             <div className="flex gap-2">
               <Button
+                onClick={handleTestTelegram}
+                disabled={sendingTest}
+                variant="outline"
+                className="border-green-500 text-green-400 hover:bg-green-500/10 transition-all duration-300 hover:scale-105"
+              >
+                <Send className={`w-4 h-4 mr-2 ${sendingTest ? 'animate-pulse' : ''}`} />
+                {sendingTest ? 'Sending...' : 'Test Telegram'}
+              </Button>
+              <Button
                 onClick={handleRefresh}
                 variant="outline"
                 disabled={isRefreshing}
@@ -196,23 +216,6 @@ const Dashboard: React.FC = () => {
               </Button>
             </div>
           </div>
-
-          // Add this button next to the refresh button
-<Button
-  onClick={async () => {
-    const success = await sendTestTelegramMessage();
-    if (success) {
-      alert('✅ Test message sent to Telegram!');
-    } else {
-      alert('❌ Failed to send test message. Check console.');
-    }
-  }}
-  variant="outline"
-  className="border-green-500 text-green-400 hover:bg-green-500/10"
->
-  Test Telegram
-</Button>
-  
 
           {/* Stats Grid with animations */}
           {statsLoading ? (
