@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock, RefreshCw, Sparkles, PartyPopper, XCircle, Loader2, AlertTriangle } from 'lucide-react';
+import { CheckCircle, MessageCircle, Copy, ArrowLeft, Clock, RefreshCw, XCircle, Loader2, AlertTriangle } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ const OrderSuccess: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const orderNumber = searchParams.get('order');
-  const { getOrderByNumber, orders } = useOrders();
+  const { getOrderByNumber } = useOrders();
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
