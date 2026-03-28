@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { Toaster } from '@/components/ui/sonner';
+import InstallPrompt from '@/components/shared/InstallPrompt';
 
 // Public Pages
 import Home from '@/pages/public/Home';
@@ -92,6 +93,7 @@ function App() {
             {/* 404 - Redirect to Home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <InstallPrompt />
         </BrowserRouter>
         <Toaster position="top-right" />
       </NotificationProvider>
