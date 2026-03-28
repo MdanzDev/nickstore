@@ -49,7 +49,7 @@ const Games: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [imageError, setImageError] = useState<Record<string, boolean>>({});
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   React.useEffect(() => {
     if (!isAuthenticated) {
