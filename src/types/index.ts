@@ -12,18 +12,20 @@ export interface Game {
 export interface Product {
   $id?: string;
   game_id: string;
-  game_name?: string;
+  game_name: string;
   name: string;
   denomination: string;
   price: number;
   original_price?: number;
+  description?: string;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;
 }
 
+
+
 export type OrderStatus = 'pending' | 'processing' | 'success' | 'failed' | 'cancelled';
-// In your types/index.ts
 export interface Order {
   $id?: string;
   order_number: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
@@ -10,8 +10,6 @@ import {
   CreditCard,
   Users,
   Calendar,
-  ArrowUp,
-  ArrowDown,
   RefreshCw,
 } from 'lucide-react';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
@@ -109,7 +107,7 @@ const Dashboard: React.FC = () => {
     ];
   }, [orders]);
 
-  const COLORS = ['#f59e0b', '#10b981', '#ef4444'];
+
 
   // Calculate percentage change (mock data for demonstration)
   const calculateChange = (current: number, previous: number) => {
@@ -304,7 +302,7 @@ const Dashboard: React.FC = () => {
                 </ResponsiveContainer>
               </div>
               <div className="flex justify-center gap-4 mt-4">
-                {statusData.map((item, index) => (
+                {statusData.map((item) => (
                   <div key={item.name} className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
                     <span className="text-sm text-slate-400">{item.name}</span>

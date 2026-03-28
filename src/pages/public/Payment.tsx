@@ -14,13 +14,14 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 
 const Payment: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { game, product, userDetails } = location.state || {};
-  const { paymentMethods, loading: methodsLoading } = usePaymentMethods(true);
+  const { paymentMethods, loading: methodsLoading } = usePaymentMethods(); // Removed the true parameter
   const { createOrder, loading: creatingOrder } = useCreateOrder();
 
   const [selectedMethod, setSelectedMethod] = useState<any>(null);
@@ -41,6 +42,10 @@ const Payment: React.FC = () => {
   const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
       setReceiptFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -63,10 +68,10 @@ const Payment: React.FC = () => {
       quantity: 1,
       total_amount: product.price,
       user_game_id: userDetails.userGameId,
-      user_game_server: userDetails.userGameServer,
-      user_nickname: userDetails.userNickname,
-      user_email: userDetails.userEmail,
-      user_phone: userDetails.userPhone,
+      user_game_server: userDetails.userGameServer || '',
+      user_nickname: userDetails.userNickname || '',
+      user_email: userDetails.userEmail || '',
+      user_phone: userDetails.userPhone || '',
       payment_method_id: selectedMethod.$id,
       payment_method_name: selectedMethod.name,
     };
@@ -77,16 +82,23 @@ const Payment: React.FC = () => {
       setShowSuccessModal(true);
     } catch (err) {
       console.error('Error creating order:', err);
+      alert(err instanceof Error ? err.message : 'Failed to create order. Please try again.');
     }
   };
 
   const handleCloseSuccess = () => {
     setShowSuccessModal(false);
-    navigate(`/order-status/${createdOrder.order_number}`);
+    if (createdOrder?.order_number) {
+      navigate(`/order-status/${createdOrder.order_number}`);
+    } else {
+      navigate('/order-status');
+    }
   };
 
   const whatsappNumber = '60137345871';
-  const whatsappMessage = `Hi, I just placed order *${createdOrder?.order_number}*. Please process it ASAP.`;
+  const whatsappMessage = createdOrder 
+    ? `Hi, I just placed order *${createdOrder.order_number}*. Please process it ASAP.`
+    : 'Hi, I need assistance with my order.';
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
@@ -244,6 +256,10 @@ const Payment: React.FC = () => {
                     <span className="text-white">{product.name}</span>
                   </div>
                   <div className="flex justify-between text-sm">
+                    <span className="text-slate-400">Denomination</span>
+                    <span className="text-white">{product.denomination}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
                     <span className="text-slate-400">Game ID</span>
                     <span className="text-white">{userDetails.userGameId}</span>
                   </div>
@@ -251,6 +267,12 @@ const Payment: React.FC = () => {
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-400">Server</span>
                       <span className="text-white">{userDetails.userGameServer}</span>
+                    </div>
+                  )}
+                  {userDetails.userNickname && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-400">Nickname</span>
+                      <span className="text-white">{userDetails.userNickname}</span>
                     </div>
                   )}
                 </div>
@@ -289,6 +311,9 @@ const Payment: React.FC = () => {
               </div>
               Order Placed Successfully!
             </DialogTitle>
+            <DialogDescription className="text-center text-slate-400">
+              Your order has been submitted and is being processed.
+            </DialogDescription>
           </DialogHeader>
           <div className="text-center">
             <p className="text-slate-400 mb-2">Your order number is:</p>

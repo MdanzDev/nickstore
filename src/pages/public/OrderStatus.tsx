@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MessageCircle, Clock, CheckCircle, XCircle, ArrowLeft, Copy, Filter } from 'lucide-react';
+import { Search, MessageCircle, Clock, CheckCircle, XCircle, ArrowLeft, Copy } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { useOrders } from '@/hooks/useOrders';
@@ -12,8 +12,6 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import {
   Select,
@@ -25,7 +23,7 @@ import {
 
 const OrderStatus: React.FC = () => {
   const navigate = useNavigate();
-  const { orders, loading, refresh, getOrderByNumber } = useOrders();
+  const { orders, loading, refresh } = useOrders();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrder, setSelectedOrder] = useState<any>(null);

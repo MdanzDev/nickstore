@@ -105,7 +105,9 @@ export const gamesCollection = {
       if (!gameId || gameId.trim() === '') {
         throw new Error('Invalid game ID');
       }
+      
       console.log('Deleting game with ID:', gameId);
+      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.games,
@@ -178,7 +180,9 @@ export const productsCollection = {
       if (!productId || productId.trim() === '') {
         throw new Error('Invalid product ID');
       }
+      
       console.log('Deleting product with ID:', productId);
+      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.products,
@@ -265,7 +269,9 @@ export const ordersCollection = {
       if (!orderId || orderId.trim() === '') {
         throw new Error('Invalid order ID');
       }
+      
       console.log('Deleting order with ID:', orderId);
+      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.orders,
@@ -345,7 +351,9 @@ export const paymentMethodsCollection = {
       if (!methodId || methodId.trim() === '') {
         throw new Error('Invalid payment method ID');
       }
+      
       console.log('Deleting payment method with ID:', methodId);
+      
       return await databases.deleteDocument(
         DATABASE_ID,
         appwriteConfig.collections.paymentMethods,
@@ -359,7 +367,7 @@ export const paymentMethodsCollection = {
 };
 
 //
-// 📁 Storage Helpers
+// 📁 Storage Helpers - Fixed unused parameters
 //
 export const storageHelpers = {
   uploadFile: async (file: File, prefix?: string) => {
@@ -384,7 +392,8 @@ export const storageHelpers = {
     }
   },
 
-  getFilePreview: (fileId: string, width?: number, height?: number) => {
+  // Removed unused parameters - free plan doesn't support transformations anyway
+  getFilePreview: (fileId: string) => {
     return storageHelpers.getFileView(fileId);
   },
 

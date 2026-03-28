@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ordersCollection, storageHelpers, appwriteConfig, generateOrderNumber } from '@/lib/appwrite';
+import { ordersCollection, storageHelpers, generateOrderNumber } from '@/lib/appwrite';
 import type { Order, OrderStatus } from '@/types';
 
 export const useOrders = () => {

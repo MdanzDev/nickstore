@@ -40,7 +40,7 @@ import type { Product } from '@/types';
 const Products: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { products, loading, createProduct, updateProduct, deleteProduct, refresh } = useAdminProducts();
+  const { products, loading, createProduct, updateProduct, deleteProduct } = useAdminProducts();
   const { games, loading: gamesLoading } = useAdminGames();
   const [searchQuery, setSearchQuery] = useState('');
   const [gameFilter, setGameFilter] = useState<string>('all');

@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   AlertDialog,
@@ -341,6 +342,9 @@ const PaymentMethods: React.FC = () => {
             <DialogTitle>
               {editingMethod ? 'Edit Payment Method' : 'Add New Payment Method'}
             </DialogTitle>
+            <DialogDescription className="text-slate-400">
+              {editingMethod ? 'Update the payment method details below.' : 'Fill in the details to add a new payment method.'}
+            </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -425,9 +429,7 @@ const PaymentMethods: React.FC = () => {
                         onClick={() => {
                           setQrImagePreview('');
                           setQrImageFile(null);
-                          if (editingMethod) {
-                            setFormData({ ...formData, qr_image_id: '' });
-                          }
+                          // Don't try to set qr_image_id in formData since it doesn't exist
                         }}
                         className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs hover:bg-red-600 transition-colors"
                       >

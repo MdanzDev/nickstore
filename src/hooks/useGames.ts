@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { gamesCollection, storageHelpers, appwriteConfig } from '@/lib/appwrite';
+import { gamesCollection, storageHelpers } from '@/lib/appwrite';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Game } from '@/types';
 
@@ -18,7 +18,8 @@ export const useGames = () => {
           const game = doc as unknown as Game;
           if (game.image_id) {
             try {
-              game.image_url = storageHelpers.getFilePreview(game.image_id, 500, 500);
+              // getFilePreview now only takes fileId
+              game.image_url = storageHelpers.getFilePreview(game.image_id);
             } catch (e) {
               console.error('Error loading image:', e);
             }
@@ -45,7 +46,7 @@ export const useGames = () => {
       const doc = await gamesCollection.get(gameId);
       const game = doc as unknown as Game;
       if (game.image_id) {
-        game.image_url = storageHelpers.getFilePreview(game.image_id, 500, 500);
+        game.image_url = storageHelpers.getFilePreview(game.image_id);
       }
       return game;
     } catch (err: any) {
@@ -60,7 +61,7 @@ export const useAdminGames = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const fetchGames = useCallback(async () => {
     if (!isAuthenticated) {
@@ -78,7 +79,8 @@ export const useAdminGames = () => {
           const game = doc as unknown as Game;
           if (game.image_id) {
             try {
-              game.image_url = storageHelpers.getFilePreview(game.image_id, 500, 500);
+              // getFilePreview now only takes fileId
+              game.image_url = storageHelpers.getFilePreview(game.image_id);
             } catch (e) {
               console.error('Error loading image:', e);
             }
