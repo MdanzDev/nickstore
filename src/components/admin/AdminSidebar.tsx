@@ -37,6 +37,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ className = '' }) =>
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
+  console.log('AdminSidebar - unreadCount:', unreadCount);
+
   const NavContent = () => (
     <>
       <div className="flex items-center justify-between h-16 border-b border-slate-800 px-4">
