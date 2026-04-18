@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { gamesCollection, storageHelpers } from '@/lib/appwrite';
+import { gamesCollection, storageHelpers } from '@/lib/mongodb';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Game } from '@/types';
 
