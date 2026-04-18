@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ordersCollection, storageHelpers, generateOrderNumber } from '@/lib/monggodb';
-import { sendTelegramNotification } from '@/lib/telegram';
+import { ordersCollection, storageHelpers, generateOrderNumber } from '@/lib/mongodb';
 import type { Order, OrderStatus } from '@/types';
 
 export const useOrders = () => {
@@ -85,10 +84,10 @@ export const useCreateOrder = () => {
       
       let receiptImageId = '';
       if (receiptFile) {
-        console.log('📤 Uploading receipt image...');
+        console.log('Uploading receipt image...');
         const upload = await storageHelpers.uploadFile(receiptFile, 'receipt');
         receiptImageId = upload.$id;
-        console.log('✅ Receipt uploaded with ID:', receiptImageId);
+        console.log('Receipt uploaded with ID:', receiptImageId);
       }
 
       const orderNumber = generateOrderNumber();
@@ -112,43 +111,13 @@ export const useCreateOrder = () => {
         user_game_server: orderData.user_game_server && orderData.user_game_server.trim() !== '' ? orderData.user_game_server : null,
       };
       
-      console.log('📝 Creating order with payload:', orderPayload);
+      console.log('Creating order with payload:', orderPayload);
       
       const newOrder = await ordersCollection.create(orderPayload);
-      console.log('✅ Order created successfully:', newOrder.order_number);
-      
-      // Prepare order for Telegram notification
-      const orderForNotification = {
-        order_number: newOrder.order_number,
-        game_name: newOrder.game_name,
-        product_name: newOrder.product_name,
-        total_amount: newOrder.total_amount,
-        user_game_id: newOrder.user_game_id,
-        user_game_server: newOrder.user_game_server,
-        user_nickname: newOrder.user_nickname,
-        user_email: newOrder.user_email,
-        user_phone: newOrder.user_phone,
-        payment_method_name: newOrder.payment_method_name,
-        created_at: newOrder.created_at,
-      };
-      
-      console.log('📱 Attempting to send Telegram notification for order:', newOrder.order_number);
-      
-      // Send Telegram notification with proper error handling
-      try {
-        const telegramSent = await sendTelegramNotification(orderForNotification);
-        if (telegramSent) {
-          console.log('✅ Telegram notification sent for order:', newOrder.order_number);
-        } else {
-          console.warn('⚠️ Telegram notification failed for order:', newOrder.order_number);
-        }
-      } catch (telegramError) {
-        console.error('❌ Telegram notification error:', telegramError);
-      }
 
       return { order: newOrder as unknown as Order, orderNumber };
     } catch (err: any) {
-      console.error('❌ Error creating order:', err);
+      console.error('Error creating order:', err);
       setError(err.message || 'Failed to create order');
       throw err;
     } finally {
@@ -183,7 +152,7 @@ export const useAdminOrders = () => {
         })
       );
       
-      setOrders(ordersWithUrls.sort((a, b) => 
+      setOrders(ordersWithUrls.sort((a: Order, b: Order) => 
         new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime()
       ));
       setError(null);
@@ -212,35 +181,13 @@ export const useAdminOrders = () => {
 
       console.log('Updating order with data:', updateData);
       const updated = await ordersCollection.update(orderId, updateData);
-      
-      // Send Telegram notification for status change
-      const order = orders.find(o => o.$id === orderId);
-      if (order && (status === 'success' || status === 'failed')) {
-        const orderForNotification = {
-          order_number: order.order_number,
-          game_name: order.game_name,
-          product_name: order.product_name,
-          total_amount: order.total_amount,
-          user_game_id: order.user_game_id,
-          user_game_server: order.user_game_server,
-          user_nickname: order.user_nickname,
-          user_email: order.user_email,
-          user_phone: order.user_phone,
-          payment_method_name: order.payment_method_name,
-          created_at: order.created_at!,
-        };
-        
-        console.log('📱 Sending status update notification for order:', order.order_number);
-        sendTelegramNotification(orderForNotification).catch(console.error);
-      }
-      
       await fetchOrders();
       return updated as unknown as Order;
     } catch (err: any) {
       console.error('Update error:', err);
       throw new Error(err.message || 'Failed to update order');
     }
-  }, [fetchOrders, orders]);
+  }, [fetchOrders]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     try {
@@ -291,17 +238,17 @@ export const useOrderStats = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
-      const todayOrders = allOrders.filter(order => {
+      const todayOrders = allOrders.filter((order: Order) => {
         const orderDate = new Date(order.created_at || '');
         return orderDate >= today;
       });
 
-      const pendingOrders = allOrders.filter(order => order.status === 'pending');
-      const completedOrders = allOrders.filter(order => order.status === 'success');
-      const todayCompleted = todayOrders.filter(order => order.status === 'success');
+      const pendingOrders = allOrders.filter((order: Order) => order.status === 'pending');
+      const completedOrders = allOrders.filter((order: Order) => order.status === 'success');
+      const todayCompleted = todayOrders.filter((order: Order) => order.status === 'success');
 
-      const totalRevenue = completedOrders.reduce((sum, order) => sum + toNumber(order.total_amount), 0);
-      const todayRevenue = todayCompleted.reduce((sum, order) => sum + toNumber(order.total_amount), 0);
+      const totalRevenue = completedOrders.reduce((sum: number, order: Order) => sum + toNumber(order.total_amount), 0);
+      const todayRevenue = todayCompleted.reduce((sum: number, order: Order) => sum + toNumber(order.total_amount), 0);
 
       setStats({
         totalOrders: allOrders.length,
