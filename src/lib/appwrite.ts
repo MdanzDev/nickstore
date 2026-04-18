@@ -1,10 +1,9 @@
-import { Client, Databases, Storage, Account, ID, Query } from 'appwrite';
+import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 
-// Appwrite Configuration
-export const appwriteConfig = {
-  endpoint: 'https://sgp.cloud.appwrite.io/v1',
-  projectId: '69c6c201000691d22aef',
-  databaseId: '69c6ccca003dbdc749e6',
+// MongoDB Atlas Configuration
+export const mongodbConfig = {
+  uri: 'mongodb+srv://Galangcouye:feridah4ever%40@cluster0.mongodb.net/?retryWrites=true&w=majority',
+  databaseName: 'gaming_store',
   collections: {
     games: 'games',
     products: 'products',
@@ -12,38 +11,99 @@ export const appwriteConfig = {
     paymentMethods: 'payment_methods',
     admins: 'admins',
   },
-  buckets: {
-    storage: '69c6e03c001a2578e6bf',
-  },
 };
 
-// Initialize Appwrite Client
-export const client = new Client();
-client.setEndpoint(appwriteConfig.endpoint);
-client.setProject(appwriteConfig.projectId);
+// MongoDB Client
+let client: MongoClient | null = null;
+let db: any = null;
 
-export const databases = new Databases(client);
-export const storage = new Storage(client);
-export const account = new Account(client);
-
-// Database ID
-const DATABASE_ID = appwriteConfig.databaseId;
-
-//
-// 🔐 Permission Helper (For Admin Operations)
-//
-const getPermissions = async () => {
+// Initialize MongoDB Connection
+export const connectToDatabase = async () => {
+  if (db) return db;
+  
   try {
-    const user = await account.get();
-    return [
-      `read("user:${user.$id}")`,
-      `write("user:${user.$id}")`,
-      `update("user:${user.$id}")`,
-      `delete("user:${user.$id}")`
-    ];
+    // URL encode the password to handle special characters
+    const uri = mongodbConfig.uri.replace('feridah4ever%40', encodeURIComponent('feridah4ever@'));
+    
+    client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
+    
+    await client.connect();
+    db = client.db(mongodbConfig.databaseName);
+    console.log('✅ Connected to MongoDB Atlas');
+    
+    // Create indexes for better performance
+    await createIndexes();
+    
+    return db;
   } catch (error) {
-    throw new Error('You must be logged in to perform this action');
+    console.error('❌ MongoDB connection error:', error);
+    throw error;
   }
+};
+
+// Create indexes for better query performance
+const createIndexes = async () => {
+  try {
+    const db = await connectToDatabase();
+    
+    // Orders indexes
+    await db.collection(mongodbConfig.collections.orders).createIndex({ order_number: 1 }, { unique: true });
+    await db.collection(mongodbConfig.collections.orders).createIndex({ status: 1 });
+    await db.collection(mongodbConfig.collections.orders).createIndex({ created_at: -1 });
+    
+    // Products indexes
+    await db.collection(mongodbConfig.collections.products).createIndex({ game_id: 1 });
+    
+    // Payment methods indexes
+    await db.collection(mongodbConfig.collections.paymentMethods).createIndex({ is_active: 1 });
+    
+    // Admins indexes
+    await db.collection(mongodbConfig.collections.admins).createIndex({ email: 1 }, { unique: true });
+    
+    console.log('✅ Database indexes created');
+  } catch (error) {
+    console.error('Error creating indexes:', error);
+  }
+};
+
+// Close MongoDB connection
+export const closeDatabaseConnection = async () => {
+  if (client) {
+    await client.close();
+    client = null;
+    db = null;
+    console.log('MongoDB connection closed');
+  }
+};
+
+// Helper function to convert string ID to ObjectId
+const toObjectId = (id: string) => {
+  try {
+    return new ObjectId(id);
+  } catch (error) {
+    throw new Error('Invalid ID format');
+  }
+};
+
+// Helper function to transform MongoDB document (convert _id to id)
+const transformDocument = (doc: any) => {
+  if (!doc) return null;
+  const { _id, ...rest } = doc;
+  return {
+    id: _id.toString(),
+    ...rest
+  };
+};
+
+// Helper function to transform multiple documents
+const transformDocuments = (docs: any[]) => {
+  return docs.map(transformDocument);
 };
 
 //
@@ -52,7 +112,12 @@ const getPermissions = async () => {
 export const gamesCollection = {
   list: async () => {
     try {
-      return await databases.listDocuments(DATABASE_ID, appwriteConfig.collections.games);
+      const db = await connectToDatabase();
+      const games = await db.collection(mongodbConfig.collections.games)
+        .find({})
+        .sort({ created_at: -1 })
+        .toArray();
+      return { documents: transformDocuments(games), total: games.length };
     } catch (error) {
       console.error('Error listing games:', error);
       throw error;
@@ -61,7 +126,10 @@ export const gamesCollection = {
 
   get: async (gameId: string) => {
     try {
-      return await databases.getDocument(DATABASE_ID, appwriteConfig.collections.games, gameId);
+      const db = await connectToDatabase();
+      const game = await db.collection(mongodbConfig.collections.games)
+        .findOne({ _id: toObjectId(gameId) });
+      return transformDocument(game);
     } catch (error) {
       console.error('Error getting game:', error);
       throw error;
@@ -70,14 +138,15 @@ export const gamesCollection = {
 
   create: async (data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.createDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.games,
-        ID.unique(),
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const gameData = {
+        ...data,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.games)
+        .insertOne(gameData);
+      return transformDocument({ _id: result.insertedId, ...gameData });
     } catch (error) {
       console.error('Error creating game:', error);
       throw error;
@@ -86,14 +155,18 @@ export const gamesCollection = {
 
   update: async (gameId: string, data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.updateDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.games,
-        gameId,
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const updateData = {
+        ...data,
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.games)
+        .findOneAndUpdate(
+          { _id: toObjectId(gameId) },
+          { $set: updateData },
+          { returnDocument: 'after' }
+        );
+      return transformDocument(result);
     } catch (error) {
       console.error('Error updating game:', error);
       throw error;
@@ -106,11 +179,10 @@ export const gamesCollection = {
         throw new Error('Invalid game ID');
       }
       console.log('Deleting game with ID:', gameId);
-      return await databases.deleteDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.games,
-        gameId
-      );
+      const db = await connectToDatabase();
+      const result = await db.collection(mongodbConfig.collections.games)
+        .deleteOne({ _id: toObjectId(gameId) });
+      return result;
     } catch (error) {
       console.error('Error deleting game:', error);
       throw error;
@@ -124,8 +196,16 @@ export const gamesCollection = {
 export const productsCollection = {
   list: async (gameId?: string) => {
     try {
-      const queries = gameId ? [Query.equal('game_id', gameId)] : [];
-      return await databases.listDocuments(DATABASE_ID, appwriteConfig.collections.products, queries);
+      const db = await connectToDatabase();
+      const query: any = {};
+      if (gameId) {
+        query.game_id = gameId;
+      }
+      const products = await db.collection(mongodbConfig.collections.products)
+        .find(query)
+        .sort({ created_at: -1 })
+        .toArray();
+      return { documents: transformDocuments(products), total: products.length };
     } catch (error) {
       console.error('Error listing products:', error);
       throw error;
@@ -134,7 +214,10 @@ export const productsCollection = {
 
   get: async (productId: string) => {
     try {
-      return await databases.getDocument(DATABASE_ID, appwriteConfig.collections.products, productId);
+      const db = await connectToDatabase();
+      const product = await db.collection(mongodbConfig.collections.products)
+        .findOne({ _id: toObjectId(productId) });
+      return transformDocument(product);
     } catch (error) {
       console.error('Error getting product:', error);
       throw error;
@@ -143,14 +226,15 @@ export const productsCollection = {
 
   create: async (data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.createDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.products,
-        ID.unique(),
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const productData = {
+        ...data,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.products)
+        .insertOne(productData);
+      return transformDocument({ _id: result.insertedId, ...productData });
     } catch (error) {
       console.error('Error creating product:', error);
       throw error;
@@ -159,14 +243,18 @@ export const productsCollection = {
 
   update: async (productId: string, data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.updateDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.products,
-        productId,
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const updateData = {
+        ...data,
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.products)
+        .findOneAndUpdate(
+          { _id: toObjectId(productId) },
+          { $set: updateData },
+          { returnDocument: 'after' }
+        );
+      return transformDocument(result);
     } catch (error) {
       console.error('Error updating product:', error);
       throw error;
@@ -179,11 +267,10 @@ export const productsCollection = {
         throw new Error('Invalid product ID');
       }
       console.log('Deleting product with ID:', productId);
-      return await databases.deleteDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.products,
-        productId
-      );
+      const db = await connectToDatabase();
+      const result = await db.collection(mongodbConfig.collections.products)
+        .deleteOne({ _id: toObjectId(productId) });
+      return result;
     } catch (error) {
       console.error('Error deleting product:', error);
       throw error;
@@ -192,13 +279,21 @@ export const productsCollection = {
 };
 
 //
-// 📦 Orders Collection - FIXED FOR PUBLIC ORDER CREATION
+// 📦 Orders Collection
 //
 export const ordersCollection = {
   list: async (status?: string) => {
     try {
-      const queries = status ? [Query.equal('status', status)] : [];
-      return await databases.listDocuments(DATABASE_ID, appwriteConfig.collections.orders, queries);
+      const db = await connectToDatabase();
+      const query: any = {};
+      if (status) {
+        query.status = status;
+      }
+      const orders = await db.collection(mongodbConfig.collections.orders)
+        .find(query)
+        .sort({ created_at: -1 })
+        .toArray();
+      return { documents: transformDocuments(orders), total: orders.length };
     } catch (error) {
       console.error('Error listing orders:', error);
       throw error;
@@ -207,7 +302,10 @@ export const ordersCollection = {
 
   get: async (orderId: string) => {
     try {
-      return await databases.getDocument(DATABASE_ID, appwriteConfig.collections.orders, orderId);
+      const db = await connectToDatabase();
+      const order = await db.collection(mongodbConfig.collections.orders)
+        .findOne({ _id: toObjectId(orderId) });
+      return transformDocument(order);
     } catch (error) {
       console.error('Error getting order:', error);
       throw error;
@@ -216,82 +314,107 @@ export const ordersCollection = {
 
   getByOrderNumber: async (orderNumber: string) => {
     try {
-      const response = await databases.listDocuments(
-        DATABASE_ID,
-        appwriteConfig.collections.orders,
-        [Query.equal('order_number', orderNumber)]
-      );
-      return response.documents[0];
+      const db = await connectToDatabase();
+      const order = await db.collection(mongodbConfig.collections.orders)
+        .findOne({ order_number: orderNumber });
+      return transformDocument(order);
     } catch (error) {
       console.error('Error getting order by number:', error);
       throw error;
     }
   },
 
-  // PUBLIC ORDER CREATION - No authentication required
+  // PUBLIC ORDER CREATION
   create: async (data: any) => {
     try {
-      // Use public permissions so anyone can create orders
-      const permissions = [
-        'read("any")',
-        'write("any")',
-        'update("any")',
-        'delete("any")'
-      ];
-      
-      return await databases.createDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.orders,
-        ID.unique(),
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const orderData = {
+        ...data,
+        created_at: new Date(),
+        updated_at: new Date(),
+        status: data.status || 'pending'
+      };
+      const result = await db.collection(mongodbConfig.collections.orders)
+        .insertOne(orderData);
+      return transformDocument({ _id: result.insertedId, ...orderData });
     } catch (error) {
       console.error('Error creating order:', error);
       throw error;
     }
   },
 
-  // ADMIN UPDATE - Requires authentication
+  // ADMIN UPDATE
   update: async (orderId: string, data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.updateDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.orders,
-        orderId,
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const updateData = {
+        ...data,
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.orders)
+        .findOneAndUpdate(
+          { _id: toObjectId(orderId) },
+          { $set: updateData },
+          { returnDocument: 'after' }
+        );
+      return transformDocument(result);
     } catch (error) {
       console.error('Error updating order:', error);
       throw error;
     }
   },
 
-  // ADMIN DELETE - Requires authentication
+  // ADMIN DELETE
   delete: async (orderId: string) => {
     try {
       if (!orderId || orderId.trim() === '') {
         throw new Error('Invalid order ID');
       }
       console.log('Deleting order with ID:', orderId);
-      return await databases.deleteDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.orders,
-        orderId
-      );
+      const db = await connectToDatabase();
+      const result = await db.collection(mongodbConfig.collections.orders)
+        .deleteOne({ _id: toObjectId(orderId) });
+      return result;
     } catch (error) {
       console.error('Error deleting order:', error);
       throw error;
     }
   },
 
+  // Real-time updates using MongoDB Change Streams
   subscribe: (callback: (payload: any) => void) => {
-    return client.subscribe(
-      `databases.${DATABASE_ID}.collections.${appwriteConfig.collections.orders}.documents`,
-      callback
-    );
+    let changeStream: any = null;
+    
+    const setupChangeStream = async () => {
+      try {
+        const db = await connectToDatabase();
+        changeStream = db.collection(mongodbConfig.collections.orders).watch();
+        
+        changeStream.on('change', (change: any) => {
+          callback({
+            event: change.operationType,
+            payload: transformDocument(change.fullDocument)
+          });
+        });
+        
+        changeStream.on('error', (error: any) => {
+          console.error('Change stream error:', error);
+          // Attempt to reconnect after 5 seconds
+          setTimeout(setupChangeStream, 5000);
+        });
+      } catch (error) {
+        console.error('Error setting up change stream:', error);
+      }
+    };
+    
+    setupChangeStream();
+    
+    // Return unsubscribe function
+    return () => {
+      if (changeStream) {
+        changeStream.close();
+      }
+    };
   },
 };
 
@@ -301,8 +424,16 @@ export const ordersCollection = {
 export const paymentMethodsCollection = {
   list: async (active?: boolean) => {
     try {
-      const queries = active !== undefined ? [Query.equal('is_active', active)] : [];
-      return await databases.listDocuments(DATABASE_ID, appwriteConfig.collections.paymentMethods, queries);
+      const db = await connectToDatabase();
+      const query: any = {};
+      if (active !== undefined) {
+        query.is_active = active;
+      }
+      const methods = await db.collection(mongodbConfig.collections.paymentMethods)
+        .find(query)
+        .sort({ display_order: 1 })
+        .toArray();
+      return { documents: transformDocuments(methods), total: methods.length };
     } catch (error) {
       console.error('Error listing payment methods:', error);
       throw error;
@@ -311,7 +442,10 @@ export const paymentMethodsCollection = {
 
   get: async (methodId: string) => {
     try {
-      return await databases.getDocument(DATABASE_ID, appwriteConfig.collections.paymentMethods, methodId);
+      const db = await connectToDatabase();
+      const method = await db.collection(mongodbConfig.collections.paymentMethods)
+        .findOne({ _id: toObjectId(methodId) });
+      return transformDocument(method);
     } catch (error) {
       console.error('Error getting payment method:', error);
       throw error;
@@ -320,14 +454,15 @@ export const paymentMethodsCollection = {
 
   create: async (data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.createDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.paymentMethods,
-        ID.unique(),
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const methodData = {
+        ...data,
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.paymentMethods)
+        .insertOne(methodData);
+      return transformDocument({ _id: result.insertedId, ...methodData });
     } catch (error) {
       console.error('Error creating payment method:', error);
       throw error;
@@ -336,14 +471,18 @@ export const paymentMethodsCollection = {
 
   update: async (methodId: string, data: any) => {
     try {
-      const permissions = await getPermissions();
-      return await databases.updateDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.paymentMethods,
-        methodId,
-        data,
-        permissions
-      );
+      const db = await connectToDatabase();
+      const updateData = {
+        ...data,
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.paymentMethods)
+        .findOneAndUpdate(
+          { _id: toObjectId(methodId) },
+          { $set: updateData },
+          { returnDocument: 'after' }
+        );
+      return transformDocument(result);
     } catch (error) {
       console.error('Error updating payment method:', error);
       throw error;
@@ -356,11 +495,10 @@ export const paymentMethodsCollection = {
         throw new Error('Invalid payment method ID');
       }
       console.log('Deleting payment method with ID:', methodId);
-      return await databases.deleteDocument(
-        DATABASE_ID,
-        appwriteConfig.collections.paymentMethods,
-        methodId
-      );
+      const db = await connectToDatabase();
+      const result = await db.collection(mongodbConfig.collections.paymentMethods)
+        .deleteOne({ _id: toObjectId(methodId) });
+      return result;
     } catch (error) {
       console.error('Error deleting payment method:', error);
       throw error;
@@ -369,43 +507,128 @@ export const paymentMethodsCollection = {
 };
 
 //
-// 📁 Storage Helpers
+// 👤 Admins Collection
+//
+export const adminsCollection = {
+  list: async () => {
+    try {
+      const db = await connectToDatabase();
+      const admins = await db.collection(mongodbConfig.collections.admins)
+        .find({})
+        .toArray();
+      return transformDocuments(admins);
+    } catch (error) {
+      console.error('Error listing admins:', error);
+      throw error;
+    }
+  },
+
+  getByEmail: async (email: string) => {
+    try {
+      const db = await connectToDatabase();
+      const admin = await db.collection(mongodbConfig.collections.admins)
+        .findOne({ email: email.toLowerCase() });
+      return transformDocument(admin);
+    } catch (error) {
+      console.error('Error getting admin:', error);
+      throw error;
+    }
+  },
+
+  create: async (data: any) => {
+    try {
+      const db = await connectToDatabase();
+      const adminData = {
+        ...data,
+        email: data.email.toLowerCase(),
+        created_at: new Date(),
+        updated_at: new Date()
+      };
+      const result = await db.collection(mongodbConfig.collections.admins)
+        .insertOne(adminData);
+      return transformDocument({ _id: result.insertedId, ...adminData });
+    } catch (error) {
+      console.error('Error creating admin:', error);
+      throw error;
+    }
+  },
+};
+
+//
+// 📁 Storage Helpers (Using GridFS or Base64)
+// Since MongoDB Atlas doesn't have built-in file storage like Appwrite,
+// we'll provide options for file handling
 //
 export const storageHelpers = {
-  uploadFile: async (file: File, prefix?: string) => {
+  // Option 1: Store files as Base64 in MongoDB
+  uploadFileAsBase64: async (file: File, prefix?: string) => {
     try {
-      const fileId = prefix ? `${prefix}_${ID.unique()}` : ID.unique();
-      const result = await storage.createFile(appwriteConfig.buckets.storage, fileId, file);
-      console.log('File uploaded:', result.$id);
-      return result;
+      const db = await connectToDatabase();
+      
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const fileData = {
+              filename: prefix ? `${prefix}_${file.name}` : file.name,
+              mimeType: file.type,
+              size: file.size,
+              data: reader.result,
+              uploaded_at: new Date()
+            };
+            
+            const result = await db.collection('files').insertOne(fileData);
+            resolve({
+              $id: result.insertedId.toString(),
+              ...fileData
+            });
+          } catch (error) {
+            reject(error);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     } catch (error) {
       console.error('Error uploading file:', error);
       throw error;
     }
   },
 
+  // Option 2: Get file URL for Base64 stored files
   getFileView: (fileId: string) => {
     try {
-      const url = `https://sgp.cloud.appwrite.io/v1/storage/buckets/${appwriteConfig.buckets.storage}/files/${fileId}/view?project=${appwriteConfig.projectId}`;
-      return url;
+      // Return an API endpoint that will serve the file
+      return `/api/files/${fileId}`;
     } catch (error) {
       console.error('Error getting file view:', error);
       return '';
     }
   },
 
-  getFilePreview: (fileId: string) => {
-    return storageHelpers.getFileView(fileId);
-  },
-
+  // Option 3: Delete file from MongoDB
   deleteFile: async (fileId: string) => {
     try {
-      return await storage.deleteFile(appwriteConfig.buckets.storage, fileId);
+      const db = await connectToDatabase();
+      const result = await db.collection('files').deleteOne({ _id: toObjectId(fileId) });
+      return result;
     } catch (error) {
       console.error('Error deleting file:', error);
       throw error;
     }
   },
+
+  // Option 4: Get file data for serving
+  getFileData: async (fileId: string) => {
+    try {
+      const db = await connectToDatabase();
+      const file = await db.collection('files').findOne({ _id: toObjectId(fileId) });
+      return file;
+    } catch (error) {
+      console.error('Error getting file data:', error);
+      throw error;
+    }
+  }
 };
 
 //
@@ -418,4 +641,78 @@ export const generateOrderNumber = () => {
   return `${prefix}-${timestamp}-${random}`;
 };
 
-export { ID, Query };
+//
+// 🔐 Authentication Helpers (Using MongoDB for sessions/tokens)
+//
+export const authHelpers = {
+  // Simple token generation
+  generateToken: () => {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  },
+  
+  // Validate admin session
+  validateAdminSession: async (token: string) => {
+    try {
+      const db = await connectToDatabase();
+      const session = await db.collection('sessions').findOne({ 
+        token,
+        expires_at: { $gt: new Date() }
+      });
+      return session ? transformDocument(session) : null;
+    } catch (error) {
+      console.error('Error validating session:', error);
+      return null;
+    }
+  },
+  
+  // Create admin session
+  createAdminSession: async (adminId: string) => {
+    try {
+      const db = await connectToDatabase();
+      const token = authHelpers.generateToken();
+      const sessionData = {
+        admin_id: adminId,
+        token,
+        created_at: new Date(),
+        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      };
+      
+      await db.collection('sessions').insertOne(sessionData);
+      return token;
+    } catch (error) {
+      console.error('Error creating session:', error);
+      throw error;
+    }
+  },
+  
+  // Delete session (logout)
+  deleteSession: async (token: string) => {
+    try {
+      const db = await connectToDatabase();
+      await db.collection('sessions').deleteOne({ token });
+    } catch (error) {
+      console.error('Error deleting session:', error);
+      throw error;
+    }
+  }
+};
+
+// Export ObjectId for external use
+export { ObjectId };
+
+// Query helper for MongoDB
+export const Query = {
+  equal: (field: string, value: any) => ({ [field]: value }),
+  notEqual: (field: string, value: any) => ({ [field]: { $ne: value } }),
+  greaterThan: (field: string, value: any) => ({ [field]: { $gt: value } }),
+  lessThan: (field: string, value: any) => ({ [field]: { $lt: value } }),
+  search: (field: string, term: string) => ({ [field]: { $regex: term, $options: 'i' } }),
+  orderAsc: (field: string) => ({ [field]: 1 }),
+  orderDesc: (field: string) => ({ [field]: -1 }),
+};
+
+// Generate a unique ID (similar to Appwrite's ID.unique())
+export const ID = {
+  unique: () => new ObjectId().toString(),
+  custom: (id: string) => id,
+};
