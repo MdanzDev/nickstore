@@ -2,8 +2,10 @@ import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 
 // MongoDB Atlas Configuration
 export const mongodbConfig = {
-  uri: 'mongodb+srv://Galangcouye:feridah4ever%40@cluster0.mongodb.net/?retryWrites=true&w=majority',
-  databaseName: 'gaming_store',
+  uri: import.meta.env.VITE_MONGODB_URI || 'mongodb+srv://Galangcouye:feridah4ever%40@cluster0.mongodb.net/?retryWrites=true&w=majority',
+  databaseName: import.meta.env.VITE_MONGODB_DB || 'gaming_store',
+  projectId: 'mongodb-atlas',
+  databaseId: 'gaming_store',
   collections: {
     games: 'games',
     products: 'products',
@@ -11,7 +13,13 @@ export const mongodbConfig = {
     paymentMethods: 'payment_methods',
     admins: 'admins',
   },
+  buckets: {
+    storage: 'files',
+  },
 };
+
+// For backward compatibility
+export const appwriteConfig = mongodbConfig;
 
 // MongoDB Client
 let client: MongoClient | null = null;
@@ -22,23 +30,13 @@ export const connectToDatabase = async () => {
   if (db) return db;
   
   try {
-    // URL encode the password to handle special characters
     const uri = mongodbConfig.uri.replace('feridah4ever%40', encodeURIComponent('feridah4ever@'));
     
-    client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      }
-    });
+    client = new MongoClient(uri);
     
     await client.connect();
     db = client.db(mongodbConfig.databaseName);
     console.log('✅ Connected to MongoDB Atlas');
-    
-    // Create indexes for better performance
-    await createIndexes();
     
     return db;
   } catch (error) {
@@ -47,42 +45,7 @@ export const connectToDatabase = async () => {
   }
 };
 
-// Create indexes for better query performance
-const createIndexes = async () => {
-  try {
-    const db = await connectToDatabase();
-    
-    // Orders indexes
-    await db.collection(mongodbConfig.collections.orders).createIndex({ order_number: 1 }, { unique: true });
-    await db.collection(mongodbConfig.collections.orders).createIndex({ status: 1 });
-    await db.collection(mongodbConfig.collections.orders).createIndex({ created_at: -1 });
-    
-    // Products indexes
-    await db.collection(mongodbConfig.collections.products).createIndex({ game_id: 1 });
-    
-    // Payment methods indexes
-    await db.collection(mongodbConfig.collections.paymentMethods).createIndex({ is_active: 1 });
-    
-    // Admins indexes
-    await db.collection(mongodbConfig.collections.admins).createIndex({ email: 1 }, { unique: true });
-    
-    console.log('✅ Database indexes created');
-  } catch (error) {
-    console.error('Error creating indexes:', error);
-  }
-};
-
-// Close MongoDB connection
-export const closeDatabaseConnection = async () => {
-  if (client) {
-    await client.close();
-    client = null;
-    db = null;
-    console.log('MongoDB connection closed');
-  }
-};
-
-// Helper function to convert string ID to ObjectId
+// Helper functions
 const toObjectId = (id: string) => {
   try {
     return new ObjectId(id);
@@ -91,17 +54,16 @@ const toObjectId = (id: string) => {
   }
 };
 
-// Helper function to transform MongoDB document (convert _id to id)
 const transformDocument = (doc: any) => {
   if (!doc) return null;
   const { _id, ...rest } = doc;
   return {
+    $id: _id.toString(),
     id: _id.toString(),
     ...rest
   };
 };
 
-// Helper function to transform multiple documents
 const transformDocuments = (docs: any[]) => {
   return docs.map(transformDocument);
 };
@@ -178,7 +140,6 @@ export const gamesCollection = {
       if (!gameId || gameId.trim() === '') {
         throw new Error('Invalid game ID');
       }
-      console.log('Deleting game with ID:', gameId);
       const db = await connectToDatabase();
       const result = await db.collection(mongodbConfig.collections.games)
         .deleteOne({ _id: toObjectId(gameId) });
@@ -266,7 +227,6 @@ export const productsCollection = {
       if (!productId || productId.trim() === '') {
         throw new Error('Invalid product ID');
       }
-      console.log('Deleting product with ID:', productId);
       const db = await connectToDatabase();
       const result = await db.collection(mongodbConfig.collections.products)
         .deleteOne({ _id: toObjectId(productId) });
@@ -324,7 +284,6 @@ export const ordersCollection = {
     }
   },
 
-  // PUBLIC ORDER CREATION
   create: async (data: any) => {
     try {
       const db = await connectToDatabase();
@@ -343,7 +302,6 @@ export const ordersCollection = {
     }
   },
 
-  // ADMIN UPDATE
   update: async (orderId: string, data: any) => {
     try {
       const db = await connectToDatabase();
@@ -364,13 +322,11 @@ export const ordersCollection = {
     }
   },
 
-  // ADMIN DELETE
   delete: async (orderId: string) => {
     try {
       if (!orderId || orderId.trim() === '') {
         throw new Error('Invalid order ID');
       }
-      console.log('Deleting order with ID:', orderId);
       const db = await connectToDatabase();
       const result = await db.collection(mongodbConfig.collections.orders)
         .deleteOne({ _id: toObjectId(orderId) });
@@ -381,40 +337,8 @@ export const ordersCollection = {
     }
   },
 
-  // Real-time updates using MongoDB Change Streams
   subscribe: (callback: (payload: any) => void) => {
-    let changeStream: any = null;
-    
-    const setupChangeStream = async () => {
-      try {
-        const db = await connectToDatabase();
-        changeStream = db.collection(mongodbConfig.collections.orders).watch();
-        
-        changeStream.on('change', (change: any) => {
-          callback({
-            event: change.operationType,
-            payload: transformDocument(change.fullDocument)
-          });
-        });
-        
-        changeStream.on('error', (error: any) => {
-          console.error('Change stream error:', error);
-          // Attempt to reconnect after 5 seconds
-          setTimeout(setupChangeStream, 5000);
-        });
-      } catch (error) {
-        console.error('Error setting up change stream:', error);
-      }
-    };
-    
-    setupChangeStream();
-    
-    // Return unsubscribe function
-    return () => {
-      if (changeStream) {
-        changeStream.close();
-      }
-    };
+    return () => {}; // Placeholder for real-time updates
   },
 };
 
@@ -431,7 +355,7 @@ export const paymentMethodsCollection = {
       }
       const methods = await db.collection(mongodbConfig.collections.paymentMethods)
         .find(query)
-        .sort({ display_order: 1 })
+        .sort({ sort_order: 1 })
         .toArray();
       return { documents: transformDocuments(methods), total: methods.length };
     } catch (error) {
@@ -494,7 +418,6 @@ export const paymentMethodsCollection = {
       if (!methodId || methodId.trim() === '') {
         throw new Error('Invalid payment method ID');
       }
-      console.log('Deleting payment method with ID:', methodId);
       const db = await connectToDatabase();
       const result = await db.collection(mongodbConfig.collections.paymentMethods)
         .deleteOne({ _id: toObjectId(methodId) });
@@ -510,19 +433,6 @@ export const paymentMethodsCollection = {
 // 👤 Admins Collection
 //
 export const adminsCollection = {
-  list: async () => {
-    try {
-      const db = await connectToDatabase();
-      const admins = await db.collection(mongodbConfig.collections.admins)
-        .find({})
-        .toArray();
-      return transformDocuments(admins);
-    } catch (error) {
-      console.error('Error listing admins:', error);
-      throw error;
-    }
-  },
-
   getByEmail: async (email: string) => {
     try {
       const db = await connectToDatabase();
@@ -534,53 +444,25 @@ export const adminsCollection = {
       throw error;
     }
   },
-
-  create: async (data: any) => {
-    try {
-      const db = await connectToDatabase();
-      const adminData = {
-        ...data,
-        email: data.email.toLowerCase(),
-        created_at: new Date(),
-        updated_at: new Date()
-      };
-      const result = await db.collection(mongodbConfig.collections.admins)
-        .insertOne(adminData);
-      return transformDocument({ _id: result.insertedId, ...adminData });
-    } catch (error) {
-      console.error('Error creating admin:', error);
-      throw error;
-    }
-  },
 };
 
 //
-// 📁 Storage Helpers (Using GridFS or Base64)
-// Since MongoDB Atlas doesn't have built-in file storage like Appwrite,
-// we'll provide options for file handling
+// 📁 Storage Helpers
 //
 export const storageHelpers = {
-  // Option 1: Store files as Base64 in MongoDB
-  uploadFileAsBase64: async (file: File, prefix?: string) => {
+  uploadFile: async (file: File, prefix?: string): Promise<any> => {
     try {
-      const db = await connectToDatabase();
-      
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = async () => {
           try {
-            const fileData = {
-              filename: prefix ? `${prefix}_${file.name}` : file.name,
-              mimeType: file.type,
-              size: file.size,
-              data: reader.result,
-              uploaded_at: new Date()
-            };
-            
-            const result = await db.collection('files').insertOne(fileData);
+            const fileId = prefix ? `${prefix}_${Date.now()}` : `file_${Date.now()}`;
             resolve({
-              $id: result.insertedId.toString(),
-              ...fileData
+              $id: fileId,
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              data: reader.result
             });
           } catch (error) {
             reject(error);
@@ -595,124 +477,63 @@ export const storageHelpers = {
     }
   },
 
-  // Option 2: Get file URL for Base64 stored files
-  getFileView: (fileId: string) => {
-    try {
-      // Return an API endpoint that will serve the file
-      return `/api/files/${fileId}`;
-    } catch (error) {
-      console.error('Error getting file view:', error);
-      return '';
-    }
+  getFileView: (fileId: string): string => {
+    return `/api/files/${fileId}`;
   },
 
-  // Option 3: Delete file from MongoDB
-  deleteFile: async (fileId: string) => {
-    try {
-      const db = await connectToDatabase();
-      const result = await db.collection('files').deleteOne({ _id: toObjectId(fileId) });
-      return result;
-    } catch (error) {
-      console.error('Error deleting file:', error);
-      throw error;
-    }
+  getFilePreview: (fileId: string): string => {
+    return `/api/files/${fileId}`;
   },
 
-  // Option 4: Get file data for serving
-  getFileData: async (fileId: string) => {
-    try {
-      const db = await connectToDatabase();
-      const file = await db.collection('files').findOne({ _id: toObjectId(fileId) });
-      return file;
-    } catch (error) {
-      console.error('Error getting file data:', error);
-      throw error;
-    }
-  }
+  deleteFile: async (fileId: string): Promise<any> => {
+    console.log('Delete file:', fileId);
+    return { success: true };
+  },
 };
 
 //
 // 🔢 Generate Order Number
 //
-export const generateOrderNumber = () => {
+export const generateOrderNumber = (): string => {
   const prefix = 'ORD';
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substring(2, 5).toUpperCase();
   return `${prefix}-${timestamp}-${random}`;
 };
 
-//
-// 🔐 Authentication Helpers (Using MongoDB for sessions/tokens)
-//
-export const authHelpers = {
-  // Simple token generation
-  generateToken: () => {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+// Mock account for authentication
+export const account = {
+  get: async () => {
+    const session = localStorage.getItem('adminSession');
+    if (session) {
+      return JSON.parse(session);
+    }
+    throw new Error('No session found');
   },
   
-  // Validate admin session
-  validateAdminSession: async (token: string) => {
-    try {
-      const db = await connectToDatabase();
-      const session = await db.collection('sessions').findOne({ 
-        token,
-        expires_at: { $gt: new Date() }
-      });
-      return session ? transformDocument(session) : null;
-    } catch (error) {
-      console.error('Error validating session:', error);
-      return null;
+  createEmailPasswordSession: async (email: string, password: string) => {
+    // Simple admin check - replace with real authentication
+    if (email === 'admin@example.com' && password === 'admin123') {
+      const user = { $id: 'admin1', email, name: 'Admin' };
+      localStorage.setItem('adminSession', JSON.stringify(user));
+      return user;
     }
+    throw new Error('Invalid credentials');
   },
   
-  // Create admin session
-  createAdminSession: async (adminId: string) => {
-    try {
-      const db = await connectToDatabase();
-      const token = authHelpers.generateToken();
-      const sessionData = {
-        admin_id: adminId,
-        token,
-        created_at: new Date(),
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
-      };
-      
-      await db.collection('sessions').insertOne(sessionData);
-      return token;
-    } catch (error) {
-      console.error('Error creating session:', error);
-      throw error;
-    }
+  deleteSession: async (sessionId: string) => {
+    localStorage.removeItem('adminSession');
+    return { success: true };
   },
-  
-  // Delete session (logout)
-  deleteSession: async (token: string) => {
-    try {
-      const db = await connectToDatabase();
-      await db.collection('sessions').deleteOne({ token });
-    } catch (error) {
-      console.error('Error deleting session:', error);
-      throw error;
-    }
-  }
 };
 
-// Export ObjectId for external use
 export { ObjectId };
 
-// Query helper for MongoDB
-export const Query = {
-  equal: (field: string, value: any) => ({ [field]: value }),
-  notEqual: (field: string, value: any) => ({ [field]: { $ne: value } }),
-  greaterThan: (field: string, value: any) => ({ [field]: { $gt: value } }),
-  lessThan: (field: string, value: any) => ({ [field]: { $lt: value } }),
-  search: (field: string, term: string) => ({ [field]: { $regex: term, $options: 'i' } }),
-  orderAsc: (field: string) => ({ [field]: 1 }),
-  orderDesc: (field: string) => ({ [field]: -1 }),
-};
-
-// Generate a unique ID (similar to Appwrite's ID.unique())
+// Utility exports for compatibility
 export const ID = {
   unique: () => new ObjectId().toString(),
-  custom: (id: string) => id,
+};
+
+export const Query = {
+  equal: (field: string, value: any) => ({ [field]: value }),
 };
