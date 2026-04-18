@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { productsCollection, appwriteConfig } from '@/lib/appwrite';
+import { productsCollection } from '@/lib/mongodb';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Product } from '@/types';
 
+// Rest of the file remains the same, just update the import and remove appwriteConfig usage
 export const useProducts = (gameId?: string) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
