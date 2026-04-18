@@ -4,7 +4,7 @@ import { Plus, Pencil, Trash2, Upload, QrCode, Building2, Wallet, RefreshCw } fr
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { useAdminPaymentMethods } from '@/hooks/usePaymentMethods';
 import { useAuth } from '@/contexts/AuthContext';
-import { storageHelpers } from '@/lib/appwrite';
+import { storageHelpers } from '@/lib/mongodb';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
