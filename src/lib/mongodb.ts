@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 // MongoDB Atlas Configuration
 export const mongodbConfig = {
@@ -337,8 +337,9 @@ export const ordersCollection = {
     }
   },
 
-  subscribe: (callback: (payload: any) => void) => {
-    return () => {}; // Placeholder for real-time updates
+  subscribe: (_callback: (payload: any) => void) => {
+    // Placeholder for real-time updates
+    return () => {};
   },
 };
 
@@ -521,7 +522,7 @@ export const account = {
     throw new Error('Invalid credentials');
   },
   
-  deleteSession: async (sessionId: string) => {
+  deleteSession: async (_sessionId: string) => {
     localStorage.removeItem('adminSession');
     return { success: true };
   },
