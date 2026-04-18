@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { paymentMethodsCollection, storageHelpers, appwriteConfig } from '@/lib/appwrite';
+import { paymentMethodsCollection, storageHelpers } from '@/lib/mongodb';
 import { useAuth } from '@/contexts/AuthContext';
 import type { PaymentMethod } from '@/types';
+
+// Rest of the file remains the same, just update the import
 
 // Public hook - only gets active payment methods
 export const usePaymentMethods = () => {
