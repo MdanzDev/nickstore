@@ -1,24 +1,14 @@
-// contexts/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { account } from '@/lib/appwrite';
+import { account } from '@/lib/mongodb';
 
-interface AppwriteUser {
+interface AdminUser {
   $id: string;
-  $createdAt: string;
-  $updatedAt: string;
-  name: string;
   email: string;
-  emailVerification: boolean;
-  phone: string;
-  phoneVerification: boolean;
-  status: boolean;
-  labels: string[];
-  prefs: Record<string, any>;
-  accessedAt: string;
+  name: string;
 }
 
 interface AuthContextType {
-  user: AppwriteUser | null;
+  user: AdminUser | null;
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -28,17 +18,17 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AppwriteUser | null>(null);
+  const [user, setUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
 
   const checkUser = useCallback(async () => {
     try {
-      console.log('🔍 Checking Appwrite session...');
+      console.log('🔍 Checking session...');
       const currentUser = await account.get();
       console.log('✅ User is authenticated:', currentUser.email);
-      setUser(currentUser as AppwriteUser);
+      setUser(currentUser as AdminUser);
     } catch (error) {
-      console.log('❌ No Appwrite session found');
+      console.log('❌ No session found');
       setUser(null);
     } finally {
       setLoading(false);
@@ -52,11 +42,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      console.log('🔐 Attempting Appwrite login for:', email);
+      console.log('🔐 Attempting login for:', email);
       await account.createEmailPasswordSession(email, password);
       const currentUser = await account.get();
       console.log('✅ Login successful! User:', currentUser.email);
-      setUser(currentUser as AppwriteUser);
+      setUser(currentUser as AdminUser);
     } catch (error: any) {
       console.error('❌ Login failed:', error);
       throw new Error(error.message || 'Login failed');
