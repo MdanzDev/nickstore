@@ -46,6 +46,8 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Add this line to allow caching files up to 4 MB
+        maximumFileSizeToCacheInBytes: 4000000,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
@@ -56,6 +58,18 @@ export default defineConfig({
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+              },
+            },
+          },
+          // Add MongoDB Atlas caching since you're now using MongoDB
+          {
+            urlPattern: /^https:\/\/.*\.mongodb\.net\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'mongodb-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24, // 1 day
               },
             },
           },
