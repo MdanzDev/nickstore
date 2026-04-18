@@ -3,7 +3,6 @@ import { productsCollection } from '@/lib/mongodb';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Product } from '@/types';
 
-// Rest of the file remains the same, just update the import and remove appwriteConfig usage
 export const useProducts = (gameId?: string) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,27 +53,13 @@ export const useAdminProducts = () => {
 
     try {
       setLoading(true);
-      console.log('[Admin Products] Fetching ALL products using public access...');
+      console.log('[Admin Products] Fetching ALL products...');
       
-      let url = `https://sgp.cloud.appwrite.io/v1/databases/${appwriteConfig.databaseId}/collections/products/documents`;
+      const response = await productsCollection.list(gameId);
+      console.log(`[Admin Products] Found ${response.documents?.length || 0} total products`);
       
-      if (gameId && gameId !== 'all') {
-        const query = encodeURIComponent(JSON.stringify({ method: 'equal', attribute: 'game_id', values: [gameId] }));
-        url += `?queries[]=${query}`;
-      }
-      
-      const response = await fetch(url, {
-        headers: {
-          'X-Appwrite-Project': appwriteConfig.projectId,
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      const data = await response.json();
-      console.log(`[Admin Products] Found ${data.documents?.length || 0} total products`);
-      
-      if (data.documents && data.documents.length > 0) {
-        setProducts(data.documents.map((doc: any) => doc as unknown as Product));
+      if (response.documents && response.documents.length > 0) {
+        setProducts(response.documents.map((doc: any) => doc as unknown as Product));
       } else {
         setProducts([]);
       }
