@@ -3,8 +3,6 @@ import { paymentMethodsCollection, storageHelpers } from '@/lib/mongodb';
 import { useAuth } from '@/contexts/AuthContext';
 import type { PaymentMethod } from '@/types';
 
-// Rest of the file remains the same, just update the import
-
 // Public hook - only gets active payment methods
 export const usePaymentMethods = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
@@ -63,22 +61,12 @@ export const useAdminPaymentMethods = () => {
       setLoading(true);
       console.log('[Admin] Fetching ALL payment methods...');
       
-      const response = await fetch(
-        `https://sgp.cloud.appwrite.io/v1/databases/${appwriteConfig.databaseId}/collections/payment_methods/documents`,
-        {
-          headers: {
-            'X-Appwrite-Project': appwriteConfig.projectId,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      const response = await paymentMethodsCollection.list();
+      console.log(`[Admin] Found ${response.documents?.length || 0} total payment methods`);
       
-      const data = await response.json();
-      console.log(`[Admin] Found ${data.documents?.length || 0} total payment methods`);
-      
-      if (data.documents && data.documents.length > 0) {
+      if (response.documents && response.documents.length > 0) {
         const methodsWithImages = await Promise.all(
-          data.documents.map(async (method: any) => {
+          response.documents.map(async (method: any) => {
             if (method.qr_image_id) {
               method.qr_image_url = storageHelpers.getFileView(method.qr_image_id);
             }
@@ -195,7 +183,6 @@ export const useAdminPaymentMethods = () => {
       setLoading(true);
       console.log('[Admin] Deleting payment method:', methodId);
       
-      // Validate the ID
       if (!methodId || methodId.trim() === '') {
         throw new Error('Invalid payment method ID');
       }
