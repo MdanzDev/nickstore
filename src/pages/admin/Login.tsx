@@ -1,4 +1,3 @@
-// pages/admin/Login.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Gamepad2, Eye, EyeOff, Lock, Mail } from 'lucide-react';
@@ -6,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { account } from '@/lib/appwrite';
+import { account } from '@/lib/mongodb'; // Updated import
 
+// Rest of the file remains the same
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated } = useAuth();
