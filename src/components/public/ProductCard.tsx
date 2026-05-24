@@ -23,10 +23,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <button
       onClick={onSelect}
       className={cn(
-        'relative w-full text-left p-4 rounded-xl border-2 transition-all duration-200',
+        'relative w-full rounded-2xl border p-4 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-slate-950',
         isSelected
-          ? 'border-violet-500 bg-violet-500/10'
-          : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'
+          ? 'border-violet-500 bg-violet-500/10 shadow-lg shadow-violet-950/20'
+          : 'border-slate-800 bg-slate-900/60 hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-800/70'
       )}
     >
       {/* Selection Indicator */}
@@ -43,11 +43,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       )}
 
-      <div className="pr-6">
-        <h4 className="font-semibold text-white">{product.name}</h4>
-        <p className="text-sm text-slate-400 mt-1">{product.denomination}</p>
+      <div className="pr-8">
+        <h4 className="font-semibold leading-snug text-white">{product.name}</h4>
+        <p className="mt-1 text-sm leading-5 text-slate-400">{product.denomination}</p>
         
-        <div className="flex items-center gap-2 mt-3">
+        <div className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
           <span className="text-lg font-bold text-violet-400">
             RM {product.price.toFixed(2)}
           </span>

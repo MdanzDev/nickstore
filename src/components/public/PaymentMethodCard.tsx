@@ -27,10 +27,10 @@ export const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
     <button
       onClick={onSelect}
       className={cn(
-        'relative w-full text-left p-4 rounded-xl border-2 transition-all duration-200',
+        'relative w-full rounded-2xl border p-4 text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-slate-950',
         isSelected
-          ? 'border-violet-500 bg-violet-500/10'
-          : 'border-slate-800 bg-slate-900/50 hover:border-slate-700 hover:bg-slate-800/50'
+          ? 'border-violet-500 bg-violet-500/10 shadow-lg shadow-violet-950/20'
+          : 'border-slate-800 bg-slate-900/60 hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-800/70'
       )}
     >
       {/* Selection Indicator */}
@@ -40,8 +40,8 @@ export const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
         </div>
       )}
 
-      <div className="flex items-start gap-4 pr-6">
-        <div className="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center flex-shrink-0">
+      <div className="flex items-start gap-3 pr-7 sm:gap-4">
+        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-slate-800">
           {method.qr_image_url ? (
             <img
               src={method.qr_image_url}
@@ -53,9 +53,9 @@ export const PaymentMethodCard: React.FC<PaymentMethodCardProps> = ({
           )}
         </div>
         
-        <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-white">{method.name}</h4>
-          <p className="text-sm text-slate-400 mt-1">{method.description}</p>
+        <div className="min-w-0 flex-1">
+          <h4 className="font-semibold leading-snug text-white">{method.name}</h4>
+          <p className="mt-1 text-sm leading-5 text-slate-400">{method.description}</p>
           
           {method.account_name && (
             <div className="mt-2 text-sm">

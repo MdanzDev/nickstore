@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, User, Mail, Phone, Gamepad2, Server } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
+import { StepProgress } from '@/components/public/StepProgress';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -73,45 +74,24 @@ const OrderForm: React.FC = () => {
     <div className="min-h-screen bg-slate-950">
       <Navbar />
 
-      <main className="pt-8 pb-20">
+      <main className="pt-6 pb-16 sm:pt-8 sm:pb-20">
         <div className="container mx-auto px-4 max-w-4xl">
           {/* Back Button */}
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6"
+            className="mb-6 flex items-center gap-2 rounded-lg text-slate-400 transition-colors hover:text-white focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-offset-2 focus:ring-offset-slate-950"
           >
             <ArrowLeft className="w-5 h-5" />
             Back
           </button>
 
           {/* Progress */}
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-violet-500 flex items-center justify-center text-white text-sm font-medium">
-                1
-              </div>
-              <span className="text-violet-400 font-medium">Details</span>
-            </div>
-            <div className="flex-1 h-0.5 bg-slate-800" />
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-sm font-medium">
-                2
-              </div>
-              <span className="text-slate-500">Payment</span>
-            </div>
-            <div className="flex-1 h-0.5 bg-slate-800" />
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 text-sm font-medium">
-                3
-              </div>
-              <span className="text-slate-500">Complete</span>
-            </div>
-          </div>
+          <StepProgress currentStep={1} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
             {/* Form */}
             <div className="lg:col-span-2">
-              <Card className="bg-slate-900/50 border-slate-800">
+              <Card className="rounded-2xl border-slate-800 bg-slate-900/60 shadow-xl shadow-slate-950/20">
                 <CardHeader>
                   <CardTitle className="text-white">Enter Your Game Details</CardTitle>
                 </CardHeader>
@@ -210,7 +190,7 @@ const OrderForm: React.FC = () => {
 
                     <Button
                       type="submit"
-                      className="w-full bg-violet-500 hover:bg-violet-600 text-white py-6"
+                      className="h-12 w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 py-6 text-white shadow-lg shadow-violet-950/25 transition-transform hover:scale-[1.01] hover:from-violet-600 hover:to-fuchsia-600"
                     >
                       Continue to Payment
                       <ChevronRight className="w-5 h-5 ml-2" />
@@ -222,7 +202,7 @@ const OrderForm: React.FC = () => {
 
             {/* Order Summary */}
             <div>
-              <Card className="bg-slate-900/50 border-slate-800 sticky top-24">
+              <Card className="sticky top-24 rounded-2xl border-slate-800 bg-slate-900/60 shadow-xl shadow-slate-950/20">
                 <CardHeader>
                   <CardTitle className="text-white text-lg">Order Summary</CardTitle>
                 </CardHeader>

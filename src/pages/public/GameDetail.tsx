@@ -110,7 +110,7 @@ const GameDetail: React.FC = () => {
     <div className="min-h-screen bg-slate-950">
       <Navbar />
 
-      <main className="pt-8 pb-32">
+      <main className="pt-6 pb-36 sm:pt-8 sm:pb-32">
         <div className="container mx-auto px-4">
           {/* Back Button with animation */}
           <button
@@ -122,8 +122,8 @@ const GameDetail: React.FC = () => {
           </button>
 
           {/* Game Header with animations */}
-          <div className="flex flex-col md:flex-row gap-6 mb-10 animate-slide-up">
-            <div className="w-full md:w-64 aspect-video md:aspect-square rounded-2xl overflow-hidden bg-slate-800 flex-shrink-0 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
+          <div className="mb-10 flex flex-col gap-6 rounded-3xl border border-slate-800/70 bg-slate-900/35 p-4 shadow-xl shadow-slate-950/20 md:flex-row md:p-5 animate-slide-up">
+            <div className="aspect-video w-full flex-shrink-0 overflow-hidden rounded-2xl bg-slate-800 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl md:aspect-square md:w-64">
               {game.image_url ? (
                 <img
                   src={game.image_url}
@@ -136,28 +136,28 @@ const GameDetail: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="flex-1">
+            <div className="flex-1 py-1 md:py-3">
               <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 py-1 mb-4 animate-pulse-slow">
                 <Sparkles className="w-3 h-3 text-violet-400" />
                 <span className="text-xs text-violet-400">Featured Game</span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 animate-fade-in-up">
+              <h1 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl animate-fade-in-up">
                 {game.name}
               </h1>
               <p className="text-slate-400 max-w-2xl animate-fade-in-up animation-delay-200">
                 {game.description}
               </p>
               
-              <div className="flex flex-wrap items-center gap-4 mt-6 animate-fade-in-up animation-delay-300">
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full transition-all duration-300 hover:scale-105">
+              <div className="mt-6 flex flex-wrap items-center gap-2 sm:gap-3 animate-fade-in-up animation-delay-300">
+                <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 transition-all duration-300 hover:scale-[1.02] sm:px-4">
                   <Zap className="w-4 h-4 text-emerald-400" />
                   <span className="text-sm text-emerald-400">Instant Delivery</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-violet-500/10 border border-violet-500/20 rounded-full transition-all duration-300 hover:scale-105">
+                <div className="flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-2 transition-all duration-300 hover:scale-[1.02] sm:px-4">
                   <Shield className="w-4 h-4 text-violet-400" />
                   <span className="text-sm text-violet-400">Secure Payment</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full transition-all duration-300 hover:scale-105">
+                <div className="flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-2 transition-all duration-300 hover:scale-[1.02] sm:px-4">
                   <Info className="w-4 h-4 text-amber-400" />
                   <span className="text-sm text-amber-400">24/7 Support</span>
                 </div>
@@ -182,7 +182,7 @@ const GameDetail: React.FC = () => {
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
                 {sortedProducts.map((product, index) => (
                   <div
                     key={product.$id}
@@ -204,17 +204,17 @@ const GameDetail: React.FC = () => {
 
       {/* Sticky Bottom Bar with animation */}
       {selectedProduct && (
-        <div className="fixed bottom-0 left-0 right-0 bg-slate-950/95 backdrop-blur-xl border-t border-slate-800 p-4 z-40 animate-slide-up">
+        <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800 bg-slate-950/95 p-3 backdrop-blur-xl sm:p-4 animate-slide-up">
           <div className="container mx-auto max-w-4xl">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
                 <p className="text-sm text-slate-400">Selected</p>
-                <p className="text-white font-medium">{selectedProduct.name}</p>
+                <p className="truncate font-medium text-white">{selectedProduct.name}</p>
                 <p className="text-violet-400 font-bold text-lg">RM {selectedProduct.price.toFixed(2)}</p>
               </div>
               <Button
                 onClick={handleContinue}
-                className="bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white px-8 py-6 transition-all duration-300 hover:scale-105 group"
+                className="group h-12 w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 px-8 py-6 text-white transition-all duration-300 hover:scale-[1.01] hover:from-violet-600 hover:to-fuchsia-600 sm:w-auto"
               >
                 Continue
                 <ChevronRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap, Shield, Clock, Gamepad2, Sparkles, Trophy, Rocket } from 'lucide-react';
 import Navbar from '@/components/public/Navbar';
@@ -13,6 +13,19 @@ const Home: React.FC = () => {
   const { games, loading } = useGames();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 24 }, (_, index) => ({
+        id: index,
+        left: `${(index * 37) % 100}%`,
+        top: `${(index * 53) % 100}%`,
+        size: `${2 + (index % 4)}px`,
+        delay: `${(index % 8) * 0.45}s`,
+        duration: `${4 + (index % 5) * 0.55}s`,
+      })),
+    []
+  );
 
   const testimonials = [
     { name: 'Ahmad R.', text: 'Fast delivery! Got my diamonds within minutes.', rating: 5 },
@@ -53,7 +66,7 @@ const Home: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.18),transparent_32rem),linear-gradient(180deg,#020617_0%,#0f172a_58%,#020617_100%)]">
       <Navbar />
 
       <main>
@@ -64,17 +77,17 @@ const Home: React.FC = () => {
           
           {/* Floating particles */}
           <div className="absolute inset-0 overflow-hidden">
-            {[...Array(30)].map((_, i) => (
+            {particles.map((particle) => (
               <div
-                key={i}
+                key={particle.id}
                 className="absolute rounded-full bg-violet-500/30 animate-float"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  width: `${2 + Math.random() * 4}px`,
-                  height: `${2 + Math.random() * 4}px`,
-                  animationDelay: `${Math.random() * 5}s`,
-                  animationDuration: `${3 + Math.random() * 4}s`,
+                  left: particle.left,
+                  top: particle.top,
+                  width: particle.size,
+                  height: particle.size,
+                  animationDelay: particle.delay,
+                  animationDuration: particle.duration,
                 }}
               />
             ))}
@@ -84,14 +97,14 @@ const Home: React.FC = () => {
           <div className="absolute top-20 right-20 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl animate-pulse-slow" />
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse-slow animation-delay-1000" />
 
-          <div className={`relative container mx-auto px-4 py-20 lg:py-32 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+          <div className={`container relative mx-auto px-4 py-16 sm:py-20 lg:py-28 transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             <div className="max-w-3xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-violet-500/10 border border-violet-500/20 rounded-full mb-8 animate-bounce-in">
+              <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-4 py-2 shadow-[0_0_40px_rgba(139,92,246,0.12)] backdrop-blur animate-bounce-in">
                 <Sparkles className="w-4 h-4 text-violet-400 animate-spin-slow" />
                 <span className="text-sm text-violet-300">Fast & Secure Game Top-ups</span>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight animate-slide-up">
+              <h1 className="text-balance text-4xl font-bold leading-[1.05] text-white sm:text-5xl md:text-6xl animate-slide-up">
                 Top Up Your{' '}
                 <span className="bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent animate-gradient-x">
                   Favorite Games
@@ -99,25 +112,25 @@ const Home: React.FC = () => {
                 Instantly
               </h1>
 
-              <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+              <p className="mx-auto mb-9 mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg animate-fade-in-up animation-delay-200">
                 Get the best deals on game credits with instant delivery. Support for all major games with secure payment options.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-300">
-                <Link to="/games">
+              <div className="mx-auto flex max-w-sm flex-col justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4 animate-fade-in-up animation-delay-300">
+                <Link to="/games" className="w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white px-8 transition-all duration-300 hover:scale-105 group"
+                    className="group h-12 w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 px-8 text-white shadow-lg shadow-violet-950/40 transition-all duration-300 hover:scale-[1.02] hover:from-violet-600 hover:to-fuchsia-600 sm:w-auto"
                   >
                     <Gamepad2 className="w-5 h-5 mr-2 transition-transform duration-300 group-hover:rotate-12" />
                     Browse Games
                   </Button>
                 </Link>
-                <Link to="/track-order">
+                <Link to="/track-order" className="w-full sm:w-auto">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800 transition-all duration-300 hover:scale-105 group"
+                    className="group h-12 w-full border-slate-700 bg-slate-950/45 text-slate-200 transition-all duration-300 hover:scale-[1.02] hover:bg-slate-800 hover:text-white sm:w-auto"
                   >
                     Track Order
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
@@ -126,7 +139,7 @@ const Home: React.FC = () => {
               </div>
 
               {/* Stats with animations */}
-              <div className="grid grid-cols-3 gap-4 mt-16">
+              <div className="mt-12 grid grid-cols-3 overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/45 shadow-2xl shadow-slate-950/40 backdrop-blur sm:mt-16">
                 {[
                   { value: '50K+', label: 'Happy Customers' },
                   { value: '100+', label: 'Games Available' },
@@ -134,11 +147,11 @@ const Home: React.FC = () => {
                 ].map((stat, index) => (
                   <div
                     key={index}
-                    className="text-center animate-fade-in-up"
+                    className="border-r border-slate-800/70 px-2 py-4 text-center last:border-r-0 sm:px-4 animate-fade-in-up"
                     style={{ animationDelay: `${(index + 4) * 100}ms` }}
                   >
-                    <div className="text-2xl md:text-3xl font-bold text-white animate-pulse-slow">{stat.value}</div>
-                    <div className="text-slate-500 text-sm">{stat.label}</div>
+                    <div className="text-xl font-bold text-white sm:text-2xl md:text-3xl animate-pulse-slow">{stat.value}</div>
+                    <div className="mt-1 text-[11px] text-slate-500 sm:text-sm">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -147,7 +160,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Features Section with staggered animations */}
-        <section className="py-20 border-t border-slate-800/50 bg-slate-900/30">
+        <section className="border-y border-slate-800/50 bg-slate-900/35 py-16 sm:py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 animate-fade-in-up">
@@ -158,11 +171,11 @@ const Home: React.FC = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="group bg-slate-800/50 border border-slate-700 rounded-2xl p-6 text-center hover:border-violet-500/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl animate-fade-in-up"
+                  className="group rounded-2xl border border-slate-700/80 bg-slate-800/50 p-6 text-center shadow-lg shadow-slate-950/20 transition-all duration-300 hover:-translate-y-1 hover:border-violet-500/50 hover:bg-slate-800/80 hover:shadow-xl animate-fade-in-up"
                   style={{ animationDelay: `${(index + 1) * 150}ms` }}
                 >
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6`}>
@@ -177,11 +190,11 @@ const Home: React.FC = () => {
         </section>
 
         {/* Games Section with scroll animation */}
-        <section className="py-20">
+        <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-10">
+            <div className="mb-8 flex items-end justify-between gap-4 sm:mb-10">
               <div>
-                <h2 className="text-3xl font-bold text-white animate-fade-in-up">Popular Games</h2>
+                <h2 className="text-2xl font-bold text-white sm:text-3xl animate-fade-in-up">Popular Games</h2>
                 <p className="text-slate-400 mt-2 animate-fade-in-up animation-delay-200">Choose from our selection of supported games</p>
               </div>
               <Link to="/games" className="hidden sm:flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-all duration-300 group animate-fade-in-up animation-delay-300">
@@ -203,7 +216,7 @@ const Home: React.FC = () => {
                 description="Check back later for new games!"
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
                 {games.slice(0, 8).map((game, index) => (
                   <div
                     key={game.$id}
@@ -230,7 +243,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* Testimonials Section with carousel animation */}
-        <section className="py-20 bg-slate-900/30">
+        <section className="bg-slate-900/35 py-16 sm:py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 animate-fade-in-up">
@@ -252,7 +265,7 @@ const Home: React.FC = () => {
                         : 'opacity-0 absolute inset-0 translate-x-full'
                     }`}
                   >
-                    <div className="bg-slate-800/50 border border-slate-700 rounded-2xl p-8 text-center">
+                    <div className="rounded-2xl border border-slate-700/80 bg-slate-800/55 p-6 text-center shadow-xl shadow-slate-950/20 sm:p-8">
                       <div className="flex justify-center gap-1 mb-4">
                         {[...Array(5)].map((_, i) => (
                           <Trophy
@@ -290,9 +303,9 @@ const Home: React.FC = () => {
         </section>
 
         {/* CTA Section with floating animation */}
-        <section className="py-20">
+        <section className="py-16 sm:py-20">
           <div className="container mx-auto px-4">
-            <div className="relative bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-3xl p-10 lg:p-16 overflow-hidden group">
+            <div className="group relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 to-fuchsia-600 p-6 shadow-2xl shadow-violet-950/35 sm:p-10 lg:p-16">
               {/* Animated background elements */}
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse-slow" />
               <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse-slow animation-delay-1000" />
@@ -309,10 +322,10 @@ const Home: React.FC = () => {
                 <p className="text-violet-100 mb-8 animate-fade-in-up animation-delay-200">
                   Get instant game credits with our secure and fast payment system. Support available 24/7.
                 </p>
-                <Link to="/games">
+                <Link to="/games" className="inline-flex w-full sm:w-auto">
                   <Button
                     size="lg"
-                    className="bg-white text-violet-600 hover:bg-violet-50 transition-all duration-300 hover:scale-105 group"
+                    className="group w-full bg-white text-violet-600 transition-all duration-300 hover:scale-[1.02] hover:bg-violet-50 sm:w-auto"
                   >
                     Start Shopping
                     <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
@@ -325,32 +338,6 @@ const Home: React.FC = () => {
       </main>
 
       <Footer />
-
-      {/* Add these styles to your index.css or tailwind config */}
-      <style>{`
-        @keyframes gradient-xy {
-          0%, 100% { background-position: 0% 0%; }
-          50% { background-position: 100% 100%; }
-        }
-        .animate-gradient-xy {
-          background-size: 200% 200%;
-          animation: gradient-xy 10s ease infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        .animate-float {
-          animation: float 5s ease-in-out infinite;
-        }
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-        .animate-shimmer {
-          animation: shimmer 3s infinite;
-        }
-      `}</style>
     </div>
   );
 };

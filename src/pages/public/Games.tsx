@@ -40,15 +40,15 @@ const Games: React.FC = () => {
     <div className="min-h-screen bg-slate-950">
       <Navbar />
 
-      <main className="pt-8 pb-20">
+      <main className="pt-6 pb-16 sm:pt-8 sm:pb-20">
         {/* Header with animation */}
         <div className="container mx-auto px-4 mb-10">
           <div className="max-w-2xl mx-auto text-center animate-slide-up">
-            <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-4 animate-pulse-slow">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 animate-pulse-slow">
               <Sparkles className="w-4 h-4 text-violet-400" />
               <span className="text-sm text-violet-400">Discover & Top Up</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 animate-fade-in-up">
+            <h1 className="mb-4 text-3xl font-bold leading-tight text-white md:text-4xl animate-fade-in-up">
               All <span className="text-violet-400">Games</span>
             </h1>
             <p className="text-slate-400 animate-fade-in-up animation-delay-200">
@@ -59,12 +59,12 @@ const Games: React.FC = () => {
 
         {/* Search with animation */}
         <div className="container mx-auto px-4 mb-10 animate-fade-in-up animation-delay-300">
-          <div className="max-w-md mx-auto relative">
+          <div className="group relative mx-auto max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 transition-all duration-300 group-focus-within:text-violet-400" />
             <Input
               placeholder="Search games..."
               onChange={handleSearchChange}
-              className="pl-12 py-6 bg-slate-900/50 border-slate-800 text-white text-lg rounded-xl transition-all duration-300 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
+              className="rounded-2xl border-slate-800 bg-slate-900/70 py-6 pl-12 text-base text-white shadow-xl shadow-slate-950/20 transition-all duration-300 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 sm:text-lg"
             />
             {isSearching && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -100,7 +100,7 @@ const Games: React.FC = () => {
               <div className="text-sm text-slate-500 mb-4 animate-fade-in-up animation-delay-400">
                 Found {filteredGames.length} game{filteredGames.length !== 1 ? 's' : ''}
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
                 {filteredGames.map((game, index) => (
                   <div
                     key={game.$id}
