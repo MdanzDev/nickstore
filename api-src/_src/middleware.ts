@@ -1,4 +1,3 @@
-import { ErrorMessages } from "@contracts/constants";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { TrpcContext } from "./context";
@@ -16,7 +15,7 @@ const requireAuth = t.middleware(async (opts) => {
   if (!ctx.user || !ctx.jwtToken) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: ErrorMessages.unauthenticated,
+      message: "Unauthenticated",
     });
   }
 
@@ -30,7 +29,7 @@ function requireRole(role: string) {
     if (!ctx.user || !ctx.user.roles.includes(role)) {
       throw new TRPCError({
         code: "FORBIDDEN",
-        message: ErrorMessages.insufficientRole,
+        message: "Insufficient role",
       });
     }
 

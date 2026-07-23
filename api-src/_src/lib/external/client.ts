@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { createClient } from "@supabase/supabase-js";
-import fetch from "node-fetch"; // ensure node-fetch is available or rely on global fetch in Node 18+
 
 const EXCHANGE_RATE = 4300;
 
