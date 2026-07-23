@@ -198,11 +198,13 @@ const DenominationCard = memo(({
   isPopular?: boolean;
 }) => {
   const { formatPrice } = useCurrency();
-  const displayPrice = formatPrice(item.price_myr, item.price_idr || item.price);
-  const originalPrice = item.discount ? item.price * (1 + item.discount / 100) : null;
+  const priceMyr = item.price_myr ?? item.price ?? 0;
+  const priceIdr = item.price_idr ?? item.priceIdr ?? (priceMyr * 4300);
+  const displayPrice = formatPrice(priceMyr, priceIdr);
+  const originalPrice = item.discount ? priceMyr * (1 + item.discount / 100) : null;
   const formattedOriginal = originalPrice ? formatPrice(
-    item.price_myr ? item.price_myr * (1 + item.discount! / 100) : undefined,
-    item.price_idr ? item.price_idr * (1 + item.discount! / 100) : originalPrice
+    originalPrice,
+    originalPrice * 4300
   ) : null;
 
   return (
@@ -441,8 +443,8 @@ export default function ProductDetail() {
     [denominations, selectedNominal]
   );
 
-  const subtotalMyr = selectedItem?.price_myr ?? (selectedItem?.price ? selectedItem.price / 4111 : 0);
-  const subtotalIdr = selectedItem?.price_idr ?? selectedItem?.price ?? 0;
+  const subtotalMyr = selectedItem?.price_myr ?? selectedItem?.price ?? 0;
+  const subtotalIdr = selectedItem?.price_idr ?? selectedItem?.priceIdr ?? (subtotalMyr * 4300);
   
   const discountMyr = voucherResult?.discountAmount || 0;
   const discountIdr = discountMyr * 4111;
@@ -672,6 +674,8 @@ export default function ProductDetail() {
         game_id: finalUserId,
         zone_id: finalZoneId,
         phone: guestPhone || "00000000000",
+        amount_myr: totalMyr || selectedItem.price || 0,
+        amount_idr: totalIdr || selectedItem.priceIdr || 0,
         ...(voucherResult ? { voucher_code: voucherResult.code } : {})
       };
       
@@ -697,6 +701,8 @@ export default function ProductDetail() {
         quantity: 1,
       }],
       notes,
+      amount_myr: totalMyr || selectedItem.price || 0,
+      amount_idr: totalIdr || selectedItem.priceIdr || 0,
       ...(voucherResult ? { voucher_code: voucherResult.code } : {})
     });
   }, [product, selectedItem, formData, isBalanceSufficient, createOrderMutation, createQrisOrderMutation, guestOrderMutation, isAuthenticated, paymentMethod, isRobloxLogin, voucherResult, guestPhone]);

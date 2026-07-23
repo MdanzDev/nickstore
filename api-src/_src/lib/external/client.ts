@@ -240,7 +240,7 @@ export async function externalUploadProductImage(jwtToken: string, productId: st
 export async function externalUploadGameImage(jwtToken: string, slug: string, base64Image: string, filename: string) { return {}; }
 
 // --- Orders ---
-export async function externalCreateOrder(jwtToken: string, data: { items?: Array<{ productId: string; quantity: number }>; shippingAddress?: Record<string, string>; notes?: string; voucher_code?: string; service_id?: string; game_id?: string; zone_id?: string; phone?: string }) {
+export async function externalCreateOrder(jwtToken: string, data: { items?: Array<{ productId: string; quantity: number }>; shippingAddress?: Record<string, string>; notes?: string; voucher_code?: string; service_id?: string; game_id?: string; zone_id?: string; phone?: string; amount_myr?: number; amount_idr?: number }) {
   const userIdMatch = data.notes?.match(/User ID:\s*([^,]+)/i);
   const zoneIdMatch = data.notes?.match(/Zone ID:\s*([^,]+)/i);
   const denomIdMatch = data.notes?.match(/DenominationId:\s*([^,]+)/i);
@@ -248,6 +248,8 @@ export async function externalCreateOrder(jwtToken: string, data: { items?: Arra
   const game_id = userIdMatch ? userIdMatch[1].trim() : (data.game_id || "");
   const zone_id = zoneIdMatch ? zoneIdMatch[1].trim() : (data.zone_id || "");
   const service_id = denomIdMatch ? denomIdMatch[1].trim() : (data.items?.[0]?.productId || data.service_id || "");
+
+  let denomPriceMyr = data.amount_myr || 10;
 
   const generatedOrderId = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   let v1Response: any = {};
@@ -265,28 +267,30 @@ export async function externalCreateOrder(jwtToken: string, data: { items?: Arra
   } catch (err: any) {
     console.warn("[V1 API Order Warning]", err.message);
     
-    // If order fails (e.g. Insufficient balance), generate deposit first via V1 API /deposit
+    // If order fails (e.g. Insufficient balance), generate deposit first via V1 API /deposit with exact denomination price
     try {
       const depositRes = await fetchV1<any>("/deposit", {
         method: "POST",
         body: JSON.stringify({
-          amount: 10,
+          amount: denomPriceMyr,
           method: "qris"
         })
       });
 
       if (depositRes && (depositRes.deposit_id || depositRes.invoice)) {
         const depId = depositRes.deposit_id || depositRes.invoice;
+        const qrCode = depositRes.qr_string || depositRes.qr_url || "";
+        const checkoutUrl = depositRes.checkout_url || "";
         v1Response = {
           order_id: depId,
-          qr_url: depositRes.qr_url,
-          checkout_url: depositRes.checkout_url,
+          qr_url: qrCode,
+          checkout_url: checkoutUrl,
           note: JSON.stringify({
             deposit_invoice: depId,
-            qr_url: depositRes.qr_url,
-            checkout_url: depositRes.checkout_url,
-            amount_myr: depositRes.amount_myr || 10,
-            amount_idr: depositRes.amount_idr || 43000
+            qr_url: qrCode,
+            checkout_url: checkoutUrl,
+            amount_myr: depositRes.amount_myr || denomPriceMyr,
+            amount_idr: depositRes.amount_idr || Math.round(denomPriceMyr * 4300)
           })
         };
       } else {
@@ -357,14 +361,36 @@ export async function externalGetOrders(jwtToken: string, params?: { page?: numb
 }
 
 export async function externalGetOrder(jwtToken: string, orderId: string) {
-  const { data: o, error } = await supabase.from('orders').select('*').eq('id', orderId).single();
-  
-  if (error || !o) {
+  let { data: o } = await supabase.from('orders').select('*').eq('id', orderId).single().catch(() => ({ data: null }));
+
+  if (orderId.startsWith('DEPO')) {
+    try {
+      const depLive = await fetchV1<any>(`/deposit/${orderId}`).catch(() => null);
+      if (depLive) {
+        return {
+          id: orderId,
+          status: (depLive.status || 'pending').toLowerCase(),
+          providerStatus: depLive.status || 'Pending',
+          keterangan: JSON.stringify({ deposit_invoice: orderId, qr_url: depLive.qr_string || '', amount_idr: depLive.amount_idr }),
+          gameUserId: o?.game_user_id || '-',
+          zoneId: o?.zone_id || '-',
+          total: depLive.amount_myr || 10,
+          totalMyr: depLive.amount_myr || 10,
+          totalIdr: depLive.amount_idr || 43000,
+          createdAt: depLive.created_at || o?.created_at || new Date().toISOString(),
+          notes: o?.service_id || 'Deposit Order',
+          items: [{ name: o?.service_id || 'Top Up Item', quantity: 1, price: depLive.amount_myr || 10 }]
+        };
+      }
+    } catch (e) {}
+  }
+
+  if (!o) {
     return {
       id: orderId,
       status: 'pending',
       providerStatus: 'Pending',
-      keterangan: 'Deposit QRIS generated',
+      keterangan: JSON.stringify({ deposit_invoice: orderId, amount_myr: 10, amount_idr: 43000 }),
       gameUserId: '-',
       zoneId: '-',
       total: 10,
@@ -437,17 +463,23 @@ export async function externalGetDenominations(productId: string, jwtToken?: str
     // Flatten the categorized services map into a single array
     const allServices = Object.values(game.services_by_type).flat();
     
-    const mapped = allServices.map((s: any) => ({
-      id: s.id || s.code,
-      productId: productId,
-      name: s.name,
-      price: parseFloat(s.price_myr) || 0,
-      priceIdr: parseFloat(s.price_idr) || convertMyrToIdr(parseFloat(s.price_myr) || 0),
-      originalPrice: parseFloat(s.price_myr) || 0,
-      stock: 9999,
-      category: "Standard",
-      description: s.description || ""
-    }));
+    const mapped = allServices.map((s: any) => {
+      const pMyr = parseFloat(s.price_myr) || parseFloat(s.price) || 0;
+      const pIdr = parseFloat(s.price_idr) || convertMyrToIdr(pMyr);
+      return {
+        id: s.id || s.code,
+        productId: productId,
+        name: s.name,
+        price: pMyr,
+        price_myr: pMyr,
+        priceIdr: pIdr,
+        price_idr: pIdr,
+        originalPrice: pMyr,
+        stock: 9999,
+        category: "Standard",
+        description: s.description || ""
+      };
+    });
     return { success: true, data: mapped };
   } catch (err) {
     return { success: true, data: [] };
