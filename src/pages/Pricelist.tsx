@@ -39,8 +39,8 @@ export default function Pricelist() {
   return (
     <div className="container mx-auto px-4 py-8 relative pt-24 pb-12 overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#FF6B00]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#FFB800]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
       <div className="relative z-10">
         {/* Page Header */}
@@ -56,15 +56,15 @@ export default function Pricelist() {
         {/* Filter Section */}
         <div className="space-y-6 mb-12 animate-in slide-in-from-bottom-4 fade-in duration-500 delay-100">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#FF6B00] flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-[#FFB800] animate-pulse" />
+            <h2 className="text-[10px] font-black uppercase tracking-widest text-[#8B5CF6] flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-[#D946EF] animate-pulse" />
               Filter Game
             </h2>
             <div className="relative w-full md:w-72">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 placeholder="Cari game..."
-                className="pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50"
+                className="pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -74,10 +74,10 @@ export default function Pricelist() {
           <p className="text-[10px] text-white/30 font-black uppercase tracking-widest">Pilih game untuk melihat produk.</p>
 
           {/* Game Horizontal Scroller */}
-          <div className="relative rounded-[1.5rem] bg-[#0c101e]/80 border border-white/10 p-5 backdrop-blur-xl shadow-2xl">
+          <div className="relative rounded-[1.5rem] bg-[#0B0A10]/80 border border-white/10 p-5 backdrop-blur-xl shadow-2xl">
             {isLoadingGames ? (
               <div className="flex justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-[#FF6B00]" />
+                <Loader2 className="h-8 w-8 animate-spin text-[#8B5CF6]" />
               </div>
             ) : filteredGames.length === 0 ? (
               <div className="text-center py-12 text-[10px] font-black uppercase tracking-widest text-white/50">
@@ -98,11 +98,11 @@ export default function Pricelist() {
                       className={`
                         snap-center flex-shrink-0 cursor-pointer w-[120px] rounded-2xl overflow-hidden
                         transition-all duration-300 relative group border
-                        ${isSelected ? 'border-[#FF6B00] shadow-[0_0_20px_rgba(255,107,0,0.3)]' : 'border-white/5 opacity-70 hover:opacity-100'}
+                        ${isSelected ? 'border-[#8B5CF6] shadow-[0_0_20px_rgba(255,107,0,0.3)]' : 'border-white/5 opacity-70 hover:opacity-100'}
                       `}
                     >
                       <div className="aspect-[3/4] relative">
-                        <div className={`absolute inset-0 bg-gradient-to-t ${isSelected ? 'from-[#FF6B00]/90 via-[#FF6B00]/20' : 'from-[#0c101e]/90 via-[#0c101e]/20'} to-transparent z-10`} />
+                        <div className={`absolute inset-0 bg-gradient-to-t ${isSelected ? 'from-[#8B5CF6]/90 via-[#8B5CF6]/20' : 'from-[#0B0A10]/90 via-[#0B0A10]/20'} to-transparent z-10`} />
                         <img 
                           src={gameImage} 
                           alt={game.name}
@@ -131,7 +131,7 @@ export default function Pricelist() {
             exit={{ opacity: 0, y: -20 }}
             className="w-full animate-in slide-in-from-bottom-4 fade-in duration-500 delay-200"
           >
-            <div className="rounded-[1.5rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl overflow-hidden shadow-2xl">
+            <div className="rounded-[1.5rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden shadow-2xl">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
                   <thead className="bg-white/[0.02] border-b border-white/10">
@@ -139,7 +139,7 @@ export default function Pricelist() {
                       <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-white/50 whitespace-nowrap">Kode Produk</th>
                       <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-white/50 whitespace-nowrap">Produk</th>
                       <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-zinc-300 whitespace-nowrap">Member</th>
-                      <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#FFB800] whitespace-nowrap">Gold</th>
+                      <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-[#D946EF] whitespace-nowrap">Gold</th>
                       <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-cyan-400 whitespace-nowrap">Platinum</th>
                       <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-emerald-400 whitespace-nowrap">Business</th>
                     </tr>
@@ -148,7 +148,7 @@ export default function Pricelist() {
                     {isLoadingPrices ? (
                       <tr>
                         <td colSpan={6} className="px-6 py-16 text-center">
-                          <Loader2 className="h-8 w-8 animate-spin text-[#FF6B00] mx-auto" />
+                          <Loader2 className="h-8 w-8 animate-spin text-[#8B5CF6] mx-auto" />
                         </td>
                       </tr>
                     ) : prices.length === 0 ? (
@@ -166,12 +166,12 @@ export default function Pricelist() {
                           key={item.id} 
                           className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group"
                         >
-                          <td className="px-6 py-4 font-mono text-[10px] text-white/30 group-hover:text-[#FFB800] transition-colors uppercase">{item.code || item.id}</td>
+                          <td className="px-6 py-4 font-mono text-[10px] text-white/30 group-hover:text-[#D946EF] transition-colors uppercase">{item.code || item.id}</td>
                           <td className="px-6 py-4 text-xs font-black text-white uppercase tracking-tight">{item.name}</td>
                           <td className="px-6 py-4 text-xs font-black text-zinc-300">
                             {formatPrice(item.basic_myr, item.basic)}
                           </td>
-                          <td className="px-6 py-4 text-xs font-black text-[#FFB800]">
+                          <td className="px-6 py-4 text-xs font-black text-[#D946EF]">
                             {formatPrice(item.gold_myr, item.gold)}
                           </td>
                           <td className="px-6 py-4 text-xs font-black text-cyan-400">

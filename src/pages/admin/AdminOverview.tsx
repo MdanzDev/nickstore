@@ -160,7 +160,7 @@ export default function AdminOverview() {
 
   const donutData = [
     { name: 'Berjaya', value: completedOrders || 0, color: '#00c864' },
-    { name: 'Processing', value: activePendingTotal || 0, color: '#FFB800' },
+    { name: 'Processing', value: activePendingTotal || 0, color: '#D946EF' },
     { name: 'Gagal', value: failedOrders || 0, color: '#FF3366' },
   ];
   
@@ -319,7 +319,7 @@ export default function AdminOverview() {
             >
               <Bell className="h-4 w-4" />
               {activePendingTotal > 0 && (
-                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#FFB800] text-[9px] font-bold text-black flex items-center justify-center border-2 border-[#0B0F19]">
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#D946EF] text-[9px] font-bold text-black flex items-center justify-center border-2 border-[#0B0A10]">
                   {activePendingTotal}
                 </span>
               )}
@@ -448,8 +448,8 @@ export default function AdminOverview() {
                       <stop offset="95%" stopColor="#00c864" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorProses" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#FFB800" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#FFB800" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#D946EF" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#D946EF" stopOpacity={0}/>
                     </linearGradient>
                     <linearGradient id="colorGagal" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#FF3366" stopOpacity={0.3}/>
@@ -460,12 +460,12 @@ export default function AdminOverview() {
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#ffffff50', fontSize: 11 }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#ffffff50', fontSize: 11 }} dx={-10} allowDecimals={false} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0B0F19', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)' }}
+                    contentStyle={{ backgroundColor: '#0B0A10', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', boxShadow: '0 10px 30px -10px rgba(0,0,0,0.5)' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                     labelStyle={{ fontSize: '11px', color: '#ffffff50', marginBottom: '4px' }}
                   />
                   <Area type="monotone" dataKey="berjaya" name="Pesanan Berjaya" stroke="#00c864" strokeWidth={3} fillOpacity={1} fill="url(#colorBerjaya)" />
-                  <Area type="monotone" dataKey="proses" name="Dalam Proses" stroke="#FFB800" strokeWidth={2} fillOpacity={1} fill="url(#colorProses)" />
+                  <Area type="monotone" dataKey="proses" name="Dalam Proses" stroke="#D946EF" strokeWidth={2} fillOpacity={1} fill="url(#colorProses)" />
                   <Area type="monotone" dataKey="gagal" name="Pesanan Gagal" stroke="#FF3366" strokeWidth={2} fillOpacity={1} fill="url(#colorGagal)" />
                 </AreaChart>
               </ResponsiveContainer>
@@ -477,7 +477,7 @@ export default function AdminOverview() {
                 <span className="text-[11px] text-white/60">Pesanan Berjaya</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#FFB800]" />
+                <div className="w-3 h-3 rounded-full bg-[#D946EF]" />
                 <span className="text-[11px] text-white/60">Dalam Proses</span>
               </div>
               <div className="flex items-center gap-2">
@@ -508,7 +508,7 @@ export default function AdminOverview() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0B0F19', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                    contentStyle={{ backgroundColor: '#0B0A10', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold', color: '#fff' }}
                   />
                 </PieChart>
@@ -585,7 +585,7 @@ export default function AdminOverview() {
           <div className="lg:col-span-5 rounded-2xl bg-[#14192B] border border-white/5 p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <span className="text-orange-500 text-lg">🔥</span>
+                <span className="text-violet-400 text-lg">🔥</span>
                 <h3 className="text-base font-bold text-white">Produk Terlaris</h3>
               </div>
               <button onClick={() => navigate("/admin/products")} className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-semibold text-white/60 hover:text-white transition-colors">
@@ -682,7 +682,7 @@ export default function AdminOverview() {
           <div className="lg:col-span-3 rounded-2xl bg-[#14192B] border border-white/5 p-5">
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <Bell className="h-4 w-4 text-[#FFB800]" />
+                <Bell className="h-4 w-4 text-[#D946EF]" />
                 <h3 className="text-base font-bold text-white">Notifikasi & Status</h3>
               </div>
               <button onClick={() => navigate("/admin/orders")} className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[11px] font-semibold text-white/60 hover:text-white transition-colors">
@@ -696,7 +696,7 @@ export default function AdminOverview() {
                 let Icon = Info;
                 if (notif.type === 'success') { iconColor = "#00c864"; Icon = CheckCircle2; }
                 else if (notif.type === 'failed') { iconColor = "#FF3366"; Icon = AlertCircle; }
-                else if (notif.type === 'warning') { iconColor = "#FFB800"; Icon = Clock; }
+                else if (notif.type === 'warning') { iconColor = "#D946EF"; Icon = Clock; }
 
                 return (
                   <div key={notif.id} className="p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/10 transition-colors">

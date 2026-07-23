@@ -376,7 +376,7 @@ export default function AdminUsers() {
           <div className="lg-card rounded-2xl overflow-hidden">
           {isLoading ? (
             <div className="p-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#FF6B00]" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#8B5CF6]" />
               <p className="text-sm text-white/40 mt-3 font-bold">Memuat data users...</p>
             </div>
           ) : users.length === 0 ? (
@@ -426,7 +426,7 @@ export default function AdminUsers() {
                           <div
                             className={`h-9 w-9 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
                               u.isActive
-                                ? "text-[#FF6B00]"
+                                ? "text-[#8B5CF6]"
                                 : "text-white/30"
                             }`}
                             style={{ background: u.isActive ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.05)", border: `1px solid ${u.isActive ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.1)"}` }}
@@ -573,7 +573,7 @@ export default function AdminUsers() {
             <DialogTitle className="flex items-center gap-2">
               {activeTab === "edit" && <UserCog className="h-5 w-5 text-primary" />}
               {activeTab === "balance" && <Wallet className="h-5 w-5 text-amber-500" />}
-              {activeTab === "deactivate" && <Ban className="h-5 w-5 text-orange-500" />}
+              {activeTab === "deactivate" && <Ban className="h-5 w-5 text-violet-400" />}
               {activeTab === "delete" && <AlertTriangle className="h-5 w-5 text-destructive" />}
               {activeTab === "edit" && "Edit User"}
               {activeTab === "balance" && "Adjust Saldo"}
@@ -839,9 +839,9 @@ export default function AdminUsers() {
               {/* DEACTIVATE TAB */}
               {activeTab === "deactivate" && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-lg bg-orange-500/10 border border-orange-500/20 text-center">
-                    <Ban className="h-12 w-12 mx-auto mb-2 text-orange-500" />
-                    <p className="font-semibold text-orange-500">Nonaktifkan User?</p>
+                  <div className="p-4 rounded-lg bg-violet-600/10 border border-violet-500/20 text-center">
+                    <Ban className="h-12 w-12 mx-auto mb-2 text-violet-400" />
+                    <p className="font-semibold text-violet-400">Nonaktifkan User?</p>
                     <p className="text-sm text-muted-foreground mt-1">
                       User tidak akan bisa login, namun semua data tetap tersimpan.
                       Bisa diaktifkan kembali kapan saja.
@@ -879,7 +879,7 @@ export default function AdminUsers() {
                       Batal
                     </Button>
                     <Button
-                      className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+                      className="flex-1 bg-violet-600 hover:bg-orange-600 text-white"
                       onClick={handleDeactivate}
                       disabled={isMutating}
                     >

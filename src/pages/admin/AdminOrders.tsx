@@ -309,7 +309,7 @@ export default function AdminOrders() {
                 { label: "Processing", key: "processing", count: globalStats.processing, color: "rgba(56,189,248,0.1)", border: "rgba(56,189,248,0.2)", text: "text-sky-400" },
                 { label: "Success", key: "success", count: globalStats.success, color: "rgba(0,200,100,0.1)", border: "rgba(0,200,100,0.2)", text: "text-emerald-400" },
                 { label: "Failed", key: "failed", count: globalStats.failed, color: "rgba(239,68,68,0.1)", border: "rgba(239,68,68,0.2)", text: "text-red-400" },
-                { label: "Refund", key: "refund", count: globalStats.refund, color: "rgba(249,115,22,0.1)", border: "rgba(249,115,22,0.2)", text: "text-amber-400" },
+                { label: "Refund", key: "refund", count: globalStats.refund, color: "rgba(139,92,246,0.1)", border: "rgba(139,92,246,0.2)", text: "text-amber-400" },
               ].map((stat) => {
                 const isActive = statusFilter === stat.key;
                 return (
@@ -430,7 +430,7 @@ export default function AdminOrders() {
                           <div className="flex items-center gap-2">
                             <button onClick={() => setSelectedOrder(order)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-sky-400"><Eye className="h-4 w-4" /></button>
                             <select
-                              className="h-9 rounded-lg text-xs px-2 cursor-pointer font-bold bg-[#0B0F19] text-white border border-white/10"
+                              className="h-9 rounded-lg text-xs px-2 cursor-pointer font-bold bg-[#0B0A10] text-white border border-white/10"
                               value={currentStatus}
                               onChange={(e) => handleStatusChange(invId, e.target.value)}
                               disabled={isUpdating}
@@ -602,7 +602,7 @@ export default function AdminOrders() {
                 <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/5">
                   <span className="text-xs text-white/50">Ubah Status</span>
                   <select
-                    className="h-8 rounded-lg text-xs px-2 font-bold bg-[#0B0F19] text-white border border-white/10"
+                    className="h-8 rounded-lg text-xs px-2 font-bold bg-[#0B0A10] text-white border border-white/10"
                     value={String(selectedOrder.status || "pending").toLowerCase()}
                     onChange={(e) => handleStatusChange(String(selectedOrder.id), e.target.value)}
                   >

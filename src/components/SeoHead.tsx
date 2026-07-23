@@ -9,15 +9,15 @@ interface SeoProps {
 }
 
 export default function SeoHead({
-  title = "Topup Kryz-Net - Platform Top Up Game & Voucher Murah #1 Malaysia",
+  title = "NickStore - Platform Top Up Game & Voucher Murah #1 Malaysia",
   description = "Topup game murah, pantas & automatik 24/7. Beli Diamonds Mobile Legends, Free Fire, Honor of Kings, Magic Chess, voucher & pulsa dengan harga termurah di Malaysia.",
   image = "https://yfkcuzvslnjrdwkdlkwe.supabase.co/storage/v1/object/public/game-images/mobile-legends-id-promo.webp",
-  url = typeof window !== "undefined" ? window.location.href : "https://topup.kryz-net.space",
+  url = typeof window !== "undefined" ? window.location.href : "https://NickStore.space",
   type = "website"
 }: SeoProps) {
   useEffect(() => {
     // 1. Update Title
-    const fullTitle = title.includes("Kryz-Net") ? title : `${title} | Topup Kryz-Net`;
+    const fullTitle = title.includes("Kryz-Net") ? title : `${title} | NickStore`;
     document.title = fullTitle;
 
     // 2. Update Meta Description

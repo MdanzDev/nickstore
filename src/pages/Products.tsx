@@ -50,10 +50,10 @@ const getImageUrl = (url: string): string => {
    CONSTANTS
 ───────────────────────────────────────────── */
 const categories = [
-  { id: "all", label: "Semua", icon: LayoutGrid, color: "#FF6B00" },
+  { id: "all", label: "Semua", icon: LayoutGrid, color: "#8B5CF6" },
   { id: "game", label: "Game", icon: Gamepad2, color: "#38BDF8" },
   { id: "streaming", label: "Streaming", icon: Film, color: "#A78BFA" },
-  { id: "voucher", label: "Voucher", icon: Ticket, color: "#FFB800" },
+  { id: "voucher", label: "Voucher", icon: Ticket, color: "#D946EF" },
   { id: "premium", label: "Premium Apps", icon: Crown, color: "#F472B6" },
   { id: "joki", label: "Joki", icon: Swords, color: "#00c864" },
 ];
@@ -108,7 +108,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
           style={{
             background: "rgba(255,255,255,0.015)",
             border: "1px solid rgba(255,255,255,0.05)",
-            boxShadow: isHovered ? '0 20px 40px -10px rgba(249,115,22,0.15), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
+            boxShadow: isHovered ? '0 20px 40px -10px rgba(139,92,246,0.15), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -133,7 +133,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
             <p className="text-[11px] text-white/40 mt-0.5 uppercase tracking-wider font-medium">{category}</p>
           </div>
           <div className="text-right">
-            <span className="block text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500">
+            <span className="block text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">
               {hasPrice ? `Rp ${Number(product.price).toLocaleString("id-ID")}` : "Lihat Harga"}
             </span>
           </div>
@@ -149,7 +149,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
         style={{
           background: "rgba(255,255,255,0.015)",
           border: "1px solid rgba(255,255,255,0.05)",
-          boxShadow: isHovered ? '0 30px 60px -15px rgba(249,115,22,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
+          boxShadow: isHovered ? '0 30px 60px -15px rgba(139,92,246,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -180,12 +180,12 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
           )}
           
           {/* Internal shadow gradient for seamless blend */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c101e] via-[#0c101e]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0A10] via-[#0B0A10]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300" />
           
           {/* Quick purchase indicator */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
-            <span className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black shadow-[0_0_20px_rgba(249,115,22,0.4)] backdrop-blur-md"
-              style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+            <span className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black shadow-[0_0_20px_rgba(139,92,246,0.4)] backdrop-blur-md"
+              style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
               <Zap className="w-3.5 h-3.5" /> Top Up
             </span>
           </div>
@@ -194,7 +194,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
           {product.popular && (
             <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-black shadow-lg"
-                style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+                style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
                 <Flame className="w-3 h-3" /> HOT
               </span>
             </div>
@@ -212,7 +212,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
             </p>
           </div>
           <div className="flex items-end justify-between mt-auto pt-2 border-t border-white/5">
-            <span className="text-[14px] sm:text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500">
+            <span className="text-[14px] sm:text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">
               {hasPrice ? `Rp ${Number(product.price).toLocaleString("id-ID")}` : "Lihat Harga"}
             </span>
             <span className="hidden sm:flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#00c864]/10 text-[#00c864] border border-[#00c864]/20 uppercase tracking-widest">
@@ -423,7 +423,7 @@ export default function Products() {
       />
       
       {/* Hero Header Section */}
-      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(249,115,22,0.1)_0%,transparent_70%)] animate-pulse-glow" />
+      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_70%)] animate-pulse-glow" />
       <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.08)_0%,transparent_70%)]" />
 
       {/* Header Section */}
@@ -457,7 +457,7 @@ export default function Products() {
                   placeholder="Cari game favoritmu..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-[#0c101e]/80 border border-white/10 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all backdrop-blur-xl"
+                  className="w-full bg-[#0B0A10]/80 border border-white/10 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all backdrop-blur-xl"
                 />
                 {search && (
                   <button
@@ -487,7 +487,7 @@ export default function Products() {
                   onClick={() => handleCategoryChange(cat.id)}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
                     isActive
-                      ? "bg-primary text-black shadow-[0_0_15px_rgba(249,115,22,0.3)]"
+                      ? "bg-primary text-black shadow-[0_0_15px_rgba(139,92,246,0.3)]"
                       : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
                   }`}
                 >

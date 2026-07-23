@@ -61,8 +61,8 @@ module.exports = {
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        "glow": "0 0 25px rgba(249, 115, 22, 0.4)",
-        "glow-lg": "0 0 45px rgba(249, 115, 22, 0.6)",
+        "glow": "0 0 25px rgba(139, 92, 246, 0.4)",
+        "glow-lg": "0 0 45px rgba(139, 92, 246, 0.6)",
         "premium-card": "0 20px 40px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)",
       },
       keyframes: {

@@ -150,13 +150,13 @@ function PaymentMethodCard({
         method.comingSoon
           ? "opacity-40 cursor-not-allowed border-white/5 bg-white/5"
           : isActive
-          ? "border-[#FF6B00] bg-[#FF6B00]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
+          ? "border-[#8B5CF6] bg-[#8B5CF6]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
           : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] hover:scale-[1.01]"
       }`}
     >
       {/* Glow Effect */}
       {isActive && !method.comingSoon && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6B00]/20 to-transparent opacity-50 blur-xl rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-transparent opacity-50 blur-xl rounded-xl" />
       )}
       
       {method.comingSoon && (
@@ -168,7 +168,7 @@ function PaymentMethodCard({
       )}
       <div className="relative z-10 flex flex-col items-center">
         <method.icon className={`h-7 w-7 mb-3 transition-colors ${
-          isActive && !method.comingSoon ? "text-[#FF6B00]" : "text-white/40 group-hover:text-white/80"
+          isActive && !method.comingSoon ? "text-[#8B5CF6]" : "text-white/40 group-hover:text-white/80"
         }`} />
         <span className="text-[11px] font-black tracking-wide uppercase text-white block">{method.label}</span>
         <span className="text-[9px] font-bold text-white/40 block mt-1 uppercase tracking-widest">{method.description}</span>
@@ -194,24 +194,24 @@ function AmountCard({
       onClick={onClick}
       className={`relative p-4 rounded-xl border-2 text-center transition-all duration-300 overflow-hidden ${
         isActive
-          ? "border-[#FF6B00] bg-[#FF6B00]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
+          ? "border-[#8B5CF6] bg-[#8B5CF6]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
           : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] hover:scale-[1.01]"
       }`}
     >
       {/* Glow Effect */}
       {isActive && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6B00]/20 to-transparent opacity-50 blur-xl rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-transparent opacity-50 blur-xl rounded-xl" />
       )}
       
       {preset.popular && (
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
-          <Badge className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-gradient-to-r from-[#FF6B00] to-[#FFB800] border-0 text-black shadow-[0_0_10px_rgba(255,107,0,0.5)]">
+          <Badge className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] border-0 text-black shadow-[0_0_10px_rgba(255,107,0,0.5)]">
             <TrendingUp className="h-2 w-2 mr-1" />
             POPULER
           </Badge>
         </div>
       )}
-      <p className={`relative z-10 text-xl font-black ${isActive ? "text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800]" : "text-white"}`} style={{ fontFamily: "'Syne', sans-serif" }}>
+      <p className={`relative z-10 text-xl font-black ${isActive ? "text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF]" : "text-white"}`} style={{ fontFamily: "'Syne', sans-serif" }}>
         {preset.label}
       </p>
     </button>
@@ -408,11 +408,11 @@ export default function Deposit() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19] text-white">
+    <div className="min-h-screen bg-[#0B0A10] text-white">
       {/* Premium Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#FF6B00]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#FFB800]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
       </div>
 
       <div className="relative container mx-auto px-4 py-8 max-w-2xl z-10">
@@ -433,9 +433,9 @@ export default function Deposit() {
         </div>
 
         {/* Balance Card */}
-        <Card className="p-8 mb-8 bg-[#0c101e]/80 backdrop-blur-xl border-white/10 relative overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#FF6B00]/20 to-[#FFB800]/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#FF6B00]/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
+        <Card className="p-8 mb-8 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 relative overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#8B5CF6]/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
           
           <div className="relative flex items-center justify-between">
             <div className="space-y-2">
@@ -447,12 +447,12 @@ export default function Deposit() {
                 </Badge>
               </div>
               <div className="flex flex-col items-start">
-                <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
                   <AnimatedNumber value={Number(balanceMyr) * 100} duration={1500} />
                 </p>
               </div>
             </div>
-            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_30px_rgba(255,107,0,0.4)]">
+            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_30px_rgba(255,107,0,0.4)]">
               <Wallet className="h-10 w-10 text-black" />
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function Deposit() {
             </div>
 
             {/* Amount Selection */}
-            <Card className="p-6 bg-[#0c101e]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
+            <Card className="p-6 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-[11px] font-black uppercase tracking-widest text-white/70">Pilih Nominal Top Up</h3>
                 <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest bg-white/5 text-white border-white/10 px-2 py-0.5">
@@ -508,7 +508,7 @@ export default function Deposit() {
                   <div className="w-full border-t border-white/10" />
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-3 bg-[#0c101e] text-[9px] font-bold uppercase tracking-widest text-white/40">
+                  <span className="px-3 bg-[#0B0A10] text-[9px] font-bold uppercase tracking-widest text-white/40">
                     atau masukkan nominal custom
                   </span>
                 </div>
@@ -526,7 +526,7 @@ export default function Deposit() {
                       setCustomAmount(value);
                       if (value) setAmount(0);
                     }}
-                    className={`h-14 text-center text-xl font-black bg-white/[0.02] border-white/10 focus:border-[#FF6B00] focus:ring-1 focus:ring-[#FF6B00]/50 transition-all text-white placeholder:text-white/20 pl-14 rounded-xl ${
+                    className={`h-14 text-center text-xl font-black bg-white/[0.02] border-white/10 focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6]/50 transition-all text-white placeholder:text-white/20 pl-14 rounded-xl ${
                       customAmount && !isValidAmount ? "border-red-500 focus:border-red-500 focus:ring-red-500/50" : ""
                     }`}
                   />
@@ -549,13 +549,13 @@ export default function Deposit() {
                   {/* Ekuivalen IDR removed */}
                   <div className="flex justify-between items-center pt-4 border-t border-white/10">
                     <span className="text-[11px] font-black uppercase tracking-widest text-white">Total Bayar</span>
-                    <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-xl" style={{ fontFamily: "'Syne', sans-serif" }}>RM {finalAmount.toFixed(2)}</span>
+                    <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-xl" style={{ fontFamily: "'Syne', sans-serif" }}>RM {finalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               )}
 
               <Button
-                className="w-full h-14 rounded-xl text-sm font-black bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:scale-[1.02] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-widest"
+                className="w-full h-14 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-widest"
                 onClick={handleCreateDeposit}
                 disabled={createDepositMutation.isPending || processingDeposit || !isValidAmount}
               >
@@ -584,11 +584,11 @@ export default function Deposit() {
 
         {/* Payment Screen */}
         {depositData && (status === "pending" || status === "success" || status === "expired") && (
-          <Card className="p-6 bg-[#0c101e]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
+          <Card className="p-6 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
             {/* Status Banner */}
             <div className={`p-6 rounded-2xl text-center mb-6 transition-all duration-500 border ${
               status === "pending"
-                ? "bg-[#FFB800]/5 border-[#FFB800]/20"
+                ? "bg-[#D946EF]/5 border-[#D946EF]/20"
                 : status === "success"
                 ? "bg-[#00c864]/5 border-[#00c864]/20"
                 : "bg-red-500/5 border-red-500/20"
@@ -597,12 +597,12 @@ export default function Deposit() {
                 <div className="space-y-4">
                   <div className="relative inline-block">
                     <div className="absolute inset-0 animate-ping opacity-20">
-                      <Clock className="h-14 w-14 text-[#FFB800] mx-auto" />
+                      <Clock className="h-14 w-14 text-[#D946EF] mx-auto" />
                     </div>
-                    <Clock className="h-14 w-14 mx-auto text-[#FFB800] relative drop-shadow-[0_0_15px_rgba(255,184,0,0.5)]" />
+                    <Clock className="h-14 w-14 mx-auto text-[#D946EF] relative drop-shadow-[0_0_15px_rgba(255,184,0,0.5)]" />
                   </div>
                   <div>
-                    <p className="font-black text-[#FFB800] text-xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Menunggu Pembayaran</p>
+                    <p className="font-black text-[#D946EF] text-xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Menunggu Pembayaran</p>
                     <p className="text-xs font-bold text-white/50 mt-1 uppercase tracking-widest">{depositData.instructions}</p>
                   </div>
                   <CountdownTimer expiryTime={depositData.expiredAt} onExpired={handleExpired} />
@@ -613,13 +613,13 @@ export default function Deposit() {
                 <div className="space-y-4">
                   <div className="relative inline-block">
                     <Check className="h-16 w-16 mx-auto text-[#00c864] drop-shadow-[0_0_15px_rgba(0,200,100,0.5)]" />
-                    <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-[#FFB800] animate-pulse" />
+                    <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-[#D946EF] animate-pulse" />
                   </div>
                   <div>
                     <p className="font-black text-[#00c864] text-2xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Pembayaran Berhasil!</p>
                     <p className="text-sm font-bold text-white/70 mt-2">
                       Saldo sebesar{" "}
-                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-lg">
+                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-lg">
                         RM {depositData.creditAmount.toFixed(2)}
                       </span>{" "}
                       telah ditambahkan
@@ -643,7 +643,7 @@ export default function Deposit() {
             {status === "pending" && depositData.qrImage && (
               <div className="flex flex-col items-center mb-8">
                 <div className="relative">
-                  <div className="p-4 rounded-3xl border border-[#FF6B00]/30 bg-white shadow-[0_0_40px_rgba(255,107,0,0.2)]">
+                  <div className="p-4 rounded-3xl border border-[#8B5CF6]/30 bg-white shadow-[0_0_40px_rgba(255,107,0,0.2)]">
                     <img
                       src={getQrImageUrl()}
                       alt="QRIS Payment Code"
@@ -654,7 +654,7 @@ export default function Deposit() {
                     />
                   </div>
                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.5)] px-4 py-1 uppercase tracking-widest font-black text-[10px]">
+                    <Badge className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.5)] px-4 py-1 uppercase tracking-widest font-black text-[10px]">
                       <QrCode className="h-3.5 w-3.5 mr-1.5" />
                       Scan QR ini
                     </Badge>
@@ -686,7 +686,7 @@ export default function Deposit() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[9px] font-bold uppercase tracking-widest text-[#FFB800] hover:text-[#FF6B00] hover:bg-[#FFB800]/10 px-2 h-6"
+                  className="text-[9px] font-bold uppercase tracking-widest text-[#D946EF] hover:text-[#8B5CF6] hover:bg-[#D946EF]/10 px-2 h-6"
                   onClick={() => setShowInstructions(!showInstructions)}
                 >
                   {showInstructions ? "Tutup" : "Lihat"} Panduan
@@ -718,13 +718,13 @@ export default function Deposit() {
                   <div 
                     key={item.field} 
                     className={`flex justify-between items-center p-3.5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors ${
-                      item.highlight ? "bg-[#FF6B00]/5" : ""
+                      item.highlight ? "bg-[#8B5CF6]/5" : ""
                     }`}
                   >
                     <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">{item.label}</span>
                     <div className="flex items-center gap-2">
                       <span className={`${item.mono ? "font-mono text-xs bg-white/5 px-2 py-0.5 rounded text-white/70" : ""} ${
-                        item.highlight ? "font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-base" : "text-sm font-bold text-white"
+                        item.highlight ? "font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-base" : "text-sm font-bold text-white"
                       }`}>
                         {item.value}
                       </span>
@@ -803,7 +803,7 @@ export default function Deposit() {
               
               {status === "expired" && (
                 <Button 
-                  className="w-full h-12 rounded-xl text-sm font-black bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:scale-[1.02] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all"
+                  className="w-full h-12 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all"
                   onClick={handleReset}
                 >
                   <RefreshCw className="mr-2 h-5 w-5" />
@@ -821,8 +821,8 @@ export default function Deposit() {
             className="flex items-center justify-between w-full p-5 rounded-[1.5rem] bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 border border-white/5 hover:border-white/20 hover:scale-[1.01]"
           >
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-[#FF6B00]/10 flex items-center justify-center border border-[#FF6B00]/20 shadow-[0_0_15px_rgba(255,107,0,0.1)]">
-                <History className="h-6 w-6 text-[#FF6B00]" />
+              <div className="h-12 w-12 rounded-xl bg-[#8B5CF6]/10 flex items-center justify-center border border-[#8B5CF6]/20 shadow-[0_0_15px_rgba(255,107,0,0.1)]">
+                <History className="h-6 w-6 text-[#8B5CF6]" />
               </div>
               <div className="text-left">
                 <span className="font-black text-sm uppercase tracking-widest text-white">Riwayat Deposit</span>
@@ -863,18 +863,18 @@ export default function Deposit() {
                           ? "bg-[#00c864]/10 border-[#00c864]/20 shadow-[0_0_15px_rgba(0,200,100,0.1)]"
                           : d.status === "expired"
                           ? "bg-red-500/10 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
-                          : "bg-[#FFB800]/10 border-[#FFB800]/20 shadow-[0_0_15px_rgba(255,184,0,0.1)]"
+                          : "bg-[#D946EF]/10 border-[#D946EF]/20 shadow-[0_0_15px_rgba(255,184,0,0.1)]"
                       }`}>
                         {d.completed || d.status === "success" ? (
                           <Check className="h-6 w-6 text-[#00c864]" />
                         ) : d.status === "expired" ? (
                           <X className="h-6 w-6 text-red-500" />
                         ) : (
-                          <Clock className="h-6 w-6 text-[#FFB800]" />
+                          <Clock className="h-6 w-6 text-[#D946EF]" />
                         )}
                       </div>
                       <div>
-                        <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-base" style={{ fontFamily: "'Syne', sans-serif" }}>
+                        <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-base" style={{ fontFamily: "'Syne', sans-serif" }}>
                           RM {Number(d.creditAmount || d.amount).toFixed(2)}
                         </p>
                         <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mt-0.5">
@@ -894,7 +894,7 @@ export default function Deposit() {
                           ? "border-[#00c864]/30 text-[#00c864] bg-[#00c864]/10 shadow-[0_0_10px_rgba(0,200,100,0.1)]"
                           : d.status === "expired"
                           ? "border-red-500/30 text-red-500 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.1)]"
-                          : "border-[#FFB800]/30 text-[#FFB800] bg-[#FFB800]/10 shadow-[0_0_10px_rgba(255,184,0,0.1)]"
+                          : "border-[#D946EF]/30 text-[#D946EF] bg-[#D946EF]/10 shadow-[0_0_10px_rgba(255,184,0,0.1)]"
                       }`}
                     >
                       {d.completed || d.status === "success" ? "Success" : d.status === "expired" ? "Expired" : "Pending"}

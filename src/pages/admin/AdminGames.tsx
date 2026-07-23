@@ -107,7 +107,7 @@ export default function AdminGames() {
 
         {isLoading ? (
           <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-[#FF6B00]" />
+            <Loader2 className="h-8 w-8 animate-spin text-[#8B5CF6]" />
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -122,7 +122,7 @@ export default function AdminGames() {
                       <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center z-10 rounded-2xl">
                         <span className="text-xs font-black text-white">{prog}%</span>
                         <div className="w-10 h-1 bg-white/20 mt-1 rounded-full overflow-hidden">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${prog}%`, background: "linear-gradient(90deg, #FF6B00, #FFB800)" }} />
+                          <div className="h-full rounded-full transition-all" style={{ width: `${prog}%`, background: "linear-gradient(90deg, #8B5CF6, #D946EF)" }} />
                         </div>
                       </div>
                     )}

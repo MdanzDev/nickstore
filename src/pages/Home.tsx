@@ -29,6 +29,7 @@ import {
   TrendingUp,
   Rocket,
   X,
+  Search,
 } from "lucide-react";
 import { useEffect, useState, useRef, useCallback, memo, useMemo } from "react";
 
@@ -223,7 +224,7 @@ const LiveTicker = memo(function LiveTicker() {
 
   return (
     <div
-      className="relative overflow-hidden bg-[#FF6B00]/10 border-y border-[#FF6B00]/20 py-2.5 cursor-pointer select-none"
+      className="relative overflow-hidden bg-[#8B5CF6]/10 border-y border-[#8B5CF6]/20 py-2.5 cursor-pointer select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       role="marquee"
@@ -242,12 +243,12 @@ const LiveTicker = memo(function LiveTicker() {
         {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
           <span
             key={i}
-            className="flex items-center gap-3 whitespace-nowrap text-xs font-medium hover:text-[#FFB800] transition-colors duration-200"
-            style={{ color: "#FF6B00" }}
+            className="flex items-center gap-3 whitespace-nowrap text-xs font-medium hover:text-[#D946EF] transition-colors duration-200"
+            style={{ color: "#8B5CF6" }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse inline-block" />
             {item}
-            <span className="text-[#FF6B00]/30 mx-2">·</span>
+            <span className="text-[#8B5CF6]/30 mx-2">·</span>
           </span>
         ))}
       </div>
@@ -275,7 +276,7 @@ const MemoizedGameMarquee = memo(function GameMarquee() {
             key={i}
             className="flex items-center gap-2 whitespace-nowrap text-sm font-semibold tracking-wide hover:scale-110 transition-transform cursor-default"
             style={{
-              color: i % 3 === 0 ? "#FF6B00" : i % 3 === 1 ? "#FFB800" : "rgba(255,255,255,0.3)",
+              color: i % 3 === 0 ? "#8B5CF6" : i % 3 === 1 ? "#D946EF" : "rgba(255,255,255,0.3)",
               transition: "color 0.3s ease",
             }}
           >
@@ -309,7 +310,7 @@ const MemoizedTestimonialMarquee = memo(function TestimonialMarquee() {
             <div className="flex items-center justify-between">
               <div className="flex gap-0.5">
                 {[...Array(t.rating)].map((_, j) => (
-                  <Star key={j} className="w-3.5 h-3.5 fill-[#FFB800] text-[#FFB800]" />
+                  <Star key={j} className="w-3.5 h-3.5 fill-[#D946EF] text-[#D946EF]" />
                 ))}
               </div>
               <span className="text-[10px] text-white/20 flex items-center gap-1">
@@ -322,9 +323,9 @@ const MemoizedTestimonialMarquee = memo(function TestimonialMarquee() {
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-black"
                 style={{
-                  background: `linear-gradient(135deg, ${["#FF6B00", "#FFB800", "#38BDF8", "#A78BFA", "#00c864", "#F472B6"][
+                  background: `linear-gradient(135deg, ${["#8B5CF6", "#D946EF", "#38BDF8", "#A78BFA", "#00c864", "#F472B6"][
                     i % 6
-                  ]}, ${["#FFB800", "#FF6B00", "#A78BFA", "#38BDF8", "#FFB800", "#38BDF8"][i % 6]})`,
+                  ]}, ${["#D946EF", "#8B5CF6", "#A78BFA", "#38BDF8", "#D946EF", "#38BDF8"][i % 6]})`,
                 }}
               >
                 {t.av}
@@ -355,75 +356,64 @@ const ProductCard = memo(function ProductCard({ product, index }: { product: any
   return (
     <Link to={`/products/${String(product.id)}`} aria-label={`Top up ${name}`}>
       <Card
-        className="group relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-3 border border-white/10 bg-white/[0.02]"
+        className="group relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-2 border border-white/10 bg-white/[0.03] hover:border-primary/50"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
-          animationDelay: `${index * 80}ms`,
+          animationDelay: `${index * 60}ms`,
           boxShadow: isHovered
-            ? "0 30px 60px -15px rgba(249,115,22,0.3), inset 0 1px 0 rgba(255,255,255,0.1)"
-            : "inset 0 1px 0 rgba(255,255,255,0.02)",
+            ? "0 20px 40px -15px rgba(139,92,246,0.35)"
+            : "none",
         }}
       >
-        <div className="aspect-[4/3] overflow-hidden relative">
+        <div className="aspect-square overflow-hidden relative p-3 flex items-center justify-center bg-gradient-to-b from-white/[0.04] to-transparent">
           {img && !imgError ? (
             img.startsWith("http") || img.startsWith("/") ? (
               <img
                 src={img}
                 alt={name}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] group-hover:rotate-1"
+                className="w-full h-full object-cover rounded-xl transition-transform duration-500 group-hover:scale-105"
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
+              <div className="w-full h-full rounded-xl flex items-center justify-center bg-white/[0.05] text-5xl transition-transform duration-500 group-hover:scale-105">
                 {img}
               </div>
             )
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
-              <Gamepad2 className="w-12 h-12 text-white/10 group-hover:text-primary/40 transition-colors duration-500" />
+            <div className="w-full h-full rounded-xl flex items-center justify-center bg-white/[0.05]">
+              <Gamepad2 className="w-10 h-10 text-white/20 group-hover:text-primary transition-colors duration-300" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c101e] via-[#0c101e]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300" />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
-            <span
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black shadow-[0_0_20px_rgba(249,115,22,0.4)] backdrop-blur-md"
-              style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}
-            >
-              <Zap className="w-3.5 h-3.5" /> Top Up
-            </span>
-          </div>
+
           <Badge
-            className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-black shadow-lg"
-            style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}
+            className="absolute top-4 left-4 flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-black text-black shadow-md uppercase tracking-wider"
+            style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}
           >
-            <Flame className="w-3 h-3" /> HOT
+            <Flame className="w-2.5 h-2.5" /> HOT
           </Badge>
         </div>
-        <div className="relative p-5 pt-1 bg-card/40 backdrop-blur-xl border-t border-white/5 h-[100px] flex flex-col justify-between">
+
+        <div className="p-3.5 pt-1 bg-card/60 backdrop-blur-md flex flex-col justify-between h-[85px] border-t border-white/5">
           <div>
-            <p className="font-bold text-[15px] text-white tracking-wide truncate group-hover:text-primary transition-colors duration-300">
+            <p className="font-bold text-sm text-white tracking-tight truncate group-hover:text-primary transition-colors duration-200">
               {name}
             </p>
-            <p className="text-[11px] text-white/40 mt-0.5 uppercase tracking-wider font-medium">
+            <p className="text-[10px] text-white/40 uppercase tracking-widest font-medium mt-0.5 truncate">
               {String(product.category || "Game Top Up")}
             </p>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500">
-              {price > 0 ? formatPrice(undefined, price) : "Lihat Harga"}
+          <div className="flex items-center justify-between mt-1">
+            <span className="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-fuchsia-400 to-pink-400">
+              {price > 0 ? formatPrice(undefined, price) : "Cek Detail"}
             </span>
-            <Badge
-              variant="outline"
-              className="flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#00c864]/10 text-[#00c864] border-[#00c864]/20 uppercase tracking-widest"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse" />
-              Instan
-            </Badge>
+            <span className="text-[9px] font-bold text-[#00c864] bg-[#00c864]/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-[#00c864] animate-pulse" />
+              Instant
+            </span>
           </div>
         </div>
-        <div className="absolute inset-0 rounded-3xl pointer-events-none border border-transparent group-hover:border-primary/30 transition-colors duration-500" />
       </Card>
     </Link>
   );
@@ -434,8 +424,8 @@ const ProductCard = memo(function ProductCard({ product, index }: { product: any
 ───────────────────────────────────────────── */
 const ProductSkeleton = memo(function ProductSkeleton() {
   return (
-    <Card className="rounded-3xl overflow-hidden animate-pulse border border-white/10 bg-white/[0.03]">
-      <div className="aspect-[4/3] relative overflow-hidden">
+    <Card className="rounded-2xl overflow-hidden animate-pulse border border-white/10 bg-white/[0.03]">
+      <div className="aspect-square relative overflow-hidden">
         <div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
           style={{
@@ -444,12 +434,12 @@ const ProductSkeleton = memo(function ProductSkeleton() {
           }}
         />
       </div>
-      <div className="p-4 space-y-2">
-        <div className="h-3.5 bg-white/5 rounded-lg w-3/4" />
-        <div className="h-2.5 bg-white/5 rounded-lg w-1/2" />
-        <div className="flex justify-between mt-3">
-          <div className="h-4 bg-white/5 rounded-lg w-1/3" />
-          <div className="h-4 bg-white/5 rounded-lg w-1/4" />
+      <div className="p-3.5 space-y-2">
+        <div className="h-3 bg-white/5 rounded-lg w-3/4" />
+        <div className="h-2 bg-white/5 rounded-lg w-1/2" />
+        <div className="flex justify-between mt-2">
+          <div className="h-3 bg-white/5 rounded-lg w-1/3" />
+          <div className="h-3 bg-white/5 rounded-lg w-1/4" />
         </div>
       </div>
     </Card>
@@ -485,7 +475,7 @@ const QuickActionFAB = memo(function QuickActionFAB() {
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-200 hover:shadow-xl group"
-        style={{ background: "linear-gradient(135deg,#FF6B00,#FFB800)" }}
+        style={{ background: "linear-gradient(135deg,#8B5CF6,#D946EF)" }}
         aria-label="Scroll to top"
       >
         <ChevronRight className="w-5 h-5 text-black -rotate-90 group-hover:-translate-y-1 transition-transform" />
@@ -518,7 +508,7 @@ const ExitIntentPopup = memo(function ExitIntentPopup({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-[fadeIn_0.3s_ease]">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
-      <Card className="relative bg-[#111] rounded-3xl p-8 max-w-md w-full border border-white/10 shadow-2xl animate-[fadeUp_0.4s_cubic-bezier(.22,.68,0,1.2)]">
+      <Card className="relative bg-[#0B0A10] rounded-3xl p-8 max-w-md w-full border border-white/10 shadow-2xl animate-[fadeUp_0.4s_cubic-bezier(.22,.68,0,1.2)]">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center glass-panel-light hover:bg-white/10 transition-colors"
@@ -527,7 +517,7 @@ const ExitIntentPopup = memo(function ExitIntentPopup({
           <X className="w-4 h-4 text-white/60" />
         </button>
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto bg-gradient-to-br from-[#FF6B00] to-[#FFB800]">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto bg-gradient-to-br from-[#8B5CF6] to-[#D946EF]">
             <Gift className="w-8 h-8 text-black" />
           </div>
           <h3 className="text-2xl font-bold text-white" style={{ fontFamily: "'Syne', sans-serif" }}>
@@ -536,9 +526,9 @@ const ExitIntentPopup = memo(function ExitIntentPopup({
           <p className="text-white/60 text-sm">
             Sebelum kamu pergi, ambil kode promo spesial untuk diskon 10%!
           </p>
-          <div className="rounded-xl p-4 bg-[#FF6B00]/10 border border-dashed border-[#FF6B00]/30">
+          <div className="rounded-xl p-4 bg-[#8B5CF6]/10 border border-dashed border-[#8B5CF6]/30">
             <code
-              className="text-2xl font-bold tracking-[0.15em] text-[#FF6B00]"
+              className="text-2xl font-bold tracking-[0.15em] text-[#8B5CF6]"
               style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
               {PROMO}
@@ -549,7 +539,7 @@ const ExitIntentPopup = memo(function ExitIntentPopup({
             className={`w-full py-3 rounded-xl font-semibold transition-all hover:scale-[1.02] ${
               copied
                 ? "bg-green-500/20 text-green-500 border border-green-500/30"
-                : "bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black"
+                : "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black"
             }`}
           >
             {copied ? "✓ Kode Tersalin!" : "Salin Kode Promo"}
@@ -577,10 +567,10 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
           animationDelay: "0ms",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FF6B00]/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/5 to-transparent pointer-events-none" />
         <div className="grid lg:grid-cols-2 gap-8 items-start relative">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3 text-[#FF6B00]">
+            <p className="text-[10px] font-bold tracking-[0.2em] uppercase mb-3 text-[#8B5CF6]">
               — MENGAPA KAMI
             </p>
             <h3
@@ -589,7 +579,7 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
             >
               Kenapa Harga Kami
               <br />
-              <span className="text-[#FF6B00]">Paling Murah?</span>
+              <span className="text-[#8B5CF6]">Paling Murah?</span>
             </h3>
             <div className="space-y-4">
               {[
@@ -606,7 +596,7 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
                 {
                   title: "Garansi Harga Termurah",
                   desc: "Kami jamin harga paling murah atau uang kembali 2x lipat",
-                  color: "#FFB800",
+                  color: "#D946EF",
                 },
               ].map((item, i) => (
                 <div
@@ -670,7 +660,7 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
               >
                 <div>
                   <p className="text-sm font-medium text-white/80">{row.game}</p>
-                  <p className="text-[10px] text-white/20">Harga pasaran vs Orion</p>
+                  <p className="text-[10px] text-white/20">Harga pasaran vs NickStore</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
@@ -690,7 +680,7 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
                 <span className="font-bold text-[#00c864]">15%</span>
               </div>
               <div className="w-full h-1.5 rounded-full bg-white/5 overflow-hidden">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#FF6B00] to-[#00c864] w-[85%]" />
+                <div className="h-full rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#00c864] w-[85%]" />
               </div>
             </div>
             <p className="text-center text-[10px] text-white/20 pt-2 flex items-center justify-center gap-1">
@@ -710,11 +700,12 @@ const PriceComparisonSection = memo(function PriceComparisonSection() {
 export default function Home() {
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { showExitPopup, setShowExitPopup } = useExitIntent();
   const { ref: statsRef, vis: statsVis } = useReveal(0.2);
   const { ref: featRef, vis: featVis } = useReveal(0.1);
 
-  const { data: productsData, isLoading } = trpc.products.list.useQuery({ limit: 8 });
+  const { data: productsData, isLoading } = trpc.products.list.useQuery({ limit: 12 });
   const products = useMemo(() => (productsData as any)?.data || [], [productsData]);
 
   const PROMO = "WELCOME10";
@@ -744,7 +735,7 @@ export default function Home() {
   return (
     <>
       <SeoHead
-        title="Topup Kryz-Net - Platform Top Up Game & Voucher Murah #1 Malaysia"
+        title="NickStore - Platform Top Up Game & Voucher Murah #1 Malaysia"
         description="Topup game murah, pantas & automatik 24/7. Beli Diamonds Mobile Legends, Free Fire, Honor of Kings, Magic Chess, voucher & pulsa dengan harga termurah di Malaysia."
       />
       {/* REST OF PAGE */}
@@ -792,266 +783,91 @@ export default function Home() {
         Skip to main content
       </a>
 
-      {/* ── LIVE TICKER ── */}
-      <LiveTicker />
-
       <main id="main-content">
-        {/* ── HERO ── */}
-        <section className="relative min-h-screen flex items-center pt-24 pb-16 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:80px_80px]" />
-          <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(249,115,22,0.15)_0%,transparent_60%)] animate-pulse-glow" />
-          <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_60%)]" />
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute -right-40 top-1/4 w-px h-[200%] rotate-[25deg] bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
-          </div>
+        {/* ── CENTRALIZED SEARCH HERO ── */}
+        <section className="relative pt-28 pb-16 overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.18)_0%,transparent_70%)] blur-3xl" />
 
-          <div className="relative max-w-7xl mx-auto px-6 w-full z-10">
-            <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-              {/* LEFT COLUMN */}
-              <div className="lg:col-span-7 space-y-8">
-                <div className="reveal" style={{ animationDelay: "0ms" }}>
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold tracking-widest uppercase bg-white/5 border border-white/10 backdrop-blur-md shadow-lg shadow-black/20">
-                    <Crown className="w-3.5 h-3.5 text-primary" />
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-orange-300">
-                      Platform Top Up #1 MALAYSIA
-                    </span>
-                  </div>
-                </div>
-                <div className="reveal space-y-4" style={{ animationDelay: "100ms" }}>
-                  <h1
-                    className="text-[clamp(3rem,6vw,5.5rem)] font-black leading-[1.02] tracking-[-0.03em] text-white drop-shadow-2xl"
-                    style={{ fontFamily: "'Syne', sans-serif" }}
-                  >
-                    Top Up Game
-                    <br />
-                    <span className="relative inline-block">
-                      <span className="absolute -inset-1 blur-2xl bg-primary/20 rounded-full" />
-                      <span className="relative bg-gradient-to-r from-primary via-orange-400 to-yellow-400 bg-clip-text text-transparent">
-                        Termurah &amp;
-                      </span>
-                    </span>
-                    <br />
-                    Tercepat.
-                  </h1>
-                  <div className="h-10 flex items-center gap-3 bg-white/5 w-fit px-4 py-2 rounded-xl border border-white/5 backdrop-blur-md">
-                    <span className="text-sm font-medium text-white/50">Tersedia untuk</span>
-                    <span
-                      className="text-sm font-bold text-white tracking-wide"
-                      style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                    >
-                      {typed}
-                      <span className="text-primary animate-pulse ml-1">█</span>
-                    </span>
-                  </div>
-                </div>
-                <p
-                  className="reveal text-white/60 text-lg leading-relaxed max-w-lg font-medium"
-                  style={{ animationDelay: "200ms" }}
-                >
-                  Beli kredit game favoritmu dengan harga distributor. Proses otomatis{" "}
-                  <strong className="text-white">24/7</strong>, item masuk dalam hitungan detik.
-                </p>
-                <div className="reveal flex flex-wrap gap-3" style={{ animationDelay: "300ms" }}>
-                  {[
-                    { icon: CheckCircle, label: "Proses Instan", c: "#00c864" },
-                    { icon: Shield, label: "Garansi 100%", c: "#38BDF8" },
-                    { icon: Headphones, label: "Support 24/7", c: "#FF6B00" },
-                  ].map(({ icon: I, label, c }) => (
-                    <div
-                      key={label}
-                      className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold shadow-lg"
-                      style={{
-                        background: `linear-gradient(to right, ${c}15, ${c}05)`,
-                        border: `1px solid ${c}30`,
-                        color: c,
-                      }}
-                    >
-                      <I className="w-3.5 h-3.5" />
-                      {label}
-                    </div>
-                  ))}
-                </div>
-                <div
-                  className="reveal flex flex-col sm:flex-row gap-4 pt-4"
-                  style={{ animationDelay: "400ms" }}
-                >
-                  <Button
-                    onClick={() => navigate("/products")}
-                    className="group relative flex items-center justify-center gap-3 px-8 py-4 rounded-[20px] text-[15px] font-black text-black transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_20px_40px_-10px_rgba(249,115,22,0.5)] overflow-hidden"
-                    style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}
-                  >
-                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
-                    <Zap className="w-5 h-5 relative z-10 group-hover:scale-110 transition-transform" />
-                    <span className="relative z-10">Mulai Top Up Sekarang</span>
-                    <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1.5 transition-transform" />
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/products")}
-                    variant="outline"
-                    className="group flex items-center justify-center gap-3 px-8 py-4 rounded-[20px] text-[15px] font-bold text-white/70 hover:text-white transition-all hover:bg-white/10 hover:border-white/20"
-                  >
-                    <Gamepad2 className="w-5 h-5 group-hover:-rotate-12 transition-transform" />
-                    Lihat Semua Game
-                  </Button>
-                </div>
-                <div
-                  className="reveal flex items-center gap-5 pt-4 border-t border-white/10 w-fit"
-                  style={{ animationDelay: "500ms" }}
-                >
-                  <div className="flex -space-x-3">
-                    {["R", "S", "B", "D", "A"].map((l, i) => (
-                      <div
-                        key={i}
-                        className="w-10 h-10 rounded-full border-2 border-[#0c101e] flex items-center justify-center text-xs font-black text-black shadow-lg"
-                        style={{
-                          background: `linear-gradient(135deg, hsl(${i * 45 + 15},90%,60%), hsl(${i * 45 + 30},90%,50%))`,
-                        }}
-                      >
-                        {l}
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <div className="flex gap-1 mb-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 fill-[#FFB800] text-[#FFB800] drop-shadow-[0_0_8px_rgba(255,184,0,0.5)]"
-                        />
-                      ))}
-                    </div>
-                    <p className="text-sm text-white/50 font-medium">
-                      <strong className="text-white">61.000+</strong> ulasan positif
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <div className="relative max-w-4xl mx-auto px-6 text-center z-10 space-y-8">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase bg-white/5 border border-white/10 backdrop-blur-md">
+              <Crown className="w-4 h-4 text-primary" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400">
+                NICKSTORE · OFFICIAL GAME STORE
+              </span>
+            </div>
 
-              {/* RIGHT COLUMN - Floating Card */}
-              <div className="hidden lg:block lg:col-span-5 relative animate-float-slow">
-                <div className="absolute inset-0 blur-[80px] rounded-full bg-gradient-to-br from-primary/40 to-purple-500/20 mix-blend-screen" />
-                <Card className="relative rounded-[32px] overflow-hidden bg-card/60 backdrop-blur-3xl border border-white/10 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.2)]">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50 pointer-events-none" />
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[32px]">
-                    <div
-                      className="absolute left-0 right-0 h-[2px] opacity-20 bg-gradient-to-r from-transparent via-primary to-transparent"
-                      style={{ animation: "scanH 6s linear infinite" }}
-                    />
-                  </div>
-                  <div className="relative p-8 z-10">
-                    <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
-                      <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-gradient-to-br from-primary to-orange-500 shadow-[0_10px_20px_-5px_rgba(249,115,22,0.5)]">
-                          <Zap className="w-7 h-7 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-black text-white text-xl tracking-wide">Orion Topup</p>
-                          <p className="text-xs text-primary font-bold tracking-widest uppercase mt-1">
-                            Platform #1 MALAYSIA
-                          </p>
-                        </div>
-                      </div>
-                      <Badge className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black bg-green-500/15 border border-green-500/30 text-green-400 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                        LIVE
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                      {[
-                        {
-                          label: "Pengguna Aktif",
-                          val: `${users.toLocaleString()}+`,
-                          icon: Users,
-                          color: "#38BDF8",
-                        },
-                        {
-                          label: "Transaksi Sukses",
-                          val: `${txns.toLocaleString()}+`,
-                          icon: Zap,
-                          color: "#00c864",
-                        },
-                        {
-                          label: "Game & Layanan",
-                          val: `${games}+`,
-                          icon: Gamepad2,
-                          color: "#FFB800",
-                        },
-                        {
-                          label: "Server Uptime",
-                          val: "99.9%",
-                          icon: Shield,
-                          color: "#A78BFA",
-                        },
-                      ].map((s, i) => (
-                        <Card
-                          key={i}
-                          className="p-4 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm hover:bg-white/[0.04] transition-colors"
-                        >
-                          <div className="flex items-center gap-2 mb-2">
-                            <s.icon className="w-4 h-4" style={{ color: s.color }} />
-                            <p className="text-xs text-white/50 font-semibold">{s.label}</p>
-                          </div>
-                          <p
-                            className="text-2xl font-black"
-                            style={{ color: s.color, fontFamily: "'JetBrains Mono', monospace" }}
-                          >
-                            {s.val}
-                          </p>
-                        </Card>
-                      ))}
-                    </div>
-                    <Card className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-transparent border border-primary/20 relative overflow-hidden group">
-                      <div className="absolute right-0 top-0 w-32 h-32 bg-primary/20 blur-3xl group-hover:bg-primary/30 transition-colors duration-500 rounded-full translate-x-1/2 -translate-y-1/2" />
-                      <div className="relative z-10">
-                        <p className="text-[11px] font-bold text-white/70 mb-3 tracking-widest uppercase flex items-center gap-2">
-                          <Gift className="w-4 h-4 text-primary" />
-                          Kode Promo Aktif
-                        </p>
-                        <div className="flex items-center justify-between bg-black/40 rounded-xl p-2 pl-4 border border-white/5">
-                          <code
-                            className="text-xl font-black tracking-[0.2em] text-white"
-                            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-                          >
-                            {PROMO}
-                          </code>
-                          <Button
-                            onClick={copyPromo}
-                            variant={copied ? "secondary" : "default"}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg ${
-                              copied
-                                ? "bg-[#00c864] text-black"
-                                : "bg-primary text-black hover:bg-orange-400"
-                            }`}
-                          >
-                            {copied ? (
-                              <>
-                                <Check className="w-4 h-4" />
-                                Tersalin
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-4 h-4" />
-                                Salin
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                        <p className="text-xs text-white/50 mt-3 font-medium">
-                          ✨ Diskon 10% khusus pengguna baru.
-                        </p>
-                      </div>
-                    </Card>
-                  </div>
-                </Card>
+            <div className="space-y-4">
+              <h1
+                className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-black leading-[1.05] tracking-tight text-white"
+                style={{ fontFamily: "'Syne', sans-serif" }}
+              >
+                Cari &amp; Top Up Game
+                <br />
+                <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 bg-clip-text text-transparent">
+                  Dalam Sekelip Mata
+                </span>
+              </h1>
+              <p className="text-white/60 text-base sm:text-lg max-w-xl mx-auto font-medium">
+                Pilih daripada 70+ game popular. Transaksi automatik 24 jam dengan harga paling berbaloi.
+              </p>
+            </div>
+
+            {/* Centralized Search Bar */}
+            <div className="max-w-2xl mx-auto relative group">
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 opacity-30 blur group-hover:opacity-60 transition duration-500" />
+              <div className="relative flex items-center bg-[#0B0A10]/90 rounded-2xl border border-white/15 p-2 shadow-2xl backdrop-blur-xl">
+                <Search className="w-6 h-6 text-primary ml-3 mr-2 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Cari game kegemaran anda (cth: Mobile Legends, PUBG)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+                  }}
+                  className="w-full bg-transparent text-white placeholder-white/40 text-sm sm:text-base outline-none pr-3"
+                />
+                <Button
+                  onClick={() => navigate(`/products?search=${encodeURIComponent(searchQuery)}`)}
+                  className="px-6 py-3 rounded-xl font-bold text-xs sm:text-sm text-black shrink-0"
+                  style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}
+                >
+                  Cari Game
+                </Button>
               </div>
             </div>
-          </div>
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-60">
-            <div className="w-[1px] h-12 bg-gradient-to-b from-primary/50 to-transparent animate-pulse" />
-            <p className="text-[9px] text-white/50 tracking-[0.3em] uppercase font-bold">
-              Scroll
-            </p>
+
+            {/* Quick Game Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+              <span className="text-xs text-white/40 font-semibold mr-1">Popular:</span>
+              {["Mobile Legends", "PUBG Mobile", "Free Fire", "Genshin Impact", "Valorant"].map((g) => (
+                <button
+                  key={g}
+                  onClick={() => navigate(`/products?search=${encodeURIComponent(g)}`)}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-primary/20 hover:text-primary border border-white/10 transition-all"
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+
+            {/* Stats Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/10 max-w-3xl mx-auto">
+              {[
+                { label: "Pengguna", val: `${users.toLocaleString()}+`, color: "#38BDF8" },
+                { label: "Pesanan Sukses", val: `${txns.toLocaleString()}+`, color: "#00c864" },
+                { label: "Koleksi Game", val: `${games}+`, color: "#D946EF" },
+                { label: "Kadar Kepuasan", val: `${rate}%`, color: "#A78BFA" },
+              ].map((s, i) => (
+                <div key={i} className="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                  <p className="text-xl font-black" style={{ color: s.color, fontFamily: "'JetBrains Mono', monospace" }}>
+                    {s.val}
+                  </p>
+                  <p className="text-[11px] font-semibold text-white/50">{s.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1134,11 +950,11 @@ export default function Home() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {isLoading
-              ? Array.from({ length: 8 }).map((_, i) => <ProductSkeleton key={i} />)
+              ? Array.from({ length: 12 }).map((_, i) => <ProductSkeleton key={i} />)
               : products
-                  .slice(0, 8)
+                  .slice(0, 12)
                   .map((p: any, i: number) => (
                     <ProductCard key={String(p.id)} product={p} index={i} />
                   ))}
@@ -1172,7 +988,7 @@ export default function Home() {
                   icon: Zap,
                   title: "Proses Super Instan",
                   body: "Top up otomatis 24/7. Item masuk ke akun dalam hitungan detik, bukan menit.",
-                  color: "#FFB800",
+                  color: "#D946EF",
                 },
                 {
                   n: "02",
@@ -1186,7 +1002,7 @@ export default function Home() {
                   icon: Headphones,
                   title: "Support 24 Jam",
                   body: "Tim kami siap membantu kapan saja via WhatsApp. Rata-rata respons < 2 menit.",
-                  color: "#FF6B00",
+                  color: "#8B5CF6",
                 },
               ].map((f, i) => (
                 <div
@@ -1252,8 +1068,8 @@ export default function Home() {
               { name: "GoPay", icon: Wallet, color: "#00c864" },
               { name: "DANA", icon: Wallet, color: "#38BDF8" },
               { name: "OVO", icon: Wallet, color: "#A78BFA" },
-              { name: "ShopeePay", icon: ShoppingCart, color: "#FF6B00" },
-              { name: "Bank Transfer", icon: Banknote, color: "#FFB800" },
+              { name: "ShopeePay", icon: ShoppingCart, color: "#8B5CF6" },
+              { name: "Bank Transfer", icon: Banknote, color: "#D946EF" },
             ].map((m) => (
               <Card
                 key={m.name}
@@ -1295,7 +1111,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-[#FFB800] text-[#FFB800]" />
+                    <Star key={i} className="w-4 h-4 fill-[#D946EF] text-[#D946EF]" />
                   ))}
                 </div>
                 <span className="text-white/30 text-xs self-center">4.99 / 5.0</span>
@@ -1309,7 +1125,7 @@ export default function Home() {
 
         {/* ── CTA ── */}
         <section className="max-w-7xl mx-auto px-6 pb-24" aria-label="Call to action">
-          <Card className="relative rounded-3xl overflow-hidden p-12 md:p-16 text-center bg-gradient-to-r from-[#FF6B00]/10 via-[#FFB800]/5 to-[#FF6B00]/10 border border-primary/20">
+          <Card className="relative rounded-3xl overflow-hidden p-12 md:p-16 text-center bg-gradient-to-r from-[#8B5CF6]/10 via-[#D946EF]/5 to-[#8B5CF6]/10 border border-primary/20">
             <div className="absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none bg-primary/10" />
             <div className="absolute bottom-0 left-0 w-60 h-60 rounded-full blur-3xl pointer-events-none bg-amber-400/5" />
             <div
@@ -1321,7 +1137,7 @@ export default function Home() {
               }}
             />
             <div className="relative">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 bg-gradient-to-br from-[#FF6B00] to-[#FFB800]">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 bg-gradient-to-br from-[#8B5CF6] to-[#D946EF]">
                 <Rocket className="w-8 h-8 text-black" />
               </div>
               <h2
@@ -1335,7 +1151,7 @@ export default function Home() {
               >
                 Siap Top Up
                 <br />
-                <span className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] bg-clip-text text-transparent">
                   Sekarang?
                 </span>
               </h2>
@@ -1350,7 +1166,7 @@ export default function Home() {
                 <Button
                   onClick={() => navigate("/products")}
                   className="group flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold text-black transition-all hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(255,107,0,0.3)]"
-                  style={{ background: "linear-gradient(135deg,#FF6B00,#FFB800)" }}
+                  style={{ background: "linear-gradient(135deg,#8B5CF6,#D946EF)" }}
                 >
                   <Zap className="w-4 h-4 group-hover:scale-125 transition-transform" />
                   Mulai Top Up
@@ -1393,9 +1209,10 @@ export default function Home() {
         </section>
       </main>
 
+      <LiveTicker />
       <footer className="border-t border-white/5 py-6 text-center">
         <p className="text-[11px] text-white/15 tracking-widest uppercase">
-          © 2025 Orion · Platform Top Up Game MALAYSIA
+          © 2025 NickStore · Platform Top Up Game MALAYSIA
         </p>
       </footer>
 

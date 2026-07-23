@@ -42,9 +42,9 @@ const timeFilters = [
 ];
 
 const rankColors = {
-  1: { bg: "from-[#FFB800]/20 to-[#FFB800]/5", border: "border-[#FFB800]/30", text: "text-[#FFB800]", badge: "bg-[#FFB800] text-black" },
+  1: { bg: "from-[#D946EF]/20 to-[#D946EF]/5", border: "border-[#D946EF]/30", text: "text-[#D946EF]", badge: "bg-[#D946EF] text-black" },
   2: { bg: "from-slate-400/20 to-slate-400/5", border: "border-slate-400/30", text: "text-slate-400", badge: "bg-slate-400 text-black" },
-  3: { bg: "from-[#FF6B00]/20 to-[#FF6B00]/5", border: "border-[#FF6B00]/30", text: "text-[#FF6B00]", badge: "bg-[#FF6B00] text-white" },
+  3: { bg: "from-[#8B5CF6]/20 to-[#8B5CF6]/5", border: "border-[#8B5CF6]/30", text: "text-[#8B5CF6]", badge: "bg-[#8B5CF6] text-white" },
 };
 
 const rankIcons = {
@@ -86,7 +86,7 @@ function LeaderboardSkeleton() {
       </div>
 
       {/* Table Skeleton */}
-      <div className="rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl overflow-hidden shadow-2xl">
+      <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden shadow-2xl">
         <div className="p-4 space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4">
@@ -108,7 +108,7 @@ function LeaderboardSkeleton() {
 ───────────────────────────────────────────── */
 function EmptyState() {
   return (
-    <div className="p-12 text-center rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl">
+    <div className="p-12 text-center rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl">
       <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
         <Trophy className="h-10 w-10 text-white/30" aria-hidden="true" />
       </div>
@@ -116,7 +116,7 @@ function EmptyState() {
       <p className="text-sm text-white/50 mb-6 max-w-sm mx-auto font-medium">
         Belum ada transaksi untuk periode ini. Jadilah yang pertama dan dapatkan posisi teratas!
       </p>
-      <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-white/[0.05] hover:text-[#FFB800] uppercase tracking-widest text-[10px] font-black h-12 px-6 rounded-xl">
+      <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-white/[0.05] hover:text-[#D946EF] uppercase tracking-widest text-[10px] font-black h-12 px-6 rounded-xl">
         <ShoppingCart className="mr-2 h-4 w-4" />
         Mulai Belanja
       </Button>
@@ -146,8 +146,8 @@ function PodiumCard({
       {/* Rank Icon */}
       {isFirst && (
         <div className="relative inline-block mb-2">
-          <Crown className="h-8 w-8 text-[#FFB800] mx-auto animate-bounce drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]" />
-          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-[#FFB800] animate-pulse" />
+          <Crown className="h-8 w-8 text-[#D946EF] mx-auto animate-bounce drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]" />
+          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-[#D946EF] animate-pulse" />
         </div>
       )}
       
@@ -157,18 +157,18 @@ function PodiumCard({
       }`}>
         <div className={`w-full h-full rounded-2xl flex items-center justify-center text-2xl font-black border-2 backdrop-blur-sm ${
           isFirst 
-            ? 'bg-gradient-to-br from-[#FFB800]/20 to-[#FFB800]/5 border-[#FFB800]/50 shadow-[0_0_20px_rgba(255,184,0,0.3)]' 
+            ? 'bg-gradient-to-br from-[#D946EF]/20 to-[#D946EF]/5 border-[#D946EF]/50 shadow-[0_0_20px_rgba(255,184,0,0.3)]' 
             : rank === 2
             ? 'bg-gradient-to-br from-slate-400/20 to-slate-400/5 border-slate-400/50'
-            : 'bg-gradient-to-br from-[#FF6B00]/20 to-[#FF6B00]/5 border-[#FF6B00]/50'
+            : 'bg-gradient-to-br from-[#8B5CF6]/20 to-[#8B5CF6]/5 border-[#8B5CF6]/50'
         }`}>
-          <span className={isFirst ? 'text-[#FFB800]' : rank === 2 ? 'text-slate-300' : 'text-[#FF6B00]'}>
+          <span className={isFirst ? 'text-[#D946EF]' : rank === 2 ? 'text-slate-300' : 'text-[#8B5CF6]'}>
             {String(user.name || "?").charAt(0).toUpperCase()}
           </span>
         </div>
         {isFirst && (
           <div className="absolute -top-2 -right-2">
-            <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_10px_rgba(255,107,0,0.5)]">
+            <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_10px_rgba(255,107,0,0.5)]">
               <Star className="h-3 w-3 text-black" fill="currentColor" />
             </div>
           </div>
@@ -177,7 +177,7 @@ function PodiumCard({
       
       {/* User Info */}
       <p className={`text-sm font-black tracking-wide uppercase truncate max-w-[120px] mx-auto ${
-        isFirst ? 'text-[#FFB800] drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]' : 'text-white'
+        isFirst ? 'text-[#D946EF] drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]' : 'text-white'
       }`}>
         {String(user.name || "Anonymous")}
       </p>
@@ -185,7 +185,7 @@ function PodiumCard({
         @{String(user.username || user.name || "user")}
       </p>
       <p className={`text-xs font-black tracking-wider mt-2 bg-clip-text text-transparent bg-gradient-to-r ${
-        isFirst ? 'from-[#FFB800] to-[#FF6B00]' : 'from-white to-white/70'
+        isFirst ? 'from-[#D946EF] to-[#8B5CF6]' : 'from-white to-white/70'
       }`}>
         {formatPrice(user.totalMyr, user.totalIdr)}
       </p>
@@ -193,13 +193,13 @@ function PodiumCard({
       {/* Podium Block */}
       <div className={`mx-auto rounded-t-2xl mt-4 flex items-center justify-center border-t-2 border-l border-r backdrop-blur-md ${
         isFirst 
-          ? 'w-28 h-32 bg-gradient-to-t from-[#FFB800]/20 to-[#FFB800]/5 border-t-[#FFB800]/50 border-x-[#FFB800]/20' 
+          ? 'w-28 h-32 bg-gradient-to-t from-[#D946EF]/20 to-[#D946EF]/5 border-t-[#D946EF]/50 border-x-[#D946EF]/20' 
           : rank === 2
           ? 'w-24 h-24 bg-gradient-to-t from-slate-400/20 to-slate-400/5 border-t-slate-400/50 border-x-slate-400/20'
-          : 'w-24 h-16 bg-gradient-to-t from-[#FF6B00]/20 to-[#FF6B00]/5 border-t-[#FF6B00]/50 border-x-[#FF6B00]/20'
+          : 'w-24 h-16 bg-gradient-to-t from-[#8B5CF6]/20 to-[#8B5CF6]/5 border-t-[#8B5CF6]/50 border-x-[#8B5CF6]/20'
       }`}>
         <span className={`text-3xl font-black ${
-          isFirst ? 'text-[#FFB800] drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]' : 'text-white/30'
+          isFirst ? 'text-[#D946EF] drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]' : 'text-white/30'
         }`}>
           #{rank}
         </span>
@@ -265,15 +265,15 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen relative pt-24 pb-12 overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#FF6B00]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#FFB800]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
       
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
         {/* Header */}
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF6B00]/10 border border-[#FF6B00]/20 mb-6">
-            <Trophy className="h-4 w-4 text-[#FFB800]" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FFB800]">Top Spenders</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 mb-6">
+            <Trophy className="h-4 w-4 text-[#D946EF]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D946EF]">Top Spenders</span>
           </div>
           
           <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent uppercase tracking-tight mb-4">
@@ -305,7 +305,7 @@ export default function Leaderboard() {
                 onClick={() => handleFilterChange(filter.id)}
                 className={`transition-all duration-300 h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest ${
                   isActive 
-                    ? "bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.3)] scale-105" 
+                    ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.3)] scale-105" 
                     : "bg-white/[0.02] border-white/10 text-white/70 hover:bg-white/[0.05] hover:text-white hover:border-white/20"
                 }`}
               >
@@ -345,22 +345,22 @@ export default function Leaderboard() {
 
         {/* Leaderboard Table */}
         {leaderboardData.length > 0 && (
-          <div className="rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+          <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
             {/* Current User Rank Banner */}
             {currentUserRank !== null && currentUserRank >= 0 && (
-              <div className="p-5 bg-gradient-to-r from-[#FF6B00]/10 to-[#FFB800]/5 border-b border-white/10 flex items-center justify-between">
+              <div className="p-5 bg-gradient-to-r from-[#8B5CF6]/10 to-[#D946EF]/5 border-b border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_15px_rgba(255,107,0,0.3)]">
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_15px_rgba(255,107,0,0.3)]">
                     <Users className="h-6 w-6 text-black" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black tracking-widest text-[#FFB800] uppercase mb-1">Peringkat Anda</p>
+                    <p className="text-[10px] font-black tracking-widest text-[#D946EF] uppercase mb-1">Peringkat Anda</p>
                     <p className="text-sm font-bold text-white">
                       #{currentUserRank + 1} dari {leaderboardData.length} pengguna
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="bg-white/[0.02] border-white/10 hover:bg-white/[0.05] hover:text-[#FFB800] text-[10px] font-black uppercase tracking-widest h-10 px-4 rounded-xl">
+                <Button variant="outline" size="sm" className="bg-white/[0.02] border-white/10 hover:bg-white/[0.05] hover:text-[#D946EF] text-[10px] font-black uppercase tracking-widest h-10 px-4 rounded-xl">
                   <ChevronUp className="mr-2 h-4 w-4" />
                   Naikkan
                 </Button>
@@ -408,7 +408,7 @@ export default function Leaderboard() {
                         key={userData.rank || index} 
                         className={`border-b border-white/5 transition-all duration-300 ${
                           isCurrentUser 
-                            ? "bg-[#FF6B00]/10 hover:bg-[#FF6B00]/20" 
+                            ? "bg-[#8B5CF6]/10 hover:bg-[#8B5CF6]/20" 
                             : "hover:bg-white/[0.02]"
                         }`}
                       >
@@ -418,10 +418,10 @@ export default function Leaderboard() {
                             {isTop3 ? (
                               <div className={`h-10 w-10 rounded-xl flex items-center justify-center border ${
                                 rank === 1 
-                                  ? 'bg-[#FFB800]/10 text-[#FFB800] border-[#FFB800]/30' 
+                                  ? 'bg-[#D946EF]/10 text-[#D946EF] border-[#D946EF]/30' 
                                   : rank === 2 
                                   ? 'bg-slate-400/10 text-slate-300 border-slate-400/30' 
-                                  : 'bg-[#FF6B00]/10 text-[#FF6B00] border-[#FF6B00]/30'
+                                  : 'bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/30'
                               }`}>
                                 <RankIcon className="h-5 w-5" />
                               </div>
@@ -438,7 +438,7 @@ export default function Leaderboard() {
                           <div className="flex items-center gap-4">
                             <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-lg font-black relative border ${
                               isCurrentUser
-                                ? 'bg-gradient-to-br from-[#FF6B00] to-[#FFB800] text-black border-transparent shadow-[0_0_15px_rgba(255,107,0,0.3)]'
+                                ? 'bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] text-black border-transparent shadow-[0_0_15px_rgba(255,107,0,0.3)]'
                                 : isTop3 && colors
                                 ? `bg-gradient-to-br ${colors.bg} ${colors.text} ${colors.border}`
                                 : 'bg-white/[0.02] text-white/70 border-white/10'
@@ -452,11 +452,11 @@ export default function Leaderboard() {
                             </div>
                             <div className="min-w-0">
                               <p className={`font-black tracking-wide uppercase truncate ${
-                                isCurrentUser ? 'text-[#FFB800]' : 'text-white'
+                                isCurrentUser ? 'text-[#D946EF]' : 'text-white'
                               }`}>
                                 {String(userData.name || "Anonymous")}
                                 {isCurrentUser && (
-                                  <Badge className="ml-3 text-[9px] bg-[#FF6B00]/20 text-[#FFB800] border-0 px-2 font-black uppercase tracking-widest">
+                                  <Badge className="ml-3 text-[9px] bg-[#8B5CF6]/20 text-[#D946EF] border-0 px-2 font-black uppercase tracking-widest">
                                     Anda
                                   </Badge>
                                 )}
@@ -494,7 +494,7 @@ export default function Leaderboard() {
                           <div>
                             <p className={`font-black tracking-wider text-lg ${
                               isTop3 
-                                ? rank === 1 ? 'text-[#FFB800]' : 'text-[#FF6B00]' 
+                                ? rank === 1 ? 'text-[#D946EF]' : 'text-[#8B5CF6]' 
                                 : 'text-white'
                             }`}>
                               {formatPrice(userData.totalMyr, userData.totalIdr)}
@@ -537,15 +537,15 @@ export default function Leaderboard() {
 
         {/* Bottom CTA */}
         <div className="flex justify-center mt-12 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
-          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#FF6B00]/10 to-[#FFB800]/10 border border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.15)]">
-            <Flame className="h-5 w-5 text-[#FF6B00]" />
+          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#8B5CF6]/10 to-[#D946EF]/10 border border-[#8B5CF6]/30 shadow-[0_0_20px_rgba(255,107,0,0.15)]">
+            <Flame className="h-5 w-5 text-[#8B5CF6]" />
             <span className="text-xs text-white/70 font-medium">
               Data diperbarui secara realtime.
             </span>
-            <span className="text-xs font-black uppercase tracking-wider text-[#FFB800] ml-2">
+            <span className="text-xs font-black uppercase tracking-wider text-[#D946EF] ml-2">
               Belanja lebih banyak untuk naik peringkat!
             </span>
-            <Gift className="h-5 w-5 text-[#FFB800]" />
+            <Gift className="h-5 w-5 text-[#D946EF]" />
           </div>
         </div>
       </div>

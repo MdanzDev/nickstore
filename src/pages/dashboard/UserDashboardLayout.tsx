@@ -124,11 +124,11 @@ function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-80 bg-[#0c101e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
+      <div className="absolute right-0 top-full mt-2 w-80 bg-[#0B0A10]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center justify-between">
             <h3 className="font-black text-sm uppercase tracking-wider text-white">Notifikasi</h3>
-            <Badge className="text-[10px] bg-[#FF6B00] text-black font-black uppercase tracking-widest border-none">3 Baru</Badge>
+            <Badge className="text-[10px] bg-[#8B5CF6] text-black font-black uppercase tracking-widest border-none">3 Baru</Badge>
           </div>
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar">
@@ -142,7 +142,7 @@ function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="flex items-start gap-3">
                 <div className={`h-2 w-2 rounded-full mt-1.5 shrink-0 shadow-[0_0_10px_currentColor] ${notif.color}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white uppercase tracking-tight group-hover:text-[#FFB800] transition-colors">{notif.title}</p>
+                  <p className="text-xs font-bold text-white uppercase tracking-tight group-hover:text-[#D946EF] transition-colors">{notif.title}</p>
                   <p className="text-[10px] font-medium text-white/50 mt-1 line-clamp-2 leading-relaxed">{notif.desc}</p>
                   <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-2">{notif.time}</p>
                 </div>
@@ -151,7 +151,7 @@ function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           ))}
         </div>
         <div className="p-3 border-t border-white/10">
-          <Button variant="ghost" size="sm" className="w-full text-[10px] font-black uppercase tracking-widest text-[#FF6B00] hover:text-[#FFB800] hover:bg-white/[0.02]">
+          <Button variant="ghost" size="sm" className="w-full text-[10px] font-black uppercase tracking-widest text-[#8B5CF6] hover:text-[#D946EF] hover:bg-white/[0.02]">
             Lihat Semua Notifikasi
           </Button>
         </div>
@@ -181,10 +181,10 @@ function UserMenuDropdown({
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-56 bg-[#0c101e]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
+      <div className="absolute right-0 top-full mt-2 w-56 bg-[#0B0A10]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center text-sm font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center text-sm font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0">
@@ -207,7 +207,7 @@ function UserMenuDropdown({
               }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-white hover:bg-white/[0.02] transition-colors group"
             >
-              <item.icon className="h-4 w-4 group-hover:text-[#FF6B00] transition-colors" />
+              <item.icon className="h-4 w-4 group-hover:text-[#8B5CF6] transition-colors" />
               {item.label}
             </button>
           ))}
@@ -288,7 +288,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] bg-[#0B0F19] text-white selection:bg-[#FF6B00]/30 selection:text-white">
+    <div className="flex min-h-[calc(100vh-4rem)] bg-[#0B0A10] text-white selection:bg-[#8B5CF6]/30 selection:text-white">
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
@@ -303,17 +303,17 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 fixed lg:sticky top-0 z-50 h-screen ${
           collapsed ? "w-[72px]" : "w-64"
-        } border-r border-white/10 bg-[#0c101e]/80 backdrop-blur-xl shrink-0 transition-all duration-300 flex flex-col overflow-y-auto`}
+        } border-r border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shrink-0 transition-all duration-300 flex flex-col overflow-y-auto`}
       >
         {/* Sidebar Header */}
         <div className="p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,107,0,0.3)]">
               <Gamepad2 className="h-5 w-5 text-black" />
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <p className="text-sm font-black uppercase tracking-tight text-white">Orion Topup</p>
+                <p className="text-sm font-black uppercase tracking-tight text-white">NickStore</p>
                 <p className="text-[9px] font-black uppercase tracking-widest text-white/50">Member Area</p>
               </div>
             )}
@@ -347,13 +347,13 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${
                   isActive
-                    ? "bg-[#FF6B00]/10 text-white shadow-[0_0_15px_rgba(255,107,0,0.1)] border border-[#FF6B00]/20"
+                    ? "bg-[#8B5CF6]/10 text-white shadow-[0_0_15px_rgba(255,107,0,0.1)] border border-[#8B5CF6]/20"
                     : "text-white/60 hover:text-white hover:bg-white/[0.02]"
                 }`}
                 title={collapsed ? item.label : undefined}
               >
                 <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
-                  isActive ? "bg-gradient-to-br from-[#FF6B00] to-[#FFB800] text-black shadow-[0_0_10px_rgba(255,107,0,0.3)]" : "bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white"
+                  isActive ? "bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] text-black shadow-[0_0_10px_rgba(255,107,0,0.3)]" : "bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white"
                 }`}>
                   <Icon className="h-4 w-4" />
                 </div>
@@ -367,14 +367,14 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                       </span>
                     </div>
                     {isActive && (
-                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#FFB800] shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
+                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#D946EF] shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
                     )}
                   </>
                 )}
                 
                 {/* Active indicator bar */}
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-[#FF6B00] to-[#FFB800] rounded-r-full shadow-[0_0_10px_rgba(255,107,0,0.5)]" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-[#8B5CF6] to-[#D946EF] rounded-r-full shadow-[0_0_10px_rgba(255,107,0,0.5)]" />
                 )}
               </Link>
             );
@@ -396,7 +396,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                     to={link.path}
                     className="flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/[0.02] transition-colors group"
                   >
-                    <Icon className="h-4 w-4 text-white/40 group-hover:text-[#FF6B00] transition-colors" />
+                    <Icon className="h-4 w-4 text-white/40 group-hover:text-[#8B5CF6] transition-colors" />
                     <span>{link.label}</span>
                   </Link>
                 );
@@ -471,7 +471,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
         {/* Top Bar */}
         <header className={`sticky top-0 z-30 transition-all duration-300 ${
           isScrolled 
-            ? "bg-[#0c101e]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" 
+            ? "bg-[#0B0A10]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" 
             : "bg-transparent border-b border-transparent"
         }`}>
           <div className="flex items-center justify-between px-4 lg:px-6 py-4">
@@ -490,7 +490,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
               <div className="hidden sm:block min-w-0">
                 <div className="flex items-center gap-3">
                   {currentPage && (
-                    <div className={`h-10 w-10 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,107,0,0.3)]`}>
+                    <div className={`h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,107,0,0.3)]`}>
                       <currentPage.icon className={`h-5 w-5 text-black`} />
                     </div>
                   )}
@@ -516,14 +516,14 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
             <div className="flex items-center gap-3 shrink-0">
               {/* Balance Badge */}
               {userData.accountBalance !== undefined && (
-                <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF6B00]/10 border border-[#FF6B00]/20 hover:bg-[#FF6B00]/20 transition-all cursor-pointer shadow-[0_0_15px_rgba(255,107,0,0.1)] group"
+                <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 hover:bg-[#8B5CF6]/20 transition-all cursor-pointer shadow-[0_0_15px_rgba(255,107,0,0.1)] group"
                   onClick={() => navigate("/deposit")}
                 >
-                  <Wallet className="h-4 w-4 text-[#FFB800]" />
+                  <Wallet className="h-4 w-4 text-[#D946EF]" />
                   <span className="text-[11px] font-black text-white uppercase tracking-wider">
                     {formatPrice(userData.accountBalance, userData.balanceIdr)}
                   </span>
-                  <ChevronRight className="h-3 w-3 text-[#FFB800] group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="h-3 w-3 text-[#D946EF] group-hover:translate-x-1 transition-transform" />
                 </div>
               )}
 
@@ -539,7 +539,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                 >
                   <Bell className="h-4 w-4 text-white" />
                   {hasNotifications && (
-                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#FF6B00] shadow-[0_0_5px_rgba(255,107,0,0.8)] animate-pulse" />
+                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#8B5CF6] shadow-[0_0_5px_rgba(255,107,0,0.8)] animate-pulse" />
                   )}
                 </button>
                 <NotificationPanel 
@@ -558,14 +558,14 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                   className="flex items-center gap-2 p-1.5 pl-2 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
                   aria-label="User menu"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center text-xs font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center text-xs font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
                     {userData.name?.charAt(0)?.toUpperCase() || "U"}
                   </div>
                   <div className="hidden lg:block text-left min-w-0 pr-1">
                     <p className="text-xs font-bold text-white uppercase tracking-tight truncate max-w-[80px]">
                       {firstName}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Member</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Member</p>
                   </div>
                   <ChevronDown className="hidden lg:block h-3 w-3 text-white/50" />
                 </button>

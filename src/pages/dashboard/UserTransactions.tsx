@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string; b
   sukses:      { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
   completed:   { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
   delivered:   { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-  pending:     { label: "Pending",     icon: Clock,       color: "text-[#FFB800]",     bg: "bg-[#FFB800]/10",     border: "border-[#FFB800]/20" },
+  pending:     { label: "Pending",     icon: Clock,       color: "text-[#D946EF]",     bg: "bg-[#D946EF]/10",     border: "border-[#D946EF]/20" },
   processing:  { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
   proses:      { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
   confirmed:   { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
@@ -35,7 +35,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string; b
   failed:      { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
   gagal:       { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
   cancelled:   { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
-  refund:      { label: "Refund",      icon: AlertCircle, color: "text-[#FF6B00]",     bg: "bg-[#FF6B00]/10",     border: "border-[#FF6B00]/20" },
+  refund:      { label: "Refund",      icon: AlertCircle, color: "text-[#8B5CF6]",     bg: "bg-[#8B5CF6]/10",     border: "border-[#8B5CF6]/20" },
 };
 
 /* ─────────────────────────────────────────────
@@ -170,11 +170,11 @@ export default function UserTransactions() {
         </div>
 
         {/* Filters Card */}
-        <Card className="p-6 bg-[#0c101e]/80 border-white/10 backdrop-blur-xl">
+        <Card className="p-6 bg-[#0B0A10]/80 border-white/10 backdrop-blur-xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Status
               </label>
               <select
@@ -183,7 +183,7 @@ export default function UserTransactions() {
                 className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
               >
                 {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s} className="bg-[#0B0F19] text-white">
+                  <option key={s} value={s} className="bg-[#0B0A10] text-white">
                     {s}
                   </option>
                 ))}
@@ -192,7 +192,7 @@ export default function UserTransactions() {
 
             {/* Date Pickers */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Tanggal Mulai
               </label>
               <input
@@ -203,7 +203,7 @@ export default function UserTransactions() {
               />
             </div>
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Tanggal Akhir
               </label>
               <input
@@ -228,10 +228,10 @@ export default function UserTransactions() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-[#FFB800]/50 hover:bg-[#FFB800]/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-white/10 hover:border-[#D946EF]/50 hover:bg-[#D946EF]/10 text-white flex-1 transition-colors"
                 onClick={() => handleExport("xlsx")}
               >
-                <Download className="mr-2 h-4 w-4 text-[#FFB800]" />
+                <Download className="mr-2 h-4 w-4 text-[#D946EF]" />
                 <span className="text-[10px] font-black uppercase tracking-widest">XLSX</span>
               </Button>
             </div>
@@ -239,7 +239,7 @@ export default function UserTransactions() {
         </Card>
 
         {/* Data Table Card */}
-        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0c101e]/80 border-white/10 shadow-2xl backdrop-blur-xl">
+        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border-white/10 shadow-2xl backdrop-blur-xl">
           {isLoading ? (
             <div className="p-16 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
@@ -311,7 +311,7 @@ export default function UserTransactions() {
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
                             <div className="flex items-center gap-1.5">
                               <span className="text-[9px] font-black uppercase tracking-widest text-white/30">Target</span>
-                              <span className="font-mono text-[10px] font-bold text-[#FFB800] bg-[#FFB800]/10 px-2 py-0.5 rounded">
+                              <span className="font-mono text-[10px] font-bold text-[#D946EF] bg-[#D946EF]/10 px-2 py-0.5 rounded">
                                 {userInput}{zone}
                               </span>
                             </div>

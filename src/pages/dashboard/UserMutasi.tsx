@@ -127,11 +127,11 @@ export default function UserMutasi() {
         </div>
 
         {/* Filters Card */}
-        <Card className="p-6 bg-[#0c101e]/80 border-white/10 backdrop-blur-xl">
+        <Card className="p-6 bg-[#0B0A10]/80 border-white/10 backdrop-blur-xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Status
               </label>
               <select
@@ -147,7 +147,7 @@ export default function UserMutasi() {
             </div>
             {/* Date Pickers */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Tanggal Mulai
               </label>
               <input
@@ -158,7 +158,7 @@ export default function UserMutasi() {
               />
             </div>
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#FFB800] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
                 Tanggal Akhir
               </label>
               <input
@@ -182,10 +182,10 @@ export default function UserMutasi() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-[#FFB800]/50 hover:bg-[#FFB800]/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-white/10 hover:border-[#D946EF]/50 hover:bg-[#D946EF]/10 text-white flex-1 transition-colors"
                 onClick={() => handleExport("xlsx")}
               >
-                <Download className="mr-2 h-4 w-4 text-[#FFB800]" />
+                <Download className="mr-2 h-4 w-4 text-[#D946EF]" />
                 <span className="text-[10px] font-black uppercase tracking-widest">XLSX</span>
               </Button>
             </div>
@@ -193,7 +193,7 @@ export default function UserMutasi() {
         </Card>
 
         {/* Data Table Card */}
-        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0c101e]/80 border-white/10 shadow-2xl backdrop-blur-xl">
+        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border-white/10 shadow-2xl backdrop-blur-xl">
           {isLoading ? (
             <div className="p-16 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />

@@ -31,7 +31,7 @@ const mockAnnouncements: Announcement[] = [
 ];
 
 const TYPE_CONFIG = {
-  warning: { icon: AlertTriangle, color: "#FFB800", bg: "rgba(255,184,0,0.1)", border: "rgba(255,184,0,0.2)", label: "Warning" },
+  warning: { icon: AlertTriangle, color: "#D946EF", bg: "rgba(255,184,0,0.1)", border: "rgba(255,184,0,0.2)", label: "Warning" },
   success: { icon: CheckCircle2, color: "#00c864", bg: "rgba(0,200,100,0.1)", border: "rgba(0,200,100,0.2)", label: "Promo" },
   info:    { icon: Info, color: "#38BDF8", bg: "rgba(56,189,248,0.1)", border: "rgba(56,189,248,0.2)", label: "Info" },
 };

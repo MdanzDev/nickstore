@@ -173,7 +173,7 @@ export default function Login() {
         return;
       }
 
-      const botUrl = data.botUrl || `https://t.me/Topup_Kryz_bot?start=${data.code}`;
+      const botUrl = data.botUrl || `https://t.me/NickStore_bot?start=${data.code}`;
       setTelegramBotUrl(botUrl);
 
       // Open Telegram Bot in a new window/tab or app
@@ -315,24 +315,24 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden pt-24 pb-12">
       <SeoHead
-        title="Log Masuk Akaun | Topup Kryz-Net"
-        description="Log masuk ke akaun Topup Kryz-Net anda untuk menguruskan pesanan topup game, baki wallet & transaksi secara pantas."
+        title="Log Masuk Akaun | NickStore"
+        description="Log masuk ke akaun NickStore anda untuk menguruskan pesanan topup game, baki wallet & transaksi secara pantas."
       />
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#FF6B00]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#FFB800]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl shadow-2xl relative z-10">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl relative z-10">
         {/* Left - Form */}
         <div className="p-8 lg:p-12 flex flex-col justify-center">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
                 <Gamepad2 className="h-6 w-6 text-black" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Topup<span className="text-[#FF6B00]">.Kryz-Net</span></span>
+                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
                 <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
@@ -347,9 +347,9 @@ export default function Login() {
             {/* Quick Stats */}
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Zap, text: "Proses Instan", color: "text-[#FFB800]" },
-                { icon: Shield, text: "100% Aman", color: "text-[#FFB800]" },
-                { icon: Users, text: "1.2K+ Member", color: "text-[#FFB800]" },
+                { icon: Zap, text: "Proses Instan", color: "text-[#D946EF]" },
+                { icon: Shield, text: "100% Aman", color: "text-[#D946EF]" },
+                { icon: Users, text: "1.2K+ Member", color: "text-[#D946EF]" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2 bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5">
                   <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
@@ -411,7 +411,7 @@ export default function Login() {
 
               <div className="relative flex items-center justify-center my-4">
                 <div className="border-t border-white/10 w-full" />
-                <span className="bg-[#0c101e] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
+                <span className="bg-[#0B0A10] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
                   Atau dengan Email
                 </span>
               </div>
@@ -433,7 +433,7 @@ export default function Login() {
             {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white/70">
-                Email <span className="text-[#FF6B00]">*</span>
+                Email <span className="text-[#8B5CF6]">*</span>
               </Label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
@@ -445,7 +445,7 @@ export default function Login() {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => handleBlur("email")}
-                  className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 ${
+                  className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
                     errors.email && touched.email
                       ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
                       : ""
@@ -471,11 +471,11 @@ export default function Login() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white/70">
-                  Kata Sandi <span className="text-[#FF6B00]">*</span>
+                  Kata Sandi <span className="text-[#8B5CF6]">*</span>
                 </Label>
                 <Link
                   to="/reset-password"
-                  className="text-[10px] text-[#FFB800] hover:text-[#FF6B00] hover:underline font-black uppercase tracking-widest transition-colors"
+                  className="text-[10px] text-[#D946EF] hover:text-[#8B5CF6] hover:underline font-black uppercase tracking-widest transition-colors"
                 >
                   Lupa password?
                 </Link>
@@ -489,7 +489,7 @@ export default function Login() {
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
                   onBlur={() => handleBlur("password")}
-                  className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 ${
+                  className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
                     errors.password && touched.password
                       ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
                       : ""
@@ -524,7 +524,7 @@ export default function Login() {
                 checked={rememberMe}
                 onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                 disabled={isLoading}
-                className="border-white/20 data-[state=checked]:bg-[#FF6B00] data-[state=checked]:border-[#FF6B00]"
+                className="border-white/20 data-[state=checked]:bg-[#8B5CF6] data-[state=checked]:border-[#8B5CF6]"
               />
               <Label htmlFor="remember" className="text-xs font-black uppercase tracking-widest text-white/50 cursor-pointer select-none hover:text-white/70 transition-colors">
                 Ingat saya
@@ -534,7 +534,7 @@ export default function Login() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FF6B00] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
+              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -566,7 +566,7 @@ export default function Login() {
               Belum punya akun?{" "}
               <Link
                 to="/register"
-                className="text-[#FFB800] hover:text-[#FF6B00] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
+                className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
               >
                 Daftar sekarang
                 <ArrowRight className="h-3 w-3" />
@@ -587,8 +587,8 @@ export default function Login() {
         {/* Right - Benefits Panel */}
         <div className="hidden lg:flex flex-col justify-center p-12 bg-black/40 border-l border-white/10 relative overflow-hidden">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#FF6B00]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#FFB800]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
           
           {/* Grid Pattern */}
           <div className="absolute inset-0 opacity-[0.03]"
@@ -602,15 +602,15 @@ export default function Login() {
             {/* Logo & Title */}
             <div className="text-center">
               <div className="relative inline-block mb-8">
-                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#FF6B00]/20 to-[#FFB800]/5 flex items-center justify-center mx-auto border border-[#FF6B00]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
-                  <Crown className="h-12 w-12 text-[#FFB800]" />
+                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center mx-auto border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
+                  <Crown className="h-12 w-12 text-[#D946EF]" />
                 </div>
-                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#FFB800] animate-pulse" />
+                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#D946EF] animate-pulse" />
               </div>
               
               <h2 className="text-3xl font-black mb-3 uppercase tracking-tight text-white">
                 Kenapa Harus<br />
-                <span className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] bg-clip-text text-transparent">
                   Jadi Member?
                 </span>
               </h2>
@@ -626,29 +626,29 @@ export default function Login() {
                   icon: Zap, 
                   title: "Transaksi Instan 24/7", 
                   desc: "Top up diproses dalam hitungan detik, kapan saja",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: Shield, 
                   title: "Refund Mudah & Cepat", 
                   desc: "Garansi uang kembali 100% jika transaksi gagal",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: Gift, 
                   title: "Promo Eksklusif Member", 
                   desc: "Diskon dan cashback spesial setiap bulan",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: Wallet, 
                   title: "Biaya Admin Rendah", 
                   desc: "Biaya termurah dibanding platform lain",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
               ].map((item, i) => (
                 <div
@@ -669,7 +669,7 @@ export default function Login() {
 
             {/* Social Proof */}
             <div className="text-center pt-8 border-t border-white/10">
-              <div className="flex items-center justify-center gap-1 text-[#FFB800] mb-3">
+              <div className="flex items-center justify-center gap-1 text-[#D946EF] mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
                 ))}
@@ -677,7 +677,7 @@ export default function Login() {
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
                 Dipercaya{" "}
-                <span className="text-[#FFB800]">1,247+</span> pengguna aktif
+                <span className="text-[#D946EF]">1,247+</span> pengguna aktif
               </p>
               
               {/* Member Avatars */}
@@ -685,7 +685,7 @@ export default function Login() {
                 {["R", "S", "B", "D", "A"].map((letter, i) => (
                   <div
                     key={i}
-                    className="h-10 w-10 rounded-full border-2 border-[#0c101e] flex items-center justify-center text-xs font-black text-white shadow-xl"
+                    className="h-10 w-10 rounded-full border-2 border-[#0B0A10] flex items-center justify-center text-xs font-black text-white shadow-xl"
                     style={{
                       background: `hsl(${i * 40 + 20}, 70%, 50%)`,
                     }}
@@ -693,7 +693,7 @@ export default function Login() {
                     {letter}
                   </div>
                 ))}
-                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0c101e] backdrop-blur-md">
+                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0B0A10] backdrop-blur-md">
                   +1.2K
                 </div>
               </div>

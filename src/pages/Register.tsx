@@ -158,7 +158,7 @@ function FormInput({
     <div className="space-y-2">
       <Label htmlFor={id} className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/70">
         {label}
-        {required && <span className="text-[#FF6B00]">*</span>}
+        {required && <span className="text-[#8B5CF6]">*</span>}
         {!required && <span className="text-[10px] text-white/40 font-bold ml-1">(Opsional)</span>}
       </Label>
       <div className="relative">
@@ -169,7 +169,7 @@ function FormInput({
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 ${
+          className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
             error 
               ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
               : ""
@@ -248,14 +248,18 @@ export default function Register() {
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: (data) => {
       toast.success("Pendaftaran berhasil! 🎉", {
-        description: "Silakan verifikasi nomor WhatsApp Anda.",
-        duration: 3000,
+        description: "Mengalihkan ke halaman utama...",
+        duration: 2000,
       });
       if (formData.phone && data.token) {
         setSessionToken(data.token);
         requestOtpMutation.mutate({ phone: formData.phone, token: data.token });
+        setOtpMode(true);
+      } else {
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       }
-      setOtpMode(true);
     },
     onError: (error) => {
       const message = error.message || "Pendaftaran gagal";
@@ -329,7 +333,7 @@ export default function Register() {
         return;
       }
 
-      const botUrl = data.botUrl || `https://t.me/Topup_Kryz_bot?start=${data.code}`;
+      const botUrl = data.botUrl || `https://t.me/NickStore_bot?start=${data.code}`;
       setTelegramBotUrl(botUrl);
 
       // Open Telegram Bot in a new window/tab
@@ -491,24 +495,24 @@ export default function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden pt-24 pb-12">
       <SeoHead
-        title="Daftar Akaun Baharu | Topup Kryz-Net"
-        description="Daftar akaun baharu di Topup Kryz-Net untuk menikmati harga topup game termurah, bonus promo & perkhidmatan pantas 24/7."
+        title="Daftar Akaun Baharu | NickStore"
+        description="Daftar akaun baharu di NickStore untuk menikmati harga topup game termurah, bonus promo & perkhidmatan pantas 24/7."
       />
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#FF6B00]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#FFB800]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl shadow-2xl relative z-10">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl relative z-10">
         {/* Left - Form */}
         <div className="p-8 lg:p-12 flex flex-col justify-center">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
                 <Gamepad2 className="h-6 w-6 text-black" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Topup<span className="text-[#FF6B00]">.Kryz-Net</span></span>
+                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
                 <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
@@ -523,9 +527,9 @@ export default function Register() {
             {/* Quick Benefits */}
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Zap, text: "Proses Instan", color: "text-[#FFB800]" },
-                { icon: Shield, text: "100% Aman", color: "text-[#FFB800]" },
-                { icon: Gift, text: "Bonus Member", color: "text-[#FFB800]" },
+                { icon: Zap, text: "Proses Instan", color: "text-[#D946EF]" },
+                { icon: Shield, text: "100% Aman", color: "text-[#D946EF]" },
+                { icon: Gift, text: "Bonus Member", color: "text-[#D946EF]" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2 bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5">
                   <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
@@ -644,7 +648,7 @@ export default function Register() {
 
                 <div className="relative flex items-center justify-center my-4">
                   <div className="border-t border-white/10 w-full" />
-                  <span className="bg-[#0c101e] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
+                  <span className="bg-[#0B0A10] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
                     Atau Isi Borang Manual
                   </span>
                 </div>
@@ -730,13 +734,13 @@ export default function Register() {
                 checked={agreeTerms}
                 onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
                 disabled={isLoading}
-                className="mt-0.5 border-white/20 data-[state=checked]:bg-[#FF6B00] data-[state=checked]:border-[#FF6B00]"
+                className="mt-0.5 border-white/20 data-[state=checked]:bg-[#8B5CF6] data-[state=checked]:border-[#8B5CF6]"
               />
               <Label htmlFor="terms" className="text-xs font-black uppercase tracking-widest text-white/50 cursor-pointer leading-relaxed hover:text-white/70 transition-colors">
                 Saya menyetujui{" "}
                 <button
                   type="button"
-                  className="text-[#FFB800] hover:text-[#FF6B00] hover:underline"
+                  className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline"
                   onClick={() => toast.info("Syarat & Ketentuan akan ditampilkan di halaman terpisah")}
                 >
                   Syarat & Ketentuan
@@ -744,7 +748,7 @@ export default function Register() {
                 {" "}dan{" "}
                 <button
                   type="button"
-                  className="text-[#FFB800] hover:text-[#FF6B00] hover:underline"
+                  className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline"
                   onClick={() => toast.info("Kebijakan Privasi akan ditampilkan di halaman terpisah")}
                 >
                   Kebijakan Privasi
@@ -763,7 +767,7 @@ export default function Register() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FF6B00] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
+              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -796,7 +800,7 @@ export default function Register() {
               Sudah punya akun?{" "}
               <Link
                 to="/login"
-                className="text-[#FFB800] hover:text-[#FF6B00] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
+                className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
               >
                 Masuk disini
                 <ArrowRight className="h-3 w-3" />
@@ -817,8 +821,8 @@ export default function Register() {
         {/* Right - Benefits Panel */}
         <div className="hidden lg:flex flex-col justify-center p-12 bg-black/40 border-l border-white/10 relative overflow-hidden">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#FF6B00]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#FFB800]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
           
           {/* Grid Pattern */}
           <div className="absolute inset-0 opacity-[0.03]"
@@ -832,15 +836,15 @@ export default function Register() {
             {/* Logo & Title */}
             <div className="text-center">
               <div className="relative inline-block mb-8">
-                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#FF6B00]/20 to-[#FFB800]/5 flex items-center justify-center mx-auto border border-[#FF6B00]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
-                  <Crown className="h-12 w-12 text-[#FFB800]" />
+                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center mx-auto border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
+                  <Crown className="h-12 w-12 text-[#D946EF]" />
                 </div>
-                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#FFB800] animate-pulse" />
+                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#D946EF] animate-pulse" />
               </div>
               
               <h2 className="text-3xl font-black mb-3 uppercase tracking-tight text-white">
                 Kenapa Harus<br />
-                <span className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] bg-clip-text text-transparent">
                   Daftar Sekarang?
                 </span>
               </h2>
@@ -856,29 +860,29 @@ export default function Register() {
                   icon: Zap, 
                   title: "Transaksi Super Instan", 
                   desc: "Top up diproses dalam hitungan detik, 24/7 non-stop",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: Shield, 
                   title: "Garansi 100% Refund", 
                   desc: "Uang kembali penuh jika transaksi gagal",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: Gift, 
                   title: "Promo Eksklusif Member", 
                   desc: "Diskon dan cashback setiap bulan",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
                 { 
                   icon: TrendingUp, 
                   title: "Harga Termurah", 
                   desc: "Bandingkan sendiri, kami yang terendah",
-                  color: "text-[#FFB800]",
-                  bg: "bg-[#FFB800]/10 border-[#FFB800]/20"
+                  color: "text-[#D946EF]",
+                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
                 },
               ].map((item, i) => (
                 <div
@@ -899,7 +903,7 @@ export default function Register() {
 
             {/* Social Proof */}
             <div className="text-center pt-8 border-t border-white/10">
-              <div className="flex items-center justify-center gap-1 text-[#FFB800] mb-3">
+              <div className="flex items-center justify-center gap-1 text-[#D946EF] mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
                 ))}
@@ -907,7 +911,7 @@ export default function Register() {
               </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
                 Bergabung dengan{" "}
-                <span className="text-[#FFB800]">1,247+</span> member lainnya
+                <span className="text-[#D946EF]">1,247+</span> member lainnya
               </p>
               
               {/* Member Avatars */}
@@ -915,7 +919,7 @@ export default function Register() {
                 {["R", "S", "B", "D", "A"].map((letter, i) => (
                   <div
                     key={i}
-                    className="h-10 w-10 rounded-full border-2 border-[#0c101e] flex items-center justify-center text-xs font-black text-white shadow-xl"
+                    className="h-10 w-10 rounded-full border-2 border-[#0B0A10] flex items-center justify-center text-xs font-black text-white shadow-xl"
                     style={{
                       background: `hsl(${i * 40 + 20}, 70%, 50%)`,
                     }}
@@ -923,7 +927,7 @@ export default function Register() {
                     {letter}
                   </div>
                 ))}
-                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0c101e] backdrop-blur-md">
+                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0B0A10] backdrop-blur-md">
                   +1.2K
                 </div>
               </div>

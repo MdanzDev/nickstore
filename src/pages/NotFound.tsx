@@ -42,16 +42,16 @@ export default function NotFound() {
 
   const quickLinks = [
     { to: "/", label: "Beranda", icon: Home, color: "text-[#00c864]" },
-    { to: "/products", label: "Produk", icon: ShoppingCart, color: "text-[#FFB800]" },
+    { to: "/products", label: "Produk", icon: ShoppingCart, color: "text-[#D946EF]" },
     { to: "/deposit", label: "Top Up", icon: Zap, color: "text-primary" },
     { to: "/cek-transaksi", label: "Cek Transaksi", icon: Search, color: "text-purple-500" },
   ];
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative overflow-hidden bg-[#0B0F19]">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative overflow-hidden bg-[#0B0A10]">
       {/* Animated Background Gradients */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(249,115,22,0.08)_0%,transparent_70%)] rounded-full blur-3xl animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(139,92,246,0.08)_0%,transparent_70%)] rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(139,92,246,0.08)_0%,transparent_70%)] rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
@@ -92,7 +92,7 @@ export default function NotFound() {
           >
             {glitchText}
           </h1>
-          <div className="absolute inset-0 flex items-center justify-center drop-shadow-[0_0_30px_rgba(249,115,22,0.3)]">
+          <div className="absolute inset-0 flex items-center justify-center drop-shadow-[0_0_30px_rgba(139,92,246,0.3)]">
             <Gamepad2 className="h-20 w-20 md:h-24 md:w-24 text-primary/20 animate-spin" style={{ animationDuration: "8s" }} />
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function NotFound() {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-          <Button asChild size="lg" className="group bg-gradient-to-r from-primary to-[#FFB800] hover:from-primary/90 hover:to-[#FFB800]/90 text-black font-bold border-0 shadow-[0_0_30px_rgba(249,115,22,0.3)] h-12 rounded-xl transition-all hover:scale-105">
+          <Button asChild size="lg" className="group bg-gradient-to-r from-primary to-[#D946EF] hover:from-primary/90 hover:to-[#D946EF]/90 text-black font-bold border-0 shadow-[0_0_30px_rgba(139,92,246,0.3)] h-12 rounded-xl transition-all hover:scale-105">
             <Link to="/">
               <Home className="mr-2 h-4 w-4" />
               Kembali ke Beranda
@@ -153,7 +153,7 @@ export default function NotFound() {
             href="https://wa.me/60137345871"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-primary hover:text-[#FFB800] font-bold transition-colors"
+            className="text-primary hover:text-[#D946EF] font-bold transition-colors"
           >
             Chat Admin
           </a>

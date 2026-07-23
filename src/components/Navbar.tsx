@@ -75,11 +75,11 @@ const NavLinkItem = memo(function NavLinkItem({
       aria-current={isActive ? "page" : undefined}
     >
       {isActive && (
-        <span className="absolute inset-0 rounded-full bg-[#FF6B00]/20 border border-[#FF6B00]/30 shadow-[0_0_15px_rgba(255,107,0,0.2)]" />
+        <span className="absolute inset-0 rounded-full bg-[#8B5CF6]/20 border border-[#8B5CF6]/30 shadow-[0_0_15px_rgba(255,107,0,0.2)]" />
       )}
       <Icon
         className={`h-4 w-4 relative z-10 transition-colors ${
-          isActive ? "text-[#FF6B00]" : "group-hover:text-[#FFB800]"
+          isActive ? "text-[#8B5CF6]" : "group-hover:text-[#D946EF]"
         }`}
       />
       <span className="relative z-10">{label}</span>
@@ -107,7 +107,7 @@ const UserMenu = memo(function UserMenu({
           className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
           aria-label="User menu"
         >
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center text-black text-xs font-black shadow-[0_0_10px_rgba(255,107,0,0.5)]">
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center text-black text-xs font-black shadow-[0_0_10px_rgba(255,107,0,0.5)]">
             {user.name?.charAt(0)?.toUpperCase() || "U"}
           </div>
           <span className="hidden sm:inline text-xs font-bold tracking-wider text-white max-w-[80px] truncate uppercase">
@@ -118,7 +118,7 @@ const UserMenu = memo(function UserMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-60 mt-2 bg-[#0c101e]/95 backdrop-blur-xl border-white/10 text-white"
+        className="w-60 mt-2 bg-[#0B0A10]/95 backdrop-blur-xl border-white/10 text-white"
       >
         <div className="px-4 py-4 border-b border-white/10">
           <p className="text-xs font-black uppercase tracking-widest text-white">{user.name}</p>
@@ -135,7 +135,7 @@ const UserMenu = memo(function UserMenu({
             onClick={() => navigate("/dashboard")}
             className="gap-3 cursor-pointer focus:bg-white/10 focus:text-white py-2"
           >
-            <LayoutDashboard className="h-4 w-4 text-[#FFB800]" />
+            <LayoutDashboard className="h-4 w-4 text-[#D946EF]" />
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest">Dashboard</p>
               <p className="text-[9px] font-bold tracking-wider text-white/50">Lihat ringkasan akun</p>
@@ -270,7 +270,7 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-500 ${
         scrolled
-          ? "border-b border-white/5 bg-[#0B0F19]/80 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+          ? "border-b border-white/5 bg-[#0B0A10]/80 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
           : "border-b border-transparent bg-transparent"
       }`}
     >
@@ -278,11 +278,11 @@ export default function Navbar() {
         {/* Logo + Desktop Nav */}
         <div className="flex items-center gap-8">
           <Link to="/" className="flex items-center gap-2 shrink-0 group" aria-label="Home">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center shadow-glow group-hover:shadow-glow-lg transition-all duration-300">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 flex items-center justify-center shadow-glow group-hover:shadow-glow-lg transition-all duration-300">
               <Gamepad2 className="h-5 w-5 text-white animate-pulse-glow" />
             </div>
             <span className="hidden sm:inline text-xl font-black tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-              Topup<span className="text-primary drop-shadow-[0_0_8px_rgba(249,115,22,0.5)]">.Kryz-net</span>
+              Nick<span>Store</span>
             </span>
           </Link>
 
@@ -307,7 +307,7 @@ export default function Navbar() {
             variant="ghost"
             size="sm"
             onClick={() => navigate("/products")}
-            className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-[#FFB800] hover:text-[#FF6B00] hover:bg-[#FFB800]/10 rounded-lg border border-transparent hover:border-[#FFB800]/20"
+            className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-[#D946EF] hover:text-[#8B5CF6] hover:bg-[#D946EF]/10 rounded-lg border border-transparent hover:border-[#D946EF]/20"
             aria-label="Promo"
           >
             <Gift className="h-4 w-4" />
@@ -328,7 +328,7 @@ export default function Navbar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-28 mt-2 bg-[#0c101e]/95 backdrop-blur-xl border-white/10 text-white"
+              className="w-28 mt-2 bg-[#0B0A10]/95 backdrop-blur-xl border-white/10 text-white"
             >
               <DropdownMenuItem
                 onClick={() => setCurrency("MYR")}
@@ -356,7 +356,7 @@ export default function Navbar() {
                 aria-label="Notifications (unread)"
               >
                 <Bell className="h-4 w-4" />
-                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#0B0F19] shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#0B0A10] shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
               </button>
 
               {/* Balance Indicator */}
@@ -393,7 +393,7 @@ export default function Navbar() {
               </Button>
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black hover:scale-[1.02] border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all text-[10px] font-black uppercase tracking-widest rounded-lg px-4"
+                className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black hover:scale-[1.02] border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all text-[10px] font-black uppercase tracking-widest rounded-lg px-4"
                 onClick={() => navigate("/register")}
               >
                 Daftar
@@ -417,7 +417,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div
           ref={mobileMenuRef}
-          className="lg:hidden border-t border-white/5 bg-[#0B0F19]/95 backdrop-blur-2xl animate-in slide-in-from-top-2 absolute w-full left-0 top-[72px] shadow-2xl"
+          className="lg:hidden border-t border-white/5 bg-[#0B0A10]/95 backdrop-blur-2xl animate-in slide-in-from-top-2 absolute w-full left-0 top-[72px] shadow-2xl"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation"
@@ -523,7 +523,7 @@ export default function Navbar() {
                     Masuk
                   </Button>
                   <Button
-                    className="w-full h-12 rounded-xl text-[11px] font-black uppercase tracking-widest bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] hover:scale-[1.02] transition-all"
+                    className="w-full h-12 rounded-xl text-[11px] font-black uppercase tracking-widest bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] hover:scale-[1.02] transition-all"
                     onClick={() => navigate("/register")}
                   >
                     Daftar

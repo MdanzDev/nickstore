@@ -152,7 +152,7 @@ export default function AdminVouchers() {
               onClick={() => setActiveTab("announcements")}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "announcements"
-                  ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+                  ? "bg-violet-600 text-white shadow-md shadow-orange-500/20"
                   : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -216,7 +216,7 @@ export default function AdminVouchers() {
                     <select
                       value={voucherForm.type}
                       onChange={(e) => setVoucherForm({ ...voucherForm, type: e.target.value as any })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0F19] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
                     >
                       <option value="percentage">Peratusan (%)</option>
                       <option value="fixed">Jumlah Tetap (MYR)</option>
@@ -248,7 +248,7 @@ export default function AdminVouchers() {
                       type="date"
                       value={voucherForm.expiryDate}
                       onChange={(e) => setVoucherForm({ ...voucherForm, expiryDate: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0F19] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
                     />
                   </div>
                 </div>
@@ -327,7 +327,7 @@ export default function AdminVouchers() {
               </h3>
               <button
                 onClick={() => setShowCreateAnno(!showCreateAnno)}
-                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-orange-500 text-white font-bold text-xs shadow-md shadow-orange-500/10"
+                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-violet-600 text-white font-bold text-xs shadow-md shadow-orange-500/10"
               >
                 <Plus className="h-4 w-4" /> Cipta Pengumuman Baru
               </button>
@@ -360,7 +360,7 @@ export default function AdminVouchers() {
                     <select
                       value={annoForm.type}
                       onChange={(e) => setAnnoForm({ ...annoForm, type: e.target.value as any })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0F19] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
                     >
                       <option value="info">Info (Biru)</option>
                       <option value="warning">Amaran / Maintenance (Kuning)</option>
@@ -370,7 +370,7 @@ export default function AdminVouchers() {
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
                   <button onClick={() => setShowCreateAnno(false)} className="px-4 py-2 rounded-xl bg-white/5 text-xs text-white/70 font-semibold">Batal</button>
-                  <button onClick={handleCreateAnno} className="px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-bold">Simpan Pengumuman</button>
+                  <button onClick={handleCreateAnno} className="px-4 py-2 rounded-xl bg-violet-600 text-white text-xs font-bold">Simpan Pengumuman</button>
                 </div>
               </div>
             )}

@@ -109,7 +109,7 @@ export default function InvoiceDetail() {
   const paymentMethodText = qrData?.qrImage ? 'QRIS ALL PAY' : (order.type === 'deposit' ? 'QRIS ALL PAY' : 'SALDO AKUN');
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-[#0B0F19]">
+    <div className="min-h-screen py-16 px-4 bg-[#0B0A10]">
       <div className="max-w-6xl mx-auto">
         <Link to="/cek-transaksi" className="inline-flex items-center text-muted-foreground hover:text-white transition-colors mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -140,7 +140,7 @@ export default function InvoiceDetail() {
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 transition-all duration-500 shadow-xl ${
                   step >= s.id 
                     ? "bg-primary text-white border-2 border-primary/50 shadow-primary/20" 
-                    : step === -1 ? "bg-white/5 text-white/30 border-2 border-white/5" : "bg-[#0B0F19] text-white/50 border-2 border-white/10"
+                    : step === -1 ? "bg-white/5 text-white/30 border-2 border-white/5" : "bg-[#0B0A10] text-white/50 border-2 border-white/10"
                 }`}>
                   {s.id === 3 && step === 3 ? <Loader2 className="w-5 h-5 animate-spin" /> : s.icon}
                 </div>

@@ -25,12 +25,12 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 
 const navItems = [
-  { path: "/admin", label: "Overview", icon: LayoutDashboard, color: "#FF6B00" },
+  { path: "/admin", label: "Overview", icon: LayoutDashboard, color: "#8B5CF6" },
   { path: "/admin/orders", label: "Pesanan & Transaksi", icon: ShoppingCart, color: "#38BDF8" },
   { path: "/admin/products", label: "Katalog Produk & Game", icon: Package, color: "#34D399" },
   { path: "/admin/api-management", label: "Pengurusan API", icon: Code2, color: "#3B82F6" },
   { path: "/admin/users", label: "Pengguna", icon: Users, color: "#A78BFA" },
-  { path: "/admin/vouchers", label: "Kupon & Pengumuman", icon: Ticket, color: "#FFB800" },
+  { path: "/admin/vouchers", label: "Kupon & Pengumuman", icon: Ticket, color: "#D946EF" },
   { path: "/admin/settings", label: "Pengaturan", icon: Settings, color: "#94A3B8" },
 ];
 
@@ -122,7 +122,7 @@ const LIQUID_GLASS_STYLE = `
     color: rgba(255,255,255,0.3) !important;
   }
   .lg-btn-primary {
-    background: linear-gradient(135deg, #FF6B00, #FFB800);
+    background: linear-gradient(135deg, #8B5CF6, #D946EF);
     color: black;
     font-weight: 700;
     border: none;
@@ -150,14 +150,14 @@ const LIQUID_GLASS_STYLE = `
     background: rgba(255,255,255,0.03) !important;
   }
   .lg-badge-success { background: rgba(0,200,100,0.15); color: #00c864; border: 1px solid rgba(0,200,100,0.25); }
-  .lg-badge-warning { background: rgba(255,184,0,0.15); color: #FFB800; border: 1px solid rgba(255,184,0,0.25); }
+  .lg-badge-warning { background: rgba(255,184,0,0.15); color: #D946EF; border: 1px solid rgba(255,184,0,0.25); }
   .lg-badge-danger  { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.25); }
   .lg-badge-info    { background: rgba(56,189,248,0.15); color: #38BDF8; border: 1px solid rgba(56,189,248,0.25); }
   .lg-badge-muted   { background: rgba(100,116,139,0.15); color: #94A3B8; border: 1px solid rgba(100,116,139,0.25); }
   .lg-separator { border-color: rgba(255,255,255,0.06); }
   .lg-label { color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
   .lg-value { color: white; font-weight: 600; }
-  select.lg-input option { background: #0c101e; color: white; }
+  select.lg-input option { background: #0B0A10; color: white; }
   textarea.lg-input { background: rgba(255,255,255,0.04) !important; }
 `;
 
@@ -180,11 +180,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B0F19" }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0B0A10" }}>
         <style>{LIQUID_GLASS_STYLE}</style>
         <div className="text-center">
           <div className="w-16 h-16 rounded-2xl lg-card mx-auto flex items-center justify-center mb-4">
-            <Shield className="h-8 w-8 text-[#FF6B00] animate-pulse" />
+            <Shield className="h-8 w-8 text-[#8B5CF6] animate-pulse" />
           </div>
           <p className="text-white/50 text-sm">Memverifikasi akses admin...</p>
         </div>
@@ -205,17 +205,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       const Icon = currentItem.icon;
       return <Icon className="h-4 w-4" style={{ color: currentItem.color }} />;
     }
-    return <Shield className="h-4 w-4 text-[#FF6B00]" />;
+    return <Shield className="h-4 w-4 text-[#8B5CF6]" />;
   };
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden" style={{ background: "#0B0F19" }}>
+    <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden" style={{ background: "#0B0A10" }}>
       <style>{LIQUID_GLASS_STYLE}</style>
 
       {/* Floating liquid blobs */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="lg-blob absolute w-[700px] h-[700px] rounded-full opacity-[0.07]"
-          style={{ background: "radial-gradient(circle, #FF6B00 0%, #FF4500 40%, transparent 70%)", top: "-15%", left: "20%" }} />
+          style={{ background: "radial-gradient(circle, #8B5CF6 0%, #FF4500 40%, transparent 70%)", top: "-15%", left: "20%" }} />
         <div className="lg-blob-2 absolute w-[600px] h-[600px] rounded-full opacity-[0.06]"
           style={{ background: "radial-gradient(circle, #6366F1 0%, #8B5CF6 40%, transparent 70%)", bottom: "0%", right: "10%" }} />
         <div className="lg-blob absolute w-[400px] h-[400px] rounded-full opacity-[0.05]"
@@ -238,13 +238,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Logo area */}
           <div className={`p-4 flex items-center gap-3 border-b lg-separator relative ${collapsed ? "justify-center" : ""}`}>
             <div className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,107,0,0.4)]"
-              style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+              style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
               <Shield className="h-5 w-5 text-black" />
             </div>
             {!collapsed && (
               <div>
                 <p className="text-xs font-black uppercase tracking-widest text-white">Admin Panel</p>
-                <p className="text-[9px] text-white/40 font-bold tracking-wider mt-0.5">Topup.Kryz-net</p>
+                <p className="text-[9px] text-white/40 font-bold tracking-wider mt-0.5">NickStore</p>
               </div>
             )}
             <button onClick={() => setMobileOpen(false)} className="absolute top-3 right-3 p-1 rounded-lg hover:bg-white/10 lg:hidden text-white/50">
@@ -299,7 +299,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="mt-2 pt-2 border-t lg-separator">
                 <div className="flex items-center gap-2 px-3 py-2 rounded-xl">
                   <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-black text-black shrink-0 shadow-[0_0_10px_rgba(255,107,0,0.4)]"
-                    style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+                    style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
                     {(user as any).name?.charAt(0)?.toUpperCase() || "A"}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -339,14 +339,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="flex items-center gap-3">
                 <div className="hidden md:flex items-center gap-2">
-                  <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-[#FF6B00] bg-[#FF6B00]/10 border border-[#FF6B00]/20 px-2.5 py-1 rounded-full">
+                  <span className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-[#8B5CF6] bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 px-2.5 py-1 rounded-full">
                     <Zap className="h-2.5 w-2.5" /> Admin Mode
                   </span>
                 </div>
                 {user && (
                   <div className="flex items-center gap-2 pl-3 border-l lg-separator">
                     <div className="h-7 w-7 rounded-full flex items-center justify-center text-xs font-black text-black shrink-0 shadow-[0_0_10px_rgba(255,107,0,0.3)]"
-                      style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+                      style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
                       {(user as any).name?.charAt(0)?.toUpperCase() || "A"}
                     </div>
                     <div className="hidden sm:block text-right">

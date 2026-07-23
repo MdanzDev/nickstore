@@ -156,7 +156,7 @@ function StatusBadge({ status }: { status: string }) {
       case "pending":
         return { 
           label: "Pending", 
-          className: "bg-[#FFB800]/10 text-[#FFB800] border-[#FFB800]/20 shadow-[0_0_10px_rgba(255,184,0,0.1)]",
+          className: "bg-[#D946EF]/10 text-[#D946EF] border-[#D946EF]/20 shadow-[0_0_10px_rgba(255,184,0,0.1)]",
           icon: Clock
         };
       case "processing":
@@ -177,7 +177,7 @@ function StatusBadge({ status }: { status: string }) {
       case "refund":
         return { 
           label: "Refund", 
-          className: "bg-[#FF6B00]/10 text-[#FF6B00] border-[#FF6B00]/20 shadow-[0_0_10px_rgba(255,107,0,0.1)]",
+          className: "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20 shadow-[0_0_10px_rgba(255,107,0,0.1)]",
           icon: AlertCircle
         };
       default:
@@ -255,7 +255,7 @@ export default function UserDashboard() {
       case "gold":
         return {
           label: "Gold Partner",
-          className: "bg-gradient-to-r from-[#FFB800] to-[#FF6B00] text-black border-none shadow-[0_0_15px_rgba(255,107,0,0.3)]",
+          className: "bg-gradient-to-r from-[#D946EF] to-[#8B5CF6] text-black border-none shadow-[0_0_15px_rgba(255,107,0,0.3)]",
           icon: Star,
         };
       default:
@@ -298,14 +298,14 @@ export default function UserDashboard() {
             <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-white">Dashboard</h1>
             <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mt-1">
               Selamat datang kembali,{" "}
-              <span className="text-[#FFB800]">{user?.name || "User"}</span>
+              <span className="text-[#D946EF]">{user?.name || "User"}</span>
             </p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleRefresh}
-            className="border-white/10 hover:border-[#FF6B00]/50 hover:bg-[#FF6B00]/10 text-white"
+            className="border-white/10 hover:border-[#8B5CF6]/50 hover:bg-[#8B5CF6]/10 text-white"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             <span className="text-[10px] font-black uppercase tracking-widest">Refresh</span>
@@ -317,13 +317,13 @@ export default function UserDashboard() {
           {QUICK_ACTIONS.map((action, i) => (
             <button
               key={i}
-              className="p-5 flex flex-col items-center gap-3 rounded-2xl bg-[#0c101e]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group hover:border-[#FF6B00]/30"
+              className="p-5 flex flex-col items-center gap-3 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group hover:border-[#8B5CF6]/30"
               onClick={() => navigate(action.path)}
             >
               <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)]`}>
                 <action.icon className="h-6 w-6 text-white" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[#FFB800] transition-colors">{action.label}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[#D946EF] transition-colors">{action.label}</span>
               <div className="text-[8px] font-black uppercase tracking-widest text-white/40 bg-white/5 px-2 py-0.5 rounded">
                 {action.badge}
               </div>
@@ -334,15 +334,15 @@ export default function UserDashboard() {
         {/* Balance & Profile */}
         <div className="grid md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
           {/* Profile Card */}
-          <div className="p-6 rounded-2xl bg-[#0c101e]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.1)]">
+          <div className="p-6 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.1)]">
             <div className="flex items-center gap-5">
               <div className="relative">
-                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
                   <span className="text-2xl font-black text-black">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </span>
                 </div>
-                <div className="absolute -bottom-2 -right-2 h-6 w-6 rounded-xl bg-emerald-400 flex items-center justify-center shadow-[0_0_10px_rgba(52,211,153,0.5)] border-2 border-[#0B0F19]">
+                <div className="absolute -bottom-2 -right-2 h-6 w-6 rounded-xl bg-emerald-400 flex items-center justify-center shadow-[0_0_10px_rgba(52,211,153,0.5)] border-2 border-[#0B0A10]">
                   <Check className="h-3.5 w-3.5 text-black" />
                 </div>
               </div>
@@ -360,13 +360,13 @@ export default function UserDashboard() {
           </div>
 
           {/* Balance Card */}
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0c101e]/80 to-[#1a1310]/80 border border-[#FF6B00]/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex items-center shadow-[0_0_30px_rgba(255,107,0,0.15)] group">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#FF6B00]/10 rounded-full blur-2xl group-hover:bg-[#FF6B00]/20 transition-colors" />
-            <div className="absolute bottom-0 right-10 w-24 h-24 bg-[#FFB800]/10 rounded-full blur-xl translate-y-1/2" />
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0B0A10]/80 to-[#1a1310]/80 border border-[#8B5CF6]/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex items-center shadow-[0_0_30px_rgba(255,107,0,0.15)] group">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-[#8B5CF6]/10 rounded-full blur-2xl group-hover:bg-[#8B5CF6]/20 transition-colors" />
+            <div className="absolute bottom-0 right-10 w-24 h-24 bg-[#D946EF]/10 rounded-full blur-xl translate-y-1/2" />
             
             <div className="relative z-10 w-full flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-black text-[#FFB800] uppercase tracking-widest flex items-center gap-2">
+                <p className="text-[10px] font-black text-[#D946EF] uppercase tracking-widest flex items-center gap-2">
                   <Wallet className="h-3.5 w-3.5" /> 
                   Saldo Akun
                 </p>
@@ -378,7 +378,7 @@ export default function UserDashboard() {
                 </p>
               </div>
               
-              <div className="hidden sm:flex h-20 w-20 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)] group-hover:scale-110 transition-transform duration-500">
+              <div className="hidden sm:flex h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)] group-hover:scale-110 transition-transform duration-500">
                 <Wallet className="h-10 w-10 text-black" />
               </div>
             </div>
@@ -389,11 +389,11 @@ export default function UserDashboard() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <Target className="h-4 w-4 text-[#FFB800]" />
+              <Target className="h-4 w-4 text-[#D946EF]" />
               Ringkasan Transaksi
             </h2>
             <div className="px-3 py-1 rounded bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-white/60 flex items-center">
-              <Clock className="h-3 w-3 mr-1.5 text-[#FFB800]" />
+              <Clock className="h-3 w-3 mr-1.5 text-[#D946EF]" />
               Real-time
             </div>
           </div>
@@ -409,8 +409,8 @@ export default function UserDashboard() {
               icon={<Clock className="h-5 w-5" />} 
               label="Menunggu" 
               value={stats.pending} 
-              color="text-[#FFB800]"
-              bgColor="bg-[#FFB800]/[0.02]"
+              color="text-[#D946EF]"
+              bgColor="bg-[#D946EF]/[0.02]"
             />
             <StatCard 
               icon={<Zap className="h-5 w-5" />} 
@@ -441,13 +441,13 @@ export default function UserDashboard() {
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <History className="h-4 w-4 text-[#FFB800]" />
+              <History className="h-4 w-4 text-[#D946EF]" />
               Riwayat Transaksi Terbaru
             </h2>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-[#FF6B00] hover:text-[#FFB800] font-black uppercase tracking-widest text-[10px] hover:bg-white/[0.02]"
+              className="text-[#8B5CF6] hover:text-[#D946EF] font-black uppercase tracking-widest text-[10px] hover:bg-white/[0.02]"
               onClick={() => navigate("/dashboard/transactions")}
             >
               Lihat Semua 
@@ -455,7 +455,7 @@ export default function UserDashboard() {
             </Button>
           </div>
 
-          <div className="rounded-[1.5rem] overflow-hidden bg-[#0c101e]/80 border border-white/10 shadow-2xl backdrop-blur-xl">
+          <div className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border border-white/10 shadow-2xl backdrop-blur-xl">
             {orders.length === 0 ? (
               <div className="p-16 text-center">
                 <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/5 mb-6 shadow-inner">
@@ -465,7 +465,7 @@ export default function UserDashboard() {
                 <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-8 max-w-sm mx-auto">
                   Anda belum melakukan transaksi. Mulai top up sekarang dan dapatkan benefit member!
                 </p>
-                <Button onClick={() => navigate("/products")} className="bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform h-12 px-8">
+                <Button onClick={() => navigate("/products")} className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform h-12 px-8">
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Mulai Belanja
                 </Button>
@@ -509,7 +509,7 @@ export default function UserDashboard() {
                             </span>
                             <button
                               onClick={() => handleCopy(String(order.id), String(order.id))}
-                              className="text-white/40 hover:text-[#FFB800] transition-colors"
+                              className="text-white/40 hover:text-[#D946EF] transition-colors"
                               aria-label="Salin invoice"
                             >
                               {copiedField === String(order.id) ? (
@@ -536,7 +536,7 @@ export default function UserDashboard() {
                         </td>
                         
                         <td className="p-5 hidden md:table-cell">
-                          <span className="font-mono text-[10px] font-bold text-[#FFB800] bg-[#FFB800]/10 px-2.5 py-1 rounded">
+                          <span className="font-mono text-[10px] font-bold text-[#D946EF] bg-[#D946EF]/10 px-2.5 py-1 rounded">
                             {order.gameUserId || "-"}
                             {order.zoneId ? ` (${order.zoneId})` : ""}
                           </span>
@@ -582,7 +582,7 @@ export default function UserDashboard() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[9px] font-black uppercase tracking-widest text-[#FF6B00] hover:text-[#FFB800] hover:bg-white/5 h-8"
+                  className="text-[9px] font-black uppercase tracking-widest text-[#8B5CF6] hover:text-[#D946EF] hover:bg-white/5 h-8"
                   onClick={() => navigate("/dashboard/transactions")}
                 >
                   Lihat Semua
@@ -600,8 +600,8 @@ export default function UserDashboard() {
               icon: Zap,
               title: "Proses Instan",
               desc: "Transaksi diproses otomatis",
-              color: "text-[#FFB800]",
-              bg: "bg-gradient-to-br from-[#FFB800]/20 to-[#FF6B00]/20 border border-[#FFB800]/30",
+              color: "text-[#D946EF]",
+              bg: "bg-gradient-to-br from-[#D946EF]/20 to-[#8B5CF6]/20 border border-[#D946EF]/30",
             },
             {
               icon: Shield,
@@ -618,7 +618,7 @@ export default function UserDashboard() {
               bg: "bg-gradient-to-br from-cyan-400/20 to-blue-600/20 border border-cyan-400/30",
             },
           ].map((item, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-[#0c101e]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+            <div key={i} className="p-5 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
               <div className="flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${item.bg}`}>
                   <item.icon className={`h-5 w-5 ${item.color}`} />

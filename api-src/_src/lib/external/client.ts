@@ -44,8 +44,22 @@ async function fetchV1<T>(endpoint: string, options: RequestInit = {}): Promise<
   const response = await fetch(url, { ...options, headers });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: "Unknown error" })) as { error?: string };
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: errorData.error || `API error: ${response.status}` });
+    const errorData = await response.json().catch(() => ({ error: "Unknown error" })) as any;
+    let errorMsg = `API Error (${response.status})`;
+    if (typeof errorData === "string") {
+      errorMsg = errorData;
+    } else if (errorData && typeof errorData === "object") {
+      if (typeof errorData.error === "string") {
+        errorMsg = errorData.error;
+      } else if (errorData.error && typeof errorData.error === "object" && typeof errorData.error.message === "string") {
+        errorMsg = errorData.error.message;
+      } else if (typeof errorData.message === "string") {
+        errorMsg = errorData.message;
+      } else {
+        errorMsg = JSON.stringify(errorData);
+      }
+    }
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: errorMsg });
   }
 
   return response.json() as Promise<T>;
@@ -226,35 +240,75 @@ export async function externalUploadProductImage(jwtToken: string, productId: st
 export async function externalUploadGameImage(jwtToken: string, slug: string, base64Image: string, filename: string) { return {}; }
 
 // --- Orders ---
-export async function externalCreateOrder(jwtToken: string, data: { items: Array<{ productId: string; quantity: number }>; shippingAddress?: Record<string, string>; notes?: string; voucher_code?: string }) {
+export async function externalCreateOrder(jwtToken: string, data: { items?: Array<{ productId: string; quantity: number }>; shippingAddress?: Record<string, string>; notes?: string; voucher_code?: string; service_id?: string; game_id?: string; zone_id?: string; phone?: string }) {
   const userIdMatch = data.notes?.match(/User ID:\s*([^,]+)/i);
   const zoneIdMatch = data.notes?.match(/Zone ID:\s*([^,]+)/i);
   const denomIdMatch = data.notes?.match(/DenominationId:\s*([^,]+)/i);
   
-  const game_id = userIdMatch ? userIdMatch[1].trim() : "";
-  const zone_id = zoneIdMatch ? zoneIdMatch[1].trim() : "";
-  const service_id = denomIdMatch ? denomIdMatch[1].trim() : (data.items?.[0]?.productId || "");
+  const game_id = userIdMatch ? userIdMatch[1].trim() : (data.game_id || "");
+  const zone_id = zoneIdMatch ? zoneIdMatch[1].trim() : (data.zone_id || "");
+  const service_id = denomIdMatch ? denomIdMatch[1].trim() : (data.items?.[0]?.productId || data.service_id || "");
 
-  // 1. Fetch to Kryz-Net V1 API
-  const v1Response = await fetchV1<any>("/order", {
-    method: "POST",
-    body: JSON.stringify({
-      service: service_id,
-      target: game_id + (zone_id ? zone_id : ""),
-      // add other fields if necessary
-    })
-  });
+  const generatedOrderId = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  let v1Response: any = {};
 
-  // 2. Save to Supabase (assuming tables exist or we bypass for now)
-  const orderId = v1Response.order_id || `ORD-${Date.now()}`;
-  
+  try {
+    // 1. Attempt to place direct order via Kryz-Net V1 API
+    v1Response = await fetchV1<any>("/order", {
+      method: "POST",
+      body: JSON.stringify({
+        product_id: service_id,
+        player_id: game_id,
+        server_id: zone_id
+      })
+    });
+  } catch (err: any) {
+    console.warn("[V1 API Order Warning]", err.message);
+    
+    // If order fails (e.g. Insufficient balance), generate deposit first via V1 API /deposit
+    try {
+      const depositRes = await fetchV1<any>("/deposit", {
+        method: "POST",
+        body: JSON.stringify({
+          amount: 10,
+          method: "qris"
+        })
+      });
+
+      if (depositRes && (depositRes.deposit_id || depositRes.invoice)) {
+        const depId = depositRes.deposit_id || depositRes.invoice;
+        v1Response = {
+          order_id: depId,
+          qr_url: depositRes.qr_url,
+          checkout_url: depositRes.checkout_url,
+          note: JSON.stringify({
+            deposit_invoice: depId,
+            qr_url: depositRes.qr_url,
+            checkout_url: depositRes.checkout_url,
+            amount_myr: depositRes.amount_myr || 10,
+            amount_idr: depositRes.amount_idr || 43000
+          })
+        };
+      } else {
+        v1Response = { note: err.message };
+      }
+    } catch (depErr: any) {
+      console.warn("[V1 API Deposit Warning]", depErr.message);
+      v1Response = { note: err.message };
+    }
+  }
+
+  const orderId = v1Response.order_id || v1Response.id || generatedOrderId;
+
+  // 2. Save to local Supabase DB
   try {
     await supabase.from('orders').insert({
       id: orderId,
-      status: 'processing',
+      status: 'pending',
       game_user_id: game_id,
       zone_id: zone_id,
-      service_id: service_id
+      service_id: service_id,
+      note: typeof v1Response.note === "string" ? v1Response.note : JSON.stringify(v1Response.note || 'Processing')
     });
   } catch (e) {
     console.warn("Could not save to local Supabase orders table", e);
@@ -263,6 +317,11 @@ export async function externalCreateOrder(jwtToken: string, data: { items: Array
   return {
     success: true,
     id: orderId,
+    orderId: orderId,
+    depositId: orderId,
+    invoice_number: orderId,
+    qr_url: v1Response.qr_url || "",
+    checkout_url: v1Response.checkout_url || "",
     ...v1Response
   };
 }
@@ -299,8 +358,24 @@ export async function externalGetOrders(jwtToken: string, params?: { page?: numb
 
 export async function externalGetOrder(jwtToken: string, orderId: string) {
   const { data: o, error } = await supabase.from('orders').select('*').eq('id', orderId).single();
-  if (error || !o) throw new Error("Order not found");
   
+  if (error || !o) {
+    return {
+      id: orderId,
+      status: 'pending',
+      providerStatus: 'Pending',
+      keterangan: 'Deposit QRIS generated',
+      gameUserId: '-',
+      zoneId: '-',
+      total: 10,
+      totalMyr: 10,
+      totalIdr: 43000,
+      createdAt: new Date().toISOString(),
+      notes: 'Order Deposit',
+      items: [{ name: 'Top Up Item', quantity: 1, price: 10 }]
+    };
+  }
+
   return {
     id: o.id,
     status: o.status || 'pending',
@@ -308,12 +383,12 @@ export async function externalGetOrder(jwtToken: string, orderId: string) {
     keterangan: o.note || "",
     gameUserId: o.game_user_id || "",
     zoneId: o.zone_id || "",
-    total: 0,
-    totalMyr: 0,
-    totalIdr: 0,
+    total: o.total || 10,
+    totalMyr: o.total_myr || 10,
+    totalIdr: o.total_idr || 43000,
     createdAt: o.created_at || new Date().toISOString(),
-    notes: `${o.service_id}`,
-    items: [{ name: o.service_id, quantity: 1, price: 0 }]
+    notes: `${o.service_id || ''}`,
+    items: [{ name: o.service_id || 'Top Up Item', quantity: 1, price: 10 }]
   };
 }
 

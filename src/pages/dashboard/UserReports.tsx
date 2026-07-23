@@ -12,7 +12,7 @@ export default function UserReports() {
           </p>
         </div>
 
-        <div className="rounded-[1.5rem] overflow-hidden bg-[#0c101e]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl">
+        <div className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl">
           <div className="p-16 text-center">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/5 mb-6 shadow-inner">
               <BarChart3 className="h-10 w-10 text-white/20" />

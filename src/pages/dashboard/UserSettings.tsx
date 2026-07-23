@@ -135,21 +135,21 @@ export default function UserSettings() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {/* Profile */}
-          <div className="p-8 rounded-[1.5rem] h-fit bg-[#0c101e]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
+          <div className="p-8 rounded-[1.5rem] h-fit bg-[#0B0A10]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
             <h2 className="text-sm font-black uppercase tracking-tight text-white mb-6 flex items-center gap-2">
-              <User className="h-4 w-4 text-[#FF6B00]" />
+              <User className="h-4 w-4 text-[#8B5CF6]" />
               Profil Saya
             </h2>
             <div className="space-y-6">
               <div className="flex items-center gap-5">
-                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
                   <span className="text-3xl font-black text-black">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </span>
                 </div>
                 <div>
-                  <Button variant="outline" size="sm" className="h-9 rounded-xl border-white/10 hover:border-[#FF6B00]/50 hover:bg-[#FF6B00]/10 text-white transition-colors">
-                    <Camera className="mr-2 h-3.5 w-3.5 text-[#FFB800]" />
+                  <Button variant="outline" size="sm" className="h-9 rounded-xl border-white/10 hover:border-[#8B5CF6]/50 hover:bg-[#8B5CF6]/10 text-white transition-colors">
+                    <Camera className="mr-2 h-3.5 w-3.5 text-[#D946EF]" />
                     <span className="text-[10px] font-black uppercase tracking-widest">Ubah Avatar</span>
                   </Button>
                   <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-2">Maksimal ukuran gambar 2MB.</p>
@@ -157,40 +157,40 @@ export default function UserSettings() {
               </div>
 
               <div className="space-y-3">
-                <Label htmlFor="username" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Username</Label>
-                <Input id="username" value={name} onChange={(e) => setName(e.target.value)} disabled={otpMode} className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors disabled:opacity-50" />
+                <Label htmlFor="username" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Username</Label>
+                <Input id="username" value={name} onChange={(e) => setName(e.target.value)} disabled={otpMode} className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors disabled:opacity-50" />
               </div>
 
               <div className="space-y-3 mt-4">
-                <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Emel</Label>
-                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={otpMode} className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors disabled:opacity-50" />
+                <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Emel</Label>
+                <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={otpMode} className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors disabled:opacity-50" />
               </div>
 
               {!otpMode ? (
                 <div className="space-y-3">
-                  <Label htmlFor="phone" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Nomor Telepon / WhatsApp</Label>
-                  <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08XXXXXXXXXX" className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors placeholder:text-white/20" />
+                  <Label htmlFor="phone" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Nomor Telepon / WhatsApp</Label>
+                  <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="08XXXXXXXXXX" className="h-11 rounded-xl bg-white/5 border border-white/10 px-4 text-xs font-black uppercase tracking-widest text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors placeholder:text-white/20" />
                   {phone && phone !== user?.phone && (
                     <p className="text-[9px] font-black uppercase tracking-widest text-amber-500 mt-2">Nomor telepon baru memerlukan verifikasi OTP WhatsApp.</p>
                   )}
                 </div>
               ) : (
-                <div className="space-y-3 bg-[#FF6B00]/5 p-5 rounded-2xl border border-[#FF6B00]/20">
-                  <Label htmlFor="otp" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Masukkan Kode OTP</Label>
+                <div className="space-y-3 bg-[#8B5CF6]/5 p-5 rounded-2xl border border-[#8B5CF6]/20">
+                  <Label htmlFor="otp" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Masukkan Kode OTP</Label>
                   <Input 
                     id="otp" 
                     value={otpCode} 
                     onChange={(e) => setOtpCode(e.target.value)} 
                     placeholder="123456" 
                     type="number"
-                    className="h-11 rounded-xl bg-black/20 border border-white/10 px-4 text-center text-lg font-black tracking-[0.5em] text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors placeholder:text-white/20 placeholder:tracking-normal"
+                    className="h-11 rounded-xl bg-black/20 border border-white/10 px-4 text-center text-lg font-black tracking-[0.5em] text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors placeholder:text-white/20 placeholder:tracking-normal"
                   />
                   <p className="text-[9px] font-black uppercase tracking-widest text-white/50 mt-2">
                     Kode 6-digit telah dikirim ke WhatsApp <span className="text-white">{phone}</span>.
                   </p>
                   <div className="flex gap-3 mt-5">
                     <Button 
-                      className="h-11 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform flex-1"
+                      className="h-11 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform flex-1"
                       onClick={handleVerifyOtp}
                       disabled={verifyOtpMutation.isPending}
                     >
@@ -210,7 +210,7 @@ export default function UserSettings() {
 
               {!otpMode && (
                 <Button
-                  className="w-full h-12 mt-4 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform"
+                  className="w-full h-12 mt-4 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform"
                   onClick={handleSave}
                   disabled={updateMutation.isPending || requestOtpMutation.isPending}
                 >
@@ -223,13 +223,13 @@ export default function UserSettings() {
 
           {/* Account Info & Telegram Link */}
           <div className="space-y-6">
-            <div className="p-8 rounded-[1.5rem] bg-[#0c101e]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
+            <div className="p-8 rounded-[1.5rem] bg-[#0B0A10]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
               <h2 className="text-sm font-black uppercase tracking-tight text-white mb-6">Informasi Akun</h2>
               <div className="space-y-5">
                 <div>
                   <Label className="text-[9px] font-black uppercase tracking-widest text-white/50">ID Pengguna</Label>
                   <div className="flex items-center mt-2">
-                    <code className="bg-black/20 border border-white/5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#FFB800] break-all">{user?.id}</code>
+                    <code className="bg-black/20 border border-white/5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-[#D946EF] break-all">{user?.id}</code>
                     <Button variant="ghost" size="icon" className="h-8 w-8 ml-2 text-white/40 hover:text-white hover:bg-white/5" onClick={() => handleCopy(user?.id || "")}>
                       {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
                     </Button>
@@ -256,7 +256,7 @@ export default function UserSettings() {
               </div>
             </div>
 
-            <div className="p-8 rounded-[1.5rem] bg-[#0c101e]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
+            <div className="p-8 rounded-[1.5rem] bg-[#0B0A10]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
               <h2 className="text-sm font-black uppercase tracking-tight text-white mb-2 flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-[#0088cc]" />
                 Tautkan Telegram (Auto Sync)
@@ -297,7 +297,7 @@ export default function UserSettings() {
               ) : (
                 <div className="space-y-4">
                   <a
-                    href={`https://t.me/Topup_Kryz_bot?start=link_${user?.id}`}
+                    href={`https://t.me/NickStore_bot?start=link_${user?.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-[#0088cc] hover:bg-[#0077bb] text-white font-black uppercase tracking-widest text-[10px] transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(0,136,204,0.3)]"
@@ -307,8 +307,8 @@ export default function UserSettings() {
                   </a>
 
                   <div className="p-3 rounded-xl bg-white/[0.02] border border-white/5 space-y-2 text-center">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Atau hantar arahan ini ke @Topup_Kryz_bot:</p>
-                    <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold text-[#FFB800] bg-black/40 p-2 rounded-lg border border-white/10">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Atau hantar arahan ini ke @NickStore_bot:</p>
+                    <div className="flex items-center justify-center gap-2 font-mono text-xs font-bold text-[#D946EF] bg-black/40 p-2 rounded-lg border border-white/10">
                       <code>/start link_{user?.id}</code>
                       <Button
                         variant="ghost"
@@ -332,7 +332,7 @@ export default function UserSettings() {
               )}
             </div>
 
-            <div className="p-8 rounded-[1.5rem] bg-[#0c101e]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
+            <div className="p-8 rounded-[1.5rem] bg-[#0B0A10]/80 border border-white/10 shadow-[0_0_30px_rgba(255,107,0,0.05)] backdrop-blur-xl hover:-translate-y-1 transition-transform duration-300">
               <h2 className="text-sm font-black uppercase tracking-tight text-white mb-2">Ubah Kata Laluan</h2>
               <p className="text-[9px] font-black uppercase tracking-widest text-white/50 mb-6">
                 Pastikan akaun anda selamat dengan menggunakan kata laluan yang kuat.
@@ -340,7 +340,7 @@ export default function UserSettings() {
               
               <div className="space-y-5">
                 <div className="space-y-3">
-                  <Label htmlFor="new-password" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Kata Laluan Baru</Label>
+                  <Label htmlFor="new-password" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Kata Laluan Baru</Label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
                     <Input
@@ -349,7 +349,7 @@ export default function UserSettings() {
                       placeholder="MIN. 8 AKSARA"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="pl-11 pr-11 h-11 rounded-xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors placeholder:text-white/20"
+                      className="pl-11 pr-11 h-11 rounded-xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors placeholder:text-white/20"
                       disabled={updatePasswordMutation.isPending}
                     />
                     <button
@@ -364,7 +364,7 @@ export default function UserSettings() {
                 </div>
                 
                 <div className="space-y-3">
-                  <Label htmlFor="confirm-password" className="text-[9px] font-black uppercase tracking-widest text-[#FFB800]">Sahkan Kata Laluan</Label>
+                  <Label htmlFor="confirm-password" className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Sahkan Kata Laluan</Label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
                     <Input
@@ -376,7 +376,7 @@ export default function UserSettings() {
                         setConfirmPassword(e.target.value);
                         updatePasswordMutation.reset();
                       }}
-                      className={`pl-11 pr-11 h-11 rounded-xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-white focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 transition-colors placeholder:text-white/20 ${confirmPassword && newPassword !== confirmPassword ? '!border-red-500/50 focus:!ring-red-500/50' : ''}`}
+                      className={`pl-11 pr-11 h-11 rounded-xl bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest text-white focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 transition-colors placeholder:text-white/20 ${confirmPassword && newPassword !== confirmPassword ? '!border-red-500/50 focus:!ring-red-500/50' : ''}`}
                       disabled={updatePasswordMutation.isPending}
                     />
                     <button
@@ -408,7 +408,7 @@ export default function UserSettings() {
                 )}
 
                 <Button
-                  className="w-full h-12 rounded-xl bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform mt-4 disabled:opacity-50"
+                  className="w-full h-12 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] transition-transform mt-4 disabled:opacity-50"
                   onClick={handleUpdatePassword}
                   disabled={updatePasswordMutation.isPending || !newPassword || !confirmPassword || newPassword !== confirmPassword || newPassword.length < 8}
                 >

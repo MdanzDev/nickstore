@@ -115,29 +115,29 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden pt-24 pb-12">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#FF6B00]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#FFB800]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
       <div className="w-full max-w-md relative z-10">
-        <div className="rounded-[2rem] border border-white/10 bg-[#0c101e]/80 backdrop-blur-xl shadow-2xl p-8 lg:p-10">
+        <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl p-8 lg:p-10">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8 justify-center">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#FF6B00] to-[#FFB800] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
                 <Gamepad2 className="h-6 w-6 text-black" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Topup<span className="text-[#FF6B00]">.Kryz-Net</span></span>
+                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
                 <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
 
             <div className="flex items-center justify-center mb-6">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#FF6B00]/20 to-[#FFB800]/5 flex items-center justify-center border border-[#FF6B00]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
+              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
                 {hasRecoveryToken ? (
-                  <ShieldCheck className="h-10 w-10 text-[#FFB800]" />
+                  <ShieldCheck className="h-10 w-10 text-[#D946EF]" />
                 ) : (
-                  <KeyRound className="h-10 w-10 text-[#FFB800]" />
+                  <KeyRound className="h-10 w-10 text-[#D946EF]" />
                 )}
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function ResetPassword() {
               {/* New Password */}
               <div className="space-y-2">
                 <Label htmlFor="new-password" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Password Baru <span className="text-[#FF6B00]">*</span>
+                  Password Baru <span className="text-[#8B5CF6]">*</span>
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
@@ -174,7 +174,7 @@ export default function ResetPassword() {
                       setNewPassword(e.target.value);
                       setPasswordError("");
                     }}
-                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
+                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
                     disabled={updatePasswordMutation.isPending}
                     autoComplete="new-password"
                     autoFocus
@@ -193,7 +193,7 @@ export default function ResetPassword() {
               {/* Confirm Password */}
               <div className="space-y-2">
                 <Label htmlFor="confirm-password" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Sahkan Password <span className="text-[#FF6B00]">*</span>
+                  Sahkan Password <span className="text-[#8B5CF6]">*</span>
                 </Label>
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
@@ -206,7 +206,7 @@ export default function ResetPassword() {
                       setConfirmPassword(e.target.value);
                       setPasswordError("");
                     }}
-                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
+                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
                     disabled={updatePasswordMutation.isPending}
                     autoComplete="new-password"
                   />
@@ -245,7 +245,7 @@ export default function ResetPassword() {
 
               <Button
                 type="submit"
-                className="w-full h-14 mt-4 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FF6B00] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
+                className="w-full h-14 mt-4 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
                 disabled={updatePasswordMutation.isPending}
               >
                 {updatePasswordMutation.isPending ? (
@@ -272,7 +272,7 @@ export default function ResetPassword() {
               <div>
                 <p className="text-xl font-black text-white uppercase tracking-tight">Email Terkirim!</p>
                 <p className="text-[10px] text-white/50 mt-3 font-medium uppercase tracking-widest leading-relaxed">
-                  Cek inbox <span className="text-[#FFB800]">{email}</span> untuk tautan reset password. Periksa juga folder spam.
+                  Cek inbox <span className="text-[#D946EF]">{email}</span> untuk tautan reset password. Periksa juga folder spam.
                 </p>
               </div>
               <div className="pt-4 space-y-3">
@@ -288,7 +288,7 @@ export default function ResetPassword() {
                 </Button>
                 <Button 
                   variant="ghost" 
-                  className="w-full h-12 rounded-xl bg-transparent text-[#FFB800] hover:bg-white/[0.05] hover:text-[#FF6B00] text-[10px] font-black tracking-widest uppercase transition-colors" 
+                  className="w-full h-12 rounded-xl bg-transparent text-[#D946EF] hover:bg-white/[0.05] hover:text-[#8B5CF6] text-[10px] font-black tracking-widest uppercase transition-colors" 
                   onClick={() => navigate("/login")}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
@@ -304,7 +304,7 @@ export default function ResetPassword() {
             >
               <div className="space-y-2">
                 <Label htmlFor="reset-email" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Alamat Email <span className="text-[#FF6B00]">*</span>
+                  Alamat Email <span className="text-[#8B5CF6]">*</span>
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
@@ -314,7 +314,7 @@ export default function ResetPassword() {
                     placeholder="contoh@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/50"
+                    className="pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50"
                     disabled={forgotMutation.isPending}
                     autoComplete="email"
                     autoFocus
@@ -324,7 +324,7 @@ export default function ResetPassword() {
 
               <Button
                 type="submit"
-                className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:from-[#FFB800] hover:to-[#FF6B00] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
+                className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
                 disabled={forgotMutation.isPending}
               >
                 {forgotMutation.isPending ? (
@@ -343,7 +343,7 @@ export default function ResetPassword() {
               <div className="flex items-center justify-center pt-4 border-t border-white/10 mt-6">
                 <Link
                   to="/login"
-                  className="text-[10px] font-black uppercase tracking-widest text-[#FFB800] hover:text-[#FF6B00] transition-colors flex items-center gap-2"
+                  className="text-[10px] font-black uppercase tracking-widest text-[#D946EF] hover:text-[#8B5CF6] transition-colors flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Kembali ke Login

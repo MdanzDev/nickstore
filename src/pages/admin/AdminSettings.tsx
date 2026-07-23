@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-function SectionCard({ title, icon, iconColor = "#FF6B00", children }: { title: string; icon: React.ReactNode; iconColor?: string; children: React.ReactNode }) {
+function SectionCard({ title, icon, iconColor = "#8B5CF6", children }: { title: string; icon: React.ReactNode; iconColor?: string; children: React.ReactNode }) {
   return (
     <div className="lg-card rounded-2xl p-6 space-y-4">
       <div className="flex items-center gap-2 pb-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -80,7 +80,7 @@ export default function AdminSettings() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-black text-white flex items-center gap-2">
-              <Settings className="h-6 w-6 text-[#FF6B00]" /> Pengaturan Platform
+              <Settings className="h-6 w-6 text-[#8B5CF6]" /> Pengaturan Platform
             </h1>
             <p className="text-sm text-white/40 mt-1">Konfigurasi markup, API keys, dan akses admin</p>
           </div>
@@ -94,7 +94,7 @@ export default function AdminSettings() {
 
         {isLoading ? (
           <div className="py-24 text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#FF6B00]" />
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#8B5CF6]" />
             <p className="text-sm text-white/40 mt-3">Memuat konfigurasi sistem...</p>
           </div>
         ) : (
@@ -111,7 +111,7 @@ export default function AdminSettings() {
             </SectionCard>
 
             {/* Auto Upgrade Config */}
-            <SectionCard title="Rules Upgrade Tier & Spends (MYR)" icon={<TrendingUp />} iconColor="#FF6B00">
+            <SectionCard title="Rules Upgrade Tier & Spends (MYR)" icon={<TrendingUp />} iconColor="#8B5CF6">
               <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div>
                   <p className="text-xs font-black text-white">Auto Upgrade System</p>
@@ -127,7 +127,7 @@ export default function AdminSettings() {
             </SectionCard>
 
             {/* Provider Credentials */}
-            <SectionCard title="Kredensial Provider (Mytopupku)" icon={<Key />} iconColor="#FFB800">
+            <SectionCard title="Kredensial Provider (Mytopupku)" icon={<Key />} iconColor="#D946EF">
               <p className="text-xs text-white/40">Untuk sinkronisasi produk & pemesanan real-time.</p>
               <div className="space-y-3">
                 <LgInput label="Provider API Key" type="password" value={providerApiKey} onChange={(e) => setProviderApiKey(e.target.value)} placeholder="Masukkan API Key" disabled={isSaving} />

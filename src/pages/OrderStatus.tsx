@@ -156,7 +156,7 @@ const STATUS_CFG: Record<string, {
    LOADING SCREEN
 ───────────────────────────────────────────── */
 const LoadingScreen = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0C10] gap-8">
+  <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0A10] gap-8">
     <motion.div 
       animate={{ 
         rotate: 360,
@@ -227,7 +227,7 @@ export default function OrderStatus() {
   if (isLoading) return <LoadingScreen />;
 
   if (!o) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0C10] text-white gap-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0A10] text-white gap-4">
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -275,7 +275,7 @@ export default function OrderStatus() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen pb-20 font-sans overflow-hidden relative" style={{ background: "#0B0C10", color: "#E0E2E5" }}>
+    <div ref={containerRef} className="min-h-screen pb-20 font-sans overflow-hidden relative" style={{ background: "#0B0A10", color: "#E0E2E5" }}>
       
       {/* Background Grid */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03]">

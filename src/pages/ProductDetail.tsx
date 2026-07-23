@@ -220,7 +220,7 @@ const DenominationCard = memo(({
       {/* Popular Badge */}
       {isPopular && (
         <div className="absolute -top-2.5 right-2">
-          <Badge className="text-[9px] font-bold px-2 py-0 bg-gradient-to-r from-[#FF6B00] to-[#FFB800] border-0 text-black">
+          <Badge className="text-[9px] font-bold px-2 py-0 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] border-0 text-black">
             <Flame className="h-2.5 w-2.5 mr-1" />
             TERLARIS
           </Badge>
@@ -731,10 +731,10 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0F19]">
+    <div className="min-h-screen bg-[#0B0A10]">
       <SeoHead
         title={`Topup ${product.name} Murah & Instant`}
-        description={`Beli item & topup ${product.name} automatik 24/7 dengan harga termurah di Topup Kryz-Net. Proses pantas, telus & selamat.`}
+        description={`Beli item & topup ${product.name} automatik 24/7 dengan harga termurah di NickStore. Proses pantas, telus & selamat.`}
         image={product.images && product.images[0] ? product.images[0] : undefined}
       />
       <div className="container mx-auto px-4 py-8 max-w-[1400px]">
@@ -764,14 +764,14 @@ export default function ProductDetail() {
         <header className="mb-8 relative rounded-[32px] overflow-hidden p-8 sm:p-10" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
           {/* Ambient Glow */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-30"
-            style={{ background: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 60%)", transform: "translate(30%, -30%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%)", transform: "translate(30%, -30%)" }} />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
             style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%)", transform: "translate(-30%, 30%)" }} />
 
           <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
             {/* Image Container */}
             <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-[28px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)] ring-1 ring-white/10 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-orange-400/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-violet-400/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {product.images?.[0] ? (
                 getImageUrl(String(product.images[0])).startsWith("http") || getImageUrl(String(product.images[0])).startsWith("/") ? (
                   <img
@@ -782,7 +782,7 @@ export default function ProductDetail() {
                     decoding="async"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://placehold.co/200x200/1a1a1a/FF8C00?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
+                      target.src = `https://placehold.co/200x200/1a1a1a/8B5CF6?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
                     }}
                   />
                 ) : (
@@ -799,7 +799,7 @@ export default function ProductDetail() {
               {(product as any).popular && (
                 <div className="absolute top-3 left-3 z-20">
                   <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-black shadow-lg"
-                    style={{ background: "linear-gradient(135deg, #FF6B00, #FFB800)" }}>
+                    style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
                     <Flame className="w-3 h-3" /> HOT
                   </span>
                 </div>
@@ -839,7 +839,7 @@ export default function ProductDetail() {
             <div className="hidden lg:grid grid-cols-1 gap-3 shrink-0">
               {[
                 { icon: Shield, label: "Aman", value: "100%", color: "#38BDF8" },
-                { icon: Clock, label: "Instan", value: "< 1 menit", color: "#FFB800" },
+                { icon: Clock, label: "Instan", value: "< 1 menit", color: "#D946EF" },
               ].map((stat, i) => (
                 <div key={i} className="flex items-center gap-4 px-6 py-4 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${stat.color}15` }}>
@@ -863,7 +863,7 @@ export default function ProductDetail() {
               <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-orange-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                       1
                     </div>
                     <CardTitle className="text-lg font-bold text-white tracking-wide">Data Player</CardTitle>
@@ -927,7 +927,7 @@ export default function ProductDetail() {
                         value={formData.userId}
                         onChange={(e) => handleInputChange("userId", e.target.value)}
                         placeholder="Contoh: myrobloxuser123"
-                        className={`w-full bg-[#0c101e]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                        className={`w-full bg-[#0B0A10]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
                       {errors.userId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.userId}</p>}
                     </div>
@@ -941,7 +941,7 @@ export default function ProductDetail() {
                         value={formData.robloxPassword}
                         onChange={(e) => handleInputChange("robloxPassword", e.target.value)}
                         placeholder="Masukkan password akun"
-                        className={`w-full bg-[#0c101e]/80 border ${errors.robloxPassword ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                        className={`w-full bg-[#0B0A10]/80 border ${errors.robloxPassword ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
                       {errors.robloxPassword && <p className="text-red-400 text-xs mt-2 ml-1">{errors.robloxPassword}</p>}
                     </div>
@@ -960,7 +960,7 @@ export default function ProductDetail() {
                             value={formData[field]}
                             onChange={(e) => handleInputChange(field, e.target.value)}
                             placeholder="Contoh: 1234abcd"
-                            className={`w-full bg-[#0c101e]/80 border ${errors[field] ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-4 py-3.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                            className={`w-full bg-[#0B0A10]/80 border ${errors[field] ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-4 py-3.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                           />
                           {errors[field] && <p className="text-red-400 text-xs mt-2 ml-1">{errors[field]}</p>}
                         </div>
@@ -982,7 +982,7 @@ export default function ProductDetail() {
                           value={formData.userId}
                           onChange={(e) => handleInputChange("userId", e.target.value)}
                           placeholder={product.userIdPlaceholder || `Masukkan ${product.userIdLabel || "User ID"}`}
-                          className={`w-full bg-[#0c101e]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
+                          className={`w-full bg-[#0B0A10]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
                         />
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                           {formData.userId && (
@@ -1007,7 +1007,7 @@ export default function ProductDetail() {
                         value={formData.zoneId}
                         onChange={(e) => handleInputChange("zoneId", e.target.value)}
                         placeholder={product.zoneIdPlaceholder || `Masukkan ${product.zoneIdLabel || "Zone ID"}`}
-                        className={`w-full bg-[#0c101e]/80 border ${errors.zoneId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                        className={`w-full bg-[#0B0A10]/80 border ${errors.zoneId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
                       {errors.zoneId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.zoneId}</p>}
                     </div>
@@ -1048,7 +1048,7 @@ export default function ProductDetail() {
               <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-orange-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                       2
                     </div>
                     <CardTitle className="text-lg font-bold text-white tracking-wide">Pilih Nominal</CardTitle>
@@ -1084,8 +1084,8 @@ export default function ProductDetail() {
                     {/* Popular denominations highlighted */}
                     {popularDenoms.length > 0 && (
                       <div className="mb-6">
-                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500 mb-3 tracking-widest uppercase flex items-center gap-1.5">
-                          <Flame className="h-3.5 w-3.5 text-orange-400" />
+                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500 mb-3 tracking-widest uppercase flex items-center gap-1.5">
+                          <Flame className="h-3.5 w-3.5 text-violet-400" />
                           PALING DIMINATI
                         </p>
                         <div className="grid grid-cols-2 gap-3">
@@ -1126,7 +1126,7 @@ export default function ProductDetail() {
             <Card className="animate-in slide-in-from-left-4 fade-in duration-500 delay-150 rounded-3xl overflow-hidden" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
               <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-orange-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                     3
                   </div>
                   <CardTitle className="text-lg font-bold text-white tracking-wide">Pilih Pembayaran</CardTitle>
@@ -1140,7 +1140,7 @@ export default function ProductDetail() {
                       !isAuthenticated 
                         ? "border-white/5 bg-white/[0.01] opacity-70 cursor-not-allowed" 
                         : paymentMethod === 'balance'
-                          ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(249,115,22,0.2)] scale-[1.02]"
+                          ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(139,92,246,0.2)] scale-[1.02]"
                           : "border-white/5 bg-white/[0.02] shadow-xl hover:border-primary/30 hover:scale-[1.01]"
                     }`}
                   >
@@ -1149,7 +1149,7 @@ export default function ProductDetail() {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className={`font-bold text-[15px] ${paymentMethod === 'balance' ? 'text-primary' : 'text-white group-hover:text-primary transition-colors'}`}>Saldo Orion</p>
+                        <p className={`font-bold text-[15px] ${paymentMethod === 'balance' ? 'text-primary' : 'text-white group-hover:text-primary transition-colors'}`}>Saldo NickStore</p>
                         {!isAuthenticated && (
                           <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-white/10 font-bold border-white/10">
                             LOGIN DULU
@@ -1159,7 +1159,7 @@ export default function ProductDetail() {
                       <p className="text-xs font-medium text-white/40 uppercase tracking-widest">Bayar instan</p>
                     </div>
                     {paymentMethod === 'balance' && isAuthenticated && (
-                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(249,115,22,0.5)]">
+                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
                         <Check className="h-3.5 w-3.5 text-black font-bold" />
                       </div>
                     )}
@@ -1169,7 +1169,7 @@ export default function ProductDetail() {
                     onClick={() => setPaymentMethod('qris')}
                     className={`relative p-5 rounded-2xl border-2 text-left transition-all duration-300 flex items-center gap-4 group ${
                       paymentMethod === 'qris'
-                        ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(249,115,22,0.2)] scale-[1.02]"
+                        ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(139,92,246,0.2)] scale-[1.02]"
                         : "border-white/5 bg-white/[0.02] shadow-xl hover:border-primary/30 hover:scale-[1.01]"
                     }`}
                   >
@@ -1181,7 +1181,7 @@ export default function ProductDetail() {
                       <p className="text-xs font-medium text-white/40 uppercase tracking-widest">OVO, DANA, GOPAY</p>
                     </div>
                     {paymentMethod === 'qris' && (
-                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(249,115,22,0.5)]">
+                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
                         <Check className="h-3.5 w-3.5 text-black font-bold" />
                       </div>
                     )}
@@ -1201,7 +1201,7 @@ export default function ProductDetail() {
                         placeholder="Contoh: 081234567890"
                         value={guestPhone}
                         onChange={(e) => setGuestPhone(e.target.value)}
-                        className={`w-full bg-[#0c101e]/80 border ${!guestPhone ? 'border-white/10 group-hover:border-white/20' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-14`}
+                        className={`w-full bg-[#0B0A10]/80 border ${!guestPhone ? 'border-white/10 group-hover:border-white/20' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-14`}
                         maxLength={15}
                       />
                     </div>
@@ -1231,7 +1231,7 @@ export default function ProductDetail() {
                 </Badge>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
                   4.99
                 </span>
                 <div>
@@ -1253,7 +1253,7 @@ export default function ProductDetail() {
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
               
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-orange-400 text-white text-sm font-black flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                   4
                 </div>
                 <CardTitle className="text-lg font-bold text-white tracking-wide">Ringkasan Pesanan</CardTitle>
@@ -1330,7 +1330,7 @@ export default function ProductDetail() {
                           value={voucherCode}
                           onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
                           onKeyDown={(e) => e.key === "Enter" && handleApplyVoucher()}
-                          className="text-sm font-bold uppercase pr-8 bg-[#0c101e]/80 border-white/10 rounded-xl h-11 focus:border-primary/50"
+                          className="text-sm font-bold uppercase pr-8 bg-[#0B0A10]/80 border-white/10 rounded-xl h-11 focus:border-primary/50"
                           maxLength={20}
                           disabled={!selectedNominal}
                         />
@@ -1377,7 +1377,7 @@ export default function ProductDetail() {
                   
                   <div className="flex justify-between items-end pt-4 mt-4 border-t border-white/5">
                     <span className="text-sm font-bold uppercase tracking-widest text-white/50 mb-1">Total Pembayaran</span>
-                    <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                    <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
                       {selectedItem ? formattedTotal : "-"}
                     </span>
                   </div>
@@ -1399,7 +1399,7 @@ export default function ProductDetail() {
               <Button
                 className={`hidden lg:flex w-full mt-6 text-black font-black h-14 rounded-xl text-base tracking-wide transition-all duration-300 ${
                   isOrderValid 
-                    ? "bg-gradient-to-r from-[#FF6B00] to-[#FFB800] hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(249,115,22,0.4)] border-0" 
+                    ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] border-0" 
                     : "bg-white/10 text-white/30 border border-white/5 hover:bg-white/10"
                 }`}
                 disabled={!isOrderValid}
@@ -1464,18 +1464,18 @@ export default function ProductDetail() {
       </div>
 
       {/* Mobile Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#0c101e]/90 backdrop-blur-xl border-t border-white/10 lg:hidden z-40 pb-safe shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#0B0A10]/90 backdrop-blur-xl border-t border-white/10 lg:hidden z-40 pb-safe shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
         <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
           <div className="min-w-0 flex-1">
             <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-0.5">Total Pembayaran</p>
-            <p className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500 truncate" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <p className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500 truncate" style={{ fontFamily: "'Syne', sans-serif" }}>
               {selectedItem ? formattedTotal : "-"}
             </p>
           </div>
           <Button
             className={`shrink-0 h-12 px-6 rounded-xl font-black tracking-wide transition-all ${
               isOrderValid
-                ? "bg-gradient-to-r from-[#FF6B00] to-[#FFB800] text-black shadow-[0_0_20px_rgba(249,115,22,0.4)] border-0"
+                ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black shadow-[0_0_20px_rgba(139,92,246,0.4)] border-0"
                 : "bg-white/10 text-white/30 border border-white/5"
             }`}
             disabled={!isOrderValid}
@@ -1495,13 +1495,13 @@ export default function ProductDetail() {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <DialogContent className="max-w-md animate-in zoom-in-95 bg-[#0B0F19] border-white/10 p-0 overflow-hidden rounded-[2rem]">
+        <DialogContent className="max-w-md animate-in zoom-in-95 bg-[#0B0A10] border-white/10 p-0 overflow-hidden rounded-[2rem]">
           {/* Decorative Top Glow */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
           
           <DialogHeader className="p-6 pb-2">
             <DialogTitle className="flex items-center gap-3 text-xl font-black text-white">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-violet-400 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
                 <Shield className="h-5 w-5 text-white" aria-hidden="true" />
               </div>
               Konfirmasi Pesanan
@@ -1538,7 +1538,7 @@ export default function ProductDetail() {
               },
               { 
                 label: "Pembayaran", 
-                value: paymentMethod === 'balance' ? "Saldo Orion" : "QRIS All Payment",
+                value: paymentMethod === 'balance' ? "Saldo NickStore" : "QRIS All Payment",
                 icon: Wallet
               },
             ].filter(Boolean).map((item: any, idx, arr) => (
@@ -1562,7 +1562,7 @@ export default function ProductDetail() {
             
             <div className="flex items-center justify-between py-5 bg-white/[0.02] border-y border-white/5 -mx-6 px-6 mt-2">
               <span className="font-bold text-xs uppercase tracking-widest text-white/50">Total Bayar</span>
-              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-yellow-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
                 {formattedTotal}
               </span>
             </div>
@@ -1617,7 +1617,7 @@ export default function ProductDetail() {
                 Batal
               </Button>
               <Button
-                className="flex-[2] h-12 rounded-xl font-black bg-gradient-to-r from-primary to-orange-400 text-black border-0 hover:scale-[1.02] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all"
+                className="flex-[2] h-12 rounded-xl font-black bg-gradient-to-r from-primary to-violet-400 text-black border-0 hover:scale-[1.02] shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all"
                 onClick={handleConfirmOrder}
                 disabled={createOrderMutation.isPending || guestOrderMutation.isPending || !paymentMethod || (paymentMethod === "balance" && !isBalanceSufficient)}
               >

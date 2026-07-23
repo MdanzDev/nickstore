@@ -7,7 +7,7 @@ export default function MainLayout() {
   const isAppLayout = location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/admin');
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0F19] text-white">
+    <div className="min-h-screen flex flex-col bg-[#0B0A10] text-white">
       <div className={isAppLayout ? "hidden lg:block" : "block"}>
         <Navbar />
       </div>
