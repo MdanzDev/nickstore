@@ -773,17 +773,23 @@ export default function ProductDetail() {
             <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-[28px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)] ring-1 ring-white/10 group">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-orange-400/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {product.images?.[0] ? (
-                <img
-                  src={getImageUrl(String(product.images[0]))}
-                  alt={String(product.name)}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
-                  decoding="async"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = `https://placehold.co/200x200/1a1a1a/FF8C00?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
-                  }}
-                />
+                getImageUrl(String(product.images[0])).startsWith("http") || getImageUrl(String(product.images[0])).startsWith("/") ? (
+                  <img
+                    src={getImageUrl(String(product.images[0]))}
+                    alt={String(product.name)}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = `https://placehold.co/200x200/1a1a1a/FF8C00?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-white/5 flex items-center justify-center text-7xl group-hover:scale-110 transition-transform duration-700">
+                    {getImageUrl(String(product.images[0]))}
+                  </div>
+                )
               ) : (
                 <div className="w-full h-full bg-white/5 flex items-center justify-center">
                   <Gamepad2 className="h-16 w-16 text-white/20" aria-hidden="true" />

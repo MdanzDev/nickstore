@@ -367,13 +367,19 @@ const ProductCard = memo(function ProductCard({ product, index }: { product: any
       >
         <div className="aspect-[4/3] overflow-hidden relative">
           {img && !imgError ? (
-            <img
-              src={img}
-              alt={name}
-              loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] group-hover:rotate-1"
-              onError={() => setImgError(true)}
-            />
+            img.startsWith("http") || img.startsWith("/") ? (
+              <img
+                src={img}
+                alt={name}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] group-hover:rotate-1"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
+                {img}
+              </div>
+            )
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
               <Gamepad2 className="w-12 h-12 text-white/10 group-hover:text-primary/40 transition-colors duration-500" />

@@ -23077,8 +23077,8 @@ async function externalUploadAvatar(jwtToken, userId, file2) {
   return { avatar: "" };
 }
 async function externalGetProducts(params) {
-  const result = await fetchV1("/products");
-  const games = result.data || result || [];
+  const result = await fetchV1("/public/games");
+  const games = result.games || result.data || result || [];
   let products = games.map((g) => ({
     id: g.slug || g.id || g.name,
     slug: g.slug || g.id || g.name,
@@ -23088,7 +23088,7 @@ async function externalGetProducts(params) {
     icon: g.icon || g.image || "",
     price: 0,
     stock: 9999,
-    denominationsCount: g.services?.length || 0,
+    denominationsCount: g.total_services || g.services?.length || 0,
     isActive: true
   }));
   if (params?.search) {
@@ -23101,17 +23101,31 @@ async function externalGetProducts(params) {
   };
 }
 async function externalGetProduct(productId) {
-  const result = await externalGetProducts();
-  const game = result.data.find((p) => p.id === productId);
-  if (!game) throw new Error("Game not found");
-  return {
-    id: game.slug,
-    name: game.name,
-    category: game.category || "game",
-    images: [game.icon || ""],
-    description: "",
-    isActive: true
-  };
+  try {
+    const result = await fetchV1(`/public/games/${productId}`);
+    const game = result.game || result;
+    if (!game) throw new Error("Game not found");
+    return {
+      id: game.slug || game.id || game.name,
+      name: game.name,
+      category: game.category || "game",
+      images: [game.icon || ""],
+      description: game.description || "",
+      isActive: true
+    };
+  } catch (err) {
+    const result = await externalGetProducts();
+    const game = result.data.find((p) => p.id === productId);
+    if (!game) throw new Error("Game not found");
+    return {
+      id: game.slug,
+      name: game.name,
+      category: game.category || "game",
+      images: [game.icon || ""],
+      description: "",
+      isActive: true
+    };
+  }
 }
 async function externalCreateProduct(jwtToken, data) {
   return {};
@@ -23279,18 +23293,26 @@ async function externalDeleteVoucher(jwtToken, voucherId) {
   return { success: true, message: "Deleted" };
 }
 async function externalGetDenominations(productId, jwtToken) {
-  const result = await fetchV1("/products");
-  const games = result.data || result || [];
-  const game = games.find((g) => g.slug === productId || g.id === productId);
-  if (!game || !game.services) return { success: true, data: [] };
-  const mapped = game.services.map((s) => ({
-    id: s.id || s.code,
-    productId,
-    name: s.name,
-    price: s.price || 0,
-    priceIdr: convertMyrToIdr(s.price || 0)
-  }));
-  return { success: true, data: mapped };
+  try {
+    const result = await fetchV1(`/public/games/${productId}`);
+    const game = result.game || result;
+    if (!game || !game.services_by_type) return { success: true, data: [] };
+    const allServices = Object.values(game.services_by_type).flat();
+    const mapped = allServices.map((s) => ({
+      id: s.id || s.code,
+      productId,
+      name: s.name,
+      price: parseFloat(s.price_myr) || 0,
+      priceIdr: parseFloat(s.price_idr) || convertMyrToIdr(parseFloat(s.price_myr) || 0),
+      originalPrice: parseFloat(s.price_myr) || 0,
+      stock: 9999,
+      category: "Standard",
+      description: s.description || ""
+    }));
+    return { success: true, data: mapped };
+  } catch (err) {
+    return { success: true, data: [] };
+  }
 }
 async function externalGetPricelist(productId) {
   return { success: true, data: [] };

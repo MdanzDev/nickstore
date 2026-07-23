@@ -115,7 +115,13 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
         >
           <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative bg-gradient-to-br from-primary/20 to-transparent">
              {imageUrl && !imageError ? (
-              <img src={imageUrl} alt={name} className="w-full h-full object-cover" onError={() => setImageError(true)} />
+              imageUrl.startsWith("http") || imageUrl.startsWith("/") ? (
+                <img src={imageUrl} alt={name} className="w-full h-full object-cover" onError={() => setImageError(true)} />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-3xl">
+                  {imageUrl}
+                </div>
+              )
              ) : (
               <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
                 <Gamepad2 className="w-8 h-8 text-white/10" />
@@ -154,13 +160,19 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
         {/* Image Wrapper */}
         <div className="relative aspect-[4/3] overflow-hidden">
           {imageUrl && !imageError ? (
-            <img 
-              src={imageUrl} 
-              alt={name} 
-              loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] group-hover:rotate-1"
-              onError={() => setImageError(true)}
-            />
+            imageUrl.startsWith("http") || imageUrl.startsWith("/") ? (
+              <img 
+                src={imageUrl} 
+                alt={name} 
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.15] group-hover:rotate-1"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
+                {imageUrl}
+              </div>
+            )
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
               <Gamepad2 className="w-12 h-12 text-white/10 group-hover:text-primary/40 transition-colors duration-500" />
