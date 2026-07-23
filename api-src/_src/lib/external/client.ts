@@ -162,8 +162,8 @@ export async function externalUploadAvatar(jwtToken: string, userId: string, fil
 
 // --- Products (Kryz-Net API V1) ---
 export async function externalGetProducts(params?: { page?: number; limit?: number; search?: string; minPrice?: number; maxPrice?: number; inStock?: boolean; category?: string }) {
-  const result = await fetchV1<any>("/products"); // Adjust depending on actual API response format
-  const games = result.data || result || [];
+  const result = await fetchV1<any>("/public/games");
+  const games = result.games || result.data || result || [];
   
   let products = games.map((g: any) => ({
     id: g.slug || g.id || g.name,
@@ -174,7 +174,7 @@ export async function externalGetProducts(params?: { page?: number; limit?: numb
     icon: g.icon || g.image || "",
     price: 0,
     stock: 9999,
-    denominationsCount: g.services?.length || 0,
+    denominationsCount: g.total_services || g.services?.length || 0,
     isActive: true
   }));
 
@@ -190,18 +190,33 @@ export async function externalGetProducts(params?: { page?: number; limit?: numb
 }
 
 export async function externalGetProduct(productId: string) {
-  const result = await externalGetProducts();
-  const game = result.data.find((p: any) => p.id === productId);
-  if (!game) throw new Error("Game not found");
-  
-  return {
-    id: game.slug,
-    name: game.name,
-    category: game.category || "game",
-    images: [game.icon || ""],
-    description: "",
-    isActive: true
-  };
+  try {
+    const result = await fetchV1<any>(`/public/games/${productId}`);
+    const game = result.game || result;
+    if (!game) throw new Error("Game not found");
+    
+    return {
+      id: game.slug || game.id || game.name,
+      name: game.name,
+      category: game.category || "game",
+      images: [game.icon || ""],
+      description: game.description || "",
+      isActive: true
+    };
+  } catch (err) {
+    const result = await externalGetProducts();
+    const game = result.data.find((p: any) => p.id === productId);
+    if (!game) throw new Error("Game not found");
+    
+    return {
+      id: game.slug,
+      name: game.name,
+      category: game.category || "game",
+      images: [game.icon || ""],
+      description: "",
+      isActive: true
+    };
+  }
 }
 
 export async function externalCreateProduct(jwtToken: string, data: Record<string, unknown>) { return {}; }
@@ -339,19 +354,29 @@ export async function externalCreateVoucher(jwtToken: string, data: any) { retur
 export async function externalUpdateVoucher(jwtToken: string, voucherId: string, data: any) { return { success: true, data: {} }; }
 export async function externalDeleteVoucher(jwtToken: string, voucherId: string) { return { success: true, message: "Deleted" }; }
 export async function externalGetDenominations(productId: string, jwtToken?: string) {
-  const result = await fetchV1<any>("/products");
-  const games = result.data || result || [];
-  const game = games.find((g: any) => g.slug === productId || g.id === productId);
-  if (!game || !game.services) return { success: true, data: [] };
-  
-  const mapped = game.services.map((s: any) => ({
-    id: s.id || s.code,
-    productId: productId,
-    name: s.name,
-    price: s.price || 0,
-    priceIdr: convertMyrToIdr(s.price || 0)
-  }));
-  return { success: true, data: mapped };
+  try {
+    const result = await fetchV1<any>(`/public/games/${productId}`);
+    const game = result.game || result;
+    if (!game || !game.services_by_type) return { success: true, data: [] };
+    
+    // Flatten the categorized services map into a single array
+    const allServices = Object.values(game.services_by_type).flat();
+    
+    const mapped = allServices.map((s: any) => ({
+      id: s.id || s.code,
+      productId: productId,
+      name: s.name,
+      price: parseFloat(s.price_myr) || 0,
+      priceIdr: parseFloat(s.price_idr) || convertMyrToIdr(parseFloat(s.price_myr) || 0),
+      originalPrice: parseFloat(s.price_myr) || 0,
+      stock: 9999,
+      category: "Standard",
+      description: s.description || ""
+    }));
+    return { success: true, data: mapped };
+  } catch (err) {
+    return { success: true, data: [] };
+  }
 }
 export async function externalGetPricelist(productId?: string) { return { success: true, data: [] }; }
 export async function externalCreateDenomination(jwtToken: string, data: any) { return { success: true, data: {} }; }
