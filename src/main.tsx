@@ -1,13 +1,19 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router'
 import './index.css'
+import { TRPCProvider } from "@/providers/trpc"
+import { CurrencyProvider } from "@/providers/CurrencyProvider"
 import App from './App.tsx'
-import { NotificationProvider } from '@/contexts/NotificationContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <NotificationProvider>
-      <App />
-    </NotificationProvider>
+    <BrowserRouter>
+      <TRPCProvider>
+        <CurrencyProvider>
+          <App />
+        </CurrencyProvider>
+      </TRPCProvider>
+    </BrowserRouter>
   </StrictMode>,
 )

@@ -1,150 +1,71 @@
-// src/lib/telegram.ts
-
-// Telegram Bot Configuration
-const TELEGRAM_BOT_TOKEN = import.meta.env.VITE_TELEGRAM_BOT_TOKEN || '';
-const TELEGRAM_CHAT_ID = import.meta.env.VITE_TELEGRAM_CHAT_ID || '';
-
-interface OrderData {
-  order_number: string;
-  game_name: string;
-  product_name: string;
-  total_amount: number | string;
-  user_game_id: string;
-  user_game_server?: string;
-  user_nickname?: string;
-  user_email?: string;
-  user_phone?: string;
-  payment_method_name: string;
-  created_at: string;
+export interface TelegramUser {
+  id: number;
+  is_bot?: boolean;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  photo_url?: string;
 }
 
-export const sendTelegramNotification = async (order: OrderData): Promise<boolean> => {
-  console.log('📱 Telegram: Starting to send notification...');
-  console.log('📱 Bot Token exists:', !!TELEGRAM_BOT_TOKEN);
-  console.log('📱 Chat ID exists:', !!TELEGRAM_CHAT_ID);
-  
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.error('❌ Telegram bot not configured. Missing:', {
-      token: TELEGRAM_BOT_TOKEN ? '✓' : '✗',
-      chatId: TELEGRAM_CHAT_ID ? '✓' : '✗',
-    });
-    return false;
-  }
-
-  const formatCurrency = (amount: number | string) => {
-    const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-    return `RM ${numericAmount.toFixed(2)}`;
+export interface TelegramWebApp {
+  initData: string;
+  initDataUnsafe: {
+    query_id?: string;
+    user?: TelegramUser;
+    auth_date?: string;
+    hash?: string;
   };
+  version: string;
+  platform: string;
+  colorScheme: 'light' | 'dark';
+  themeParams: Record<string, any>;
+  isExpanded: boolean;
+  viewportHeight: number;
+  viewportStableHeight: number;
+  headerColor: string;
+  backgroundColor: string;
+  ready: () => void;
+  expand: () => void;
+  close: () => void;
+  openTelegramLink: (url: string) => void;
+  openLink: (url: string) => void;
+}
 
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleString('en-MY', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch (e) {
-      return dateString;
-    }
-  };
-
-  const message = `
-🛒 *NEW ORDER RECEIVED!* 🛒
-
-📋 *Order Details*
-━━━━━━━━━━━━━━━━
-*Order #:* ${order.order_number}
-*Game:* ${order.game_name}
-*Product:* ${order.product_name}
-*Amount:* ${formatCurrency(order.total_amount)}
-*Payment:* ${order.payment_method_name}
-*Date:* ${formatDate(order.created_at)}
-
-👤 *Customer Details*
-━━━━━━━━━━━━━━━━
-*Game ID:* ${order.user_game_id}
-${order.user_game_server ? `*Server:* ${order.user_game_server}\n` : ''}${order.user_nickname ? `*Nickname:* ${order.user_nickname}\n` : ''}${order.user_email ? `*Email:* ${order.user_email}\n` : ''}${order.user_phone ? `*Phone:* ${order.user_phone}\n` : ''}
-🔗 *View Order:* https://nickstore.vercel.app/admin/orders
-  `;
-
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-      }),
-    });
-
-    const data = await response.json();
-    
-    if (data.ok) {
-      console.log('✅ Telegram notification sent successfully');
-      return true;
-    } else {
-      console.error('❌ Telegram API error:', data);
-      console.error('Error description:', data.description);
-      return false;
-    }
-  } catch (error) {
-    console.error('❌ Failed to send Telegram notification:', error);
-    return false;
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: TelegramWebApp;
+    };
   }
-};
+}
 
-// Send a test message to verify configuration
-export const sendTestTelegramMessage = async (): Promise<boolean> => {
-  console.log('📱 Sending test Telegram message...');
-  
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-    console.error('❌ Telegram bot not configured');
-    return false;
+export function getTelegramWebApp(): TelegramWebApp | null {
+  if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+    return window.Telegram.WebApp;
   }
+  return null;
+}
 
-  const message = `
-✅ *Test Notification* ✅
+export function isTelegramWebApp(): boolean {
+  const tg = getTelegramWebApp();
+  return !!(tg && tg.initData);
+}
 
-Your Telegram bot is configured correctly!
-You will now receive order notifications here.
+export function getTelegramUser(): TelegramUser | null {
+  const tg = getTelegramWebApp();
+  return tg?.initDataUnsafe?.user || null;
+}
 
-*Time:* ${new Date().toLocaleString()}
-  `;
+export function getTelegramInitData(): string {
+  const tg = getTelegramWebApp();
+  return tg?.initData || '';
+}
 
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: 'Markdown',
-      }),
-    });
-
-    const data = await response.json();
-    
-    if (data.ok) {
-      console.log('✅ Test message sent successfully');
-      return true;
-    } else {
-      console.error('❌ Test message failed:', data);
-      return false;
-    }
-  } catch (error) {
-    console.error('❌ Test message error:', error);
-    return false;
+export function initTelegramWebAppUI() {
+  const tg = getTelegramWebApp();
+  if (tg) {
+    tg.ready();
+    tg.expand();
   }
-};
+}

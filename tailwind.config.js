@@ -56,8 +56,14 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
         xs: "calc(var(--radius) - 6px)",
       },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+      },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "glow": "0 0 25px rgba(249, 115, 22, 0.4)",
+        "glow-lg": "0 0 45px rgba(249, 115, 22, 0.6)",
+        "premium-card": "0 20px 40px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)",
       },
       keyframes: {
         "accordion-down": {
@@ -72,11 +78,26 @@ module.exports = {
           "0%,70%,100%": { opacity: "1" },
           "20%,50%": { opacity: "0" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-12px)" },
+        },
+        "float-slow": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-25px)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "1", filter: "brightness(1) blur(60px)" },
+          "50%": { opacity: "0.85", filter: "brightness(1.3) blur(80px)" },
+        },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "accordion-up": "accordion-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
+        "float": "float 4s ease-in-out infinite",
+        "float-slow": "float-slow 8s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },
