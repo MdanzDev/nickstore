@@ -363,3 +363,23 @@ export async function externalGetAdminSettings(jwtToken: string) { return { data
 export async function externalGuestGetOrderStatus(orderId: string) { return externalGetOrder("", orderId); }
 export async function externalGetLatestTransactions() { return []; }
 export async function externalValidateNickname(gameSlug: string, userId: string, zoneId: string) { return { success: true, username: "Valid User" }; }
+
+export async function externalForgotPassword(email: string) { return { success: true }; }
+export async function externalUpdatePassword(token: string, newPass: string) { return { success: true }; }
+export async function externalTelegramWebAppAuth(initData: string) { return { user: {} as any, token: "", expiresIn: 0 }; }
+export async function externalGetApiKey(jwt: string) { return { apiKey: "" }; }
+export async function externalGenerateApiKey(jwt: string) { return { apiKey: "" }; }
+export async function externalRequestPhoneOtp(jwt: string, phone: string) { return { success: true }; }
+export async function externalVerifyPhoneOtp(jwt: string, otp: string) { return { success: true }; }
+export async function externalUnlinkTelegram(jwt: string) { return { success: true }; }
+export async function externalGetAdminTransactions(jwt: string, p: any) { return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1} }; }
+export async function externalUpdateAdminSettings(jwt: string, s: any) { return { success: true }; }
+export async function externalGetProviderBalance(jwt: string) { return { balance: 0 }; }
+export async function externalCreateProviderDeposit(jwt: string, amt: number, method: string) { return { success: true, data: {} }; }
+export async function externalGetAdminApiKeys(jwt: string) { return { data: [] }; }
+export async function externalAdminGenerateApiKey(jwt: string, p: any) { return { success: true, apiKey: "" }; }
+export async function externalAdminToggleApiKey(jwt: string, id: string, active: boolean) { return { success: true }; }
+export async function externalAdminDeleteApiKey(jwt: string, id: string) { return { success: true }; }
+export async function externalGetAdminApiStats(jwt: string) { return { totalRequests: 0, successRate: 100, activeKeys: 0 }; }
+export async function externalGetAdminApiLogs(jwt: string, p: any) { return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1} }; }
+

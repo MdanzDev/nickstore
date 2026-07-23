@@ -1,0 +1,133 @@
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalForgotPassword"
+
+    api-src/_src/external-auth-router.ts:7:2:
+      7 │   externalForgotPassword,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalUpdatePassword"
+
+    api-src/_src/external-auth-router.ts:8:2:
+      8 │   externalUpdatePassword,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalTelegramWebAppAuth"
+
+    api-src/_src/external-auth-router.ts:9:2:
+      9 │   externalTelegramWebAppAuth,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetApiKey"
+
+    api-src/_src/users-router.ts:1:9:
+      1 │ import { externalGetApiKey, externalGenerateApiKey } from './lib/ex...
+        ╵          ~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGenerateApiKey"
+
+    api-src/_src/users-router.ts:1:28:
+      1 │ ...{ externalGetApiKey, externalGenerateApiKey } from './lib/extern...
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalRequestPhoneOtp"
+
+    api-src/_src/users-router.ts:15:2:
+      15 │   externalRequestPhoneOtp,
+         ╵   ~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalVerifyPhoneOtp"
+
+    api-src/_src/users-router.ts:16:2:
+      16 │   externalVerifyPhoneOtp,
+         ╵   ~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalUnlinkTelegram"
+
+    api-src/_src/users-router.ts:18:2:
+      18 │   externalUnlinkTelegram,
+         ╵   ~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetAdminTransactions"
+
+    api-src/_src/transactions-router.ts:5:2:
+      5 │   externalGetAdminTransactions,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalUpdateAdminSettings"
+
+    api-src/_src/settings-router.ts:2:35:
+      2 │ ...lGetAdminSettings, externalUpdateAdminSettings, externalGetProvi...
+        ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetProviderBalance"
+
+    api-src/_src/settings-router.ts:2:64:
+      2 │ ...dateAdminSettings, externalGetProviderBalance, externalCreatePro...
+        ╵                       ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalCreateProviderDeposit"
+
+    api-src/_src/settings-router.ts:2:92:
+      2 │ ...tProviderBalance, externalCreateProviderDeposit } from "./lib/ex...
+        ╵                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetAdminApiKeys"
+
+    api-src/_src/api-management-router.ts:4:2:
+      4 │   externalGetAdminApiKeys,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalAdminGenerateApiKey"
+
+    api-src/_src/api-management-router.ts:5:2:
+      5 │   externalAdminGenerateApiKey,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalAdminToggleApiKey"
+
+    api-src/_src/api-management-router.ts:6:2:
+      6 │   externalAdminToggleApiKey,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalAdminDeleteApiKey"
+
+    api-src/_src/api-management-router.ts:7:2:
+      7 │   externalAdminDeleteApiKey,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetAdminApiStats"
+
+    api-src/_src/api-management-router.ts:8:2:
+      8 │   externalGetAdminApiStats,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~~
+
+X [ERROR] No matching export in "api-src/_src/lib/external/client.ts" for import "externalGetAdminApiLogs"
+
+    api-src/_src/api-management-router.ts:9:2:
+      9 │   externalGetAdminApiLogs,
+        ╵   ~~~~~~~~~~~~~~~~~~~~~~~
+
+18 errors
+node:child_process:921
+    throw err;
+    ^
+
+Error: Command failed: C:\Users\Win10\Documents\GitHub\nickstore\node_modules\@esbuild\win32-x64\esbuild.exe api-src/boot.ts --platform=node --bundle --format=esm --outfile=api/boot.js --log-limit=0
+    at genericNodeError (node:internal/errors:983:15)
+    at wrappedFn (node:internal/errors:537:14)
+    at checkExecSyncError (node:child_process:882:11)
+    at Object.execFileSync (node:child_process:918:15)
+    at Object.<anonymous> (C:\Users\Win10\Documents\GitHub\nickstore\node_modules\esbuild\bin\esbuild:222:28)
+    at Module._compile (node:internal/modules/cjs/loader:1740:14)
+    at Object..js (node:internal/modules/cjs/loader:1905:10)
+    at Module.load (node:internal/modules/cjs/loader:1474:32)
+    at Function._load (node:internal/modules/cjs/loader:1286:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14) {
+  status: 1,
+  signal: null,
+  output: [ null, null, null ],
+  pid: 10980,
+  stdout: null,
+  stderr: null
+}
+
+Node.js v23.5.0
