@@ -7,8 +7,8 @@ function convertMyrToIdr(myr: number): number {
   return Math.round(myr * EXCHANGE_RATE);
 }
 
-const KRYZ_NET_API_URL = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
-const KRYZ_NET_API_KEY = process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
+const getKryzNetApiUrl = () => process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
+const getKryzNetApiKey = () => process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
 
 const supabaseUrl = process.env.SUPABASE_URL || "https://ldfodgqlwwxjggrhypmq.supabase.co";
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkZm9kaHFsd3d4amdncmh5cG1xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDgxMDQ3MCwiZXhwIjoyMTAwMzg2NDcwfQ.Y-_t0SDkrQECPBEj1fr1BreaWZsZmvrp08y_QEVfzPw";
@@ -35,10 +35,11 @@ export type ExternalApiUser = {
 
 // --- Kryz-Net V1 API Helpers ---
 async function fetchV1<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const url = `${KRYZ_NET_API_URL}${endpoint.startsWith('/api/v1') ? endpoint : `/api/v1${endpoint}`}`;
+  const url = `${getKryzNetApiUrl()}${endpoint.startsWith('/api/v1') ? endpoint : `/api/v1${endpoint}`}`;
   console.log(`[V1 API] Requesting URL: ${url}`);
   const headers = new Headers(options.headers || {});
-  headers.set("Authorization", `Bearer ${KRYZ_NET_API_KEY}`);
+  headers.set("Authorization", `Bearer ${getKryzNetApiKey()}`);
+  headers.set("x-api-key", getKryzNetApiKey());
   headers.set("Content-Type", "application/json");
 
   const response = await fetch(url, { ...options, headers });
@@ -361,7 +362,7 @@ export async function externalGetOrders(jwtToken: string, params?: { page?: numb
 }
 
 export async function externalGetOrder(jwtToken: string, orderId: string) {
-  let { data: o } = await supabase.from('orders').select('*').eq('id', orderId).single().catch(() => ({ data: null }));
+  let { data: o } = await supabase.from('orders').select('*').eq('id', orderId).single().then(r => r, () => ({ data: null, error: null }));
 
   if (orderId.startsWith('DEPO')) {
     try {
@@ -491,18 +492,18 @@ export async function externalUpdateDenomination(jwtToken: string, denominationI
 export async function externalDeleteDenomination(jwtToken: string, denominationId: string) { return { success: true, message: "Deleted" }; }
 export async function externalGetLeaderboard(filter?: string) { return { data: [] }; }
 export async function externalUpdateMe(jwtToken: string, username: string, phone?: string, email?: string) { return { success: true, message: "Updated" }; }
-export async function externalGetAdminSettings(jwtToken: string) { return { data: { provider_api_key: KRYZ_NET_API_KEY } }; }
+export async function externalGetAdminSettings(jwtToken: string) { return { data: { provider_api_key: getKryzNetApiKey() } }; }
 export async function externalGuestGetOrderStatus(orderId: string) { return externalGetOrder("", orderId); }
 export async function externalGetLatestTransactions() { return []; }
 export async function externalValidateNickname(gameSlug: string, userId: string, zoneId: string) { return { success: true, username: "Valid User" }; }
 
 export async function externalForgotPassword(email: string) { return { success: true }; }
 export async function externalUpdatePassword(token: string, newPass: string) { return { success: true }; }
-export async function externalTelegramWebAppAuth(initData: string) { return { user: {} as any, token: "", expiresIn: 0 }; }
+export async function externalTelegramWebAppAuth(initData: any) { return { user: {} as any, token: "", expiresIn: 0 }; }
 export async function externalGetApiKey(jwt: string) { return { apiKey: "" }; }
 export async function externalGenerateApiKey(jwt: string) { return { apiKey: "" }; }
-export async function externalRequestPhoneOtp(jwt: string, phone: string) { return { success: true }; }
-export async function externalVerifyPhoneOtp(jwt: string, otp: string) { return { success: true }; }
+export async function externalRequestPhoneOtp(phone: string, jwtToken?: string) { return { success: true }; }
+export async function externalVerifyPhoneOtp(phone: string, otp: string, jwtToken?: string) { return { success: true }; }
 export async function externalUnlinkTelegram(jwt: string) { return { success: true }; }
 export async function externalGetAdminTransactions(jwt: string, p: any) { return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1} }; }
 export async function externalUpdateAdminSettings(jwt: string, s: any) { return { success: true }; }

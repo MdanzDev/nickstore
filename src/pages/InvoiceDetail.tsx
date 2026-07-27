@@ -4,7 +4,7 @@ import { useCurrency } from "@/providers/CurrencyProvider";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CheckCircle2, Clock, FileText, AlertCircle, Loader2, Copy } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, FileText, AlertCircle, Loader2, Copy, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -169,24 +169,24 @@ export default function InvoiceDetail() {
                 <div className="w-32 h-32 rounded-xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
                   {/* Try to infer a nice gradient or placeholder based on game slug */}
                   <div className="w-full h-full bg-gradient-to-br from-primary/40 to-blue-600/40 flex items-center justify-center">
-                     <span className="text-4xl font-black text-white/50 uppercase">{(order.game_slug || "T").substring(0,2)}</span>
+                     <span className="text-4xl font-black text-white/50 uppercase">{((order as any).game_slug || "T").substring(0,2)}</span>
                   </div>
                 </div>
                 <div className="space-y-4 flex-1">
                   <div>
-                    <h3 className="font-bold text-xl text-white">{(order.game_slug || "").split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3>
-                    <p className="text-primary font-medium">{order.service_name}</p>
+                    <h3 className="font-bold text-xl text-white">{((order as any).game_slug || "").split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3>
+                    <p className="text-primary font-medium">{(order as any).service_name || (order as any).keterangan}</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Target ID / UID</p>
-                      <p className="text-sm font-mono text-white/90">{order.game_id || "N/A"}</p>
+                      <p className="text-sm font-mono text-white/90">{(order as any).game_id || order.gameUserId || "N/A"}</p>
                     </div>
-                    {order.zone_id && (
+                    {((order as any).zone_id || order.zoneId) && (
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">Server / Zone ID</p>
-                        <p className="text-sm font-mono text-white/90">{order.zone_id}</p>
+                        <p className="text-sm font-mono text-white/90">{(order as any).zone_id || order.zoneId}</p>
                       </div>
                     )}
                   </div>
@@ -196,7 +196,7 @@ export default function InvoiceDetail() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Harga</span>
-                  <span className="text-white">{formatPrice(order.price_myr, order.price_idr || order.price_myr * exchangeRate)}</span>
+                  <span className="text-white">{formatPrice((order as any).price_myr || (order as any).totalMyr || 0, (order as any).price_idr || (order as any).totalIdr || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Jumlah</span>
@@ -208,7 +208,7 @@ export default function InvoiceDetail() {
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t border-white/10">
                   <span className="font-bold text-white">Total Pembayaran</span>
-                  <span className="font-bold text-xl text-primary">{formatPrice(order.price_myr, order.price_idr || order.price_myr * exchangeRate)}</span>
+                  <span className="font-bold text-xl text-primary">{formatPrice((order as any).price_myr || (order as any).totalMyr || 0, (order as any).price_idr || (order as any).totalIdr || 0)}</span>
                 </div>
               </div>
             </Card>
@@ -227,8 +227,8 @@ export default function InvoiceDetail() {
                   <div>
                     <h3 className="text-sm text-muted-foreground mb-2">Nomor Invoice</h3>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-white tracking-wider">{order.invoice}</span>
-                      <button onClick={() => copyToClipboard(order.invoice)} className="text-muted-foreground hover:text-white transition-colors p-1 bg-white/5 rounded-md hover:bg-white/10">
+                      <span className="font-mono font-bold text-white tracking-wider">{(order as any).invoice || order.id}</span>
+                      <button onClick={() => copyToClipboard((order as any).invoice || order.id)} className="text-muted-foreground hover:text-white transition-colors p-1 bg-white/5 rounded-md hover:bg-white/10">
                         <Copy className="w-4 h-4" />
                       </button>
                     </div>

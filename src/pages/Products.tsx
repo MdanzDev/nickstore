@@ -4,8 +4,6 @@ import SeoHead from "@/components/SeoHead";
 import { trpc } from "@/providers/trpc";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Gamepad2,
@@ -14,14 +12,10 @@ import {
   LayoutGrid,
   Film,
   Ticket,
-  Smartphone,
   Swords,
-  Star,
-  ShoppingCart,
   ChevronLeft,
   ChevronRight,
   X,
-  Sparkles,
   TrendingUp,
   Flame,
   Clock,
@@ -30,9 +24,7 @@ import {
   ArrowUpDown,
   Grid3X3,
   List,
-  Tag,
   Crown,
-  Gift,
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
@@ -365,7 +357,7 @@ export default function Products() {
     search: search || undefined,
     category: activeCategory !== "all" ? activeCategory : undefined,
     sort: sortBy !== "popular" ? sortBy : undefined,
-  });
+  } as any);
 
   // Sync URL params
   useEffect(() => {
@@ -401,15 +393,15 @@ export default function Products() {
   // Extract products from response
   const products = useMemo(() => {
     if (!data) return [];
-    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray((data as any).data)) return (data as any).data;
     if (Array.isArray(data)) return data;
-    if (data.data?.data) return data.data.data;
-    if (data.result?.data?.json?.data) return data.result.data.json.data;
+    if ((data as any).data?.data) return (data as any).data.data;
+    if ((data as any).result?.data?.json?.data) return (data as any).result.data.json.data;
     return [];
   }, [data]);
 
   const meta = useMemo(() => {
-    return data?.data?.meta || data?.meta || data?.result?.data?.json?.meta;
+    return (data as any)?.data?.meta || (data as any)?.meta || (data as any)?.result?.data?.json?.meta;
   }, [data]);
 
   const totalProducts = meta?.total || products.length;

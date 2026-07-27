@@ -199,7 +199,7 @@ const DenominationCard = memo(({
 }) => {
   const { formatPrice } = useCurrency();
   const priceMyr = item.price_myr ?? item.price ?? 0;
-  const priceIdr = item.price_idr ?? item.priceIdr ?? (priceMyr * 4300);
+  const priceIdr = item.price_idr ?? (item as any).priceIdr ?? (priceMyr * 4300);
   const displayPrice = formatPrice(priceMyr, priceIdr);
   const originalPrice = item.discount ? priceMyr * (1 + item.discount / 100) : null;
   const formattedOriginal = originalPrice ? formatPrice(
@@ -307,7 +307,7 @@ function useProductDetail(id: string | undefined) {
 
   return {
     product: productQuery.data as Product | undefined,
-    denominations: (denominationsQuery.data?.data || []) as Denomination[],
+    denominations: (denominationsQuery.data?.data || []) as unknown as Denomination[],
     isLoading: productQuery.isLoading,
     isError: productQuery.isError || denominationsQuery.isError,
     isDenomLoading: denominationsQuery.isLoading,
@@ -375,7 +375,7 @@ export default function ProductDetail() {
   const validateVoucherMutation = trpc.vouchers.validate.useMutation({
     onSuccess: (data) => {
       const result = data.data || data;
-      setVoucherResult(result);
+      setVoucherResult(result as any);
       toast.success("Voucher berhasil diterapkan!", {
         description: `Anda hemat ${formatPrice(result.discountAmount, result.discountAmount * exchangeRate)}`,
         icon: <Gift className="h-4 w-4" />,
@@ -444,7 +444,7 @@ export default function ProductDetail() {
   );
 
   const subtotalMyr = selectedItem?.price_myr ?? selectedItem?.price ?? 0;
-  const subtotalIdr = selectedItem?.price_idr ?? selectedItem?.priceIdr ?? (subtotalMyr * 4300);
+  const subtotalIdr = selectedItem?.price_idr ?? (selectedItem as any)?.priceIdr ?? (subtotalMyr * 4300);
   
   const discountMyr = voucherResult?.discountAmount || 0;
   const discountIdr = discountMyr * 4111;
@@ -473,7 +473,7 @@ export default function ProductDetail() {
       if (!formData.userId || !formData.robloxPassword || !formData.recovery1 || !formData.recovery2 || !formData.recovery3) return false;
     } else {
       if (!formData.userId.trim()) return false;
-      if (product?.requiresZoneId && !formData.zoneId) return false;
+      if ((product as any)?.requiresZoneId && !formData.zoneId) return false;
     }
     
     // Check payment method
@@ -506,13 +506,11 @@ export default function ProductDetail() {
     setNicknameError(null);
     setValidatedNickname(null);
     try {
-      const res = await utils.orders.validateNickname.fetch({ gameSlug, userId, zoneId });
-      if ((res.success || (res as any).status) && res.data?.nickname) {
-        setValidatedNickname(res.data.nickname);
-      } else if (res.success && (res as any).nickname) {
-        setValidatedNickname((res as any).nickname);
+      const res: any = await utils.orders.validateNickname.fetch({ gameSlug, userId, zoneId });
+      if ((res?.success || res?.status) && (res?.data?.nickname || res?.nickname)) {
+        setValidatedNickname(res?.data?.nickname || res?.nickname);
       } else {
-        setNicknameError(res.message || "Nickname tidak ditemukan");
+        setNicknameError(res?.message || "Nickname tidak ditemukan");
         setSelectedNominal(null); // Reset selected nominal if invalid
       }
     } catch (err: any) {
@@ -675,9 +673,9 @@ export default function ProductDetail() {
         zone_id: finalZoneId,
         phone: guestPhone || "00000000000",
         amount_myr: totalMyr || selectedItem.price || 0,
-        amount_idr: totalIdr || selectedItem.priceIdr || 0,
+        amount_idr: totalIdr || (selectedItem as any).priceIdr || 0,
         ...(voucherResult ? { voucher_code: voucherResult.code } : {})
-      };
+      } as any;
       
       if (isAuthenticated) {
         createQrisOrderMutation.mutate(payload);
@@ -702,9 +700,9 @@ export default function ProductDetail() {
       }],
       notes,
       amount_myr: totalMyr || selectedItem.price || 0,
-      amount_idr: totalIdr || selectedItem.priceIdr || 0,
+      amount_idr: totalIdr || (selectedItem as any).priceIdr || 0,
       ...(voucherResult ? { voucher_code: voucherResult.code } : {})
-    });
+    } as any);
   }, [product, selectedItem, formData, isBalanceSufficient, createOrderMutation, createQrisOrderMutation, guestOrderMutation, isAuthenticated, paymentMethod, isRobloxLogin, voucherResult, guestPhone]);
 
   // Error state
@@ -979,7 +977,7 @@ export default function ProductDetail() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="relative group">
                       <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
-                        {product.userIdLabel || "User ID"}
+                        {(product as any)?.userIdLabel || "User ID"}
                       </label>
                       <div className="relative">
                         <input
@@ -987,7 +985,7 @@ export default function ProductDetail() {
                           type={showUserId ? "text" : "password"}
                           value={formData.userId}
                           onChange={(e) => handleInputChange("userId", e.target.value)}
-                          placeholder={product.userIdPlaceholder || `Masukkan ${product.userIdLabel || "User ID"}`}
+                          placeholder={(product as any)?.userIdPlaceholder || `Masukkan ${(product as any)?.userIdLabel || "User ID"}`}
                           className={`w-full bg-[#0B0A10]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
                         />
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -1006,13 +1004,13 @@ export default function ProductDetail() {
 
                     <div className="relative group">
                       <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
-                        {product.zoneIdLabel || "Zone ID / Server"} {(!product.requiresZoneId) && <span className="text-white/30 lowercase">(opsional)</span>}
+                        {(product as any)?.zoneIdLabel || "Zone ID / Server"} {(!(product as any)?.requiresZoneId) && <span className="text-white/30 lowercase">(opsional)</span>}
                       </label>
                       <input
                         type="text"
                         value={formData.zoneId}
                         onChange={(e) => handleInputChange("zoneId", e.target.value)}
-                        placeholder={product.zoneIdPlaceholder || `Masukkan ${product.zoneIdLabel || "Zone ID"}`}
+                        placeholder={(product as any)?.zoneIdPlaceholder || `Masukkan ${(product as any)?.zoneIdLabel || "Zone ID"}`}
                         className={`w-full bg-[#0B0A10]/80 border ${errors.zoneId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
                       {errors.zoneId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.zoneId}</p>}
@@ -1217,7 +1215,6 @@ export default function ProductDetail() {
                   </div>
                 )}
                 
-                {paymentMethod === 'qris' && isAuthenticated && !guestPhone && setGuestPhone((user as any)?.phone_number || '080000000000')}
               </CardContent>
             </Card>
 

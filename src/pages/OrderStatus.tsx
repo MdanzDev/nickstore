@@ -264,7 +264,7 @@ export default function OrderStatus() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: any = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
     show: { 
       opacity: 1, 
@@ -742,7 +742,7 @@ export default function OrderStatus() {
 
         {/* QRIS PAYMENT SECTION (ONLY FOR PENDING DEPOSITS) */}
         <AnimatePresence>
-          {status === 'pending' && o.qrImage && (
+          {status === 'pending' && (o as any).qrImage && (
             <motion.div
               initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -771,14 +771,14 @@ export default function OrderStatus() {
                     >
                       <div className="absolute inset-0 bg-blue-500/30 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                       <div className="absolute inset-0 border-4 border-dashed border-blue-500/30 rounded-2xl animate-spin-slow pointer-events-none" style={{ animationDuration: '10s' }} />
-                      <img src={o.qrImage} alt="QRIS Payment" className="w-48 h-48 md:w-56 md:h-56 relative z-10 rounded-xl" />
+                      <img src={(o as any).qrImage} alt="QRIS Payment" className="w-48 h-48 md:w-56 md:h-56 relative z-10 rounded-xl" />
                     </motion.div>
                     
-                    {o.checkoutUrl && (
+                    {(o as any).checkoutUrl && (
                       <motion.a 
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        href={o.checkoutUrl} 
+                        href={(o as any).checkoutUrl} 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] text-white rounded-full transition-all font-semibold text-sm"
@@ -1071,7 +1071,7 @@ export default function OrderStatus() {
             <div className="w-full h-full bg-[url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=support')] bg-cover opacity-90 mix-blend-multiply" />
             <motion.div 
               className="absolute inset-0 rounded-lg ring-2 ring-white/0"
-              whileHover={{ ringColor: "rgba(255,255,255,0.5)" }}
+              whileHover={{ opacity: 0.8 }}
               transition={{ duration: 0.3 }}
             />
           </motion.div>

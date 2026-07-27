@@ -1,3 +1,4 @@
+import "./supabase-mock.cjs";
 import { serve } from "@hono/node-server";
 import { spawn, ChildProcess } from "child_process";
 import path from "path";
@@ -14,8 +15,8 @@ export async function setup() {
   process.env.NODE_ENV = "test";
 
   // Dynamically import Hono app after env variables are set
-  const bootModule = await import("../../../api/boot");
-  app = bootModule.default;
+  const bootModule = await import("../../boot");
+  app = bootModule.app || bootModule.default;
 
   // 1. Launch Hono proxy server on port 3001
   honoServer = serve({
@@ -41,7 +42,10 @@ export async function setup() {
       NODE_ENV: "test",
       EXTERNAL_API_KEY: "dev-secret-key",
       PROVIDER_API_KEY: "dev-secret-key",
-      PROVIDER_SECRET_KEY: "dev-secret-key"
+      PROVIDER_SECRET_KEY: "dev-secret-key",
+      SUPABASE_URL: process.env.SUPABASE_URL || "https://mock.supabase.co",
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY || "mock-anon-key",
+      SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || "mock-service-key"
     },
     stdio: "inherit" // Forward logs to see potential crash/startup logs in test output
   });

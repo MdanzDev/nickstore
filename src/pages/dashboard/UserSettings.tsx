@@ -265,7 +265,7 @@ export default function UserSettings() {
                 Pautkan akaun anda dengan Telegram Bot untuk menerima notifikasi transaksi & menguruskan akaun terus dari Telegram!
               </p>
               
-              {user?.telegramId && !user.telegramId.startsWith('web_') ? (
+              {(user as any)?.telegramId && !(user as any).telegramId.startsWith('web_') ? (
                 <div className="space-y-4">
                   <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 flex items-start justify-between gap-4 shadow-[0_0_15px_rgba(52,211,153,0.1)]">
                     <div className="flex items-start gap-3">
@@ -275,7 +275,7 @@ export default function UserSettings() {
                       <div>
                         <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">Terhubung & Disinkronkan</p>
                         <p className="text-[9px] font-black uppercase tracking-widest text-emerald-400/70 mt-1 font-mono">
-                          Telegram ID: {user.telegramId}
+                          Telegram ID: {(user as any).telegramId}
                         </p>
                       </div>
                     </div>

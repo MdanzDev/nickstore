@@ -33,8 +33,8 @@ async function getAdminLeaderboard() {
   if (!email || !password) return null;
 
   try {
-    const loginRes = await externalLogin(email, password);
-    if (!loginRes.success) return null;
+    const loginRes: any = await externalLogin(email, password);
+    if (!loginRes || !loginRes.token) return null;
     
     const usersRes = await externalGetUsers(loginRes.token, { limit: 1000 });
     const users = usersRes.data.filter(u => u.isActive && u.totalSpent > 0);

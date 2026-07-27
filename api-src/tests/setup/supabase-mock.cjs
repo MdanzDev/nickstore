@@ -55,7 +55,29 @@ const db = {
       status: 'Aktif'
     }
   ],
-  service_cache: []
+  service_cache: [],
+  wallets: [],
+  wallet_transactions: [],
+  transactions: [],
+  provider_orders: [],
+  products: [],
+  otp: [],
+  api_keys: [
+    {
+      id: 'key-1',
+      user_id: '11111111-2222-3333-4444-555555555555',
+      key_prefix: 'kryz_liv',
+      key_hash: 'c20fabc004eed526bd2b924ee38ab3c861f3ff32',
+      is_active: true
+    },
+    {
+      id: 'key-2',
+      user_id: '11111111-2222-3333-4444-555555555555',
+      key_prefix: 'dev-secr',
+      key_hash: 'dev-secret-key',
+      is_active: true
+    }
+  ]
 };
 
 class QueryBuilder {
@@ -91,6 +113,48 @@ class QueryBuilder {
 
   in(field, values) {
     this.filters.push({ type: 'in', field, values });
+    return this;
+  }
+
+  is(field, value) {
+    this.filters.push({ type: 'is', field, value });
+    return this;
+  }
+
+  not(field, operator, value) {
+    this.filters.push({ type: 'not', field, operator, value });
+    return this;
+  }
+
+  gt(field, value) {
+    this.filters.push({ type: 'gt', field, value });
+    return this;
+  }
+
+  lt(field, value) {
+    this.filters.push({ type: 'lt', field, value });
+    return this;
+  }
+
+  range(from, to) {
+    this.limitCount = to - from + 1;
+    return this;
+  }
+
+  gte(field, value) {
+    this.filters.push({ type: 'gte', field, value });
+    return this;
+  }
+
+  lte(field, value) {
+    this.filters.push({ type: 'lte', field, value });
+    return this;
+  }
+
+  upsert(data, options = {}) {
+    this.action = 'upsert';
+    this.actionData = data;
+    this.upsertOnConflict = options.onConflict;
     return this;
   }
 
@@ -145,6 +209,24 @@ class QueryBuilder {
             if (row[f.field] === f.value) return false;
           } else if (f.type === 'in') {
             if (!f.values.includes(row[f.field])) return false;
+          } else if (f.type === 'gte') {
+            if (row[f.field] < f.value) return false;
+          } else if (f.type === 'lte') {
+            if (row[f.field] > f.value) return false;
+          } else if (f.type === 'gt') {
+            if (row[f.field] <= f.value) return false;
+          } else if (f.type === 'lt') {
+            if (row[f.field] >= f.value) return false;
+          } else if (f.type === 'is') {
+            if (f.value === null) {
+              if (row[f.field] !== null && row[f.field] !== undefined) return false;
+            } else if (row[f.field] !== f.value) return false;
+          } else if (f.type === 'not') {
+            if (f.operator === 'eq' || f.operator === 'is') {
+              if (row[f.field] === f.value) return false;
+            } else if (f.operator === 'in') {
+              if (Array.isArray(f.value) && f.value.includes(row[f.field])) return false;
+            }
           }
         }
         return true;
@@ -252,6 +334,25 @@ class QueryBuilder {
       return { data: deleted, error: null };
     }
 
+    if (this.action === 'upsert') {
+      const rowsToUpsert = Array.isArray(this.actionData) ? this.actionData : [this.actionData];
+      if (!this.dbRef[this.table]) this.dbRef[this.table] = [];
+      const upserted = [];
+      const conflictField = this.upsertOnConflict || 'id';
+      for (const r of rowsToUpsert) {
+        const existingIdx = this.dbRef[this.table].findIndex(row => row[conflictField] === r[conflictField]);
+        if (existingIdx !== -1) {
+          this.dbRef[this.table][existingIdx] = { ...this.dbRef[this.table][existingIdx], ...r };
+          upserted.push(this.dbRef[this.table][existingIdx]);
+        } else {
+          const newRow = { ...r };
+          this.dbRef[this.table].push(newRow);
+          upserted.push(newRow);
+        }
+      }
+      return { data: upserted, error: null };
+    }
+
     return { data: null, error: null };
   }
 
@@ -268,6 +369,39 @@ class QueryBuilder {
 const mockSupabase = {
   createClient: (url, key) => {
     return {
+      rpc: async (fnName, params = {}) => {
+        if (fnName === 'create_bot_order_atomic') {
+          const { p_user_id, p_telegram_id, p_amount, p_reference_id, p_product_id, p_player_id, p_zone_id } = params;
+          let userId = p_user_id;
+          if (!userId && p_telegram_id) {
+            const u = (db.users || []).find(x => x.telegram_id === p_telegram_id);
+            if (u) userId = u.id;
+          }
+          if (!userId) {
+            return { data: { success: false, error: 'USER_NOT_FOUND', message: 'Pengguna tidak dijumpai. Sila mendaftar terlebih dahulu.' }, error: null };
+          }
+          let wallet = (db.wallets || []).find(w => w.user_id === userId);
+          if (!wallet) {
+            wallet = { id: 'w-' + Math.random().toString(36).substring(2, 8), user_id: userId, balance_myr: 100.0 };
+            if (!db.wallets) db.wallets = [];
+            db.wallets.push(wallet);
+          }
+          const amt = parseFloat(p_amount || 0);
+          if (parseFloat(wallet.balance_myr || 0) < amt) {
+            return { data: { success: false, error: 'INSUFFICIENT_BALANCE', message: 'Baki wallet anda tidak mencukupi untuk pesanan ini.' }, error: null };
+          }
+          wallet.balance_myr = parseFloat(wallet.balance_myr) - amt;
+          const refId = p_reference_id || `TX-${Date.now()}`;
+          const txRow = { id: 'tx-' + Math.random().toString(36).substring(2, 8), reference_id: refId, user_id: userId, product_id: p_product_id, amount: amt, status: 'Processing', game_user_id: p_player_id, zone_id: p_zone_id, created_at: new Date().toISOString() };
+          if (!db.transactions) db.transactions = [];
+          db.transactions.push(txRow);
+          const pOrder = { id: 'po-' + Math.random().toString(36).substring(2, 8), internal_transaction_id: refId, provider: 'Kryz-Net', status: 'Processing', created_at: new Date().toISOString() };
+          if (!db.provider_orders) db.provider_orders = [];
+          db.provider_orders.push(pOrder);
+          return { data: { success: true, reference_id: refId, transaction_id: txRow.id, user_id: userId, amount: amt }, error: null };
+        }
+        return { data: { success: true }, error: null };
+      },
       auth: {
         signUp: async ({ email, password, options }) => {
           console.log(`[MOCK AUTH] Sign Up: ${email} with password: ${password}`);
@@ -349,6 +483,10 @@ const mockSupabase = {
 };
 
 const mockAxios = {
+  defaults: {
+    httpsAgent: null,
+    headers: { common: {} }
+  },
   post: async (url, data, config) => {
     if (url.includes('/order')) {
       const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
@@ -387,6 +525,15 @@ const mockAxios = {
             serial_number: 'SN-MOCK-999',
             note: 'Top-up completed'
           }
+        }
+      };
+    }
+    if (url.includes('/check-nickname')) {
+      return {
+        status: 200,
+        data: {
+          success: true,
+          data: { nickname: 'ProPlayer_99' }
         }
       };
     }
@@ -556,6 +703,18 @@ const server = http.createServer((req, res) => {
   }
 });
 
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    // Port 5001 already in use by process, ignore duplicate listen
+  } else {
+    console.error('Test DB bridge server error:', err);
+  }
+});
+
 server.listen(5001, '127.0.0.1', () => {
+  server.unref();
   console.log('Test DB bridge listening on http://127.0.0.1:5001');
 });
+
+globalThis.__mockSupabase = mockSupabase;
+

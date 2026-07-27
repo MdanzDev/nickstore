@@ -25,7 +25,6 @@ import {
   Crown,
   Loader2,
   MessageCircle,
-  ShoppingCart,
   Wallet,
   Check,
 } from "lucide-react";
@@ -305,7 +304,7 @@ export default function Login() {
       email: formData.email.trim(),
       password: formData.password,
       rememberMe,
-    });
+    } as any);
   }, [formData, rememberMe, validateField, loginMutation]);
 
   const isLoading = loginMutation.isPending;

@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
 import { trpc } from "@/providers/trpc";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,10 +8,8 @@ import {
   Crown, 
   Medal, 
   Flame, 
-  Loader2, 
   TrendingUp, 
   Star, 
-  Zap,
   Users,
   ArrowUp,
   ArrowDown,
@@ -24,8 +21,6 @@ import {
   ChevronUp,
   Gamepad2,
   ShoppingCart,
-  Wallet,
-  Award,
 } from "lucide-react";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { useAuth } from "@/hooks/useAuth";
@@ -136,8 +131,8 @@ function PodiumCard({
   rank: number; 
   formatPrice: (myr?: number, idr?: number) => string;
 }) {
-  const RankIcon = rankIcons[rank as keyof typeof rankIcons] || Medal;
-  const colors = rankColors[rank as keyof typeof rankColors];
+  const _RankIcon = rankIcons[rank as keyof typeof rankIcons] || Medal;
+  const _colors = rankColors[rank as keyof typeof rankColors];
   const isFirst = rank === 1;
   
   return (
@@ -244,7 +239,7 @@ export default function Leaderboard() {
   }, [leaderboardDataResult]);
 
   const top3 = useMemo(() => leaderboardData.slice(0, 3), [leaderboardData]);
-  const restData = useMemo(() => leaderboardData.slice(3), [leaderboardData]);
+  const _restData = useMemo(() => leaderboardData.slice(3), [leaderboardData]);
 
   // Find current user's rank
   const currentUserRank = useMemo(() => {

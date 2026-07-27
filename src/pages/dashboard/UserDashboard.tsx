@@ -35,6 +35,8 @@ import {
   Crown,
   Target,
   Shield,
+  MessageSquare,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -380,6 +382,70 @@ export default function UserDashboard() {
               
               <div className="hidden sm:flex h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)] group-hover:scale-110 transition-transform duration-500">
                 <Wallet className="h-10 w-10 text-black" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Telegram Connection Widget */}
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-175">
+          <div className="p-5 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,136,204,0.15)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] ${
+                  (user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
+                    ? 'bg-gradient-to-br from-[#0088cc] to-[#0077bb]'
+                    : 'bg-white/5 border border-white/10'
+                }`}>
+                  <MessageSquare className={`h-6 w-6 ${
+                    (user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
+                      ? 'text-white'
+                      : 'text-white/30'
+                  }`} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                    Telegram Bot
+                    {(user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_') ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[8px]">
+                        <CheckCircle className="h-2.5 w-2.5" />
+                        Terhubung
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[8px]">
+                        Belum ditautkan
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">
+                    {(user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
+                      ? `ID: ${(user as any).telegramId}`
+                      : 'Hubungkan untuk notifikasi & top up via Telegram'
+                    }
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {(user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_') ? (
+                  <a
+                    href="https://t.me/NickStore_bot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0088cc]/10 border border-[#0088cc]/20 text-[#0088cc] hover:bg-[#0088cc]/20 transition-colors text-[9px] font-black uppercase tracking-widest"
+                  >
+                    <ExternalLink className="h-3 w-3" />
+                    Buka Bot
+                  </a>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => navigate('/dashboard/settings')}
+                    className="border-[#0088cc]/30 hover:bg-[#0088cc]/10 text-[#0088cc] text-[9px] font-black uppercase tracking-widest rounded-xl"
+                  >
+                    Hubungkan
+                  </Button>
+                )}
               </div>
             </div>
           </div>

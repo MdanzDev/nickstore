@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import {
   Gamepad2,
   Home,
-  ArrowLeft,
   Search,
   ShoppingCart,
   MessageCircle,

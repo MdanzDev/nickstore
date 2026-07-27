@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router";
 import { Search, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import { trpc } from "@/providers/trpc";
 import { useCurrency } from "@/providers/CurrencyProvider";
 

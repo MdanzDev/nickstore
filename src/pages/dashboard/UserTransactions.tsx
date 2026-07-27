@@ -15,12 +15,15 @@ import {
   Zap,
   XCircle,
   AlertCircle,
+  MessageSquare,
+  Globe,
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────────── */
 const STATUS_OPTIONS = ["Semua", "pending", "processing", "success", "failed", "refund", "cancelled"];
+const SOURCE_OPTIONS = ["Semua", "website", "telegram"];
 
 const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string; bg: string; border: string }> = {
   success:     { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
@@ -140,6 +143,7 @@ export default function UserTransactions() {
   const { formatPrice } = useCurrency();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("Semua");
+  const [sourceFilter, setSourceFilter] = useState("Semua");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
@@ -149,7 +153,15 @@ export default function UserTransactions() {
     status: statusFilter === "Semua" ? undefined : statusFilter,
   });
 
-  const orders = data?.data ?? [];
+  const allOrders = data?.data ?? [];
+  const orders = useMemo(() => {
+    if (sourceFilter === "Semua") return allOrders;
+    return allOrders.filter((o: any) => {
+      const channel = (o.channel || o.source || "website").toLowerCase();
+      if (sourceFilter === "telegram") return channel === "telegram" || channel === "bot";
+      return channel === "website" || channel === "web" || (!o.channel && !o.source);
+    });
+  }, [allOrders, sourceFilter]);
   const meta = data?.meta;
 
   const handleExport = useCallback((format: "csv" | "xlsx") => {
@@ -185,6 +197,24 @@ export default function UserTransactions() {
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s} className="bg-[#0B0A10] text-white">
                     {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Source Filter */}
+            <div>
+              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+                Sumber
+              </label>
+              <select
+                value={sourceFilter}
+                onChange={(e) => setSourceFilter(e.target.value)}
+                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
+              >
+                {SOURCE_OPTIONS.map((s) => (
+                  <option key={s} value={s} className="bg-[#0B0A10] text-white">
+                    {s === "Semua" ? "Semua Sumber" : s === "website" ? "🌐 Website" : "📱 Telegram Bot"}
                   </option>
                 ))}
               </select>

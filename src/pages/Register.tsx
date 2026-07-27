@@ -3,11 +3,9 @@ import { Link, useNavigate } from "react-router";
 import SeoHead from "@/components/SeoHead";
 import { trpc } from "@/providers/trpc";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import {
   Gamepad2,
   Eye,
@@ -28,10 +26,8 @@ import {
   ArrowRight,
   Sparkles,
   Crown,
-  Clock,
   Loader2,
   TrendingUp,
-  Users,
   MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -437,16 +433,7 @@ export default function Register() {
     }
   }, [touched, validateField]);
 
-  const handleBlur = useCallback((field: string) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    const error = validateField(field, formData[field as keyof typeof formData]);
-    setErrors(prev => {
-      const next = { ...prev };
-      if (error) next[field] = error;
-      else delete next[field];
-      return next;
-    });
-  }, [formData, validateField]);
+  // const handleBlur = useCallback((field: string) => { ... });
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();

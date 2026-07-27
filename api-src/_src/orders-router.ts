@@ -43,7 +43,7 @@ export async function syncAllPendingLogic(jwtToken: string) {
   
   for (const order of pendingOrders) {
     // Determine provider TRX ID. For QRIS, it's stored in keterangan as deposit_invoice
-    let providerTrxId = order.providerTrxId;
+    let providerTrxId = (order as any).providerTrxId;
     if (!providerTrxId && order.keterangan) {
       try {
         const ketData = JSON.parse(order.keterangan);
@@ -73,7 +73,7 @@ export async function syncAllPendingLogic(jwtToken: string) {
         continue;
       }
       
-      const data = await response.json();
+      const data: any = await response.json();
       
       if (data && data.status === true) {
         const providerData = data.data || data;

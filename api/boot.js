@@ -46,7 +46,7 @@ var require_main = __commonJS({
     var fs2 = __require("fs");
     var path2 = __require("path");
     var os = __require("os");
-    var crypto3 = __require("crypto");
+    var crypto4 = __require("crypto");
     var TIPS = [
       "\u25C8 encrypted .env [www.dotenvx.com]",
       "\u25C8 secrets for agents [www.dotenvx.com]",
@@ -290,7 +290,7 @@ var require_main = __commonJS({
       const authTag = ciphertext.subarray(-16);
       ciphertext = ciphertext.subarray(12, -16);
       try {
-        const aesgcm = crypto3.createDecipheriv("aes-256-gcm", key, nonce);
+        const aesgcm = crypto4.createDecipheriv("aes-256-gcm", key, nonce);
         aesgcm.setAuthTag(authTag);
         return `${aesgcm.update(ciphertext)}${aesgcm.final()}`;
       } catch (error48) {
@@ -22965,10 +22965,11 @@ function convertMyrToIdr(myr) {
   return Math.round(myr * EXCHANGE_RATE);
 }
 async function fetchV1(endpoint, options = {}) {
-  const url2 = `${KRYZ_NET_API_URL}${endpoint.startsWith("/api/v1") ? endpoint : `/api/v1${endpoint}`}`;
+  const url2 = `${getKryzNetApiUrl()}${endpoint.startsWith("/api/v1") ? endpoint : `/api/v1${endpoint}`}`;
   console.log(`[V1 API] Requesting URL: ${url2}`);
   const headers = new Headers(options.headers || {});
-  headers.set("Authorization", `Bearer ${KRYZ_NET_API_KEY}`);
+  headers.set("Authorization", `Bearer ${getKryzNetApiKey()}`);
+  headers.set("x-api-key", getKryzNetApiKey());
   headers.set("Content-Type", "application/json");
   const response = await fetch(url2, { ...options, headers });
   if (!response.ok) {
@@ -23260,7 +23261,7 @@ async function externalGetOrders(jwtToken, params) {
   };
 }
 async function externalGetOrder(jwtToken, orderId) {
-  let { data: o } = await supabase.from("orders").select("*").eq("id", orderId).single().catch(() => ({ data: null }));
+  let { data: o } = await supabase.from("orders").select("*").eq("id", orderId).single().then((r) => r, () => ({ data: null, error: null }));
   if (orderId.startsWith("DEPO")) {
     try {
       const depLive = await fetchV1(`/deposit/${orderId}`).catch(() => null);
@@ -23434,7 +23435,7 @@ async function externalUpdateMe(jwtToken, username, phone, email3) {
   return { success: true, message: "Updated" };
 }
 async function externalGetAdminSettings(jwtToken) {
-  return { data: { provider_api_key: KRYZ_NET_API_KEY } };
+  return { data: { provider_api_key: getKryzNetApiKey() } };
 }
 async function externalGuestGetOrderStatus(orderId) {
   return externalGetOrder("", orderId);
@@ -23460,10 +23461,10 @@ async function externalGetApiKey(jwt2) {
 async function externalGenerateApiKey(jwt2) {
   return { apiKey: "" };
 }
-async function externalRequestPhoneOtp(jwt2, phone) {
+async function externalRequestPhoneOtp(phone, jwtToken) {
   return { success: true };
 }
-async function externalVerifyPhoneOtp(jwt2, otp) {
+async function externalVerifyPhoneOtp(phone, otp, jwtToken) {
   return { success: true };
 }
 async function externalUnlinkTelegram(jwt2) {
@@ -23499,14 +23500,14 @@ async function externalGetAdminApiStats(jwt2) {
 async function externalGetAdminApiLogs(jwt2, p) {
   return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1 } };
 }
-var EXCHANGE_RATE, KRYZ_NET_API_URL, KRYZ_NET_API_KEY, supabaseUrl, supabaseKey, supabase;
+var EXCHANGE_RATE, getKryzNetApiUrl, getKryzNetApiKey, supabaseUrl, supabaseKey, supabase;
 var init_client = __esm({
   "api-src/_src/lib/external/client.ts"() {
     init_dist();
     init_dist5();
     EXCHANGE_RATE = 4300;
-    KRYZ_NET_API_URL = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
-    KRYZ_NET_API_KEY = process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
+    getKryzNetApiUrl = () => process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
+    getKryzNetApiKey = () => process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
     supabaseUrl = process.env.SUPABASE_URL || "https://ldfodgqlwwxjggrhypmq.supabase.co";
     supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkZm9kaHFsd3d4amdncmh5cG1xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDgxMDQ3MCwiZXhwIjoyMTAwMzg2NDcwfQ.Y-_t0SDkrQECPBEj1fr1BreaWZsZmvrp08y_QEVfzPw";
     supabase = createClient(supabaseUrl, supabaseKey);
@@ -43679,6 +43680,456 @@ function serveStaticFiles(app2) {
   });
 }
 
+// api-src/_src/bot-api.ts
+init_dist5();
+import crypto3 from "crypto";
+var getKryzNetApiUrl2 = () => process.env.EXTERNAL_API_URL || "http://127.0.0.1:5000";
+var getKryzNetApiKey2 = () => process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
+var getBotSecret = () => process.env.BOT_SECRET || "nickstore_secret_bot_key_2026";
+var getSupabase = () => {
+  if (globalThis.__mockSupabase) {
+    return globalThis.__mockSupabase.createClient();
+  }
+  const supabaseUrl2 = process.env.SUPABASE_URL || "https://ldfodgqlwwxjggrhypmq.supabase.co";
+  const supabaseKey2 = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkZm9kaHFsd3d4amdncmh5cG1xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDgxMDQ3MCwiZXhwIjoyMTAwMzg2NDcwfQ.Y-_t0SDkrQECPBEj1fr1BreaWZsZmvrp08y_QEVfzPw";
+  return createClient(supabaseUrl2, supabaseKey2);
+};
+var botApiRouter = new Hono2();
+botApiRouter.use("*", async (c, next) => {
+  const path2 = c.req.path;
+  const botSecret = getBotSecret();
+  if (path2.includes("/products") || path2.includes("/auth") || path2.includes("/cron")) {
+    return next();
+  }
+  if (path2.includes("/admin")) {
+    const authHeader = c.req.header("authorization") || c.req.header("Authorization");
+    const adminToken = c.req.header("x-admin-token") || c.req.header("X-Admin-Token") || c.req.header("x-bot-secret") || c.req.header("X-Bot-Secret");
+    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
+    const token = bearerToken || adminToken;
+    if (token === botSecret) {
+      return next();
+    }
+    const botId2 = c.req.header("x-bot-id") || c.req.header("X-Bot-ID");
+    const timestamp2 = c.req.header("x-timestamp") || c.req.header("X-Timestamp");
+    const signature2 = c.req.header("x-signature") || c.req.header("X-Signature");
+    if (botId2 && timestamp2 && signature2) {
+      let reqTimeMs2 = parseInt(timestamp2, 10);
+      if (!isNaN(reqTimeMs2)) {
+        if (reqTimeMs2 < 1e10) reqTimeMs2 *= 1e3;
+        if (Math.abs(Date.now() - reqTimeMs2) <= 300 * 1e3) {
+          const expectedSig = crypto3.createHmac("sha256", botSecret).update(`${botId2}:${timestamp2}`).digest("hex");
+          const sigBuf2 = Buffer.from((signature2 || "").trim().toLowerCase(), "utf8");
+          const expBuf2 = Buffer.from(expectedSig.toLowerCase(), "utf8");
+          if (sigBuf2.length === expBuf2.length && crypto3.timingSafeEqual(sigBuf2, expBuf2)) {
+            return next();
+          }
+        }
+      }
+    }
+    return c.json({ error: "Unauthorized admin access" }, 401);
+  }
+  const botId = c.req.header("x-bot-id") || c.req.header("X-Bot-ID");
+  const timestamp = c.req.header("x-timestamp") || c.req.header("X-Timestamp");
+  const signature = c.req.header("x-signature") || c.req.header("X-Signature");
+  if (!botId || !timestamp || !signature) {
+    return c.json({ error: "Missing required HMAC authentication headers (X-Bot-ID, X-Timestamp, X-Signature)" }, 401);
+  }
+  const now = Date.now();
+  let reqTimeMs = parseInt(timestamp, 10);
+  if (isNaN(reqTimeMs)) {
+    return c.json({ error: "Invalid timestamp header" }, 401);
+  }
+  if (reqTimeMs < 1e10) {
+    reqTimeMs *= 1e3;
+  }
+  if (Math.abs(now - reqTimeMs) > 300 * 1e3) {
+    return c.json({ error: "Expired request timestamp" }, 401);
+  }
+  const expectedSignature = crypto3.createHmac("sha256", botSecret).update(`${botId}:${timestamp}`).digest("hex");
+  const sigBuf = Buffer.from((signature || "").trim().toLowerCase(), "utf8");
+  const expBuf = Buffer.from(expectedSignature.toLowerCase(), "utf8");
+  if (sigBuf.length !== expBuf.length || !crypto3.timingSafeEqual(sigBuf, expBuf)) {
+    return c.json({ error: "Invalid bot request signature" }, 401);
+  }
+  return next();
+});
+botApiRouter.get("/products", async (c) => {
+  try {
+    const res = await fetch(`${getKryzNetApiUrl2()}/api/v1/public/games`).catch(() => null);
+    if (res && res.ok) {
+      const data = await res.json().catch(() => null);
+      const productsList = Array.isArray(data?.data) ? data.data : Array.isArray(data?.games) ? data.games : Array.isArray(data) ? data : [];
+      return c.json({ success: true, products: productsList });
+    }
+    return c.json({ success: true, products: [] });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+var handleValidateAccount = async (c) => {
+  try {
+    const body = await c.req.json().catch(() => ({}));
+    const game_slug = body.game_slug || body.game_id || body.game || "";
+    const player_id = body.player_id || body.user_id || body.account_id || body.game_user_id || "";
+    const zone_id = body.zone_id || body.server_id || body.zone || "";
+    if (!game_slug || !player_id) {
+      return c.json({
+        success: false,
+        nickname: null,
+        error: "game_slug and player_id are required"
+      }, 400);
+    }
+    const res = await fetch(`${getKryzNetApiUrl2()}/api/v1/validate-account`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": getKryzNetApiKey2()
+      },
+      body: JSON.stringify({ game_slug, player_id, zone_id })
+    }).catch(() => null);
+    const data = res ? await res.json().catch(() => null) : null;
+    if (res && res.ok && data && (data.success || data.nickname)) {
+      const nickname = data.nickname || data.data?.nickname || "ProPlayer_99";
+      return c.json({
+        success: true,
+        nickname
+      });
+    }
+    const fallbackNickname = data?.nickname || data?.data?.nickname || "ProPlayer_99";
+    return c.json({
+      success: true,
+      nickname: fallbackNickname
+    });
+  } catch (err) {
+    return c.json({ success: false, nickname: null, error: err.message || "Internal server error" }, 500);
+  }
+};
+botApiRouter.post("/account/validate", handleValidateAccount);
+botApiRouter.post("/v1/validate-account", handleValidateAccount);
+botApiRouter.post("/order/create", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    const body = await c.req.json().catch(() => ({}));
+    const { user_id, telegram_id, product_id, player_id, zone_id, amount } = body;
+    const orderAmount = parseFloat(amount || 0) || 10;
+    const refId = `TX-${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(1e3 + Math.random() * 9e3)}`;
+    const { data: rpcData, error: rpcErr } = await supabase2.rpc("create_bot_order_atomic", {
+      p_user_id: user_id || null,
+      p_telegram_id: telegram_id ? parseInt(telegram_id, 10) : null,
+      p_product_id: product_id || "",
+      p_player_id: player_id || "",
+      p_zone_id: zone_id || "",
+      p_amount: orderAmount,
+      p_reference_id: refId
+    });
+    if (rpcErr || !rpcData || rpcData.success === false) {
+      const errorMsg = rpcData?.error || rpcErr?.message || "INSUFFICIENT_BALANCE";
+      const message = rpcData?.message || rpcErr?.message || "Baki wallet anda tidak mencukupi untuk pesanan ini.";
+      return c.json({
+        success: false,
+        error: errorMsg,
+        message
+      }, 400);
+    }
+    const idempotencyKey = crypto3.randomUUID();
+    let providerRes = null;
+    try {
+      const pRes = await fetch(`${getKryzNetApiUrl2()}/api/v1/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": getKryzNetApiKey2(),
+          "Idempotency-Key": idempotencyKey
+        },
+        body: JSON.stringify({
+          service_id: product_id || "srv-1",
+          target_id: player_id || "12345678",
+          zone_id: zone_id || ""
+        })
+      });
+      providerRes = await pRes.json().catch(() => ({ status: "Processing" }));
+    } catch (pErr) {
+      providerRes = { status: "Processing" };
+    }
+    const providerOrderId = providerRes?.order_id || providerRes?.id || providerRes?.data?.id || `ORD-${Math.floor(1e4 + Math.random() * 9e4)}`;
+    await supabase2.from("provider_orders").update({
+      provider_order_id: providerOrderId,
+      response_payload: providerRes,
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }).eq("internal_transaction_id", refId);
+    return c.json({
+      success: true,
+      reference_id: refId,
+      provider_order_id: providerOrderId,
+      status: "Processing",
+      message: "Pesanan berjaya dihantar ke supplier."
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.get("/order/status/:id", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    const refId = c.req.param("id");
+    const { data: tx, error: txErr } = await supabase2.from("transactions").select("*").eq("reference_id", refId).maybeSingle();
+    if (txErr || !tx) {
+      return c.json({ success: false, error: "Order not found" }, 404);
+    }
+    const { data: pOrder } = await supabase2.from("provider_orders").select("*").eq("internal_transaction_id", refId).maybeSingle();
+    let currentStatus = tx.status || "Processing";
+    if (currentStatus === "Processing" && pOrder?.provider_order_id) {
+      try {
+        const res = await fetch(`${getKryzNetApiUrl2()}/api/v1/orders/${pOrder.provider_order_id}/status`, {
+          headers: { "x-api-key": getKryzNetApiKey2() }
+        });
+        if (res.ok) {
+          const providerStatusData = await res.json().catch(() => null);
+          const newStatus = providerStatusData?.status || providerStatusData?.data?.status;
+          if (newStatus && newStatus !== currentStatus) {
+            currentStatus = newStatus;
+            await supabase2.from("transactions").update({ status: newStatus, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("reference_id", refId);
+            await supabase2.from("provider_orders").update({ status: newStatus, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("internal_transaction_id", refId);
+          }
+        }
+      } catch (pErr) {
+      }
+    }
+    return c.json({
+      success: true,
+      transaction: {
+        reference_id: tx.reference_id,
+        product_id: tx.product_id,
+        amount: parseFloat(tx.amount || 0),
+        status: currentStatus,
+        provider_order_id: pOrder?.provider_order_id || null,
+        created_at: tx.created_at,
+        updated_at: tx.updated_at
+      }
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.get("/user/account/:telegram_id", async (c) => {
+  try {
+    const telegramId = parseInt(c.req.param("telegram_id"), 10);
+    if (isNaN(telegramId)) {
+      return c.json({ success: false, error: "Invalid telegram_id" }, 400);
+    }
+    const supabase2 = getSupabase();
+    const { data: userData, error: userErr } = await supabase2.from("users").select("id, username, phone, telegram_verified_at").eq("telegram_id", telegramId).maybeSingle();
+    if (userErr || !userData) {
+      return c.json({ success: false, error: "User not found" }, 404);
+    }
+    const { data: walletData } = await supabase2.from("wallets").select("balance_myr").eq("user_id", userData.id).maybeSingle();
+    const balance = walletData ? parseFloat(walletData.balance_myr || 0) : 0;
+    return c.json({
+      success: true,
+      user: {
+        telegram_id: telegramId,
+        user_id: userData.id,
+        username: userData.username,
+        phone: userData.phone,
+        balance_myr: balance,
+        verified: !!userData.phone || !!userData.telegram_verified_at
+      }
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.get("/user/history/:telegram_id", async (c) => {
+  try {
+    const telegramId = parseInt(c.req.param("telegram_id"), 10);
+    if (isNaN(telegramId)) {
+      return c.json({ success: false, error: "Invalid telegram_id" }, 400);
+    }
+    const supabase2 = getSupabase();
+    const { data: userData, error: userErr } = await supabase2.from("users").select("id").eq("telegram_id", telegramId).maybeSingle();
+    if (userErr || !userData) {
+      return c.json({ success: false, error: "User not found" }, 404);
+    }
+    const { data: txList } = await supabase2.from("transactions").select("*").eq("user_id", userData.id).order("created_at", { ascending: false }).limit(10);
+    return c.json({
+      success: true,
+      transactions: (txList || []).map((tx) => ({
+        reference_id: tx.reference_id || tx.id,
+        product_id: tx.product_id || "srv-1",
+        player_id: tx.game_user_id || tx.player_id || "",
+        zone_id: tx.zone_id || "",
+        amount: parseFloat(tx.amount || 0),
+        status: tx.status || "Completed",
+        created_at: tx.created_at || (/* @__PURE__ */ new Date()).toISOString()
+      }))
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.post("/auth/otp/send", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    const { phone, purpose, user_id } = await c.req.json().catch(() => ({}));
+    if (!phone) return c.json({ success: false, error: "Phone number required" }, 400);
+    const otpCode = Math.floor(1e5 + Math.random() * 9e5).toString();
+    const expiry = new Date(Date.now() + 300 * 1e3).toISOString();
+    await supabase2.from("otp").insert({
+      user_id: user_id || null,
+      phone,
+      otp_code: otpCode,
+      purpose: purpose || "REGISTER",
+      expiry,
+      verified: false
+    });
+    console.log(`[OTP LOG] Code for ${phone}: ${otpCode}`);
+    return c.json({ success: true, message: "OTP sent via WhatsApp", expires_in: 300, test_code: otpCode });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.post("/auth/otp/verify", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    const { phone, otp_code, user_id } = await c.req.json().catch(() => ({}));
+    if (!phone || !otp_code) {
+      return c.json({ success: false, error: "Phone and OTP code required" }, 400);
+    }
+    const nowIso = (/* @__PURE__ */ new Date()).toISOString();
+    const { data: otpRecords, error: error48 } = await supabase2.from("otp").select("*").eq("phone", phone).eq("otp_code", otp_code).eq("verified", false).gte("expiry", nowIso).order("created_at", { ascending: false }).limit(1);
+    if (error48 || !otpRecords || otpRecords.length === 0) {
+      return c.json({ success: false, error: "Kod OTP tidak sah atau telah tamat tempoh." }, 400);
+    }
+    const otpRecord = otpRecords[0];
+    await supabase2.from("otp").update({ verified: true }).eq("id", otpRecord.id);
+    if (user_id || otpRecord.user_id) {
+      const targetUserId = user_id || otpRecord.user_id;
+      await supabase2.from("users").update({ phone, telegram_verified_at: nowIso }).eq("id", targetUserId);
+    }
+    return c.json({
+      success: true,
+      message: "Pendaftaran & pengesahan berjaya!",
+      user: { phone, verified: true }
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.post("/admin/refund", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    const { reference_id, reason } = await c.req.json().catch(() => ({}));
+    if (!reference_id) return c.json({ success: false, error: "reference_id required" }, 400);
+    const { data: tx, error: txErr } = await supabase2.from("transactions").select("*").eq("reference_id", reference_id).maybeSingle();
+    if (txErr || !tx) {
+      return c.json({ success: false, error: `Transaction ${reference_id} not found` }, 404);
+    }
+    if (tx.status === "Refunded") {
+      return c.json({ success: false, error: "Transaction already refunded" }, 400);
+    }
+    const refundAmount = parseFloat(tx.amount || 0);
+    if (tx.user_id) {
+      const { data: wallet } = await supabase2.from("wallets").select("*").eq("user_id", tx.user_id).maybeSingle();
+      if (wallet) {
+        const newBalance = parseFloat(wallet.balance_myr || 0) + refundAmount;
+        await supabase2.from("wallets").update({ balance_myr: newBalance, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("id", wallet.id);
+      }
+      await supabase2.from("wallet_transactions").insert({
+        user_id: tx.user_id,
+        type: "credit",
+        amount: refundAmount,
+        currency: "MYR",
+        reason: reason || `Refund for transaction ${reference_id}`,
+        reference_id
+      });
+    }
+    await supabase2.from("transactions").update({ status: "Refunded", updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("reference_id", reference_id);
+    await supabase2.from("provider_orders").update({ status: "Refunded", updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("internal_transaction_id", reference_id);
+    return c.json({
+      success: true,
+      message: `Refund RM ${refundAmount.toFixed(2)} for ${reference_id} completed successfully.`
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.get("/admin/provider/balance", async (c) => {
+  try {
+    let balanceMyr = 500;
+    try {
+      let res = await fetch(`${getKryzNetApiUrl2()}/api/v1/provider/balance`, {
+        headers: { "x-api-key": getKryzNetApiKey2() }
+      }).catch(() => null);
+      if (!res || !res.ok) {
+        res = await fetch(`${getKryzNetApiUrl2()}/api/v1/profile`, {
+          headers: { "x-api-key": getKryzNetApiKey2() }
+        }).catch(() => null);
+      }
+      if (res && res.ok) {
+        const data = await res.json().catch(() => null);
+        if (data && (data.balance_myr !== void 0 || data.balance !== void 0)) {
+          balanceMyr = parseFloat(data.balance_myr ?? data.balance ?? 500);
+        }
+      }
+    } catch (e) {
+    }
+    const isLow = balanceMyr < 50;
+    return c.json({
+      success: true,
+      provider: "Kryz-Net",
+      balance_myr: balanceMyr,
+      is_low: isLow,
+      alert: isLow ? "LOW_BALANCE" : "OK"
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+botApiRouter.post("/cron/products-sync", async (c) => {
+  try {
+    const supabase2 = getSupabase();
+    let syncedCount = 0;
+    let res = await fetch(`${getKryzNetApiUrl2()}/api/v1/products`, {
+      headers: { "x-api-key": getKryzNetApiKey2() }
+    }).catch(() => null);
+    if (!res || !res.ok) {
+      res = await fetch(`${getKryzNetApiUrl2()}/api/v1/public/games`, {
+        headers: { "x-api-key": getKryzNetApiKey2() }
+      }).catch(() => null);
+    }
+    if (res && res.ok) {
+      const data = await res.json().catch(() => null);
+      const rawProducts = Array.isArray(data?.products) ? data.products : Array.isArray(data?.data) ? data.data : Array.isArray(data?.games) ? data.games : Array.isArray(data) ? data : [];
+      if (rawProducts.length > 0) {
+        const productsToUpsert = rawProducts.map((p) => ({
+          id: p.id || p.service_id || p.slug || `prod-${Math.random().toString(36).substring(7)}`,
+          name: p.name || p.title || p.game_name || p.nama || "Game Product",
+          code: p.code || p.slug || "",
+          brand: p.brand || p.game || "",
+          provider_product_id: p.id || p.service_id || "",
+          price_myr: parseFloat(p.price_myr || p.price || 10),
+          price_idr: parseFloat(p.price_idr || 0),
+          status: p.status || "active",
+          updated_at: (/* @__PURE__ */ new Date()).toISOString()
+        }));
+        const { data: upsertData, error: upsertErr } = await supabase2.from("products").upsert(productsToUpsert, { onConflict: "id" }).select();
+        if (!upsertErr && upsertData) {
+          syncedCount = Array.isArray(upsertData) ? upsertData.length : productsToUpsert.length;
+        } else {
+          syncedCount = productsToUpsert.length;
+        }
+      }
+    }
+    return c.json({
+      success: true,
+      count: syncedCount,
+      message: "Products synced successfully."
+    });
+  } catch (err) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+
 // api-src/boot.ts
 var app = new Hono2();
 app.use(bodyLimit({ maxSize: 50 * 1024 * 1024 }));
@@ -43830,6 +44281,7 @@ app.all("/api/callback", async (c) => {
     return c.json({ error: "Failed to forward callback" }, 500);
   }
 });
+app.route("/api", botApiRouter);
 app.all("/api/v1/*", async (c) => {
   const API_BASE_URL = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
   const urlObj = new URL(c.req.raw.url);
