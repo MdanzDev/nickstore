@@ -18,6 +18,18 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { DenominationCard } from "@/components/DenominationCard";
+import {
+  getProductTypeFromData,
+  getProductTypeConfig,
+  getInputSchemaFromData,
+  getSchemaFieldLabel,
+  getTypeLabel,
+  getTypeDescription,
+  getTypeColor,
+  type ProductType,
+  type SchemaField,
+} from "@/lib/productTypes";
 import {
   Gamepad2,
   Zap,
@@ -50,7 +62,8 @@ import {
   ArrowLeft,
   Wallet,
   QrCode,
-  Phone
+  Phone,
+  Server,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -65,8 +78,12 @@ interface Denomination {
   price_myr?: number;
   price_idr?: number;
   isActive: boolean;
+  provider_slug?: string;
+  provider_service_code?: string;
   popular?: boolean;
   discount?: number;
+  min_order?: number;
+  max_order?: number;
 }
 
 interface VoucherResult {
@@ -83,12 +100,20 @@ interface Product {
   id: string;
   name: string;
   category?: string;
+  type?: string;
+  input_schema?: { fields?: SchemaField[] } | null;
+  fulfillment_type?: string | null;
   images?: string[];
   description?: string;
   rating?: number;
   totalOrders?: number;
   minOrder?: number;
   maxOrder?: number;
+  userIdLabel?: string;
+  userIdPlaceholder?: string;
+  zoneIdLabel?: string;
+  zoneIdPlaceholder?: string;
+  requiresZoneId?: boolean;
 }
 
 // ─── Utilities ──────────────────────────────────────────────────────
@@ -186,100 +211,6 @@ const ErrorState = memo(({ onRetry }: { onRetry: () => void }) => (
 
 ErrorState.displayName = "ErrorState";
 
-const DenominationCard = memo(({
-  item,
-  isSelected,
-  onSelect,
-  isPopular,
-}: {
-  item: Denomination;
-  isSelected: boolean;
-  onSelect: (id: string) => void;
-  isPopular?: boolean;
-}) => {
-  const { formatPrice } = useCurrency();
-  const priceMyr = item.price_myr ?? item.price ?? 0;
-  const priceIdr = item.price_idr ?? (item as any).priceIdr ?? (priceMyr * 4300);
-  const displayPrice = formatPrice(priceMyr, priceIdr);
-  const originalPrice = item.discount ? priceMyr * (1 + item.discount / 100) : null;
-  const formattedOriginal = originalPrice ? formatPrice(
-    originalPrice,
-    originalPrice * 4300
-  ) : null;
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(item.id)}
-      className={`relative p-4 rounded-xl border-2 text-left transition-all duration-300 group ${
-        isSelected 
-          ? "border-primary bg-primary/10 shadow-lg shadow-primary/10 scale-[1.02]" 
-          : "border-white/5 glass-panel/80 shadow-2xl backdrop-blur-md hover:border-primary/30 hover:shadow-md hover:scale-[1.01]"
-      }`}
-      aria-pressed={isSelected}
-      aria-label={`${item.name}, harga ${displayPrice}`}
-    >
-      {/* Popular Badge */}
-      {isPopular && (
-        <div className="absolute -top-2.5 right-2">
-          <Badge className="text-[9px] font-bold px-2 py-0 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] border-0 text-black">
-            <Flame className="h-2.5 w-2.5 mr-1" />
-            TERLARIS
-          </Badge>
-        </div>
-      )}
-
-      {/* Discount Badge */}
-      {item.discount && (
-        <div className="absolute -top-2.5 left-2">
-          <Badge className="text-[9px] font-bold px-2 py-0 bg-green-500 border-0 text-white">
-            -{item.discount}%
-          </Badge>
-        </div>
-      )}
-
-      <div className="flex items-start justify-between gap-2">
-        <p className="text-sm font-medium leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-          {item.name}
-        </p>
-        <Badge 
-          variant="outline" 
-          className="text-[10px] h-5 shrink-0 border-green-500/30 text-green-500 bg-green-500/10"
-        >
-          <Zap className="h-2 w-2 mr-1" />
-          READY
-        </Badge>
-      </div>
-      
-      <div className="mt-2 space-y-1">
-        <p className="text-base font-bold text-primary">
-          {displayPrice}
-        </p>
-        {formattedOriginal && (
-          <p className="text-xs text-muted-foreground line-through">
-            {formattedOriginal}
-          </p>
-        )}
-      </div>
-      
-      <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground">
-        <Clock className="h-2.5 w-2.5" aria-hidden="true" />
-        <span>Proses instan</span>
-      </div>
-      
-      {isSelected && (
-        <div className="absolute top-2 right-2" aria-hidden="true">
-          <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
-            <Check className="h-3.5 w-3.5 text-primary-foreground" />
-          </div>
-        </div>
-      )}
-    </button>
-  );
-});
-
-DenominationCard.displayName = "DenominationCard";
-
 // ─── Custom Hook ────────────────────────────────────────────────────
 
 function useProductDetail(id: string | undefined) {
@@ -324,6 +255,7 @@ export default function ProductDetail() {
   const { isAuthenticated, user } = useAuth();
   const { currency, formatPrice, exchangeRate } = useCurrency();
   const userIdInputRef = useRef<HTMLInputElement>(null);
+  const handleInputChangeRef = useRef<(key: string, value: string) => void>(() => {});
 
   // Form state
   const [formData, setFormData] = useState({
@@ -333,7 +265,17 @@ export default function ProductDetail() {
     recovery1: "",
     recovery2: "",
     recovery3: "",
+    quantity: "",
+    email: "",
+    link: "",
+    notes: "",
+    target: "",
+    phone: "",
+    password: "",
+    heroRequest: "",
+    currentRank: "",
   });
+  const [dynamicFields, setDynamicFields] = useState<Record<string, string>>({});
   const [selectedNominal, setSelectedNominal] = useState<string | null>(null);
   const [voucherCode, setVoucherCode] = useState("");
   const [voucherResult, setVoucherResult] = useState<VoucherResult | null>(null);
@@ -355,14 +297,45 @@ export default function ProductDetail() {
   const { product, denominations, isLoading, isError, isDenomLoading, refetch } = 
     useProductDetail(id);
 
-  // Identify if it's Roblox via Login
+  // Product type system
+  const productType = useMemo<ProductType>(() => getProductTypeFromData(product), [product]);
+  const typeConfig = useMemo(() => getProductTypeConfig(productType), [productType]);
+  const TypeIcon = typeConfig.icon;
+
+  const schemaFields = useMemo<SchemaField[] | null>(() => getInputSchemaFromData(product), [product]);
+  const effectiveFields = useMemo<SchemaField[]>(
+    () => schemaFields ?? (typeConfig.fields as unknown as SchemaField[]),
+    [schemaFields, typeConfig]
+  );
+  const effectiveIsManual = schemaFields
+    ? (product?.fulfillment_type === "manual")
+    : typeConfig.isManual;
+
+  const getFieldValue = useCallback((key: string): string => {
+    if (key in formData) return (formData as any)[key]?.toString() ?? "";
+    return dynamicFields[key] ?? "";
+  }, [formData, dynamicFields]);
+
+  const setFieldValue = useCallback((key: string, value: string) => {
+    if (key in formData) {
+      handleInputChangeRef.current(key, value);
+      return;
+    }
+    setDynamicFields(prev => ({ ...prev, [key]: value }));
+  }, [formData, dynamicFields]);
+
+  // Identify if it's Roblox via Login (special game sub-type)
   const isRobloxLogin = useMemo(() => {
-    if (!product) return false;
+    if (!product || productType !== "game") return false;
     const cat = (product.category || "").toLowerCase();
     const name = (product.name || "").toLowerCase();
-    return (cat.includes("roblox") || name.includes("roblox")) && 
-           (cat.includes("login") || name.includes("login") || name.includes("via login"));
-  }, [product]);
+    return (
+      (cat.includes("roblox") || name.includes("roblox")) &&
+      (cat.includes("login") || name.includes("login") || name.includes("via login"))
+    );
+  }, [product, productType]);
+
+  const isSmm = useMemo(() => productType === "smm", [productType]);
 
   // Mutations & Queries
   const utils = trpc.useUtils();
@@ -443,8 +416,27 @@ export default function ProductDetail() {
     [denominations, selectedNominal]
   );
 
-  const subtotalMyr = selectedItem?.price_myr ?? selectedItem?.price ?? 0;
-  const subtotalIdr = selectedItem?.price_idr ?? (selectedItem as any)?.priceIdr ?? (subtotalMyr * 4300);
+  const basePriceIdr = selectedItem?.price_idr ?? selectedItem?.price ?? 0;
+  const basePriceMyr = selectedItem?.price_myr ?? 0;
+
+  const effectiveQuantity = useMemo(() => {
+    if (isSmm || productType === "joki") {
+      const q = Number(getFieldValue("quantity")) || 1;
+      return Math.max(1, q);
+    }
+    return 1;
+  }, [isSmm, productType, getFieldValue]);
+
+  const subtotalMyr = isSmm
+    ? (basePriceMyr / 1000) * effectiveQuantity
+    : productType === "joki"
+    ? basePriceMyr * effectiveQuantity
+    : basePriceMyr;
+  const subtotalIdr = isSmm
+    ? (basePriceIdr / 1000) * effectiveQuantity
+    : productType === "joki"
+    ? basePriceIdr * effectiveQuantity
+    : basePriceIdr;
   
   const discountMyr = voucherResult?.discountAmount || 0;
   const discountIdr = discountMyr * 4111;
@@ -466,30 +458,87 @@ export default function ProductDetail() {
   const balanceFormatted = formatPrice(balanceMyr, balanceIdr);
   const isBalanceSufficient = balance >= total;
 
+  const targetDisplay = useMemo(() => {
+    if (isRobloxLogin) return formData.userId ? `Login: ${formData.userId}` : "";
+    if (schemaFields) {
+      return effectiveFields
+        .filter(f => f.required)
+        .map(f => {
+          const v = getFieldValue(f.key);
+          return v ? `${getSchemaFieldLabel(f)}: ${String(v)}` : "";
+        })
+        .filter(Boolean)
+        .join(" · ");
+    }
+    if (productType === "smm") return formData.target ? String(formData.target) : "";
+    if (productType === "pulsa") return formData.phone ? String(formData.phone) : "";
+    if (productType === "joki") {
+      const parts = [];
+      if (formData.email) parts.push(`Email: ${formData.email}`);
+      if (formData.password) parts.push(`Password: ***`);
+      if (formData.heroRequest) parts.push(`Hero: ${formData.heroRequest}`);
+      if (formData.currentRank) parts.push(`Rank: ${formData.currentRank}`);
+      if (getFieldValue("quantity")) parts.push(`Qty: ${getFieldValue("quantity")}`);
+      return parts.join(" · ");
+    }
+    if (productType === "vilog" || productType === "voucher") return formData.email ? String(formData.email) : "";
+    return formData.userId ? String(formData.userId) + (formData.zoneId ? ` (${formData.zoneId})` : "") : "";
+  }, [isRobloxLogin, schemaFields, effectiveFields, getFieldValue, productType, formData]);
+
   const isOrderValid = useMemo(() => {
     if (!selectedNominal) return false;
     
     if (isRobloxLogin) {
       if (!formData.userId || !formData.robloxPassword || !formData.recovery1 || !formData.recovery2 || !formData.recovery3) return false;
     } else {
-      if (!formData.userId.trim()) return false;
-      if ((product as any)?.requiresZoneId && !formData.zoneId) return false;
+      const allFilled = effectiveFields.every(field => {
+        if (!field.required) return true;
+        const v = getFieldValue(field.key);
+        return v !== undefined && v !== null && String(v).trim() !== "";
+      });
+      if (!allFilled) return false;
+
+      if (isSmm && selectedItem) {
+        const qty = Number(getFieldValue("quantity")) || 1;
+        const min = (selectedItem as any).min_order || 1;
+        const max = (selectedItem as any).max_order || 999999;
+        if (qty < min || qty > max) return false;
+      }
     }
     
-    // Check payment method
     if (!paymentMethod) return false;
-
     if (!isAuthenticated && paymentMethod === 'qris' && guestPhone.length < 10) return false;
-    
     if (String(product?.id || "").includes("mobile-legends") && !validatedNickname) return false;
     
     return true;
-  }, [formData, selectedNominal, product, isRobloxLogin, isAuthenticated, paymentMethod, guestPhone, validatedNickname]);
+  }, [formData, selectedNominal, product, isRobloxLogin, isAuthenticated, paymentMethod, guestPhone, validatedNickname, effectiveFields, getFieldValue, isSmm, selectedItem]);
+
+  // Server/Provider filtering
+  const servers = useMemo(() => {
+    const s = new Set<string>();
+    denominations.filter(d => d.isActive !== false).forEach(d => s.add((d as any).provider_slug || "mytopupku"));
+    return Array.from(s).sort();
+  }, [denominations]);
+  const [selectedServer, setSelectedServer] = useState("");
+
+  useEffect(() => {
+    if (servers.length > 0 && !servers.includes(selectedServer)) {
+      setSelectedServer(servers[0]);
+    }
+  }, [servers, selectedServer]);
+
+  const filteredDenominations = useMemo(() => {
+    return denominations.filter(d => {
+      if (d.isActive === false) return false;
+      if (selectedServer && (d as any).provider_slug && (d as any).provider_slug !== selectedServer) return false;
+      return true;
+    });
+  }, [denominations, selectedServer]);
 
   // Get popular denominations
   const popularDenoms = useMemo(
-    () => denominations.filter(d => d.popular).slice(0, 2),
-    [denominations]
+    () => filteredDenominations.filter(d => d.popular).slice(0, 2),
+    [filteredDenominations]
   );
 
   // Auto-focus userId input
@@ -511,11 +560,11 @@ export default function ProductDetail() {
         setValidatedNickname(res?.data?.nickname || res?.nickname);
       } else {
         setNicknameError(res?.message || "Nickname tidak ditemukan");
-        setSelectedNominal(null); // Reset selected nominal if invalid
+        setSelectedNominal(null);
       }
     } catch (err: any) {
       setNicknameError(err.message || "Gagal mengecek nickname");
-      setSelectedNominal(null); // Reset selected nominal if invalid
+      setSelectedNominal(null);
     } finally {
       setIsValidatingNickname(false);
     }
@@ -556,9 +605,16 @@ export default function ProductDetail() {
     }
   }, [showConfirm]);
 
+  // QRIS Phone Auto-fill
+  useEffect(() => {
+    if (paymentMethod === 'qris' && isAuthenticated && !guestPhone) {
+      setGuestPhone((user as any)?.phone || (user as any)?.phone_number || '');
+    }
+  }, [paymentMethod, isAuthenticated, guestPhone, user]);
+
   // Validation
   const validateForm = useCallback(() => {
-    if (!product) return;
+    if (!product) return false;
 
     const newErrors: Record<string, string> = {};
     if (!selectedNominal) {
@@ -572,8 +628,21 @@ export default function ProductDetail() {
       if (!formData.recovery2) newErrors.recovery2 = "Recovery Code 2 wajib diisi";
       if (!formData.recovery3) newErrors.recovery3 = "Recovery Code 3 wajib diisi";
     } else {
-      if (!formData.userId.trim()) {
-        newErrors.userId = "User ID wajib diisi";
+      effectiveFields.forEach((field) => {
+        if (!field.required) return;
+        const value = getFieldValue(field.key);
+        if (value === undefined || value === null || String(value).trim() === "") {
+          newErrors[field.key] = `${getSchemaFieldLabel(field)} wajib diisi`;
+        }
+      });
+
+      if (productType === "smm" && selectedItem) {
+        const minOrder = (selectedItem as any).min_order || 0;
+        const maxOrder = (selectedItem as any).max_order || 999999999;
+        const qty = Math.max(1, Number(getFieldValue("quantity")) || 1);
+        if (qty < minOrder || qty > maxOrder) {
+          newErrors.quantity = `Jumlah harus antara ${minOrder} - ${maxOrder === 999999999 ? "Tak Terbatas" : maxOrder}`;
+        }
       }
     }
 
@@ -587,7 +656,7 @@ export default function ProductDetail() {
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData, selectedNominal, product, isAuthenticated, paymentMethod, guestPhone, isRobloxLogin]);
+  }, [formData, selectedNominal, product, isAuthenticated, paymentMethod, guestPhone, isRobloxLogin, effectiveFields, getFieldValue, productType, selectedItem]);
 
   // Handlers
   const handleInputChange = useCallback((field: string, value: string) => {
@@ -600,6 +669,8 @@ export default function ProductDetail() {
       });
     }
   }, [errors]);
+
+  handleInputChangeRef.current = handleInputChange;
 
   const handleSelectNominal = useCallback((denomId: string) => {
     if (needsValidation && !isValidated) {
@@ -657,23 +728,33 @@ export default function ProductDetail() {
   const handleConfirmOrder = useCallback(() => {
     if (!product || !selectedItem) return;
 
-    let finalUserId = formData.userId;
-    let finalZoneId = formData.zoneId;
-
-    if (isRobloxLogin) {
-      finalUserId = `${formData.userId}|${formData.robloxPassword}`;
-      finalZoneId = `${formData.recovery1}|${formData.recovery2}|${formData.recovery3}`;
+    let target: Record<string, string | number>;
+    if (isRobloxLogin && !schemaFields) {
+      target = {
+        user_id: `${formData.userId}|${formData.robloxPassword}`,
+        zone_id: `${formData.recovery1}|${formData.recovery2}|${formData.recovery3}`,
+      };
+    } else if (schemaFields) {
+      target = {};
+      effectiveFields.forEach((field) => {
+        const v = getFieldValue(field.key);
+        if (v !== "" && v !== undefined && v !== null) {
+          target[field.key] = field.key === "quantity" ? Math.max(1, Number(v) || 1) : v;
+        }
+      });
+    } else {
+      target = typeConfig.buildTarget(formData);
     }
 
-    // Use QRIS if selected OR if not enough balance
     if (paymentMethod === 'qris' || !isBalanceSufficient) {
       const payload = {
         service_id: selectedItem.id,
-        game_id: finalUserId,
-        zone_id: finalZoneId,
+        game_id: String(product.id || ""),
+        zone_id: String(target.zone_id || ""),
         phone: guestPhone || "00000000000",
-        amount_myr: totalMyr || selectedItem.price || 0,
-        amount_idr: totalIdr || (selectedItem as any).priceIdr || 0,
+        amount_myr: totalMyr || 0,
+        amount_idr: totalIdr || 0,
+        target,
         ...(voucherResult ? { voucher_code: voucherResult.code } : {})
       } as any;
       
@@ -684,26 +765,38 @@ export default function ProductDetail() {
       }
       return;
     }
-    
-    // Build notes
+
+    let playerId = productType === "smm"
+      ? String(getFieldValue("target") || "")
+      : productType === "joki"
+      ? `Email: ${getFieldValue("email")} | Hero: ${getFieldValue("heroRequest")}`
+      : String(getFieldValue("userId") || "");
     const notes = [
-      `User ID: ${formData.userId}`,
-      formData.zoneId && `Zone ID: ${formData.zoneId}`,
+      `User ID: ${playerId}`,
+      getFieldValue("zoneId") && `Zone ID: ${getFieldValue("zoneId")}`,
       `DenominationId: ${selectedItem.id}`,
       `Item: ${selectedItem.name}`,
+      productType === "smm" && `Quantity: ${getFieldValue("quantity")}`,
+      productType !== "game" && `Type: ${productType}`,
     ].filter(Boolean).join(", ");
 
     createOrderMutation.mutate({
-      items: [{ 
-        productId: product.id, 
-        quantity: 1,
-      }],
+      items: [{ productId: selectedItem.id, quantity: effectiveQuantity }],
       notes,
-      amount_myr: totalMyr || selectedItem.price || 0,
-      amount_idr: totalIdr || (selectedItem as any).priceIdr || 0,
+      target,
+      service_id: selectedItem.id,
+      game_id: playerId,
+      zone_id: String(target.zone_id || ""),
+      amount_myr: totalMyr,
+      amount_idr: totalIdr,
       ...(voucherResult ? { voucher_code: voucherResult.code } : {})
     } as any);
-  }, [product, selectedItem, formData, isBalanceSufficient, createOrderMutation, createQrisOrderMutation, guestOrderMutation, isAuthenticated, paymentMethod, isRobloxLogin, voucherResult, guestPhone]);
+  }, [
+    product, selectedItem, formData, schemaFields, effectiveFields, getFieldValue,
+    isBalanceSufficient, createOrderMutation, createQrisOrderMutation, guestOrderMutation,
+    isAuthenticated, paymentMethod, isRobloxLogin, voucherResult, guestPhone,
+    typeConfig, productType, totalMyr, totalIdr, effectiveQuantity,
+  ]);
 
   // Error state
   if (isError) {
@@ -822,7 +915,7 @@ export default function ProductDetail() {
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00c864]/10 border border-[#00c864]/20 text-[#00c864] text-xs font-bold tracking-wide">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse" />
-                  PROSES INSTAN
+                  {effectiveIsManual ? "PROSES MANUAL" : "PROSES INSTAN"}
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold tracking-wide">
                   <Star className="w-3.5 h-3.5 fill-amber-500" />
@@ -834,7 +927,7 @@ export default function ProductDetail() {
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white/70 text-xs font-bold tracking-wide">
                   <ShoppingCart className="w-3.5 h-3.5" />
-                  {denominations.length} PILIHAN
+                  {filteredDenominations.length} PILIHAN
                 </div>
               </div>
             </div>
@@ -912,6 +1005,17 @@ export default function ProductDetail() {
                   </div>
                 )}
 
+              {/* Product type badge + guidance */}
+              <div className="px-2 sm:px-4 pt-2">
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
+                    <TypeIcon className="h-3 w-3 mr-1" />
+                    {getTypeLabel(productType)}
+                  </Badge>
+                  <span className="text-xs sm:text-sm text-white/60">{getTypeDescription(productType)}</span>
+                </div>
+              </div>
+
               {isRobloxLogin ? (
                 <div className="p-2 sm:p-4 flex flex-col gap-5">
                   <div className="bg-amber-500/5 border border-amber-500/10 p-4 rounded-2xl flex items-start gap-3 mb-2">
@@ -975,46 +1079,95 @@ export default function ProductDetail() {
               ) : (
                 <div className="p-2 sm:p-4 flex flex-col gap-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="relative group">
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
-                        {(product as any)?.userIdLabel || "User ID"}
-                      </label>
-                      <div className="relative">
-                        <input
-                          ref={userIdInputRef}
-                          type={showUserId ? "text" : "password"}
-                          value={formData.userId}
-                          onChange={(e) => handleInputChange("userId", e.target.value)}
-                          placeholder={(product as any)?.userIdPlaceholder || `Masukkan ${(product as any)?.userIdLabel || "User ID"}`}
-                          className={`w-full bg-[#0B0A10]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                          {formData.userId && (
-                            <button onClick={() => handleCopy(formData.userId, "userId")} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                              {copiedField === "userId" ? <Check className="h-4 w-4 text-[#00c864]" /> : <Copy className="h-4 w-4 text-white/40 hover:text-white/80" />}
-                            </button>
-                          )}
-                          <button onClick={() => setShowUserId(!showUserId)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                            {showUserId ? <EyeOff className="h-4 w-4 text-white/40 hover:text-white/80" /> : <Eye className="h-4 w-4 text-white/40 hover:text-white/80" />}
-                          </button>
-                        </div>
-                      </div>
-                      {errors.userId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.userId}</p>}
-                    </div>
+                    {effectiveFields.map((field) => {
+                      const error = errors[field.key];
+                      const value = getFieldValue(field.key);
 
-                    <div className="relative group">
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
-                        {(product as any)?.zoneIdLabel || "Zone ID / Server"} {(!(product as any)?.requiresZoneId) && <span className="text-white/30 lowercase">(opsional)</span>}
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.zoneId}
-                        onChange={(e) => handleInputChange("zoneId", e.target.value)}
-                        placeholder={(product as any)?.zoneIdPlaceholder || `Masukkan ${(product as any)?.zoneIdLabel || "Zone ID"}`}
-                        className={`w-full bg-[#0B0A10]/80 border ${errors.zoneId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
-                      />
-                      {errors.zoneId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.zoneId}</p>}
-                    </div>
+                      const label = schemaFields
+                        ? getSchemaFieldLabel(field)
+                        : field.key === "userId"
+                        ? product.userIdLabel || "User ID"
+                        : field.key === "zoneId"
+                        ? `${product.zoneIdLabel || "Zone ID / Server"}${!product.requiresZoneId ? " (opsional)" : ""}`
+                        : field.placeholder || field.key;
+
+                      const placeholder = schemaFields
+                        ? field.placeholder || `Masukkan ${label}`
+                        : field.key === "userId"
+                        ? product.userIdPlaceholder || `Masukkan ${product.userIdLabel || "User ID"}`
+                        : field.key === "zoneId"
+                        ? product.zoneIdPlaceholder || `Masukkan ${product.zoneIdLabel || "Zone ID"}`
+                        : field.placeholder || `Masukkan ${label}`;
+
+                      const isUserIdPassword = !schemaFields && field.key === "userId" && productType === "game";
+                      const isSelect = field.type === "select" && Array.isArray(field.options) && field.options.length > 0;
+
+                      return (
+                        <div key={field.key} className={`relative group ${field.type === "textarea" ? "md:col-span-2" : ""}`}>
+                          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
+                            {label}
+                            {field.required && <span className="text-primary ml-1">*</span>}
+                          </label>
+                          {isUserIdPassword ? (
+                            <div className="relative">
+                              <input
+                                ref={userIdInputRef}
+                                type={showUserId ? "text" : "password"}
+                                value={value}
+                                onChange={(e) => setFieldValue(field.key, e.target.value)}
+                                placeholder={placeholder}
+                                className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
+                              />
+                              <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                                {String(value || "") && (
+                                  <button onClick={() => handleCopy(String(value || ""), field.key)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                                    {copiedField === field.key ? <Check className="h-4 w-4 text-[#00c864]" /> : <Copy className="h-4 w-4 text-white/40 hover:text-white/80" />}
+                                  </button>
+                                )}
+                                <button onClick={() => setShowUserId(!showUserId)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+                                  {showUserId ? <EyeOff className="h-4 w-4 text-white/40 hover:text-white/80" /> : <Eye className="h-4 w-4 text-white/40 hover:text-white/80" />}
+                                </button>
+                              </div>
+                            </div>
+                          ) : field.type === "textarea" ? (
+                            <textarea
+                              value={String(value || "")}
+                              onChange={(e) => setFieldValue(field.key, e.target.value)}
+                              placeholder={placeholder}
+                              rows={4}
+                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl resize-none`}
+                            />
+                          ) : isSelect ? (
+                            <select
+                              value={String(value || "")}
+                              onChange={(e) => setFieldValue(field.key, e.target.value)}
+                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl appearance-none`}
+                            >
+                              <option value="">Pilih...</option>
+                              {(field.options || []).map((opt) => (
+                                <option key={opt} value={opt} className="bg-[#0B0A10] text-white">{opt}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={field.type === "number" ? "number" : field.type === "tel" ? "tel" : field.type === "email" ? "email" : field.type === "url" ? "url" : field.type === "password" ? (showUserId ? "text" : "password") : "text"}
+                              min={field.min}
+                              max={field.max}
+                              value={value}
+                              onChange={(e) => setFieldValue(field.key, field.type === "number" ? e.target.value : e.target.value)}
+                              placeholder={placeholder}
+                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                            />
+                          )}
+                          {error && <p className="text-red-400 text-xs mt-2 ml-1">{error}</p>}
+                          {field.key === "quantity" && selectedItem && (
+                            <p className="text-[#00c864]/80 text-xs mt-2 ml-1 font-medium">
+                              Min: {(selectedItem as any).min_order || 1} | Max: {(selectedItem as any).max_order || "Tak Terbatas"}
+                            </p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                   
                   {/* Nickname Validation Result */}
@@ -1059,7 +1212,7 @@ export default function ProductDetail() {
                   </div>
                   {!isDenomLoading && (
                     <Badge variant="secondary" className="text-xs bg-white/5 border border-white/10 hover:bg-white/10 font-bold tracking-wider">
-                      {denominations.length} TERSEDIA
+                      {filteredDenominations.length} TERSEDIA
                     </Badge>
                   )}
                 </div>
@@ -1077,7 +1230,7 @@ export default function ProductDetail() {
                     <p className="text-sm font-bold text-white/50 tracking-wider uppercase mt-4">Memuat nominal...</p>
                     <span className="sr-only">Memuat daftar nominal...</span>
                   </div>
-                ) : denominations.length === 0 ? (
+                ) : filteredDenominations.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Gamepad2 className="h-12 w-12 mx-auto mb-3 opacity-20" aria-hidden="true" />
                     <p className="text-sm font-bold text-white/50 tracking-wider uppercase">Belum ada nominal tersedia</p>
@@ -1085,6 +1238,27 @@ export default function ProductDetail() {
                   </div>
                 ) : (
                   <div className={needsValidation && !isValidated ? "pointer-events-none opacity-40 select-none transition-opacity duration-300" : "transition-opacity duration-300"}>
+                    {/* Server Tabs */}
+                    {servers.length > 1 && (
+                      <div className="mb-6">
+                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-3 tracking-widest uppercase flex items-center gap-1.5">
+                          <Server className="h-3.5 w-3.5 text-purple-400" />
+                          Pilih Server
+                        </p>
+                        <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/10 w-fit">
+                          {servers.map((srv, idx) => (
+                            <button
+                              key={srv}
+                              onClick={() => setSelectedServer(srv)}
+                              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${selectedServer === srv ? 'bg-primary text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+                            >
+                              {srv === 'mytopupku' ? 'Server 1' : srv === 'zxuantopup' ? 'Server 2' : `Server ${idx + 1}`}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Popular denominations highlighted */}
                     {popularDenoms.length > 0 && (
                       <div className="mb-6">
@@ -1100,6 +1274,8 @@ export default function ProductDetail() {
                               isSelected={selectedNominal === item.id}
                               onSelect={handleSelectNominal}
                               isPopular={true}
+                              productType={productType}
+                              isManual={effectiveIsManual}
                             />
                           ))}
                         </div>
@@ -1112,12 +1288,14 @@ export default function ProductDetail() {
                       role="radiogroup" 
                       aria-label="Pilih nominal top up"
                     >
-                      {denominations.map((item) => (
+                      {filteredDenominations.map((item) => (
                         <DenominationCard
                           key={item.id}
                           item={item}
                           isSelected={selectedNominal === item.id}
                           onSelect={handleSelectNominal}
+                          productType={productType}
+                          isManual={effectiveIsManual}
                         />
                       ))}
                     </div>
@@ -1282,10 +1460,9 @@ export default function ProductDetail() {
                 <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
                   <span className="text-white/50 text-xs font-bold uppercase tracking-widest shrink-0">Target</span>
                   <span className="text-right ml-4 font-bold">
-                    {formData.userId ? (
+                    {targetDisplay ? (
                       <span className="text-white font-mono bg-white/5 px-2 py-1 rounded-md">
-                        {formData.userId}
-                        {formData.zoneId && ` (${formData.zoneId})`}
+                        {targetDisplay}
                       </span>
                     ) : (
                       <span className="text-white/30 italic">Belum diisi</span>

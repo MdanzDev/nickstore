@@ -10,9 +10,6 @@ import {
   Search,
   Zap,
   LayoutGrid,
-  Film,
-  Ticket,
-  Swords,
   ChevronLeft,
   ChevronRight,
   X,
@@ -24,7 +21,6 @@ import {
   ArrowUpDown,
   Grid3X3,
   List,
-  Crown,
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
@@ -41,13 +37,16 @@ const getImageUrl = (url: string): string => {
 /* ─────────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────────── */
+import { getTypeLabel, getTypeColor, getProductTypeFromData, getProductTypeConfig, PRODUCT_TYPES } from "@/lib/productTypes";
+
 const categories = [
   { id: "all", label: "Semua", icon: LayoutGrid, color: "#8B5CF6" },
-  { id: "game", label: "Game", icon: Gamepad2, color: "#38BDF8" },
-  { id: "streaming", label: "Streaming", icon: Film, color: "#A78BFA" },
-  { id: "voucher", label: "Voucher", icon: Ticket, color: "#D946EF" },
-  { id: "premium", label: "Premium Apps", icon: Crown, color: "#F472B6" },
-  { id: "joki", label: "Joki", icon: Swords, color: "#00c864" },
+  ...Object.values(PRODUCT_TYPES).map(t => ({
+    id: t.key,
+    label: t.label,
+    icon: t.icon,
+    color: t.color,
+  })),
 ];
 
 const sortOptions = [
@@ -88,7 +87,10 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
   const [isHovered, setIsHovered] = useState(false);
   
   const name = String(product.name);
-  const category = String(product.category || "Game Top Up");
+  const productType = getProductTypeFromData(product);
+  const typeConfig = getProductTypeConfig(productType);
+  const category = String(product.category || typeConfig.label);
+  const categoryColor = getTypeColor(productType);
   const imageUrl = product.images?.[0] ? getImageUrl(String(product.images[0])) : null;
   const hasPrice = product.price && Number(product.price) > 0;
 
@@ -122,7 +124,11 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
           </div>
           <div className="ml-4 flex-1">
             <p className="font-bold text-[15px] text-white tracking-wide truncate group-hover:text-primary transition-colors">{name}</p>
-            <p className="text-[11px] text-white/40 mt-0.5 uppercase tracking-wider font-medium">{category}</p>
+            <p className="text-[11px] text-white/40 mt-0.5 uppercase tracking-wider font-medium">
+              <span className="inline-flex items-center gap-1" style={{ color: categoryColor }}>
+                <typeConfig.icon className="w-3 h-3" /> {getTypeLabel(productType)}
+              </span>
+            </p>
           </div>
           <div className="text-right">
             <span className="block text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">
@@ -200,7 +206,9 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
               {name}
             </p>
             <p className="text-[11px] text-white/40 mt-1 uppercase tracking-wider font-medium">
-              {category}
+              <span className="inline-flex items-center gap-1" style={{ color: categoryColor }}>
+                <typeConfig.icon className="w-3 h-3" /> {getTypeLabel(productType)}
+              </span>
             </p>
           </div>
           <div className="flex items-end justify-between mt-auto pt-2 border-t border-white/5">
