@@ -169,7 +169,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
+              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-3xl sm:text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
                 {imageUrl}
               </div>
             )
@@ -438,7 +438,7 @@ export default function Products() {
   const totalPages = meta?.pages || Math.ceil(totalProducts / ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-[#080b14] text-white">
+    <div className="min-h-screen bg-[#080b14] text-white overflow-hidden">
       <SeoHead
         title="Katalog Game & Voucher Top Up Murah"
         description="Senarai penuh topup game & voucher murah di Kryz-Net. Beli Diamonds Mobile Legends, Free Fire, Honor of Kings, Magic Chess & voucher secara automatik 24/7."
@@ -449,7 +449,7 @@ export default function Products() {
       <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.08)_0%,transparent_70%)]" />
 
       {/* Header Section */}
-      <div className="relative pt-32 pb-12 px-6">
+      <div className="relative pt-20 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6">
         <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none border-b border-white/5" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -458,7 +458,7 @@ export default function Products() {
                 <LayoutGrid className="w-3 h-3 text-primary" />
                 Katalog Produk
               </div>
-              <h1 className="text-4xl md:text-5xl font-black text-white" style={{ fontFamily: "'Syne', sans-serif" }}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white" style={{ fontFamily: "'Syne', sans-serif" }}>
                 Jelajahi <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400">Semua Game</span>
               </h1>
               <p className="text-sm text-white/50 flex items-center gap-2">

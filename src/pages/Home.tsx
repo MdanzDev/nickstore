@@ -785,7 +785,7 @@ export default function Home() {
 
       <main id="main-content">
         {/* ── CENTRALIZED SEARCH HERO ── */}
-        <section className="relative pt-28 pb-16 overflow-hidden">
+        <section className="relative pt-20 sm:pt-28 pb-16 overflow-hidden">
           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.18)_0%,transparent_70%)] blur-3xl" />
 
@@ -912,7 +912,7 @@ export default function Home() {
                 className="relative p-8 group border-0 border-r border-white/5 last:border-r-0 hover:bg-white/[0.05] transition-colors"
               >
                 <p
-                  className="relative text-4xl lg:text-5xl font-extrabold mb-2"
+                  className="relative text-2xl sm:text-3xl lg:text-5xl font-extrabold mb-2"
                   style={{ color: s.color, fontFamily: "'JetBrains Mono', monospace" }}
                 >
                   {s.n}
@@ -1017,7 +1017,7 @@ export default function Home() {
                     }}
                   />
                   <p
-                    className="text-5xl font-extrabold mb-6 leading-none"
+                    className="text-3xl sm:text-5xl font-extrabold mb-6 leading-none"
                     style={{
                       color: `${f.color}20`,
                       fontFamily: "'JetBrains Mono', monospace",
@@ -1125,7 +1125,7 @@ export default function Home() {
 
         {/* ── CTA ── */}
         <section className="max-w-7xl mx-auto px-6 pb-24" aria-label="Call to action">
-          <Card className="relative rounded-3xl overflow-hidden p-12 md:p-16 text-center bg-gradient-to-r from-[#8B5CF6]/10 via-[#D946EF]/5 to-[#8B5CF6]/10 border border-primary/20">
+          <Card className="relative rounded-3xl overflow-hidden p-8 sm:p-12 md:p-16 text-center bg-gradient-to-r from-[#8B5CF6]/10 via-[#D946EF]/5 to-[#8B5CF6]/10 border border-primary/20">
             <div className="absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none bg-primary/10" />
             <div className="absolute bottom-0 left-0 w-60 h-60 rounded-full blur-3xl pointer-events-none bg-amber-400/5" />
             <div

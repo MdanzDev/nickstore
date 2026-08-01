@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="absolute inset-0 bg-gradient-to-t from-[#8B5CF6]/5 to-transparent pointer-events-none" />
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-t from-[#D946EF]/10 to-transparent blur-[120px] pointer-events-none rounded-full" />
       
-      <div className="container mx-auto px-4 py-16 relative z-10">
+      <div className="container mx-auto px-4 py-10 sm:py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8">
           <div className="space-y-4">
             <div className="flex items-center gap-2 shrink-0 group">

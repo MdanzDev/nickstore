@@ -828,7 +828,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0A10]">
+    <div className="min-h-screen bg-[#0B0A10] overflow-hidden">
       <SeoHead
         title={`Topup ${product.name} Murah & Instant`}
         description={`Beli item & topup ${product.name} automatik 24/7 dengan harga termurah di NickStore. Proses pantas, telus & selamat.`}
@@ -883,7 +883,7 @@ export default function ProductDetail() {
                     }}
                   />
                 ) : (
-                  <div className="w-full h-full bg-white/5 flex items-center justify-center text-7xl group-hover:scale-110 transition-transform duration-700">
+                  <div className="w-full h-full bg-white/5 flex items-center justify-center text-4xl sm:text-7xl group-hover:scale-110 transition-transform duration-700">
                     {getImageUrl(String(product.images[0]))}
                   </div>
                 )
@@ -908,7 +908,7 @@ export default function ProductDetail() {
               <p className="text-xs font-bold text-primary tracking-widest uppercase mb-3 flex items-center gap-2">
                 <Tag className="w-3.5 h-3.5" /> {String(product.category || "Game Top Up")}
               </p>
-              <h1 className="text-4xl sm:text-5xl font-black text-white mb-6 leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-6 leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
                 {String(product.name)}
               </h1>
               
@@ -1383,7 +1383,7 @@ export default function ProductDetail() {
                         placeholder="Contoh: 081234567890"
                         value={guestPhone}
                         onChange={(e) => setGuestPhone(e.target.value)}
-                        className={`w-full bg-[#0B0A10]/80 border ${!guestPhone ? 'border-white/10 group-hover:border-white/20' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-14`}
+                        className={`w-full bg-[#0B0A10]/80 border ${!guestPhone ? 'border-white/10 group-hover:border-white/20' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-12 sm:h-14`}
                         maxLength={15}
                       />
                     </div>
@@ -1412,7 +1412,7 @@ export default function ProductDetail() {
                 </Badge>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <span className="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
                   4.99
                 </span>
                 <div>
@@ -1557,7 +1557,7 @@ export default function ProductDetail() {
                   
                   <div className="flex justify-between items-end pt-4 mt-4 border-t border-white/5">
                     <span className="text-sm font-bold uppercase tracking-widest text-white/50 mb-1">Total Pembayaran</span>
-                    <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                    <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
                       {selectedItem ? formattedTotal : "-"}
                     </span>
                   </div>
@@ -1577,7 +1577,7 @@ export default function ProductDetail() {
               </div>
 
               <Button
-                className={`hidden lg:flex w-full mt-6 text-black font-black h-14 rounded-xl text-base tracking-wide transition-all duration-300 ${
+                className={`hidden lg:flex w-full mt-6 text-black font-black h-12 sm:h-14 rounded-xl text-base tracking-wide transition-all duration-300 ${
                   isOrderValid 
                     ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] border-0" 
                     : "bg-white/10 text-white/30 border border-white/5 hover:bg-white/10"
