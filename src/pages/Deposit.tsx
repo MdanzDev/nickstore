@@ -384,10 +384,16 @@ export default function Deposit() {
   const getQrImageUrl = () => {
     if (!depositData) return "";
     if (depositData.qrString?.startsWith("http")) return depositData.qrString;
+    if (depositData.qrImage?.startsWith("http")) return depositData.qrImage;
     if (depositData.qrImage?.includes("create-qr-code/?size=300x300&data=http")) {
       return decodeURIComponent(depositData.qrImage.split("data=")[1]);
     }
-    return depositData.qrImage;
+    // Convert QRIS raw string to QR code image via Google Charts API
+    const qrData = depositData.qrString || depositData.qrImage || "";
+    if (qrData) {
+      return `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${encodeURIComponent(qrData)}&choe=UTF-8`;
+    }
+    return "";
   };
 
   // Loading state
