@@ -70,20 +70,29 @@ export async function externalLogin(email: string, password: string) {
 
   const { data: profile } = await supabase.from("users").select("*").eq("id", data.user.id).single();
   const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", data.user.id).maybeSingle();
-  const balanceMyr = parseFloat(profile?.balance_myr || wallet?.balance_myr || 0);
+
+  // Fallback to profiles table for legacy users
+  let legacyProfile: any = null;
+  if (!profile || !profile.role) {
+    const { data: lp } = await supabase.from("profiles").select("*").eq("id", data.user.id).maybeSingle();
+    legacyProfile = lp;
+  }
+
+  const effectiveRole = profile?.role || legacyProfile?.role || "customer";
+  const balanceMyr = parseFloat(profile?.balance_myr || wallet?.balance_myr || legacyProfile?.balance || 0);
 
   const mappedUser: ExternalApiUser = {
     id: data.user.id,
-    name: profile?.username || profile?.name || email.split("@")[0],
+    name: profile?.username || profile?.name || legacyProfile?.name || email.split("@")[0],
     email: email,
-    phone: profile?.phone || "",
+    phone: profile?.phone || legacyProfile?.phone || "",
     telegramId: profile?.telegram_id ? String(profile.telegram_id) : undefined,
     avatar: profile?.avatar || "",
     accountBalance: balanceMyr,
     balanceMyr: balanceMyr,
     balanceIdr: convertMyrToIdr(balanceMyr),
-    roles: [profile?.role || "customer"],
-    isActive: profile?.status !== "blocked",
+    roles: [effectiveRole],
+    isActive: profile?.status !== "blocked" && legacyProfile?.status !== "blocked",
     createdAt: data.user.created_at,
     updatedAt: new Date().toISOString(),
   };
@@ -131,21 +140,30 @@ export async function externalGetMe(jwtToken: string) {
 
   const { data: profile } = await supabase.from("users").select("*").eq("id", user.id).single();
   const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", user.id).maybeSingle();
-  const balanceMyr = parseFloat(wallet?.balance_myr || profile?.balance_myr || 0);
+
+  // Fallback to profiles table for legacy users
+  let legacyProfile: any = null;
+  if (!profile || !profile.role) {
+    const { data: lp } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+    legacyProfile = lp;
+  }
+
+  const effectiveRole = profile?.role || legacyProfile?.role || "customer";
+  const balanceMyr = parseFloat(wallet?.balance_myr || profile?.balance_myr || legacyProfile?.balance || 0);
 
   return {
     id: user.id,
-    name: profile?.username || profile?.name || user.email?.split("@")[0] || "User",
-    email: user.email || profile?.email || "",
-    phone: profile?.phone || "",
+    name: profile?.username || profile?.name || legacyProfile?.name || user.email?.split("@")[0] || "User",
+    email: user.email || profile?.email || legacyProfile?.email || "",
+    phone: profile?.phone || legacyProfile?.phone || "",
     telegramId: profile?.telegram_id ? String(profile.telegram_id) : undefined,
     avatar: profile?.avatar || "",
     accountBalance: balanceMyr,
     balanceMyr: balanceMyr,
     balanceIdr: convertMyrToIdr(balanceMyr),
-    roles: [profile?.role || "customer"],
-    isActive: profile?.status !== "blocked",
-    createdAt: user.created_at || profile?.created_at,
+    roles: [effectiveRole],
+    isActive: profile?.status !== "blocked" && legacyProfile?.status !== "blocked",
+    createdAt: user.created_at || profile?.created_at || legacyProfile?.created_at,
     updatedAt: new Date().toISOString(),
   } as ExternalApiUser;
 }
