@@ -251,6 +251,10 @@ export async function externalGetProducts(params?: { page?: number; limit?: numb
       products = products.filter((p: any) => p.name.toLowerCase().includes(s));
     }
 
+    if (params?.category && params.category !== "all") {
+      products = products.filter((p: any) => p.category === params.category);
+    }
+
     return { data: products, meta: { total: products.length, page: 1, limit: 100, pages: 1 } };
   } catch {
     return { data: [], meta: { total: 0, page: 1, limit: 100, pages: 1 } };
