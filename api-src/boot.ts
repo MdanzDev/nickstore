@@ -291,3 +291,36 @@ if (process.env.NODE_ENV === "production" && !process.env.VERCEL) {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }
+
+// Self-pinging sync: keeps the serverless function warm and runs sync every 5min.
+// Vercel free tier persists the worker ~5-10min after last request; combined with
+// regular traffic this effectively replaces cron.
+let syncInterval: ReturnType<typeof setInterval> | null = null;
+const startSyncPing = () => {
+  if (syncInterval) return;
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.EXTERNAL_API_URL
+    ? process.env.EXTERNAL_API_URL.replace("api.kryz-net.space", "nickstore.vercel.app")
+    : "http://localhost:3000";
+  const cronSecret = process.env.CRON_SECRET || "";
+
+  syncInterval = setInterval(async () => {
+    try {
+      const headers: Record<string, string> = {};
+      if (cronSecret) headers["Authorization"] = `Bearer ${cronSecret}`;
+      await fetch(`${baseUrl}/api/cron/sync`, { headers });
+      console.log("[SYNC-PING] Triggered sync");
+    } catch (e: any) {
+      console.log("[SYNC-PING] Failed:", e.message);
+    }
+  }, 5 * 60 * 1000);
+
+  console.log(`[SYNC-PING] Started, pinging ${baseUrl}/api/cron/sync every 5min`);
+};
+
+// Start pinging on any request (cold start or warm)
+app.use("*", async (c, next) => {
+  startSyncPing();
+  await next();
+});
