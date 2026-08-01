@@ -10,6 +10,7 @@ import {
   Search,
   Zap,
   LayoutGrid,
+  Share2,
   ChevronLeft,
   ChevronRight,
   X,
@@ -38,6 +39,7 @@ const getImageUrl = (url: string): string => {
    CONSTANTS
 ───────────────────────────────────────────── */
 import { getTypeLabel, getTypeColor, getProductTypeFromData, getProductTypeConfig, PRODUCT_TYPES } from "@/lib/productTypes";
+import { groupSmmProducts, type SmmPlatformGroup } from "@/lib/smmPlatforms";
 
 const categories = [
   { id: "all", label: "Semua", icon: LayoutGrid, color: "#8B5CF6" },
@@ -357,6 +359,7 @@ export default function Products() {
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "popular");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
+  const [activeSmmPlatform, setActiveSmmPlatform] = useState<string | null>(null);
 
   // Query
   const { data, isLoading } = trpc.products.list.useQuery({
@@ -411,6 +414,25 @@ export default function Products() {
   const meta = useMemo(() => {
     return (data as any)?.data?.meta || (data as any)?.meta || (data as any)?.result?.data?.json?.meta;
   }, [data]);
+
+  // Group SMM products by platform for the "Semua" / "smm" category views
+  const grouped = useMemo(() => {
+    if (activeCategory !== "all" && activeCategory !== "smm") return null;
+    if (search) return null;
+    return groupSmmProducts(products);
+  }, [products, activeCategory, search]);
+
+  // When drilling into an SMM platform, show only that platform's sub-products
+  const displayProducts = useMemo(() => {
+    if (activeSmmPlatform && grouped) {
+      const platform = grouped.smmPlatforms.find(p => p.platform === activeSmmPlatform);
+      return platform?.products || [];
+    }
+    if (grouped && !activeSmmPlatform) {
+      return grouped.others;
+    }
+    return products;
+  }, [products, grouped, activeSmmPlatform]);
 
   const totalProducts = meta?.total || products.length;
   const totalPages = meta?.pages || Math.ceil(totalProducts / ITEMS_PER_PAGE);
@@ -580,12 +602,75 @@ export default function Products() {
           </div>
         ) : (
           <>
+            {/* SMM Platform Cards — grouped view */}
+            {grouped && !activeSmmPlatform && grouped.smmPlatforms.length > 0 && (
+              <>
+                <div className="mb-4">
+                  <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
+                    <Share2 className="w-4 h-4" /> Sosial Media
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    {grouped.smmPlatforms.map((platform) => (
+                      <button
+                        key={platform.platform}
+                        onClick={() => setActiveSmmPlatform(platform.platform)}
+                        className="relative p-5 rounded-2xl border-2 border-white/5 bg-white/[0.02] hover:border-[#A78BFA]/40 hover:bg-[#A78BFA]/5 transition-all duration-300 text-left group"
+                      >
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-10 h-10 rounded-xl bg-[#A78BFA]/10 flex items-center justify-center">
+                            <Share2 className="w-5 h-5 text-[#A78BFA]" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-sm text-white truncate">{platform.platform}</p>
+                            <p className="text-[10px] text-white/40">{platform.products.length} layanan</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#A78BFA]">
+                            {platform.totalServices} item
+                          </span>
+                          <span className="text-[10px] text-white/30 group-hover:text-white/60 transition-colors">
+                            Lihat →
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {/* Divider */}
+                {displayProducts.length > 0 && (
+                  <div className="flex items-center gap-4 my-6">
+                    <div className="flex-1 border-t border-white/5" />
+                    <span className="text-xs font-bold uppercase tracking-widest text-white/30">Game & Lainnya</span>
+                    <div className="flex-1 border-t border-white/5" />
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* SMM Platform drill-down back button */}
+            {activeSmmPlatform && grouped && (
+              <div className="mb-4">
+                <button
+                  onClick={() => setActiveSmmPlatform(null)}
+                  className="flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Kembali ke Semua
+                </button>
+                <h3 className="text-lg font-bold text-white mt-2 flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-[#A78BFA]" /> {activeSmmPlatform}
+                  <span className="text-xs font-normal text-white/40">({displayProducts.length} layanan)</span>
+                </h3>
+              </div>
+            )}
+
             <div className={`grid gap-4 ${
               view === "grid" 
                 ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" 
                 : "grid-cols-1 max-w-3xl mx-auto"
             }`}>
-              {products.map((product: any) => (
+              {displayProducts.map((product: any) => (
                 <ProductCard key={String(product.id)} product={product} />
               ))}
             </div>
@@ -593,7 +678,7 @@ export default function Products() {
             {/* Results info */}
             <div className="text-center mt-6">
               <p className="text-xs text-muted-foreground">
-                Menampilkan {products.length} dari {totalProducts.toLocaleString()} produk
+                Menampilkan {displayProducts.length} dari {totalProducts.toLocaleString()} produk
                 {meta?.pages > 1 && ` • Halaman ${page} dari ${meta.pages}`}
               </p>
             </div>
