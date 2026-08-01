@@ -12,7 +12,7 @@ export default function UserApi() {
   const [copied, setCopied] = useState(false);
   const [newKey, setNewKey] = useState<string | null>(null);
 
-  const { data: apiKeyData, isLoading, refetch } = trpc.users.getApiKey.useQuery();
+  const { data: apiKeyData, isPending, refetch } = trpc.users.getApiKey.useQuery();
   const generateApiKey = trpc.users.generateApiKey.useMutation({
     onSuccess: (data) => {
       setNewKey(data.api_key);
@@ -93,7 +93,7 @@ export default function UserApi() {
         <Card className="bg-slate-900/70 border-slate-800 p-6 space-y-6 rounded-xl">
           <h2 className="text-lg font-semibold text-slate-200">Kunci API Aktif</h2>
 
-          {isLoading ? (
+          {isPending ? (
             <div className="flex items-center gap-2 text-slate-400 py-4">
               <Loader2 className="w-5 h-5 animate-spin text-amber-400" /> Memuat data API Key...
             </div>
@@ -110,10 +110,10 @@ export default function UserApi() {
                   <Button 
                     variant="outline"
                     onClick={handleRegenerate}
-                    disabled={generateApiKey.isLoading}
+                    disabled={generateApiKey.isPending}
                     className="border-amber-500/40 hover:bg-amber-500/10 text-amber-400 font-medium shrink-0 flex gap-2"
                   >
-                    {generateApiKey.isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
+                    {generateApiKey.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                     Regenerate Key
                   </Button>
                 </div>
@@ -136,10 +136,10 @@ export default function UserApi() {
               </div>
               <Button 
                 onClick={() => generateApiKey.mutate()} 
-                disabled={generateApiKey.isLoading}
+                disabled={generateApiKey.isPending}
                 className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold"
               >
-                {generateApiKey.isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Key className="w-4 h-4 mr-2" />}
+                {generateApiKey.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Key className="w-4 h-4 mr-2" />}
                 Buat API Key
               </Button>
             </div>

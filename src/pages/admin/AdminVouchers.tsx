@@ -296,7 +296,7 @@ export default function AdminVouchers() {
                         <td className="py-3 px-3 text-center">
                           <div className="flex items-center justify-center gap-2">
                             <button
-                              onClick={() => toggleVoucherMutation.mutate({ id: v.id })}
+                              onClick={() => toggleVoucherMutation.mutate({ id: v.id, isActive: !v.isActive })}
                               className="p-1.5 rounded-lg bg-white/5 text-amber-400 hover:bg-white/10"
                             >
                               <Power className="h-3.5 w-3.5" />

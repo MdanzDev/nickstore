@@ -426,7 +426,7 @@ export default function ProductDetail() {
       });
       setSubmitError(null);
       utils.orders.list.invalidate();
-      const orderId = data.id || data.data?.id || (data as any).invoice_number || (data.data as any)?.invoice_number;
+      const orderId = data.id || (data as any).invoice_number;
       if (orderId) {
         navigate(`/order/${orderId}`);
       }

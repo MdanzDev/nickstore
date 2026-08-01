@@ -83,7 +83,7 @@ export default function AdminUsers() {
     return () => clearTimeout(t);
   }, [search]);
 
-  const { data, isLoading, refetch } = trpc.users.list.useQuery({
+  const { data, isPending, refetch } = trpc.users.list.useQuery({
     page,
     limit: 20,
     search: debouncedSearch || undefined,
@@ -188,10 +188,10 @@ export default function AdminUsers() {
   const users = (data?.data || []) as User[];
   const meta = data?.meta;
   const isMutating =
-    updateMutation.isLoading ||
-    deleteMutation.isLoading ||
-    adjustBalanceMutation.isLoading ||
-    blockMutation.isLoading;
+    updateMutation.isPending ||
+    deleteMutation.isPending ||
+    adjustBalanceMutation.isPending ||
+    blockMutation.isPending;
 
   const openDialog = (user: User, tab: TabType = "edit") => {
     setSelectedUser(user);
@@ -328,7 +328,7 @@ export default function AdminUsers() {
   };
   const itemVariants = {
     hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+    visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
   };
 
   return (
@@ -344,9 +344,9 @@ export default function AdminUsers() {
             <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
               {meta?.total || 0} total users
             </span>
-            <button onClick={() => refetch()} disabled={isLoading}
+            <button onClick={() => refetch()} disabled={isPending}
               className="lg-btn-ghost flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold">
-              <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`h-3.5 w-3.5 ${isPending ? "animate-spin" : ""}`} />
               Refresh
             </button>
           </div>
@@ -374,7 +374,7 @@ export default function AdminUsers() {
         {/* Table */}
         <motion.div variants={itemVariants}>
           <div className="lg-card rounded-2xl overflow-hidden">
-          {isLoading ? (
+          {isPending ? (
             <div className="p-12 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#8B5CF6]" />
               <p className="text-sm text-white/40 mt-3 font-bold">Memuat data users...</p>
@@ -718,7 +718,7 @@ export default function AdminUsers() {
                       onClick={handleUpdate}
                       disabled={isMutating}
                     >
-                      {updateMutation.isLoading ? (
+                      {updateMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         "Simpan Perubahan"
@@ -826,7 +826,7 @@ export default function AdminUsers() {
                       onClick={handleBalanceUpdate}
                       disabled={isMutating || !balanceAmount}
                     >
-                      {adjustBalanceMutation.isLoading ? (
+                      {adjustBalanceMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         "Simpan Saldo"
@@ -883,7 +883,7 @@ export default function AdminUsers() {
                       onClick={handleDeactivate}
                       disabled={isMutating}
                     >
-                      {blockMutation.isLoading ? (
+                      {blockMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
                       ) : (
                         <Ban className="h-4 w-4 mr-2" />
@@ -947,7 +947,7 @@ export default function AdminUsers() {
                       onClick={handlePermanentDelete}
                       disabled={isMutating}
                     >
-                      {deleteMutation.isLoading ? (
+                      {deleteMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
                       ) : (
                         <Trash2 className="h-4 w-4 mr-2" />

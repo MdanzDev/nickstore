@@ -97,7 +97,7 @@ export default function AdminProductDenominations() {
 
   const product = productQuery.data as Product | null;
   const denoms = (denomsQuery.data?.data || []) as Denomination[];
-  const loading = productQuery.isLoading || denomsQuery.isLoading;
+  const loading = productQuery.isPending || denomsQuery.isPending;
 
   const handleCreate = () => {
     if (!form.name.trim()) return toast.error("Nama harus diisi");
@@ -194,7 +194,7 @@ export default function AdminProductDenominations() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                disabled={createMutation.isLoading}
+                disabled={createMutation.isPending}
               />
             </div>
             <div className="w-full sm:w-44 space-y-1">
@@ -205,12 +205,12 @@ export default function AdminProductDenominations() {
                 value={form.price}
                 onChange={(e) => setForm({ ...form, price: e.target.value })}
                 onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                disabled={createMutation.isLoading}
+                disabled={createMutation.isPending}
               />
             </div>
             <div className="flex items-end">
-              <Button onClick={handleCreate} disabled={createMutation.isLoading}>
-                {createMutation.isLoading ? (
+              <Button onClick={handleCreate} disabled={createMutation.isPending}>
+                {createMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <><Plus className="mr-2 h-4 w-4" />Tambah</>
@@ -248,8 +248,8 @@ export default function AdminProductDenominations() {
                         <Input className="w-36 h-8 text-sm" type="number" value={editForm.price} onChange={(e) => setEditForm({ ...editForm, price: e.target.value })} />
                       </div>
                       <div className="flex gap-1">
-                        <button onClick={() => handleSaveEdit(denom.id)} disabled={updateMutation.isLoading} className="p-1.5 rounded bg-primary/10 text-primary">
-                          {updateMutation.isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                        <button onClick={() => handleSaveEdit(denom.id)} disabled={updateMutation.isPending} className="p-1.5 rounded bg-primary/10 text-primary">
+                          {updateMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
                         </button>
                         <button onClick={() => setEditingId(null)} className="p-1.5 rounded hover:bg-secondary">
                           <X className="h-3.5 w-3.5" />
@@ -266,8 +266,8 @@ export default function AdminProductDenominations() {
                         <p className="text-sm font-bold text-primary">{formatPrice(denom.price_myr || denom.price / 4111, denom.price_idr || denom.price)}</p>
                         <div className="flex gap-1">
                           <button onClick={() => startEdit(denom)} className="p-1.5 rounded hover:bg-secondary"><Pencil className="h-3.5 w-3.5" /></button>
-                          <button onClick={() => handleDelete(denom.id)} disabled={deleteMutation.isLoading} className="p-1.5 rounded hover:bg-destructive/10">
-                            {deleteMutation.isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5 text-destructive" />}
+                          <button onClick={() => handleDelete(denom.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded hover:bg-destructive/10">
+                            {deleteMutation.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Trash2 className="h-3.5 w-3.5 text-destructive" />}
                           </button>
                         </div>
                       </div>

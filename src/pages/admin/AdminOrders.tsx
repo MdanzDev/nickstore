@@ -147,7 +147,7 @@ export default function AdminOrders() {
       status: statusFilter === "Semua Status" ? undefined : statusFilter,
       search: debouncedOrderSearch || undefined,
     },
-    { keepPreviousData: true }
+    {}
   );
 
   const {
@@ -161,7 +161,7 @@ export default function AdminOrders() {
       type: typeFilter,
       search: debouncedTrxSearch || undefined,
     },
-    { keepPreviousData: true }
+    {}
   );
 
   const { data: usersData } = trpc.users.list.useQuery({ limit: 100 });
@@ -195,7 +195,7 @@ export default function AdminOrders() {
     onError: (error: any) => toast.error(error.message),
   });
 
-  const updateBalanceMutation = trpc.users.updateBalance.useMutation({
+  const updateBalanceMutation = trpc.users.adjustBalance.useMutation({
     onSuccess: () => {
       toast.success("Baki dikemaskini!");
       setShowAdjustModal(false);
@@ -203,7 +203,7 @@ export default function AdminOrders() {
       setAdjustNote("");
       refetchTrx();
     },
-    onError: (err) => toast.error(err.message),
+    onError: (err: any) => toast.error(err.message),
   });
 
   // --- Handlers ---
@@ -221,8 +221,7 @@ export default function AdminOrders() {
     updateBalanceMutation.mutate({
       userId: selectedUserId,
       amount: Number(adjustAmount),
-      type: "add",
-      notes: adjustNote || "Penyelarasan baki manual",
+      reason: adjustNote || "Penyelarasan baki manual",
     });
   };
 

@@ -62,7 +62,7 @@ export default function AdminTransactions() {
     search: debouncedSearch || undefined,
   });
 
-  const updateBalanceMutation = trpc.users.updateBalance.useMutation({
+  const updateBalanceMutation = trpc.users.adjustBalance.useMutation({
     onSuccess: () => {
       toast.success("Baki akaun pengguna berjaya dikemaskini!");
       setShowAdjustModal(false);
@@ -70,7 +70,7 @@ export default function AdminTransactions() {
       setAdjustNote("");
       refetch();
     },
-    onError: (err) => {
+    onError: (err: any) => {
       toast.error(err.message || "Gagal mengemaskini baki");
     }
   });
@@ -91,14 +91,13 @@ export default function AdminTransactions() {
     updateBalanceMutation.mutate({
       userId: selectedUserId,
       amount: Number(adjustAmount),
-      type: "add",
-      notes: adjustNote || "Penyelarasan baki oleh Admin"
+      reason: adjustNote || "Penyelarasan baki oleh Admin"
     });
   };
 
   const transactions = data?.data || [];
-  const totalPages = data?.pagination?.totalPages || 1;
-  const totalCount = data?.pagination?.total || 0;
+  const totalPages = data?.meta?.pages || 1;
+  const totalCount = data?.meta?.total || 0;
 
   // Helper untuk label status
   const getStatusConfig = (status: string) => {

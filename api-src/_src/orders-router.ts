@@ -6,114 +6,140 @@ import {
   externalGetOrder,
   externalUpdateOrderStatus,
   externalGetAdminOrders,
-  externalGetAdminSettings,
   externalCreateQrisOrder,
   externalGetAdminStats,
 } from "./lib/external/client";
 
 export async function syncAllPendingLogic(jwtToken: string) {
   console.log('[SYNC CRON] Starting order synchronization...');
-  
-  // Get all pending and processing orders
-  const ordersResult = await externalGetAdminOrders(jwtToken, { limit: 1000 });
-  const pendingOrders = ordersResult.data.filter((o: any) => 
-    o.status === 'pending' || o.status === 'processing' || o.status === 'shipped' || o.status === 'confirmed'
-  );
-  
-  if (pendingOrders.length === 0) {
-    console.log('[SYNC CRON] No pending orders found to sync.');
+
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabaseUrl = process.env.SUPABASE_URL || "";
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const { data: pendingOrders } = await supabase.from("transactions").select("*").in("status", ["Pending", "Processing"]).order("created_at", { ascending: false }).limit(100);
+
+  if (!pendingOrders || pendingOrders.length === 0) {
+    console.log('[SYNC CRON] No pending/processing orders found.');
     return { success: true, updatedCount: 0, message: "No pending orders to sync" };
   }
-  
-  // Get API key
-  const settingsResult = await externalGetAdminSettings(jwtToken);
-  const apiKey = settingsResult.data?.provider_api_key || process.env.PROVIDER_API_KEY;
-  if (!apiKey) throw new Error("Provider API Key not configured in settings");
-  
-  let updatedCount = 0;
-  
-  const mapProviderStatus = (status: string) => {
-    const s = (status || '').toLowerCase();
-    if (['sukses', 'success', 'delivered', 'paid', 'completed'].includes(s)) return 'Success';
-    if (['proses', 'processing'].includes(s)) return 'Processing';
-    if (['batal', 'gagal', 'failed', 'refund', 'reffund', 'cancelled', 'error'].includes(s)) return 'Failed';
-    if (['pending', 'menunggu'].includes(s)) return 'Pending';
-    return 'Pending';
-  };
-  
-  for (const order of pendingOrders) {
-    // Determine provider TRX ID. For QRIS, it's stored in keterangan as deposit_invoice
-    let providerTrxId = (order as any).providerTrxId;
-    if (!providerTrxId && order.keterangan) {
-      try {
-        const ketData = JSON.parse(order.keterangan);
-        if (ketData.deposit_invoice) providerTrxId = ketData.deposit_invoice;
-      } catch (e) {}
-    }
-    
-    if (!providerTrxId) continue;
-    
-    try {
-      const isDeposit = providerTrxId.startsWith('DEPO') || providerTrxId.startsWith('MTDEPO');
-      const endpoint = isDeposit ? "https://api.mytopupku.com/api/v2/check-deposit" : "https://api.mytopupku.com/api/v2/check-status";
-      const payload = isDeposit 
-        ? { api_key: apiKey, invoice: providerTrxId } 
-        : { api_key: apiKey, order_id: providerTrxId };
 
-      console.log(`[SYNC CRON] Checking order ID: ${order.id} | Provider TRX: ${providerTrxId} | Type: ${isDeposit ? 'Deposit' : 'Order'}`);
-      
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-API-KEY': apiKey },
-        body: JSON.stringify(payload)
-      });
-      
-      if (!response.ok) {
-        console.log(`[SYNC CRON] Provider API returned ${response.status} for TRX: ${providerTrxId}`);
-        continue;
-      }
-      
-      const data: any = await response.json();
-      
-      if (data && data.status === true) {
-        const providerData = data.data || data;
-        // Check both order status field or deposit status field
-        const providerStatus = providerData.status || providerData.transaction_status;
-        
-        if (!providerStatus) continue;
-        
-        let mappedStatus = mapProviderStatus(providerStatus);
-        
-        if (mappedStatus !== 'Pending') {
-          // Convert mappedStatus to lowercase enum for our TRPC router: pending, confirmed, shipped, delivered, cancelled
-          let trpcStatus = 'pending';
-          if (mappedStatus === 'Success') trpcStatus = isDeposit ? 'shipped' : 'delivered';
-          else if (mappedStatus === 'Failed') trpcStatus = 'cancelled';
-          else if (mappedStatus === 'Processing') trpcStatus = 'shipped';
-          
-          console.log(`[SYNC CRON] Order ${order.id} status changed! Provider: ${providerStatus} -> mapped to: ${trpcStatus}`);
-          
-          // Call externalUpdateOrderStatus to save
-          try {
-            const sn = providerData.sn || providerData.serial_number || providerData.vcr || '';
-            const note = providerData.message || providerData.note || '';
-            await externalUpdateOrderStatus(jwtToken, order.id, trpcStatus, providerStatus, note, sn);
-            console.log(`[SYNC CRON] Successfully updated order ${order.id} in local database.`);
-            updatedCount++;
-          } catch (e: any) {
-            console.error(`[SYNC CRON ERROR] Failed to update local DB for order ${order.id}:`, e.message);
+  const apiKey = process.env.EXTERNAL_API_KEY || "";
+  const apiUrl = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
+
+  let updatedCount = 0;
+  let creditedDeposits = 0;
+
+  // First: sweep unpaid deposits
+  const { data: pendingDeps } = await supabase.from("deposits").select("*").eq("status", "Pending").eq("credited", false).limit(50);
+  if (pendingDeps && pendingDeps.length > 0) {
+    for (const dep of pendingDeps) {
+      try {
+        const res = await fetch(`${apiUrl}/api/v2/deposit/${dep.kryznet_deposit_id}`, {
+          headers: { "X-API-KEY": apiKey },
+        });
+        if (res.ok) {
+          const data = await res.json() as any;
+          if (data.status === "Success") {
+            // Credit local wallet
+            if (dep.user_id) {
+              try { await supabase.rpc("increment_balance", {
+                p_user_id: dep.user_id,
+                p_amount: parseFloat(dep.amount_myr || 0),
+                p_reason: `Deposit ${dep.kryznet_deposit_id} paid`,
+              }); } catch {}
+            }
+            await supabase.from("deposits").update({ status: "Success", credited: true, updated_at: new Date().toISOString() }).eq("id", dep.id);
+            creditedDeposits++;
+
+            // Auto-place pending order if this deposit was for an order
+            const { data: orderTx } = await supabase.from("transactions").select("*").eq("reference_id", dep.kryznet_deposit_id).maybeSingle();
+            if (orderTx && orderTx.note?.includes("pending_order")) {
+              const noteJson = (() => { try { return JSON.parse(orderTx.note || "{}"); } catch { return {}; } })();
+              if (noteJson.product_id && noteJson.player_id) {
+                try {
+                  const idempotencyKey = `NS-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+                  const orderRes = await fetch(`${apiUrl}/api/v2/order`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-API-KEY": apiKey, "Idempotency-Key": idempotencyKey },
+                    body: JSON.stringify({ product_id: noteJson.product_id, player_id: noteJson.player_id, server_id: noteJson.server_id || "" }),
+                  });
+                  if (orderRes.ok) {
+                    const orderData = await orderRes.json() as any;
+                    await supabase.from("transactions").update({
+                      reference_id: orderData.order_id,
+                      status: orderData.status === "Processing" ? "Processing" : "Pending",
+                      note: JSON.stringify({ ...noteJson, order_id: orderData.order_id, status: orderData.status }),
+                      updated_at: new Date().toISOString(),
+                    }).eq("id", orderTx.id);
+                    console.log(`[SYNC CRON] Auto-placed order ${orderData.order_id} from deposit ${dep.kryznet_deposit_id}`);
+                  }
+                } catch (e: any) {
+                  console.error(`[SYNC CRON] Auto-place order failed for ${dep.kryznet_deposit_id}:`, e.message);
+                }
+              }
+            }
+          } else if (data.status === "Expired" || data.status === "Failed") {
+            await supabase.from("deposits").update({ status: data.status === "Expired" ? "Expired" : "Failed", updated_at: new Date().toISOString() }).eq("id", dep.id);
           }
-        } else {
-           console.log(`[SYNC CRON] Order ${order.id} is still ${mappedStatus}. No changes.`);
         }
+      } catch (e: any) {
+        console.error(`[SYNC CRON] Deposit sweep failed for ${dep.kryznet_deposit_id}:`, e.message);
       }
-    } catch (err: any) {
-      console.error(`[SYNC CRON ERROR] Fetch failed for order ${order.id}:`, err.message);
     }
   }
-  
-  console.log(`[SYNC CRON] Finished synchronization. Updated ${updatedCount} orders.`);
-  return { success: true, updatedCount };
+
+  // Second: sync order statuses via v2
+  for (const order of pendingOrders) {
+    const orderId = order.reference_id;
+    if (!orderId || orderId.startsWith("PG-") || orderId.startsWith("DEPO") || orderId === order.kryznet_deposit_id) continue;
+
+    try {
+      const res = await fetch(`${apiUrl}/api/v2/order/${orderId}`, {
+        headers: { "X-API-KEY": apiKey },
+      });
+      if (!res.ok) continue;
+      const data = await res.json() as any;
+      const v2Status = data.status;
+
+      const mapStatus = (s: string | undefined) => {
+        if (!s) return null;
+        const sl = s.toLowerCase();
+        if (["sukses", "success", "delivered", "paid", "completed"].includes(sl)) return "Success";
+        if (["proses", "processing"].includes(sl)) return "Processing";
+        if (["gagal", "failed", "refund", "refunded", "cancelled", "error"].includes(sl)) return "Failed";
+        if (["pending", "menunggu"].includes(sl)) return "Pending";
+        return null;
+      };
+
+      const mapped = mapStatus(v2Status);
+      if (mapped && mapped !== order.status) {
+        console.log(`[SYNC CRON] Order ${orderId} ${order.status} -> ${mapped}`);
+
+        if (mapped === "Failed" && order.user_id) {
+          // Auto-refund local wallet on failure (mirroring kryz-net float refund)
+          try { await supabase.rpc("increment_balance", {
+            p_user_id: order.user_id,
+            p_amount: parseFloat(order.amount || 0),
+            p_reason: `Refund: Order ${orderId} failed`,
+          }); } catch {}
+        }
+
+        await supabase.from("transactions").update({
+          status: mapped,
+          updated_at: new Date().toISOString(),
+        }).eq("id", order.id);
+
+        updatedCount++;
+      }
+    } catch (e: any) {
+      console.error(`[SYNC CRON] Status sync failed for ${orderId}:`, e.message);
+    }
+  }
+
+  console.log(`[SYNC CRON] Finished: ${updatedCount} orders updated, ${creditedDeposits} deposits credited.`);
+  return { success: true, updatedCount, depositsCredited: creditedDeposits };
 }
 
 export const ordersRouter = createRouter({
