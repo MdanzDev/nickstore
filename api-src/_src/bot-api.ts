@@ -22,6 +22,25 @@ botApiRouter.use("*", async (c, next) => {
   const path = c.req.path;
   const botSecret = getBotSecret();
 
+  // Only intercept requests that belong to the bot API; all other /api/* paths
+  // (the /api/v1/* Express proxy, tRPC, image uploads, Vercel cron) pass through.
+  const botPath = path.replace(/^\/api/, "") || "/";
+  const isBotApiPath =
+    botPath === "/products" ||
+    botPath.startsWith("/products/") ||
+    botPath === "/account/validate" ||
+    botPath === "/v1/validate-account" ||
+    botPath.startsWith("/order/") ||
+    botPath.startsWith("/user/") ||
+    botPath.startsWith("/auth/otp/") ||
+    botPath.startsWith("/admin/refund") ||
+    botPath === "/admin/provider/balance" ||
+    botPath.startsWith("/cron/products-sync");
+
+  if (!isBotApiPath) {
+    return next();
+  }
+
   // Public endpoints that do not require bot HMAC authentication
   if (path.includes("/products") || path.includes("/auth") || path.includes("/cron")) {
     return next();

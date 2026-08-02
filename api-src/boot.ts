@@ -226,13 +226,9 @@ app.all("/api/callback", async (c) => {
 });
 
 // ============================================================
-// 5. BOT REST API & ADMIN ENDPOINTS
-// ============================================================
-import { botApiRouter } from "./_src/bot-api";
-app.route("/api", botApiRouter);
-
-// ============================================================
-// 6. EXPRESS BACKEND V1 API PROXY
+// 5. EXPRESS BACKEND V1 API PROXY
+// (registered before the bot API router so /api/v1/* requests
+//  are never intercepted by the bot HMAC middleware)
 // ============================================================
 app.all("/api/v1/*", async (c) => {
   const API_BASE_URL = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
@@ -267,7 +263,11 @@ app.all("/api/v1/*", async (c) => {
   }
 });
 
-
+// ============================================================
+// 6. BOT REST API & ADMIN ENDPOINTS
+// ============================================================
+import { botApiRouter } from "./_src/bot-api";
+app.route("/api", botApiRouter);
 
 // ============================================================
 // 7. CATCH-ALL (LAST)

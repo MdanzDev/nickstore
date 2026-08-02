@@ -22964,47 +22964,55 @@ __export(client_exports, {
 function convertMyrToIdr(myr) {
   return Math.round(myr * EXCHANGE_RATE);
 }
-async function fetchV1(endpoint, options = {}) {
-  const url2 = `${getKryzNetApiUrl()}${endpoint.startsWith("/api/v1") ? endpoint : `/api/v1${endpoint}`}`;
-  console.log(`[V1 API] Requesting URL: ${url2}`);
+async function fetchV2(endpoint, options = {}) {
+  const apiKey = getKryzNetApiKey();
+  if (!apiKey) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "EXTERNAL_API_KEY not configured" });
+  }
+  const url2 = `${getKryzNetApiUrl()}${endpoint.startsWith("/api/v2") ? endpoint : `/api/v2${endpoint}`}`;
   const headers = new Headers(options.headers || {});
-  headers.set("Authorization", `Bearer ${getKryzNetApiKey()}`);
-  headers.set("x-api-key", getKryzNetApiKey());
+  headers.set("X-API-KEY", apiKey);
   headers.set("Content-Type", "application/json");
   const response = await fetch(url2, { ...options, headers });
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+    const errorData = await response.json().catch(() => null);
     let errorMsg = `API Error (${response.status})`;
-    if (typeof errorData === "string") {
+    if (errorData?.error?.message) {
+      errorMsg = errorData.error.message;
+    } else if (errorData?.error) {
+      errorMsg = typeof errorData.error === "string" ? errorData.error : JSON.stringify(errorData.error);
+    } else if (typeof errorData === "string") {
       errorMsg = errorData;
-    } else if (errorData && typeof errorData === "object") {
-      if (typeof errorData.error === "string") {
-        errorMsg = errorData.error;
-      } else if (errorData.error && typeof errorData.error === "object" && typeof errorData.error.message === "string") {
-        errorMsg = errorData.error.message;
-      } else if (typeof errorData.message === "string") {
-        errorMsg = errorData.message;
-      } else {
-        errorMsg = JSON.stringify(errorData);
-      }
     }
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: errorMsg });
+    const trpcCode = response.status === 402 ? "PAYMENT_REQUIRED" : "INTERNAL_SERVER_ERROR";
+    throw new TRPCError({ code: trpcCode, message: errorMsg });
   }
   return response.json();
 }
 async function externalLogin(email3, password) {
   const { data, error: error48 } = await supabase.auth.signInWithPassword({ email: email3, password });
   if (error48) throw new TRPCError({ code: "UNAUTHORIZED", message: error48.message });
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", data.user.id).single();
+  const { data: profile } = await supabase.from("users").select("*").eq("id", data.user.id).single();
+  const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", data.user.id).maybeSingle();
+  let legacyProfile = null;
+  if (!profile || !profile.role) {
+    const { data: lp } = await supabase.from("profiles").select("*").eq("id", data.user.id).maybeSingle();
+    legacyProfile = lp;
+  }
+  const effectiveRole = profile?.role || legacyProfile?.role || "customer";
+  const balanceMyr = parseFloat(profile?.balance_myr || wallet?.balance_myr || legacyProfile?.balance || 0);
   const mappedUser = {
     id: data.user.id,
-    name: profile?.name || email3.split("@")[0],
+    name: profile?.username || profile?.name || legacyProfile?.name || email3.split("@")[0],
     email: email3,
-    accountBalance: profile?.balance || 0,
-    balanceMyr: profile?.balance || 0,
-    balanceIdr: convertMyrToIdr(profile?.balance || 0),
-    roles: [profile?.role || "customer"],
-    isActive: true,
+    phone: profile?.phone || legacyProfile?.phone || "",
+    telegramId: profile?.telegram_id ? String(profile.telegram_id) : void 0,
+    avatar: profile?.avatar || "",
+    accountBalance: balanceMyr,
+    balanceMyr,
+    balanceIdr: convertMyrToIdr(balanceMyr),
+    roles: [effectiveRole],
+    isActive: profile?.status !== "blocked" && legacyProfile?.status !== "blocked",
     createdAt: data.user.created_at,
     updatedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
@@ -23014,13 +23022,21 @@ async function externalRegister(data) {
   const { data: authData, error: error48 } = await supabase.auth.signUp({ email: data.email, password: data.password });
   if (error48) throw new TRPCError({ code: "BAD_REQUEST", message: error48.message });
   if (authData.user) {
-    await supabase.from("profiles").insert({
+    await supabase.from("users").upsert({
       id: authData.user.id,
-      name: data.name,
+      username: data.name,
       email: data.email,
       role: "customer",
-      balance: 0
-    });
+      status: "active",
+      created_at: (/* @__PURE__ */ new Date()).toISOString(),
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }, { onConflict: "id" });
+    await supabase.from("wallets").upsert({
+      user_id: authData.user.id,
+      balance_myr: 0,
+      balance_idr: 0,
+      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+    }, { onConflict: "user_id" });
   }
   return {
     user: { id: authData.user?.id || "", name: data.name, email: data.email, roles: ["customer"], isActive: true, accountBalance: 0, balanceMyr: 0, balanceIdr: 0, createdAt: (/* @__PURE__ */ new Date()).toISOString(), updatedAt: (/* @__PURE__ */ new Date()).toISOString() },
@@ -23034,99 +23050,153 @@ async function externalRefreshToken(jwtToken) {
 async function externalGetMe(jwtToken) {
   const { data: { user }, error: error48 } = await supabase.auth.getUser(jwtToken);
   if (error48 || !user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
-  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("users").select("*").eq("id", user.id).single();
+  const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", user.id).maybeSingle();
+  let legacyProfile = null;
+  if (!profile || !profile.role) {
+    const { data: lp } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+    legacyProfile = lp;
+  }
+  const effectiveRole = profile?.role || legacyProfile?.role || "customer";
+  const balanceMyr = parseFloat(wallet?.balance_myr || profile?.balance_myr || legacyProfile?.balance || 0);
   return {
     id: user.id,
-    name: profile?.name || user.email?.split("@")[0] || "User",
-    email: user.email || "",
-    accountBalance: profile?.balance || 0,
-    balanceMyr: profile?.balance || 0,
-    balanceIdr: convertMyrToIdr(profile?.balance || 0),
-    roles: [profile?.role || "customer"],
-    isActive: true,
-    createdAt: user.created_at,
+    name: profile?.username || profile?.name || legacyProfile?.name || user.email?.split("@")[0] || "User",
+    email: user.email || profile?.email || legacyProfile?.email || "",
+    phone: profile?.phone || legacyProfile?.phone || "",
+    telegramId: profile?.telegram_id ? String(profile.telegram_id) : void 0,
+    avatar: profile?.avatar || "",
+    accountBalance: balanceMyr,
+    balanceMyr,
+    balanceIdr: convertMyrToIdr(balanceMyr),
+    roles: [effectiveRole],
+    isActive: profile?.status !== "blocked" && legacyProfile?.status !== "blocked",
+    createdAt: user.created_at || profile?.created_at || legacyProfile?.created_at,
     updatedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
 }
 async function externalGetUsers(jwtToken, params) {
-  let query = supabase.from("profiles").select("*");
+  let query = supabase.from("users").select("*", { count: "exact" });
+  if (params?.search) {
+    const s = `%${params.search}%`;
+    query = query.or(`username.ilike.${s},email.ilike.${s},phone.ilike.${s}`);
+  }
   const { data, count, error: error48 } = await query;
   if (error48) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: error48.message });
-  const mapped = (data || []).map((u) => ({
+  const mapped = (data || []).map(async (u) => {
+    const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", u.id).maybeSingle();
+    const bal = parseFloat(wallet?.balance_myr || u.balance_myr || 0);
+    return {
+      id: u.id,
+      name: u.username || u.name || "",
+      email: u.email || "",
+      phone: u.phone || "",
+      accountBalance: bal,
+      balanceMyr: bal,
+      balanceIdr: convertMyrToIdr(bal),
+      roles: [u.role || "customer"],
+      isActive: u.status !== "blocked",
+      totalSpent: 0,
+      totalOrders: 0,
+      createdAt: u.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+      updatedAt: u.updated_at || (/* @__PURE__ */ new Date()).toISOString()
+    };
+  });
+  const resolved = await Promise.all(mapped);
+  return { data: resolved, meta: { total: count || resolved.length, page: params?.page || 1, limit: params?.limit || 100, pages: 1 } };
+}
+async function externalGetUser(jwtToken, userId) {
+  const { data: u } = await supabase.from("users").select("*").eq("id", userId).single();
+  if (!u) throw new Error("User not found");
+  const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", userId).maybeSingle();
+  const bal = parseFloat(wallet?.balance_myr || u.balance_myr || 0);
+  return {
     id: u.id,
-    name: u.name,
-    email: u.email,
+    name: u.username || u.name || "",
+    email: u.email || "",
     phone: u.phone || "",
-    accountBalance: u.balance || 0,
-    balanceMyr: u.balance || 0,
-    balanceIdr: convertMyrToIdr(u.balance || 0),
+    accountBalance: bal,
+    balanceMyr: bal,
+    balanceIdr: convertMyrToIdr(bal),
     roles: [u.role || "customer"],
-    isActive: true,
+    isActive: u.status !== "blocked",
     totalSpent: 0,
     totalOrders: 0,
     createdAt: u.created_at || (/* @__PURE__ */ new Date()).toISOString(),
-    updatedAt: (/* @__PURE__ */ new Date()).toISOString()
-  }));
-  return { data: mapped, meta: { total: mapped.length, page: 1, limit: 100, pages: 1 } };
-}
-async function externalGetUser(jwtToken, userId) {
-  const result = await externalGetUsers(jwtToken);
-  const user = result.data.find((u) => u.id === userId);
-  if (!user) throw new Error("User not found");
-  return user;
+    updatedAt: u.updated_at || (/* @__PURE__ */ new Date()).toISOString()
+  };
 }
 async function externalUpdateUser(jwtToken, userId, data) {
-  await supabase.from("profiles").update(data).eq("id", userId);
+  await supabase.from("users").update(data).eq("id", userId);
   return { success: true, message: "User updated successfully" };
 }
 async function externalDeleteUser(jwtToken, userId) {
+  await supabase.from("users").delete().eq("id", userId);
   return { success: true, message: "" };
 }
 async function externalAdjustBalance(jwtToken, userId, amount, reason) {
-  return { success: true, new_balance: 0 };
+  await supabase.rpc("increment_balance", {
+    p_user_id: userId,
+    p_amount: amount,
+    p_reason: reason || "Admin adjustment"
+  });
+  const { data: wallet } = await supabase.from("wallets").select("balance_myr").eq("user_id", userId).maybeSingle();
+  return { success: true, new_balance: parseFloat(wallet?.balance_myr || 0) };
 }
 async function externalBlockUser(jwtToken, userId, isBlocked) {
+  await supabase.from("users").update({ status: isBlocked ? "blocked" : "active", updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("id", userId);
   return { success: true, message: "" };
 }
 async function externalUploadAvatar(jwtToken, userId, file2) {
   return { avatar: "" };
 }
 async function externalGetProducts(params) {
-  const result = await fetchV1("/public/games");
-  const games = result.games || result.data || result || [];
-  let products = games.map((g) => ({
-    id: g.slug || g.id || g.name,
-    slug: g.slug || g.id || g.name,
-    name: g.name,
-    category: g.category || "Games",
-    images: [g.icon || g.image || ""],
-    icon: g.icon || g.image || "",
-    price: 0,
-    stock: 9999,
-    denominationsCount: g.total_services || g.services?.length || 0,
-    isActive: true
-  }));
-  if (params?.search) {
-    const s = params.search.toLowerCase();
-    products = products.filter((p) => p.name.toLowerCase().includes(s));
+  try {
+    const { games } = await fetchV2("/games");
+    let products = (games || []).map((g) => ({
+      id: g.slug,
+      slug: g.slug,
+      name: g.name,
+      category: g.type || "game",
+      images: [g.icon || ""],
+      icon: g.icon || "",
+      price: 0,
+      stock: g.total_services || 9999,
+      denominationsCount: g.total_services || 0,
+      isActive: true,
+      description: g.description || "",
+      fulfillment_type: g.fulfillment_type || "auto",
+      input_schema: g.input_schema || null,
+      provider_slug: g.provider_slug || null
+    }));
+    if (params?.search) {
+      const s = params.search.toLowerCase();
+      products = products.filter((p) => p.name.toLowerCase().includes(s));
+    }
+    if (params?.category && params.category !== "all") {
+      products = products.filter((p) => p.category === params.category);
+    }
+    return { data: products, meta: { total: products.length, page: 1, limit: 100, pages: 1 } };
+  } catch {
+    return { data: [], meta: { total: 0, page: 1, limit: 100, pages: 1 } };
   }
-  return {
-    data: products,
-    meta: { total: products.length, page: 1, limit: 100, pages: 1 }
-  };
 }
 async function externalGetProduct(productId) {
   try {
-    const result = await fetchV1(`/public/games/${productId}`);
-    const game = result.game || result;
+    const { games } = await fetchV2("/games");
+    const game = (games || []).find((g) => g.slug === productId);
     if (!game) throw new Error("Game not found");
     return {
-      id: game.slug || game.id || game.name,
+      id: game.slug,
       name: game.name,
-      category: game.category || "game",
+      category: game.type || "game",
       images: [game.icon || ""],
+      icon: game.icon || "",
       description: game.description || "",
-      isActive: true
+      isActive: true,
+      fulfillment_type: game.fulfillment_type || "auto",
+      input_schema: game.input_schema || null,
+      provider_slug: game.provider_slug || null
     };
   } catch (err) {
     const result = await externalGetProducts();
@@ -23137,196 +23207,582 @@ async function externalGetProduct(productId) {
       name: game.name,
       category: game.category || "game",
       images: [game.icon || ""],
-      description: "",
+      description: game.description || "",
       isActive: true
     };
   }
 }
-async function externalCreateProduct(jwtToken, data) {
-  return {};
+async function externalGetDenominations(productId, jwtToken) {
+  try {
+    const { denominations, game } = await fetchV2(`/denominations?game=${encodeURIComponent(productId)}`);
+    if (!denominations) return { success: true, data: [] };
+    const mapped = (denominations || []).map((d) => ({
+      id: d.id,
+      productId,
+      name: d.name,
+      price: d.price_myr,
+      price_myr: d.price_myr,
+      priceIdr: d.price_idr,
+      price_idr: d.price_idr,
+      originalPrice: d.price_myr,
+      stock: 9999,
+      category: game || "Standard",
+      description: d.description || "",
+      fulfillment_type: d.fulfillment_type || "auto",
+      input_schema: d.input_schema || null,
+      isActive: true,
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    }));
+    return { success: true, data: mapped };
+  } catch {
+    return { success: true, data: [] };
+  }
 }
-async function externalUpdateProduct(jwtToken, productId, data) {
-  return {};
-}
-async function externalDeleteProduct(jwtToken, productId) {
-  return { message: "Product deleted" };
-}
-async function externalUploadProductImage(jwtToken, productId, file2) {
-  return { images: [] };
-}
-async function externalUploadGameImage(jwtToken, slug, base64Image, filename) {
-  return {};
+async function externalGetPricelist(productId) {
+  try {
+    const { products } = await fetchV2("/products");
+    const mapped = (products || []).map((p) => ({
+      id: p.id,
+      productId: p.game_slug || p.brand,
+      name: p.name,
+      brand: p.brand,
+      price: p.price_myr,
+      price_myr: p.price_myr,
+      priceIdr: p.price_idr,
+      price_idr: p.price_idr,
+      stock: 9999,
+      category: p.brand || "Standard",
+      description: p.description || ""
+    }));
+    return { success: true, data: mapped };
+  } catch {
+    return { success: true, data: [] };
+  }
 }
 async function externalCreateOrder(jwtToken, data) {
-  const userIdMatch = data.notes?.match(/User ID:\s*([^,]+)/i);
-  const zoneIdMatch = data.notes?.match(/Zone ID:\s*([^,]+)/i);
-  const denomIdMatch = data.notes?.match(/DenominationId:\s*([^,]+)/i);
-  const game_id = userIdMatch ? userIdMatch[1].trim() : data.game_id || "";
-  const zone_id = zoneIdMatch ? zoneIdMatch[1].trim() : data.zone_id || "";
-  const service_id = denomIdMatch ? denomIdMatch[1].trim() : data.items?.[0]?.productId || data.service_id || "";
-  let denomPriceMyr = data.amount_myr || 10;
-  const generatedOrderId = `ORD-${Date.now()}-${Math.floor(Math.random() * 1e3)}`;
-  let v1Response = {};
+  let productId = data.items?.[0]?.productId || data.service_id || "";
+  let playerId = data.game_id || "";
+  let serverId = data.zone_id || "";
+  if (data.notes) {
+    const userIdMatch = data.notes.match(/User ID:\s*([^,]+)/i);
+    const zoneIdMatch = data.notes.match(/Zone ID:\s*([^,]+)/i);
+    const denomIdMatch = data.notes.match(/DenominationId:\s*([^,]+)/i);
+    if (userIdMatch) playerId = userIdMatch[1].trim();
+    if (zoneIdMatch) serverId = zoneIdMatch[1].trim();
+    if (denomIdMatch) productId = denomIdMatch[1].trim();
+  }
+  if (!productId || !playerId) {
+    throw new TRPCError({ code: "BAD_REQUEST", message: "Product ID and Player ID are required" });
+  }
+  const idempotencyKey = `NS-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
   try {
-    v1Response = await fetchV1("/order", {
+    const v2Res = await fetchV2("/order", {
       method: "POST",
-      body: JSON.stringify({
-        product_id: service_id,
-        player_id: game_id,
-        server_id: zone_id
-      })
+      headers: { "Idempotency-Key": idempotencyKey },
+      body: JSON.stringify({ product_id: productId, player_id: playerId, server_id: serverId || "" })
     });
-  } catch (err) {
-    console.warn("[V1 API Order Warning]", err.message);
+    const orderId = v2Res.order_id || `ORD-${Date.now()}`;
+    const amountMyr = v2Res.amount_myr || data.amount_myr || 0;
+    const amountIdr = v2Res.amount_idr || data.amount_idr || 0;
+    const user = await externalGetMe(jwtToken).catch(() => null);
     try {
-      const depositRes = await fetchV1("/deposit", {
-        method: "POST",
-        body: JSON.stringify({
-          amount: denomPriceMyr,
-          method: "qris"
-        })
+      await supabase.from("transactions").insert({
+        reference_id: orderId,
+        user_id: user?.id || null,
+        product_id: productId,
+        amount: amountMyr,
+        status: v2Res.status === "Processing" ? "Processing" : "Pending",
+        game_user_id: playerId,
+        zone_id: serverId || "",
+        note: data.notes || "",
+        created_at: (/* @__PURE__ */ new Date()).toISOString(),
+        updated_at: (/* @__PURE__ */ new Date()).toISOString()
       });
-      if (depositRes && (depositRes.deposit_id || depositRes.invoice)) {
-        const depId = depositRes.deposit_id || depositRes.invoice;
-        const qrCode = depositRes.qr_string || depositRes.qr_url || "";
-        const checkoutUrl = depositRes.checkout_url || "";
-        v1Response = {
-          order_id: depId,
+    } catch {
+    }
+    return {
+      success: true,
+      id: orderId,
+      orderId,
+      invoice_number: orderId,
+      amount_myr: amountMyr,
+      amount_idr: amountIdr,
+      status: v2Res.status,
+      message: v2Res.message,
+      qr_url: "",
+      checkout_url: ""
+    };
+  } catch (err) {
+    if (err.message?.includes("Insufficient balance") || err.message?.includes("INSUFFICIENT_BALANCE")) {
+      try {
+        const depRes = await fetchV2("/deposit", {
+          method: "POST",
+          body: JSON.stringify({ amount: data.amount_myr || 10, method: "qris" })
+        });
+        const depId = depRes.deposit_id || "";
+        const qrCode = depRes.qr_string || "";
+        const checkoutUrl = depRes.checkout_url || "";
+        const user = await externalGetMe(jwtToken).catch(() => null);
+        try {
+          await supabase.from("deposits").insert({
+            user_id: user?.id || null,
+            kryznet_deposit_id: depId,
+            amount_myr: data.amount_myr || depRes.amount_myr || 10,
+            amount_idr: data.amount_idr || depRes.amount_idr || 0,
+            payment_method: "qris",
+            qr_string: qrCode,
+            checkout_url: checkoutUrl,
+            status: "Pending",
+            expired_at: depRes.expired_at || new Date(Date.now() + 30 * 60 * 1e3).toISOString(),
+            credited: false
+          });
+        } catch {
+        }
+        const orderId = depId;
+        try {
+          await supabase.from("transactions").insert({
+            reference_id: orderId,
+            user_id: user?.id || null,
+            product_id: productId,
+            amount: data.amount_myr || 10,
+            status: "Pending",
+            game_user_id: playerId,
+            zone_id: serverId || "",
+            note: JSON.stringify({
+              deposit_invoice: depId,
+              qr_url: qrCode,
+              checkout_url: checkoutUrl,
+              amount_myr: data.amount_myr || depRes.amount_myr || 10,
+              amount_idr: data.amount_idr || depRes.amount_idr || 0,
+              pending_order: true,
+              product_id: productId,
+              player_id: playerId,
+              server_id: serverId
+            }),
+            created_at: (/* @__PURE__ */ new Date()).toISOString(),
+            updated_at: (/* @__PURE__ */ new Date()).toISOString()
+          });
+        } catch {
+        }
+        return {
+          success: true,
+          id: depId,
+          orderId: depId,
+          depositId: depId,
+          invoice_number: depId,
           qr_url: qrCode,
           checkout_url: checkoutUrl,
+          amount_myr: data.amount_myr || depRes.amount_myr || 10,
+          amount_idr: data.amount_idr || depRes.amount_idr || 0,
+          status: "Pending",
           note: JSON.stringify({
             deposit_invoice: depId,
             qr_url: qrCode,
             checkout_url: checkoutUrl,
-            amount_myr: depositRes.amount_myr || denomPriceMyr,
-            amount_idr: depositRes.amount_idr || Math.round(denomPriceMyr * 4300)
+            amount_myr: data.amount_myr || depRes.amount_myr || 10,
+            amount_idr: data.amount_idr || depRes.amount_idr || 0,
+            pending_order: true
           })
         };
-      } else {
-        v1Response = { note: err.message };
+      } catch (depErr) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: depErr.message || "Deposit creation failed" });
       }
-    } catch (depErr) {
-      console.warn("[V1 API Deposit Warning]", depErr.message);
-      v1Response = { note: err.message };
     }
+    throw err;
   }
-  const orderId = v1Response.order_id || v1Response.id || generatedOrderId;
-  try {
-    await supabase.from("orders").insert({
-      id: orderId,
-      status: "pending",
-      game_user_id: game_id,
-      zone_id,
-      service_id,
-      note: typeof v1Response.note === "string" ? v1Response.note : JSON.stringify(v1Response.note || "Processing")
-    });
-  } catch (e) {
-    console.warn("Could not save to local Supabase orders table", e);
-  }
-  return {
-    success: true,
-    id: orderId,
-    orderId,
-    depositId: orderId,
-    invoice_number: orderId,
-    qr_url: v1Response.qr_url || "",
-    checkout_url: v1Response.checkout_url || "",
-    ...v1Response
-  };
 }
 async function externalCreateQrisOrder(jwtToken, data) {
-  return externalCreateOrder(jwtToken, { items: [{ productId: data.service_id, quantity: 1 }], notes: `User ID: ${data.game_id}, Zone ID: ${data.zone_id}` });
+  return externalCreateOrder(jwtToken, {
+    items: [{ productId: data.service_id, quantity: 1 }],
+    notes: `User ID: ${data.game_id}${data.zone_id ? `, Zone ID: ${data.zone_id}` : ""}`,
+    service_id: data.service_id,
+    game_id: data.game_id,
+    zone_id: data.zone_id,
+    phone: data.phone,
+    voucher_code: data.voucher_code
+  });
 }
 async function externalGuestCreateOrder(data) {
-  return externalCreateOrder("", data);
+  return externalCreateOrder("", {
+    items: [{ productId: data.service_id, quantity: 1 }],
+    notes: `User ID: ${data.game_id}${data.zone_id ? `, Zone ID: ${data.zone_id}` : ""}`,
+    service_id: data.service_id,
+    game_id: data.game_id,
+    zone_id: data.zone_id,
+    phone: data.phone,
+    voucher_code: data.voucher_code
+  });
 }
 async function externalGetOrders(jwtToken, params) {
-  const { data: orders, error: error48 } = await supabase.from("orders").select("*");
-  const mappedOrders = (orders || []).map((o) => ({
-    id: o.id,
+  const user = await externalGetMe(jwtToken).catch(() => null);
+  if (!user) return { data: [], meta: { total: 0, page: 1, limit: 100, pages: 1 } };
+  let query = supabase.from("transactions").select("*", { count: "exact" }).eq("user_id", user.id).order("created_at", { ascending: false });
+  if (params?.status) query = query.eq("status", params.status);
+  const { data: orders, count, error: error48 } = await query;
+  if (error48) return { data: [], meta: { total: 0, page: 1, limit: 100, pages: 1 } };
+  const mapped = (orders || []).map((o) => ({
+    id: o.reference_id || o.id,
     status: o.status || "pending",
     providerStatus: o.status || "",
     keterangan: o.note || "",
     gameUserId: o.game_user_id || "",
     zoneId: o.zone_id || "",
-    total: 0,
-    totalMyr: 0,
-    totalIdr: 0,
+    total: parseFloat(o.amount || 0),
+    totalMyr: parseFloat(o.amount || 0),
+    totalIdr: convertMyrToIdr(parseFloat(o.amount || 0)),
     createdAt: o.created_at || (/* @__PURE__ */ new Date()).toISOString(),
-    notes: `${o.service_id}`
+    notes: `${o.product_id || ""}`
   }));
-  return {
-    data: mappedOrders,
-    meta: { total: mappedOrders.length, page: 1, limit: 100, pages: 1 }
-  };
+  return { data: mapped, meta: { total: count || mapped.length, page: params?.page || 1, limit: params?.limit || 100, pages: 1 } };
 }
 async function externalGetOrder(jwtToken, orderId) {
-  let { data: o } = await supabase.from("orders").select("*").eq("id", orderId).single().then((r) => r, () => ({ data: null, error: null }));
-  if (orderId.startsWith("DEPO")) {
+  const { data: tx } = await supabase.from("transactions").select("*").eq("reference_id", orderId).maybeSingle();
+  let v2Status = null;
+  try {
+    v2Status = await fetchV2(`/order/${orderId}`);
+  } catch {
+  }
+  if (orderId.startsWith("DEPO") || orderId.startsWith("PG-") || tx?.note && tx.note.includes("deposit_invoice")) {
     try {
-      const depLive = await fetchV1(`/deposit/${orderId}`).catch(() => null);
+      const depId = orderId.startsWith("DEPO") || orderId.startsWith("PG-") ? orderId : "";
+      const depLive = depId ? await fetchV2(`/deposit/${depId}`).catch(() => null) : null;
       if (depLive) {
         return {
           id: orderId,
+          type: "deposit",
           status: (depLive.status || "pending").toLowerCase(),
           providerStatus: depLive.status || "Pending",
-          keterangan: JSON.stringify({ deposit_invoice: orderId, qr_url: depLive.qr_string || "", amount_idr: depLive.amount_idr }),
-          gameUserId: o?.game_user_id || "-",
-          zoneId: o?.zone_id || "-",
-          total: depLive.amount_myr || 10,
-          totalMyr: depLive.amount_myr || 10,
-          totalIdr: depLive.amount_idr || 43e3,
-          createdAt: depLive.created_at || o?.created_at || (/* @__PURE__ */ new Date()).toISOString(),
-          notes: o?.service_id || "Deposit Order",
-          items: [{ name: o?.service_id || "Top Up Item", quantity: 1, price: depLive.amount_myr || 10 }]
+          keterangan: JSON.stringify({
+            deposit_invoice: orderId,
+            qr_url: depLive.qr_string || "",
+            amount_idr: depLive.amount_idr,
+            pending_order: tx?.note?.includes("pending_order") || false
+          }),
+          gameUserId: tx?.game_user_id || "-",
+          zoneId: tx?.zone_id || "-",
+          total: depLive.amount_myr || parseFloat(tx?.amount || 0),
+          totalMyr: depLive.amount_myr || parseFloat(tx?.amount || 0),
+          totalIdr: depLive.amount_idr || 0,
+          createdAt: depLive.created_at || tx?.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+          notes: tx?.product_id || "Deposit Order",
+          items: [{ name: tx?.product_id || "Top Up Item", quantity: 1, price: depLive.amount_myr || 10 }]
         };
       }
-    } catch (e) {
+    } catch {
     }
   }
-  if (!o) {
+  if (v2Status) {
     return {
       id: orderId,
-      status: "pending",
-      providerStatus: "Pending",
-      keterangan: JSON.stringify({ deposit_invoice: orderId, amount_myr: 10, amount_idr: 43e3 }),
-      gameUserId: "-",
-      zoneId: "-",
-      total: 10,
-      totalMyr: 10,
-      totalIdr: 43e3,
-      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
-      notes: "Order Deposit",
-      items: [{ name: "Top Up Item", quantity: 1, price: 10 }]
+      type: "order",
+      status: (v2Status.status || "pending").toLowerCase(),
+      providerStatus: v2Status.status || "Pending",
+      keterangan: tx?.note || "",
+      gameUserId: tx?.game_user_id || v2Status.target_user_id || "-",
+      zoneId: tx?.zone_id || "-",
+      total: v2Status.amount_myr || parseFloat(tx?.amount || 0),
+      totalMyr: v2Status.amount_myr || parseFloat(tx?.amount || 0),
+      totalIdr: v2Status.amount_idr || 0,
+      createdAt: v2Status.created_at || tx?.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+      notes: `${tx?.product_id || ""}`,
+      items: [{ name: tx?.product_id || "Top Up Item", quantity: 1, price: v2Status.amount_myr || parseFloat(tx?.amount || 0) }]
+    };
+  }
+  if (tx) {
+    const noteJson = (() => {
+      try {
+        return JSON.parse(tx.note || "{}");
+      } catch {
+        return {};
+      }
+    })();
+    return {
+      id: tx.reference_id || tx.id,
+      type: "order",
+      status: tx.status || "pending",
+      providerStatus: tx.status || "",
+      keterangan: tx.note || "",
+      gameUserId: tx.game_user_id || "",
+      zoneId: tx.zone_id || "",
+      total: parseFloat(tx.amount || 0),
+      totalMyr: parseFloat(tx.amount || 0),
+      totalIdr: convertMyrToIdr(parseFloat(tx.amount || 0)),
+      createdAt: tx.created_at || (/* @__PURE__ */ new Date()).toISOString(),
+      notes: `${tx.product_id || ""}`,
+      items: [{ name: tx.product_id || "Top Up Item", quantity: 1, price: parseFloat(tx.amount || 0) }],
+      qr_url: noteJson.qr_url || "",
+      checkout_url: noteJson.checkout_url || "",
+      deposit_invoice: noteJson.deposit_invoice || ""
     };
   }
   return {
-    id: o.id,
+    id: orderId,
+    type: "order",
+    status: "pending",
+    providerStatus: "Pending",
+    keterangan: "",
+    gameUserId: "-",
+    zoneId: "-",
+    total: 10,
+    totalMyr: 10,
+    totalIdr: 43e3,
+    createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+    notes: "Order not found",
+    items: []
+  };
+}
+async function externalGuestGetOrderStatus(orderId) {
+  return externalGetOrder("", orderId);
+}
+async function externalUpdateOrderStatus(jwtToken, orderId, status, providerStatus, note, serialNumber) {
+  await supabase.from("transactions").update({
+    status,
+    note: note || void 0,
+    updated_at: (/* @__PURE__ */ new Date()).toISOString()
+  }).eq("reference_id", orderId);
+  return { success: true };
+}
+async function externalGetAdminOrders(jwtToken, params) {
+  let query = supabase.from("transactions").select("*", { count: "exact" }).order("created_at", { ascending: false });
+  if (params?.status) query = query.eq("status", params.status);
+  if (params?.search) {
+    const s = `%${params.search}%`;
+    query = query.or(`reference_id.ilike.${s},product_id.ilike.${s},game_user_id.ilike.${s}`);
+  }
+  const { data: orders, count } = await query;
+  const mapped = (orders || []).map((o) => ({
+    id: o.reference_id || o.id,
     status: o.status || "pending",
     providerStatus: o.status || "",
     keterangan: o.note || "",
     gameUserId: o.game_user_id || "",
     zoneId: o.zone_id || "",
-    total: o.total || 10,
-    totalMyr: o.total_myr || 10,
-    totalIdr: o.total_idr || 43e3,
+    total: parseFloat(o.amount || 0),
+    totalMyr: parseFloat(o.amount || 0),
+    totalIdr: convertMyrToIdr(parseFloat(o.amount || 0)),
     createdAt: o.created_at || (/* @__PURE__ */ new Date()).toISOString(),
-    notes: `${o.service_id || ""}`,
-    items: [{ name: o.service_id || "Top Up Item", quantity: 1, price: 10 }]
-  };
-}
-async function externalUpdateOrderStatus(jwtToken, orderId, status, providerStatus, note, serialNumber) {
-  await supabase.from("orders").update({ status, note }).eq("id", orderId);
-  return { success: true };
-}
-async function externalGetAdminOrders(jwtToken, params) {
-  return externalGetOrders(jwtToken, params);
+    notes: `${o.product_id || ""}`,
+    userId: o.user_id || ""
+  }));
+  return { data: mapped, meta: { total: count || mapped.length, page: params?.page || 1, limit: params?.limit || 100, pages: 1 } };
 }
 async function externalGetAdminStats(jwtToken, days) {
-  return {};
+  const { data: orders } = await supabase.from("transactions").select("status, amount, created_at");
+  const total = orders?.length || 0;
+  const success2 = orders?.filter((o) => o.status === "Success" || o.status === "delivered").length || 0;
+  const pending = orders?.filter((o) => o.status === "Pending" || o.status === "Processing").length || 0;
+  const failed = orders?.filter((o) => o.status === "Failed" || o.status === "cancelled").length || 0;
+  const totalRevenue = orders?.reduce((sum, o) => sum + parseFloat(o.amount || 0), 0) || 0;
+  return {
+    totalOrders: total,
+    successOrders: success2,
+    pendingOrders: pending,
+    failedOrders: failed,
+    totalRevenue,
+    totalRevenueMyr: totalRevenue,
+    totalRevenueIdr: convertMyrToIdr(totalRevenue),
+    totalUsers: 0,
+    totalProfitMyr: 0,
+    processingOrders: pending,
+    completedOrders: success2,
+    refundOrders: 0,
+    topProducts: [],
+    chartData: []
+  };
+}
+async function externalGetLatestTransactions() {
+  const { data: txs } = await supabase.from("transactions").select("*").order("created_at", { ascending: false }).limit(20);
+  return (txs || []).map((tx) => ({
+    id: tx.reference_id || tx.id,
+    status: tx.status || "pending",
+    productName: tx.product_id || "Top Up",
+    amount: parseFloat(tx.amount || 0),
+    createdAt: tx.created_at || (/* @__PURE__ */ new Date()).toISOString()
+  }));
+}
+async function externalValidateNickname(gameSlug, userId, zoneId) {
+  try {
+    const result = await fetchV2("/validate-account", {
+      method: "POST",
+      body: JSON.stringify({ game_slug: gameSlug, player_id: userId, zone_id: zoneId })
+    });
+    return { success: true, username: result.nickname || "Valid User" };
+  } catch (err) {
+    return { success: false, username: "", error: err.message };
+  }
+}
+async function externalGetRamsBalance(jwtToken) {
+  const profile = await externalGetMe(jwtToken).catch(() => null);
+  const balanceMyr = profile?.balanceMyr || 0;
+  let v2Balance = balanceMyr;
+  try {
+    const v2Profile = await fetchV2("/profile");
+    v2Balance = v2Profile.balance_myr || balanceMyr;
+  } catch {
+  }
+  return {
+    success: true,
+    data: {
+      ramsBalance: { balance: balanceMyr, balance_myr: balanceMyr, balance_idr: convertMyrToIdr(balanceMyr), username: profile?.name || "User", email: profile?.email || "" },
+      localBalance: balanceMyr,
+      balance_myr: balanceMyr,
+      balance_idr: convertMyrToIdr(balanceMyr),
+      providerBalance: v2Balance
+    }
+  };
+}
+async function externalCreateDeposit(jwtToken, amount, method = "qris") {
+  const user = await externalGetMe(jwtToken).catch(() => null);
+  const v2Res = await fetchV2("/deposit", {
+    method: "POST",
+    body: JSON.stringify({ amount, method })
+  });
+  try {
+    await supabase.from("deposits").insert({
+      user_id: user?.id || null,
+      kryznet_deposit_id: v2Res.deposit_id,
+      amount_myr: amount,
+      amount_idr: v2Res.amount_idr || convertMyrToIdr(amount),
+      payment_method: method,
+      qr_string: v2Res.qr_string || "",
+      checkout_url: v2Res.checkout_url || "",
+      status: "Pending",
+      expired_at: v2Res.expired_at || new Date(Date.now() + 30 * 60 * 1e3).toISOString(),
+      credited: false
+    });
+  } catch {
+  }
+  return {
+    success: true,
+    data: {
+      depositId: v2Res.deposit_id,
+      qrImage: v2Res.qr_string || "",
+      qrString: v2Res.qr_string || "",
+      totalAmount: amount,
+      creditAmount: amount,
+      uniqueCode: 0,
+      expiredAt: v2Res.expired_at || new Date(Date.now() + 30 * 60 * 1e3).toISOString(),
+      instructions: "Scan QR code to pay",
+      checkoutUrl: v2Res.checkout_url || ""
+    }
+  };
+}
+async function externalGetDepositStatus(jwtToken, depositId) {
+  try {
+    const v2Res = await fetchV2(`/deposit/${depositId}`);
+    const status = v2Res.status === "Success" ? "success" : v2Res.status === "Expired" ? "expired" : "pending";
+    if (status === "success") {
+      const { data: dep } = await supabase.from("deposits").select("credited, user_id, amount_myr").eq("kryznet_deposit_id", depositId).maybeSingle();
+      if (dep && !dep.credited && dep.user_id) {
+        try {
+          await supabase.rpc("increment_balance", {
+            p_user_id: dep.user_id,
+            p_amount: parseFloat(dep.amount_myr || 0),
+            p_reason: `Deposit ${depositId} paid`
+          });
+        } catch {
+        }
+        try {
+          await supabase.from("deposits").update({ status: "Success", credited: true, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("kryznet_deposit_id", depositId);
+        } catch {
+        }
+      }
+    }
+    return { success: true, data: { status } };
+  } catch {
+    return { success: true, data: { status: "pending" } };
+  }
+}
+async function externalGetDepositQR(jwtToken, depositId) {
+  try {
+    const v2Res = await fetchV2(`/deposit/${depositId}`);
+    return { success: true, data: { qr_string: v2Res.qr_string || "" } };
+  } catch {
+    return { success: true, data: { qr_string: "" } };
+  }
+}
+async function externalGetRamsHistory(jwtToken) {
+  const user = await externalGetMe(jwtToken).catch(() => null);
+  if (!user) return { success: true, data: { localDeposits: [] } };
+  const { data: txs } = await supabase.from("wallet_transactions").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20);
+  const { data: deps } = await supabase.from("deposits").select("*").eq("user_id", user.id).order("created_at", { ascending: false }).limit(20);
+  const localDeposits = (deps || []).map((d) => ({
+    depositId: d.kryznet_deposit_id,
+    amount: parseFloat(d.amount_myr || 0),
+    creditAmount: parseFloat(d.amount_myr || 0),
+    status: d.status === "Success" ? "success" : d.status === "Expired" ? "expired" : "pending",
+    completed: d.status === "Success",
+    createdAt: d.created_at
+  }));
+  return { success: true, data: { localDeposits } };
+}
+async function externalProcessPayment(jwtToken, amount, description) {
+  return { success: true, data: { newBalance: 0 } };
+}
+async function externalGetUserDeposits(jwtToken, userId) {
+  const { data: deps } = await supabase.from("deposits").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+  return { success: true, data: (deps || []).map((d) => ({
+    depositId: d.kryznet_deposit_id,
+    amount: parseFloat(d.amount_myr || 0),
+    status: d.status,
+    createdAt: d.created_at
+  })) };
+}
+async function externalGetLeaderboard(filter) {
+  try {
+    const { data: txns } = await supabase.from("transactions").select("user_id, amount, status").eq("status", "Success");
+    const byUser = {};
+    (txns || []).forEach((t2) => {
+      if (!t2.user_id) return;
+      if (!byUser[t2.user_id]) byUser[t2.user_id] = { totalMyr: 0, orders: 0 };
+      byUser[t2.user_id].totalMyr += parseFloat(t2.amount || 0);
+      byUser[t2.user_id].orders += 1;
+    });
+    const leaderboard = Object.entries(byUser).sort((a, b) => b[1].totalMyr - a[1].totalMyr).slice(0, 50).map(([userId, stats], i) => ({
+      rank: i + 1,
+      id: userId,
+      name: userId.substring(0, 8),
+      totalMyr: stats.totalMyr,
+      totalIdr: convertMyrToIdr(stats.totalMyr),
+      orders: stats.orders,
+      favorite: "Mobile Legends"
+    }));
+    return { data: leaderboard };
+  } catch {
+    return { data: [] };
+  }
+}
+async function externalGetHealth() {
+  try {
+    const profile = await fetchV2("/profile");
+    return { status: "ok", providerBalance: profile.balance_myr || 0 };
+  } catch {
+    return { status: "degraded" };
+  }
+}
+async function externalGetAdminSettings(jwtToken) {
+  const apiKey = getKryzNetApiKey();
+  return { data: { provider_api_key: apiKey, markups: { customer: 5, gold: 3, platinum: 2, business: 1 }, role_settings: { autoUpgrade: false, minimumSpend: { gold: 500, platinum: 2e3, business: 1e4 } }, admin_emails: [], provider_secret_key: "" } };
+}
+async function externalUpdateAdminSettings(jwtToken, settings) {
+  return { success: true };
+}
+async function externalGetProviderBalance(jwtToken) {
+  try {
+    const profile = await fetchV2("/profile");
+    return { balance: profile.balance_myr || 0, membership: "customer", name: profile.username || "Provider", email: "" };
+  } catch {
+    return { balance: 0, membership: "customer", name: "Provider", email: "" };
+  }
+}
+async function externalCreateProviderDeposit(jwtToken, amount, method) {
+  return externalCreateDeposit(jwtToken, amount, method);
 }
 async function externalGetTransactions(jwtToken, params) {
   return { data: [], meta: { total: 0, page: 1, limit: 100, pages: 1 } };
+}
+async function externalGetAdminTransactions(jwtToken, p) {
+  return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1 } };
 }
 async function externalGetNotifications(jwtToken, params) {
   return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1 } };
@@ -23336,39 +23792,6 @@ async function externalMarkNotificationRead(jwtToken, notificationId) {
 }
 async function externalMarkAllNotificationsRead(jwtToken) {
   return { message: "Notifications read" };
-}
-async function externalGetRamsBalance(jwtToken) {
-  const profile = await externalGetMe(jwtToken).catch(() => null);
-  return {
-    success: true,
-    data: {
-      ramsBalance: { balance: profile?.balanceMyr || 0, balance_myr: profile?.balanceMyr || 0, balance_idr: profile?.balanceIdr || 0, username: profile?.name || "User", email: profile?.email || "" },
-      localBalance: profile?.balanceMyr || 0,
-      balance_myr: profile?.balanceMyr || 0,
-      balance_idr: profile?.balanceIdr || 0
-    }
-  };
-}
-async function externalCreateDeposit(jwtToken, amount, method = "qris") {
-  return { success: true, data: {} };
-}
-async function externalGetDepositStatus(jwtToken, depositId) {
-  return { success: true, data: {} };
-}
-async function externalGetDepositQR(jwtToken, depositId) {
-  return { success: true, data: {} };
-}
-async function externalGetRamsHistory(jwtToken) {
-  return { success: true, data: [] };
-}
-async function externalProcessPayment(jwtToken, amount, description) {
-  return { success: true, data: { newBalance: 0 } };
-}
-async function externalGetUserDeposits(jwtToken, userId) {
-  return { success: true, data: [] };
-}
-async function externalGetHealth() {
-  return { status: "ok" };
 }
 async function externalGetVouchers(params) {
   return { success: true, data: [] };
@@ -23388,36 +23811,20 @@ async function externalUpdateVoucher(jwtToken, voucherId, data) {
 async function externalDeleteVoucher(jwtToken, voucherId) {
   return { success: true, message: "Deleted" };
 }
-async function externalGetDenominations(productId, jwtToken) {
-  try {
-    const result = await fetchV1(`/public/games/${productId}`);
-    const game = result.game || result;
-    if (!game || !game.services_by_type) return { success: true, data: [] };
-    const allServices = Object.values(game.services_by_type).flat();
-    const mapped = allServices.map((s) => {
-      const pMyr = parseFloat(s.price_myr) || parseFloat(s.price) || 0;
-      const pIdr = parseFloat(s.price_idr) || convertMyrToIdr(pMyr);
-      return {
-        id: s.id || s.code,
-        productId,
-        name: s.name,
-        price: pMyr,
-        price_myr: pMyr,
-        priceIdr: pIdr,
-        price_idr: pIdr,
-        originalPrice: pMyr,
-        stock: 9999,
-        category: "Standard",
-        description: s.description || ""
-      };
-    });
-    return { success: true, data: mapped };
-  } catch (err) {
-    return { success: true, data: [] };
-  }
+async function externalCreateProduct(jwtToken, data) {
+  return {};
 }
-async function externalGetPricelist(productId) {
-  return { success: true, data: [] };
+async function externalUpdateProduct(jwtToken, productId, data) {
+  return {};
+}
+async function externalDeleteProduct(jwtToken, productId) {
+  return { message: "Product deleted" };
+}
+async function externalUploadProductImage(jwtToken, productId, file2) {
+  return { images: [] };
+}
+async function externalUploadGameImage(jwtToken, slug, base64Image, filename) {
+  return {};
 }
 async function externalCreateDenomination(jwtToken, data) {
   return { success: true, data: {} };
@@ -23428,23 +23835,8 @@ async function externalUpdateDenomination(jwtToken, denominationId, data) {
 async function externalDeleteDenomination(jwtToken, denominationId) {
   return { success: true, message: "Deleted" };
 }
-async function externalGetLeaderboard(filter) {
-  return { data: [] };
-}
 async function externalUpdateMe(jwtToken, username, phone, email3) {
   return { success: true, message: "Updated" };
-}
-async function externalGetAdminSettings(jwtToken) {
-  return { data: { provider_api_key: getKryzNetApiKey() } };
-}
-async function externalGuestGetOrderStatus(orderId) {
-  return externalGetOrder("", orderId);
-}
-async function externalGetLatestTransactions() {
-  return [];
-}
-async function externalValidateNickname(gameSlug, userId, zoneId) {
-  return { success: true, username: "Valid User" };
 }
 async function externalForgotPassword(email3) {
   return { success: true };
@@ -23456,10 +23848,10 @@ async function externalTelegramWebAppAuth(initData) {
   return { user: {}, token: "", expiresIn: 0 };
 }
 async function externalGetApiKey(jwt2) {
-  return { apiKey: "" };
+  return { api_key: { key_prefix: "", last_used_at: null } };
 }
 async function externalGenerateApiKey(jwt2) {
-  return { apiKey: "" };
+  return { success: true, api_key: "", message: "API key generated" };
 }
 async function externalRequestPhoneOtp(phone, jwtToken) {
   return { success: true };
@@ -23470,35 +23862,23 @@ async function externalVerifyPhoneOtp(phone, otp, jwtToken) {
 async function externalUnlinkTelegram(jwt2) {
   return { success: true };
 }
-async function externalGetAdminTransactions(jwt2, p) {
-  return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1 } };
-}
-async function externalUpdateAdminSettings(jwt2, s) {
-  return { success: true };
-}
-async function externalGetProviderBalance(jwt2) {
-  return { balance: 0 };
-}
-async function externalCreateProviderDeposit(jwt2, amt, method) {
-  return { success: true, data: {} };
-}
 async function externalGetAdminApiKeys(jwt2) {
-  return { data: [] };
+  return { keys: [] };
 }
 async function externalAdminGenerateApiKey(jwt2, p) {
-  return { success: true, apiKey: "" };
+  return { success: true, api_key: "", message: "API key generated" };
 }
 async function externalAdminToggleApiKey(jwt2, id, active) {
-  return { success: true };
+  return { success: true, message: `API key ${active ? "activated" : "deactivated"}` };
 }
 async function externalAdminDeleteApiKey(jwt2, id) {
   return { success: true };
 }
 async function externalGetAdminApiStats(jwt2) {
-  return { totalRequests: 0, successRate: 100, activeKeys: 0 };
+  return { stats: { totalRequests: 0, successRate: 100, activeKeys: 0, totalKeys: 0, totalApiOrders: 0, totalApiRevenue: 0, readRateLimit: "60/min", orderRateLimit: "10/min" } };
 }
 async function externalGetAdminApiLogs(jwt2, p) {
-  return { data: [], meta: { total: 0, page: 1, limit: 10, pages: 1 } };
+  return { logs: [], pagination: { page: 1, pages: 1, total: 0, totalPages: 1 } };
 }
 var EXCHANGE_RATE, getKryzNetApiUrl, getKryzNetApiKey, supabaseUrl, supabaseKey, supabase;
 var init_client = __esm({
@@ -23507,9 +23887,9 @@ var init_client = __esm({
     init_dist5();
     EXCHANGE_RATE = 4300;
     getKryzNetApiUrl = () => process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
-    getKryzNetApiKey = () => process.env.EXTERNAL_API_KEY || "kryz_live_c20fabc004eed526bd2b924ee38ab3c861f3ff32";
-    supabaseUrl = process.env.SUPABASE_URL || "https://ldfodgqlwwxjggrhypmq.supabase.co";
-    supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkZm9kaHFsd3d4amdncmh5cG1xIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDgxMDQ3MCwiZXhwIjoyMTAwMzg2NDcwfQ.Y-_t0SDkrQECPBEj1fr1BreaWZsZmvrp08y_QEVfzPw";
+    getKryzNetApiKey = () => process.env.EXTERNAL_API_KEY || "";
+    supabaseUrl = process.env.SUPABASE_URL || "";
+    supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
     supabase = createClient(supabaseUrl, supabaseKey);
   }
 });
@@ -42366,81 +42746,126 @@ var productsRouter = createRouter({
 init_client();
 async function syncAllPendingLogic(jwtToken) {
   console.log("[SYNC CRON] Starting order synchronization...");
-  const ordersResult = await externalGetAdminOrders(jwtToken, { limit: 1e3 });
-  const pendingOrders = ordersResult.data.filter(
-    (o) => o.status === "pending" || o.status === "processing" || o.status === "shipped" || o.status === "confirmed"
-  );
-  if (pendingOrders.length === 0) {
-    console.log("[SYNC CRON] No pending orders found to sync.");
+  const { createClient: createClient2 } = await Promise.resolve().then(() => (init_dist5(), dist_exports));
+  const supabaseUrl2 = process.env.SUPABASE_URL || "";
+  const supabaseKey2 = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  const supabase2 = createClient2(supabaseUrl2, supabaseKey2);
+  const { data: pendingOrders } = await supabase2.from("transactions").select("*").in("status", ["Pending", "Processing"]).order("created_at", { ascending: false }).limit(100);
+  if (!pendingOrders || pendingOrders.length === 0) {
+    console.log("[SYNC CRON] No pending/processing orders found.");
     return { success: true, updatedCount: 0, message: "No pending orders to sync" };
   }
-  const settingsResult = await externalGetAdminSettings(jwtToken);
-  const apiKey = settingsResult.data?.provider_api_key || process.env.PROVIDER_API_KEY;
-  if (!apiKey) throw new Error("Provider API Key not configured in settings");
+  const apiKey = process.env.EXTERNAL_API_KEY || "";
+  const apiUrl = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
   let updatedCount = 0;
-  const mapProviderStatus = (status) => {
-    const s = (status || "").toLowerCase();
-    if (["sukses", "success", "delivered", "paid", "completed"].includes(s)) return "Success";
-    if (["proses", "processing"].includes(s)) return "Processing";
-    if (["batal", "gagal", "failed", "refund", "reffund", "cancelled", "error"].includes(s)) return "Failed";
-    if (["pending", "menunggu"].includes(s)) return "Pending";
-    return "Pending";
-  };
-  for (const order of pendingOrders) {
-    let providerTrxId = order.providerTrxId;
-    if (!providerTrxId && order.keterangan) {
+  let creditedDeposits = 0;
+  const { data: pendingDeps } = await supabase2.from("deposits").select("*").eq("status", "Pending").eq("credited", false).limit(50);
+  if (pendingDeps && pendingDeps.length > 0) {
+    for (const dep of pendingDeps) {
       try {
-        const ketData = JSON.parse(order.keterangan);
-        if (ketData.deposit_invoice) providerTrxId = ketData.deposit_invoice;
-      } catch (e) {
-      }
-    }
-    if (!providerTrxId) continue;
-    try {
-      const isDeposit = providerTrxId.startsWith("DEPO") || providerTrxId.startsWith("MTDEPO");
-      const endpoint = isDeposit ? "https://api.mytopupku.com/api/v2/check-deposit" : "https://api.mytopupku.com/api/v2/check-status";
-      const payload = isDeposit ? { api_key: apiKey, invoice: providerTrxId } : { api_key: apiKey, order_id: providerTrxId };
-      console.log(`[SYNC CRON] Checking order ID: ${order.id} | Provider TRX: ${providerTrxId} | Type: ${isDeposit ? "Deposit" : "Order"}`);
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-API-KEY": apiKey },
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) {
-        console.log(`[SYNC CRON] Provider API returned ${response.status} for TRX: ${providerTrxId}`);
-        continue;
-      }
-      const data = await response.json();
-      if (data && data.status === true) {
-        const providerData = data.data || data;
-        const providerStatus = providerData.status || providerData.transaction_status;
-        if (!providerStatus) continue;
-        let mappedStatus = mapProviderStatus(providerStatus);
-        if (mappedStatus !== "Pending") {
-          let trpcStatus = "pending";
-          if (mappedStatus === "Success") trpcStatus = isDeposit ? "shipped" : "delivered";
-          else if (mappedStatus === "Failed") trpcStatus = "cancelled";
-          else if (mappedStatus === "Processing") trpcStatus = "shipped";
-          console.log(`[SYNC CRON] Order ${order.id} status changed! Provider: ${providerStatus} -> mapped to: ${trpcStatus}`);
-          try {
-            const sn = providerData.sn || providerData.serial_number || providerData.vcr || "";
-            const note = providerData.message || providerData.note || "";
-            await externalUpdateOrderStatus(jwtToken, order.id, trpcStatus, providerStatus, note, sn);
-            console.log(`[SYNC CRON] Successfully updated order ${order.id} in local database.`);
-            updatedCount++;
-          } catch (e) {
-            console.error(`[SYNC CRON ERROR] Failed to update local DB for order ${order.id}:`, e.message);
+        const res = await fetch(`${apiUrl}/api/v2/deposit/${dep.kryznet_deposit_id}`, {
+          headers: { "X-API-KEY": apiKey }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.status === "Success") {
+            if (dep.user_id) {
+              try {
+                await supabase2.rpc("increment_balance", {
+                  p_user_id: dep.user_id,
+                  p_amount: parseFloat(dep.amount_myr || 0),
+                  p_reason: `Deposit ${dep.kryznet_deposit_id} paid`
+                });
+              } catch {
+              }
+            }
+            await supabase2.from("deposits").update({ status: "Success", credited: true, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("id", dep.id);
+            creditedDeposits++;
+            const { data: orderTx } = await supabase2.from("transactions").select("*").eq("reference_id", dep.kryznet_deposit_id).maybeSingle();
+            if (orderTx && orderTx.note?.includes("pending_order")) {
+              const noteJson = (() => {
+                try {
+                  return JSON.parse(orderTx.note || "{}");
+                } catch {
+                  return {};
+                }
+              })();
+              if (noteJson.product_id && noteJson.player_id) {
+                try {
+                  const idempotencyKey = `NS-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+                  const orderRes = await fetch(`${apiUrl}/api/v2/order`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-API-KEY": apiKey, "Idempotency-Key": idempotencyKey },
+                    body: JSON.stringify({ product_id: noteJson.product_id, player_id: noteJson.player_id, server_id: noteJson.server_id || "" })
+                  });
+                  if (orderRes.ok) {
+                    const orderData = await orderRes.json();
+                    await supabase2.from("transactions").update({
+                      reference_id: orderData.order_id,
+                      status: orderData.status === "Processing" ? "Processing" : "Pending",
+                      note: JSON.stringify({ ...noteJson, order_id: orderData.order_id, status: orderData.status }),
+                      updated_at: (/* @__PURE__ */ new Date()).toISOString()
+                    }).eq("id", orderTx.id);
+                    console.log(`[SYNC CRON] Auto-placed order ${orderData.order_id} from deposit ${dep.kryznet_deposit_id}`);
+                  }
+                } catch (e) {
+                  console.error(`[SYNC CRON] Auto-place order failed for ${dep.kryznet_deposit_id}:`, e.message);
+                }
+              }
+            }
+          } else if (data.status === "Expired" || data.status === "Failed") {
+            await supabase2.from("deposits").update({ status: data.status === "Expired" ? "Expired" : "Failed", updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("id", dep.id);
           }
-        } else {
-          console.log(`[SYNC CRON] Order ${order.id} is still ${mappedStatus}. No changes.`);
         }
+      } catch (e) {
+        console.error(`[SYNC CRON] Deposit sweep failed for ${dep.kryznet_deposit_id}:`, e.message);
       }
-    } catch (err) {
-      console.error(`[SYNC CRON ERROR] Fetch failed for order ${order.id}:`, err.message);
     }
   }
-  console.log(`[SYNC CRON] Finished synchronization. Updated ${updatedCount} orders.`);
-  return { success: true, updatedCount };
+  for (const order of pendingOrders) {
+    const orderId = order.reference_id;
+    if (!orderId || orderId.startsWith("PG-") || orderId.startsWith("DEPO") || orderId === order.kryznet_deposit_id) continue;
+    try {
+      const res = await fetch(`${apiUrl}/api/v2/order/${orderId}`, {
+        headers: { "X-API-KEY": apiKey }
+      });
+      if (!res.ok) continue;
+      const data = await res.json();
+      const v2Status = data.status;
+      const mapStatus = (s) => {
+        if (!s) return null;
+        const sl = s.toLowerCase();
+        if (["sukses", "success", "delivered", "paid", "completed"].includes(sl)) return "Success";
+        if (["proses", "processing"].includes(sl)) return "Processing";
+        if (["gagal", "failed", "refund", "refunded", "cancelled", "error"].includes(sl)) return "Failed";
+        if (["pending", "menunggu"].includes(sl)) return "Pending";
+        return null;
+      };
+      const mapped = mapStatus(v2Status);
+      if (mapped && mapped !== order.status) {
+        console.log(`[SYNC CRON] Order ${orderId} ${order.status} -> ${mapped}`);
+        if (mapped === "Failed" && order.user_id) {
+          try {
+            await supabase2.rpc("increment_balance", {
+              p_user_id: order.user_id,
+              p_amount: parseFloat(order.amount || 0),
+              p_reason: `Refund: Order ${orderId} failed`
+            });
+          } catch {
+          }
+        }
+        await supabase2.from("transactions").update({
+          status: mapped,
+          updated_at: (/* @__PURE__ */ new Date()).toISOString()
+        }).eq("id", order.id);
+        updatedCount++;
+      }
+    } catch (e) {
+      console.error(`[SYNC CRON] Status sync failed for ${orderId}:`, e.message);
+    }
+  }
+  console.log(`[SYNC CRON] Finished: ${updatedCount} orders updated, ${creditedDeposits} deposits credited.`);
+  return { success: true, updatedCount, depositsCredited: creditedDeposits };
 }
 var ordersRouter = createRouter({
   create: authedQuery.input(
@@ -43698,6 +44123,11 @@ var botApiRouter = new Hono2();
 botApiRouter.use("*", async (c, next) => {
   const path2 = c.req.path;
   const botSecret = getBotSecret();
+  const botPath = path2.replace(/^\/api/, "") || "/";
+  const isBotApiPath = botPath === "/products" || botPath.startsWith("/products/") || botPath === "/account/validate" || botPath === "/v1/validate-account" || botPath.startsWith("/order/") || botPath.startsWith("/user/") || botPath.startsWith("/auth/otp/") || botPath.startsWith("/admin/refund") || botPath === "/admin/provider/balance" || botPath.startsWith("/cron/products-sync");
+  if (!isBotApiPath) {
+    return next();
+  }
   if (path2.includes("/products") || path2.includes("/auth") || path2.includes("/cron")) {
     return next();
   }
@@ -44281,7 +44711,6 @@ app.all("/api/callback", async (c) => {
     return c.json({ error: "Failed to forward callback" }, 500);
   }
 });
-app.route("/api", botApiRouter);
 app.all("/api/v1/*", async (c) => {
   const API_BASE_URL = process.env.EXTERNAL_API_URL || "https://api.kryz-net.space";
   const urlObj = new URL(c.req.raw.url);
@@ -44309,6 +44738,7 @@ app.all("/api/v1/*", async (c) => {
     return c.json({ error: "Failed to forward request to backend API", details: err.message }, 500);
   }
 });
+app.route("/api", botApiRouter);
 app.all("/api/*", (c) => c.json({ error: "Not Found" }, 404));
 var GET = handle(app);
 var POST = handle(app);
@@ -44323,6 +44753,27 @@ if (process.env.NODE_ENV === "production" && !process.env.VERCEL) {
     console.log(`Server running on http://localhost:${port}/`);
   });
 }
+var syncInterval = null;
+var startSyncPing = () => {
+  if (syncInterval) return;
+  const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.EXTERNAL_API_URL ? process.env.EXTERNAL_API_URL.replace("api.kryz-net.space", "nickstore.vercel.app") : "http://localhost:3000";
+  const cronSecret = process.env.CRON_SECRET || "";
+  syncInterval = setInterval(async () => {
+    try {
+      const headers = {};
+      if (cronSecret) headers["Authorization"] = `Bearer ${cronSecret}`;
+      await fetch(`${baseUrl}/api/cron/sync`, { headers });
+      console.log("[SYNC-PING] Triggered sync");
+    } catch (e) {
+      console.log("[SYNC-PING] Failed:", e.message);
+    }
+  }, 5 * 60 * 1e3);
+  console.log(`[SYNC-PING] Started, pinging ${baseUrl}/api/cron/sync every 5min`);
+};
+app.use("*", async (c, next) => {
+  startSyncPing();
+  await next();
+});
 export {
   DELETE,
   GET,
