@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router";
+﻿import { useParams, Link } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { Card } from "@/components/ui/card";
@@ -49,7 +49,7 @@ export default function InvoiceDetail() {
       case "delivered":
         return { color: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/20", label: "PAID" };
       case "pending":
-        return { color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20", label: "UNPAID" };
+        return { color: "text-amber-600", bg: "bg-amber-500/10", border: "border-amber-500/20", label: "UNPAID" };
       case "proses":
       case "processing":
       case "confirmed":
@@ -80,9 +80,9 @@ export default function InvoiceDetail() {
           <div className="w-20 h-20 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="w-10 h-10 text-destructive" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Invoice Tidak Ditemukan</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Invoice Tidak Ditemukan</h1>
           <p className="text-muted-foreground mb-8">Pastikan nomor invoice yang Anda masukkan sudah benar.</p>
-          <Button asChild className="bg-primary hover:bg-primary/90 text-white rounded-full px-8">
+          <Button asChild className="bg-primary hover:bg-primary/90 text-foreground rounded-full px-8">
             <Link to="/cek-transaksi">
               <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
             </Link>
@@ -109,20 +109,20 @@ export default function InvoiceDetail() {
   const paymentMethodText = qrData?.qrImage ? 'QRIS ALL PAY' : (order.type === 'deposit' ? 'QRIS ALL PAY' : 'SALDO AKUN');
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-[#0B0A10]">
+    <div className="min-h-screen py-16 px-4 bg-card">
       <div className="max-w-6xl mx-auto">
-        <Link to="/cek-transaksi" className="inline-flex items-center text-muted-foreground hover:text-white transition-colors mb-8">
+        <Link to="/cek-transaksi" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors mb-8">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Kembali ke Pencarian
         </Link>
 
         {/* Progress Bar Header */}
-        <Card className="p-8 mb-8 bg-white/[0.02] backdrop-blur-xl border-white/5 shadow-2xl rounded-2xl relative overflow-hidden">
-          <h2 className="text-xl font-bold text-white mb-8">Progress Transaksi</h2>
+        <Card className="p-8 mb-8 bg-secondary/50 backdrop-blur-xl border-border/70 shadow-2xl rounded-2xl relative overflow-hidden">
+          <h2 className="text-xl font-bold text-foreground mb-8">Progress Transaksi</h2>
           
           <div className="relative flex justify-between items-center mb-4">
             {/* Connecting Lines */}
-            <div className="absolute top-1/2 left-0 w-full h-1 bg-white/10 -z-10 -translate-y-1/2 rounded-full overflow-hidden">
+            <div className="absolute top-1/2 left-0 w-full h-1 bg-secondary/80 -z-10 -translate-y-1/2 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-primary transition-all duration-1000 ease-in-out" 
                 style={{ width: `${step === 4 ? 100 : step === 3 ? 66 : step === 2 ? 33 : 0}%` }}
@@ -139,12 +139,12 @@ export default function InvoiceDetail() {
               <div key={s.id} className="flex flex-col items-center w-1/4 relative">
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-4 transition-all duration-500 shadow-xl ${
                   step >= s.id 
-                    ? "bg-primary text-white border-2 border-primary/50 shadow-primary/20" 
-                    : step === -1 ? "bg-white/5 text-white/30 border-2 border-white/5" : "bg-[#0B0A10] text-white/50 border-2 border-white/10"
+                    ? "bg-primary text-foreground border-2 border-primary/50 shadow-primary/20" 
+                    : step === -1 ? "bg-secondary/60 text-muted-foreground/60 border-2 border-border/70" : "bg-card text-muted-foreground/90 border-2 border-border/80"
                 }`}>
                   {s.id === 3 && step === 3 ? <Loader2 className="w-5 h-5 animate-spin" /> : s.icon}
                 </div>
-                <h3 className={`text-sm font-bold mb-1 ${step >= s.id ? "text-white" : "text-white/50"}`}>{s.label}</h3>
+                <h3 className={`text-sm font-bold mb-1 ${step >= s.id ? "text-foreground" : "text-muted-foreground/90"}`}>{s.label}</h3>
                 <p className="text-xs text-muted-foreground text-center max-w-[120px] hidden md:block">{s.desc}</p>
               </div>
             ))}
@@ -164,29 +164,29 @@ export default function InvoiceDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column - Product Details */}
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-6 bg-white/[0.02] backdrop-blur-xl border-white/5 shadow-2xl rounded-2xl">
-              <div className="flex flex-col md:flex-row gap-6 mb-8 border-b border-white/10 pb-8">
-                <div className="w-32 h-32 rounded-xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
+            <Card className="p-6 bg-secondary/50 backdrop-blur-xl border-border/70 shadow-2xl rounded-2xl">
+              <div className="flex flex-col md:flex-row gap-6 mb-8 border-b border-border/80 pb-8">
+                <div className="w-32 h-32 rounded-xl overflow-hidden bg-secondary/60 border border-border/80 shrink-0">
                   {/* Try to infer a nice gradient or placeholder based on game slug */}
                   <div className="w-full h-full bg-gradient-to-br from-primary/40 to-blue-600/40 flex items-center justify-center">
-                     <span className="text-4xl font-black text-white/50 uppercase">{((order as any).game_slug || "T").substring(0,2)}</span>
+                     <span className="text-4xl font-black text-muted-foreground/90 uppercase">{((order as any).game_slug || "T").substring(0,2)}</span>
                   </div>
                 </div>
                 <div className="space-y-4 flex-1">
                   <div>
-                    <h3 className="font-bold text-xl text-white">{((order as any).game_slug || "").split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3>
+                    <h3 className="font-bold text-xl text-foreground">{((order as any).game_slug || "").split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</h3>
                     <p className="text-primary font-medium">{(order as any).service_name || (order as any).keterangan}</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-muted-foreground mb-1">Target ID / UID</p>
-                      <p className="text-sm font-mono text-white/90">{(order as any).game_id || order.gameUserId || "N/A"}</p>
+                      <p className="text-sm font-mono text-foreground/90">{(order as any).game_id || order.gameUserId || "N/A"}</p>
                     </div>
                     {((order as any).zone_id || order.zoneId) && (
                       <div>
                         <p className="text-xs text-muted-foreground mb-1">Server / Zone ID</p>
-                        <p className="text-sm font-mono text-white/90">{(order as any).zone_id || order.zoneId}</p>
+                        <p className="text-sm font-mono text-foreground/90">{(order as any).zone_id || order.zoneId}</p>
                       </div>
                     )}
                   </div>
@@ -196,18 +196,18 @@ export default function InvoiceDetail() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Harga</span>
-                  <span className="text-white">{formatPrice((order as any).price_myr || (order as any).totalMyr || 0, (order as any).price_idr || (order as any).totalIdr || 0)}</span>
+                  <span className="text-foreground">{formatPrice((order as any).price_myr || (order as any).totalMyr || 0, (order as any).price_idr || (order as any).totalIdr || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Jumlah</span>
-                  <span className="text-white">1x</span>
+                  <span className="text-foreground">1x</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Payment Fee</span>
-                  <span className="text-white">RM 0.00</span>
+                  <span className="text-foreground">RM 0.00</span>
                 </div>
-                <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                  <span className="font-bold text-white">Total Pembayaran</span>
+                <div className="flex justify-between items-center pt-4 border-t border-border/80">
+                  <span className="font-bold text-foreground">Total Pembayaran</span>
                   <span className="font-bold text-xl text-primary">{formatPrice((order as any).price_myr || (order as any).totalMyr || 0, (order as any).price_idr || (order as any).totalIdr || 0)}</span>
                 </div>
               </div>
@@ -216,19 +216,19 @@ export default function InvoiceDetail() {
 
           {/* Right Column - Payment Details */}
           <div className="lg:col-span-7">
-            <Card className="p-8 bg-white/[0.02] backdrop-blur-xl border-white/5 shadow-2xl rounded-2xl h-full">
+            <Card className="p-8 bg-secondary/50 backdrop-blur-xl border-border/70 shadow-2xl rounded-2xl h-full">
               <div className="space-y-6">
                 <div>
                   <h3 className="text-sm text-muted-foreground mb-1">Metode Pembayaran</h3>
-                  <p className="font-bold text-lg text-white uppercase">{paymentMethodText}</p>
+                  <p className="font-bold text-lg text-foreground uppercase">{paymentMethodText}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                   <div>
                     <h3 className="text-sm text-muted-foreground mb-2">Nomor Invoice</h3>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-white tracking-wider">{(order as any).invoice || order.id}</span>
-                      <button onClick={() => copyToClipboard((order as any).invoice || order.id)} className="text-muted-foreground hover:text-white transition-colors p-1 bg-white/5 rounded-md hover:bg-white/10">
+                      <span className="font-mono font-bold text-foreground tracking-wider">{(order as any).invoice || order.id}</span>
+                      <button onClick={() => copyToClipboard((order as any).invoice || order.id)} className="text-muted-foreground hover:text-foreground transition-colors p-1 bg-secondary/60 rounded-md hover:bg-secondary/80">
                         <Copy className="w-4 h-4" />
                       </button>
                     </div>
@@ -250,7 +250,7 @@ export default function InvoiceDetail() {
 
                   <div className="md:col-span-2">
                     <h3 className="text-sm text-muted-foreground mb-2">Pesan</h3>
-                    <p className="text-sm text-white/90 bg-white/5 p-4 rounded-xl border border-white/10 leading-relaxed break-words whitespace-pre-wrap">
+                    <p className="text-sm text-foreground/90 bg-secondary/60 p-4 rounded-xl border border-border/80 leading-relaxed break-words whitespace-pre-wrap">
                       {qrData?.message || (order.keterangan && !qrData?.qrImage ? order.keterangan : "Silakan lakukan pembayaran dengan metode yang kamu pilih.")}
                     </p>
                   </div>
@@ -258,21 +258,21 @@ export default function InvoiceDetail() {
 
                 {/* Inline QR Code Section */}
                 {step === 2 && qrData?.qrImage && (
-                  <div className="mt-8 pt-8 border-t border-white/10">
+                  <div className="mt-8 pt-8 border-t border-border/80">
                     <h3 className="text-sm text-muted-foreground mb-6">Kode Pembayaran</h3>
                     <div className="flex flex-col items-center">
-                      <div className="bg-white p-6 rounded-2xl shadow-2xl border-4 border-white/10 relative overflow-hidden group">
+                      <div className="bg-white p-6 rounded-2xl shadow-2xl border-4 border-border/80 relative overflow-hidden group">
                         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                         <img src={qrData.qrImage} alt="QRIS Code" className="w-64 h-64 object-contain" />
                       </div>
                       
-                      <p className="text-sm text-amber-500 mt-6 font-medium bg-amber-500/10 px-6 py-2 rounded-full border border-amber-500/20 flex items-center">
+                      <p className="text-sm text-amber-600 mt-6 font-medium bg-amber-500/10 px-6 py-2 rounded-full border border-amber-500/20 flex items-center">
                         <Clock className="w-4 h-4 mr-2" /> Menunggu pembayaran diproses...
                       </p>
 
                       {qrData.checkoutUrl && (
                         <div className="mt-6 w-full max-w-sm">
-                          <Button asChild className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl shadow-lg shadow-primary/20">
+                          <Button asChild className="w-full bg-primary hover:bg-primary/90 text-foreground rounded-xl shadow-lg shadow-primary/20">
                             <a href={qrData.checkoutUrl} target="_blank" rel="noopener noreferrer">
                               Buka Link Pembayaran <ExternalLink className="w-4 h-4 ml-2" />
                             </a>

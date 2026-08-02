@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+﻿import { useState, useCallback, useMemo } from "react";
 import { trpc } from "@/providers/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,9 +16,9 @@ import {
   ShoppingCart
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    PAGINATION (reusable)
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Pagination({
   currentPage,
   totalPages,
@@ -89,9 +89,9 @@ function Pagination({
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN PAGE
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function UserMutasi() {
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState("");
@@ -118,26 +118,26 @@ export default function UserMutasi() {
       <div className="space-y-8 max-w-7xl mx-auto">
         {/* Header */}
         <div>
-          <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-white">
+          <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-foreground">
             Riwayat Mutasi
           </h1>
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mt-1">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90 mt-1">
             Menampilkan data riwayat mutasi yang telah Kamu lakukan
           </p>
         </div>
 
         {/* Filters Card */}
-        <Card className="p-6 bg-[#0B0A10]/80 border-white/10 backdrop-blur-xl">
+        <Card className="p-6 bg-secondary/60 border-border/80 backdrop-blur-xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Status
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
               >
                 <option value="all">Semua</option>
                 <option value="deposit">Deposit</option>
@@ -147,25 +147,25 @@ export default function UserMutasi() {
             </div>
             {/* Date Pickers */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Tanggal Mulai
               </label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
               />
             </div>
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Tanggal Akhir
               </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
               />
             </div>
             {/* Export Buttons */}
@@ -173,7 +173,7 @@ export default function UserMutasi() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-border/80 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-foreground flex-1 transition-colors"
                 onClick={() => handleExport("csv")}
               >
                 <Download className="mr-2 h-4 w-4 text-emerald-400" />
@@ -182,10 +182,10 @@ export default function UserMutasi() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-[#D946EF]/50 hover:bg-[#D946EF]/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-border/80 hover:border-primary/50 hover:bg-primary/10 text-foreground flex-1 transition-colors"
                 onClick={() => handleExport("xlsx")}
               >
-                <Download className="mr-2 h-4 w-4 text-[#D946EF]" />
+                <Download className="mr-2 h-4 w-4 text-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest">XLSX</span>
               </Button>
             </div>
@@ -193,7 +193,7 @@ export default function UserMutasi() {
         </Card>
 
         {/* Data Table Card */}
-        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border-white/10 shadow-2xl backdrop-blur-xl">
+        <Card className="rounded-[1.5rem] overflow-hidden bg-secondary/60 border-border/80 shadow-2xl backdrop-blur-xl">
           {isLoading ? (
             <div className="p-16 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
@@ -203,13 +203,13 @@ export default function UserMutasi() {
             </div>
           ) : transactions.length === 0 ? (
             <div className="p-16 text-center">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/5 mb-6 shadow-inner">
-                <ArrowLeftRight className="h-10 w-10 text-white/20" />
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/60 mb-6 shadow-inner">
+                <ArrowLeftRight className="h-10 w-10 text-muted-foreground/40" />
               </div>
-              <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
+              <h3 className="text-xl font-black text-foreground uppercase tracking-tight mb-2">
                 Belum Ada Mutasi
               </h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90">
                 Tidak ada data mutasi yang ditemukan.
               </p>
             </div>
@@ -224,7 +224,7 @@ export default function UserMutasi() {
                   return (
                     <div
                       key={tx.id || index}
-                      className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:border-white/10 transition-all duration-300 backdrop-blur-sm overflow-hidden"
+                      className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 rounded-2xl bg-secondary/50 border border-border/70 hover:bg-secondary/80 hover:border-border/80 transition-all duration-300 backdrop-blur-sm overflow-hidden"
                     >
                       {/* Hover glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
@@ -234,8 +234,8 @@ export default function UserMutasi() {
                           <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex flex-col gap-1.5">
-                          <span className="font-bold text-sm text-white/90 group-hover:text-white transition-colors leading-tight line-clamp-2">{tx.description ?? "-"}</span>
-                          <span className="text-[10px] font-black uppercase tracking-widest text-white/40">{new Date(tx.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                          <span className="font-bold text-sm text-foreground/90 group-hover:text-foreground transition-colors leading-tight line-clamp-2">{tx.description ?? "-"}</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{new Date(tx.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
                       </div>
                       
@@ -244,8 +244,8 @@ export default function UserMutasi() {
                           {isPositive ? "+" : "-"}{formatPrice(amount)}
                         </span>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-white/30">Saldo</span>
-                          <span className="text-[11px] font-black tracking-wider text-white/70">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Saldo</span>
+                          <span className="text-[11px] font-black tracking-wider text-foreground/75">
                             {formatPrice(tx.balanceAfter ?? tx.balance ?? 0)}
                           </span>
                         </div>
@@ -256,8 +256,8 @@ export default function UserMutasi() {
               </div>
 
               {/* Pagination with summary */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/10 bg-white/[0.01]">
-                <p className="text-[9px] font-black uppercase tracking-widest text-white/40">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-border/80 bg-secondary/40">
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                   Menampilkan {transactions.length} dari {meta?.total ?? 0} hasil
                 </p>
                 <Pagination

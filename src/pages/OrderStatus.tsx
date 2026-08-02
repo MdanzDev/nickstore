@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router";
+﻿import { useParams, useNavigate } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -23,9 +23,9 @@ const parseKeterangan = (str?: string) => {
   return str;
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    TYPES
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 interface Order {
   id: string
   status: string
@@ -47,9 +47,9 @@ interface Order {
   items?: { name: string; quantity: number; price: number }[]
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    COPY BUTTON
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CopyBtn({ text }: { text: string }) {
   const [done, setDone] = useState(false);
   const copy = () => {
@@ -64,7 +64,7 @@ function CopyBtn({ text }: { text: string }) {
       onClick={copy}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="p-1.5 rounded-md hover:bg-white/10 text-white/40 hover:text-white/80 transition-all flex items-center gap-1.5 border border-white/5"
+      className="p-1.5 rounded-md hover:bg-secondary/80 text-muted-foreground hover:text-foreground/85 transition-all flex items-center gap-1.5 border border-border/70"
     >
       <AnimatePresence mode="wait">
         {done ? (
@@ -92,9 +92,9 @@ function CopyBtn({ text }: { text: string }) {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    ANIMATED COUNTER
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const AnimatedCounter = ({ value, className = "", style }: { value: string, className?: string, style?: any }) => {
   return (
     <motion.span
@@ -110,9 +110,9 @@ const AnimatedCounter = ({ value, className = "", style }: { value: string, clas
   );
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    STATUS CONFIG
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const STATUS_CFG: Record<string, {
   color: string; bg: string; border: string; glow: string;
   label: string; headline: string; sub: string;
@@ -152,11 +152,11 @@ const STATUS_CFG: Record<string, {
     label: "Cancelled", headline: "Dibatalkan", sub: "Pesanan ini dibatalkan.",
     icon: XCircle
   },
-}/* ─────────────────────────────────────────────
+}/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    LOADING SCREEN
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const LoadingScreen = () => (
-  <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0A10] gap-8">
+  <div className="min-h-screen flex flex-col items-center justify-center bg-card gap-8">
     <motion.div 
       animate={{ 
         rotate: 360,
@@ -178,7 +178,7 @@ const LoadingScreen = () => (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="text-white/60 text-sm flex items-center gap-2"
+      className="text-foreground/70 text-sm flex items-center gap-2"
     >
       <span>Memuat data transaksi</span>
       <motion.span
@@ -191,9 +191,9 @@ const LoadingScreen = () => (
   </div>
 );
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function OrderStatus() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -227,19 +227,19 @@ export default function OrderStatus() {
   if (isLoading) return <LoadingScreen />;
 
   if (!o) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0B0A10] text-white gap-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-card text-foreground gap-4">
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200 }}
         className="mb-4"
       >
-        <Search className="w-16 h-16 text-white/40" />
+        <Search className="w-16 h-16 text-muted-foreground" />
       </motion.div>
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-white/60"
+        className="text-foreground/70"
       >
         Order tidak ditemukan
       </motion.p>
@@ -247,7 +247,7 @@ export default function OrderStatus() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => navigate("/")}
-        className="px-6 py-2 bg-red-600 text-white rounded-lg mt-4"
+        className="px-6 py-2 bg-red-600 text-foreground rounded-lg mt-4"
       >
         Kembali ke Beranda
       </motion.button>
@@ -275,7 +275,7 @@ export default function OrderStatus() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen pb-20 font-sans overflow-hidden relative" style={{ background: "#0B0A10", color: "#E0E2E5" }}>
+    <div ref={containerRef} className="min-h-screen pb-20 font-sans overflow-hidden relative" style={{ background: "var(--background)", color: "var(--foreground)" }}>
       
       {/* Background Grid */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
@@ -296,12 +296,12 @@ export default function OrderStatus() {
       >
         <motion.button 
           onClick={() => navigate("/")} 
-          className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
+          className="flex items-center gap-2 text-foreground/70 hover:text-foreground transition-colors group"
           whileHover={{ x: -5 }}
           whileTap={{ scale: 0.95 }}
         >
           <motion.div whileHover={{ rotate: -90 }} transition={{ duration: 0.3 }}>
-            <ArrowLeft className="w-5 h-5 group-hover:text-red-400 transition-colors" />
+            <ArrowLeft className="w-5 h-5 group-hover:text-red-600 transition-colors" />
           </motion.div>
           <span className="text-sm font-medium">Kembali ke Beranda</span>
         </motion.button>
@@ -327,7 +327,7 @@ export default function OrderStatus() {
             whileHover={{ scale: 1.05 }} 
             whileTap={{ scale: 0.95 }} 
             onClick={handleRefresh}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:glass-panel-light transition-colors text-xs text-white/60"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 hover:bg-card/90 transition-colors text-xs text-foreground/70"
           >
             <motion.div
               animate={isRefreshing ? { rotate: 360 } : { rotate: 0 }}
@@ -337,7 +337,7 @@ export default function OrderStatus() {
             </motion.div>
             Refresh
           </motion.button>
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 hover:glass-panel-light transition-colors text-xs text-white/60">
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 hover:bg-card/90 transition-colors text-xs text-foreground/70">
             <Share2 className="w-3.5 h-3.5" /> Bagikan
           </motion.button>
         </div>
@@ -353,7 +353,7 @@ export default function OrderStatus() {
         {/* HERO BANNER */}
         <motion.div 
           variants={itemVariants} 
-          className="relative rounded-2xl overflow-hidden p-8 flex flex-col items-center text-center border border-white/5"
+          className="relative rounded-2xl overflow-hidden p-8 flex flex-col items-center text-center border border-border/70"
           style={{ background: `radial-gradient(circle at 50% 50%, ${cfg.bg} 0%, rgba(20,20,22,0.9) 100%)` }}
         >
           
@@ -388,14 +388,14 @@ export default function OrderStatus() {
                   { duration: 4, repeat: Infinity, ease: "easeInOut" }
                 }
               >
-                <cfg.icon className="w-12 h-12 text-white drop-shadow-md" />
+                <cfg.icon className="w-12 h-12 text-foreground drop-shadow-md" />
               </motion.div>
             </motion.div>
             
           </div>
 
           <motion.h1 
-            className="text-3xl font-bold text-white mb-3 relative z-30"
+            className="text-3xl font-bold text-foreground mb-3 relative z-30"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -417,7 +417,7 @@ export default function OrderStatus() {
           </motion.h1>
           
           <motion.p 
-            className="text-white/60 text-sm max-w-sm mb-5 relative z-30"
+            className="text-foreground/70 text-sm max-w-sm mb-5 relative z-30"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
@@ -452,7 +452,7 @@ export default function OrderStatus() {
               <motion.button 
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.15)" }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 glass-panel-light text-xs text-white/70 transition-colors shadow-lg"
+                className="flex items-center gap-2 px-4 py-1.5 rounded-full border border-border/80 bg-card/70 backdrop-blur text-xs text-foreground/75 transition-colors shadow-lg"
               >
                 {cfg.action} <Info className="w-3.5 h-3.5" />
               </motion.button>
@@ -460,7 +460,7 @@ export default function OrderStatus() {
                 <motion.p 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-white/40 text-xs bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm max-w-sm text-center leading-relaxed"
+                  className="text-muted-foreground text-xs bg-foreground/5 px-3 py-1.5 rounded-full backdrop-blur-sm max-w-sm text-center leading-relaxed"
                 >
                   {parseKeterangan(o.keterangan) || cfg.reason}
                 </motion.p>
@@ -472,12 +472,12 @@ export default function OrderStatus() {
         {/* RINGKASAN TRANSAKSI */}
           <motion.div 
             variants={itemVariants} 
-            className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10"
+            className="group relative overflow-hidden rounded-xl border border-border/70 bg-secondary/50 backdrop-blur-xl p-5 transition-all duration-300 hover:bg-secondary/80 hover:border-border/80"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none z-0" />
             <div className="relative z-10">
-            <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/5">
-              <div className="flex items-center gap-2 text-white/80 font-semibold text-sm">
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/70">
+              <div className="flex items-center gap-2 text-foreground/85 font-semibold text-sm">
                 <motion.div
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
@@ -488,7 +488,7 @@ export default function OrderStatus() {
               </div>
               <div className="flex items-center gap-3">
                 <motion.span 
-                  className="text-sm font-mono text-white/50 truncate max-w-[120px] md:max-w-none hover:text-white/80 transition-colors cursor-pointer"
+                  className="text-sm font-mono text-muted-foreground/90 truncate max-w-[120px] md:max-w-none hover:text-foreground/85 transition-colors cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                 >
                   #{o.id}
@@ -499,7 +499,7 @@ export default function OrderStatus() {
             
             <div className="grid grid-cols-3 gap-6">
               <div>
-                <p className="text-xs text-white/40 mb-1.5 flex items-center gap-1.5">
+                <p className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1.5">
                   <motion.div
                     animate={{ rotate: [0, 360] }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -508,18 +508,18 @@ export default function OrderStatus() {
                   </motion.div>
                   Tanggal
                 </p>
-                <p className="text-sm font-medium text-white/90">
+                <p className="text-sm font-medium text-foreground/90">
                   {createdDate.toLocaleDateString("id-ID", { day: '2-digit', month: 'short', year: 'numeric' })}
                   <br/>
                   <AnimatedCounter 
                     value={createdDate.toLocaleTimeString("id-ID", { hour: '2-digit', minute: '2-digit' })} 
-                    className="text-white/40 text-xs font-normal"
+                    className="text-muted-foreground text-xs font-normal"
                   />
-                  <span className="text-white/40 text-xs font-normal ml-1">(GMT+8)</span>
+                  <span className="text-muted-foreground text-xs font-normal ml-1">(GMT+8)</span>
                 </p>
               </div>
-              <div className="border-l border-white/5 pl-4 md:pl-6 relative">
-                <p className="text-xs text-white/40 mb-1.5 flex items-center gap-1.5">
+              <div className="border-l border-border/70 pl-4 md:pl-6 relative">
+                <p className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1.5">
                   <motion.div
                     animate={cfg.isLive ? { rotate: 360 } : {}}
                     transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -532,7 +532,7 @@ export default function OrderStatus() {
                       animate={{ rotate: 360 }}
                       transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                     >
-                      <RefreshCw className="w-3 h-3 text-white/30" />
+                      <RefreshCw className="w-3 h-3 text-muted-foreground/60" />
                     </motion.div>
                   )}
                 </p>
@@ -555,8 +555,8 @@ export default function OrderStatus() {
                   <AnimatedCounter value={cfg.label} className="text-sm font-medium" style={{ color: cfg.color }} />
                 </div>
               </div>
-              <div className="border-l border-white/5 pl-4 md:pl-6 overflow-hidden">
-                <p className="text-xs text-white/40 mb-1.5 flex items-center gap-1.5">
+              <div className="border-l border-border/70 pl-4 md:pl-6 overflow-hidden">
+                <p className="text-xs text-muted-foreground mb-1.5 flex items-center gap-1.5">
                   <motion.div
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -566,7 +566,7 @@ export default function OrderStatus() {
                   ID Transaksi
                 </p>
                 <motion.p 
-                  className="text-sm font-medium text-white/90 font-mono truncate" 
+                  className="text-sm font-medium text-foreground/90 font-mono truncate" 
                   title={`#${o.id}`}
                   whileHover={{ scale: 1.05, color: "#fff" }}
                 >
@@ -580,12 +580,12 @@ export default function OrderStatus() {
         {/* DETAIL PEMBELIAN */}
           <motion.div 
             variants={itemVariants} 
-            className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10"
+            className="group relative overflow-hidden rounded-xl border border-border/70 bg-secondary/50 backdrop-blur-xl p-5 transition-all duration-300 hover:bg-secondary/80 hover:border-border/80"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none z-0" />
             <div className="relative z-10">
-            <div className="flex items-center justify-between mb-5 pb-4 border-b border-white/5">
-              <div className="flex items-center gap-2 text-white/80 font-semibold text-sm">
+            <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/70">
+              <div className="flex items-center gap-2 text-foreground/85 font-semibold text-sm">
                 <motion.div
                   animate={{ x: [0, 3, -3, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -595,9 +595,9 @@ export default function OrderStatus() {
                 DETAIL PEMBELIAN
               </div>
               <div className="flex items-center gap-1.5 text-xs">
-                <span className="text-white/40">Provider:</span>
+                <span className="text-muted-foreground">Provider:</span>
                 <motion.span 
-                  className="text-white/80 font-medium flex items-center gap-1 hover:text-white transition-colors"
+                  className="text-foreground/85 font-medium flex items-center gap-1 hover:text-foreground transition-colors"
                   whileHover={{ scale: 1.05 }}
                 >
                   KryzNet 
@@ -616,7 +616,7 @@ export default function OrderStatus() {
                 <motion.div 
                   whileHover={{ scale: 1.05, rotate: -2 }}
                   whileTap={{ scale: 0.95, rotate: 2 }}
-                  className="w-20 h-20 rounded-xl overflow-hidden glass-panel-light border border-white/10 shrink-0 flex items-center justify-center relative group cursor-pointer"
+                  className="w-20 h-20 rounded-xl overflow-hidden bg-card/70 backdrop-blur border border-border/80 shrink-0 flex items-center justify-center relative group cursor-pointer"
                 >
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10"
@@ -637,23 +637,23 @@ export default function OrderStatus() {
                 </motion.div>
                 <div>
                   <motion.h3 
-                    className="text-lg font-bold text-white mb-1 tracking-tight"
+                    className="text-lg font-bold text-foreground mb-1 tracking-tight"
                     layout
                   >
                     {o.serviceName ? (o.gameSlug ? o.gameSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "Game Item") : "Mobile Legends"}
                   </motion.h3>
                   <div className="flex items-center gap-2 mb-2">
                     <motion.span 
-                      className="text-sm text-white/80 glass-panel-light px-2 py-0.5 rounded-md border border-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                      className="text-sm text-foreground/85 bg-card/70 backdrop-blur px-2 py-0.5 rounded-md border border-border/70 hover:bg-secondary/80 transition-colors cursor-pointer"
                       whileHover={{ scale: 1.05 }}
                     >
                       {o.serviceName || "Diamonds"}
                     </motion.span>
                   </div>
-                  <div className="text-xs text-white/40">
+                  <div className="text-xs text-muted-foreground">
                     Game ID <br/>
                     <motion.span 
-                      className="text-white/90 text-sm mt-0.5 inline-flex items-center gap-1.5 group cursor-pointer"
+                      className="text-foreground/90 text-sm mt-0.5 inline-flex items-center gap-1.5 group cursor-pointer"
                       onClick={() => {
                         navigator.clipboard.writeText(o.gameUserId || "");
                         toast.success("Game ID disalin!");
@@ -665,7 +665,7 @@ export default function OrderStatus() {
                         whileHover={{ scale: 1.2, rotate: 360 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <Copy className="w-3 h-3 text-white/30 group-hover:text-white transition-colors" />
+                        <Copy className="w-3 h-3 text-muted-foreground/60 group-hover:text-foreground transition-colors" />
                       </motion.div>
                     </motion.span>
                   </div>
@@ -686,7 +686,7 @@ export default function OrderStatus() {
                   />
                 </motion.div>
                 <motion.span 
-                  className="text-2xl font-bold text-white tracking-wide"
+                  className="text-2xl font-bold text-foreground tracking-wide"
                   animate={{ scale: [1, 1.1, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
@@ -700,10 +700,10 @@ export default function OrderStatus() {
         {/* DETAIL PEMBAYARAN */}
           <motion.div 
             variants={itemVariants} 
-            className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10"
+            className="group relative overflow-hidden rounded-xl border border-border/70 bg-secondary/50 backdrop-blur-xl p-5 transition-all duration-300 hover:bg-secondary/80 hover:border-border/80"
           >
             <div className="relative z-10">
-            <div className="flex items-center gap-2 text-white/80 font-semibold text-sm mb-5 pb-4 border-b border-white/5">
+            <div className="flex items-center gap-2 text-foreground/85 font-semibold text-sm mb-5 pb-4 border-b border-border/70">
               <motion.div
                 animate={{ rotateY: [0, 360] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
@@ -714,9 +714,9 @@ export default function OrderStatus() {
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-white/40 mb-1.5">Metode Pembayaran</p>
+                <p className="text-xs text-muted-foreground mb-1.5">Metode Pembayaran</p>
                 <motion.div 
-                  className="text-xl font-black italic tracking-tighter text-white drop-shadow-md"
+                  className="text-xl font-black italic tracking-tighter text-foreground drop-shadow-md"
                   animate={{ scale: [1, 1.02, 1] }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
@@ -724,7 +724,7 @@ export default function OrderStatus() {
                 </motion.div>
               </div>
               <div className="text-right">
-                <p className="text-xs text-white/40 mb-1.5">Total Bayar</p>
+                <p className="text-xs text-muted-foreground mb-1.5">Total Bayar</p>
                 <motion.p 
                   key={formatPrice(o.totalMyr, o.totalIdr || o.total)}
                   initial={{ opacity: 0, scale: 0.5, y: 20 }}
@@ -750,7 +750,7 @@ export default function OrderStatus() {
             >
               
                 <motion.div 
-                  className="rounded-xl border border-blue-500/30 bg-white/[0.02] backdrop-blur-xl p-5 mt-4 mb-4 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.1)] relative overflow-hidden"
+                  className="rounded-xl border border-blue-500/30 bg-secondary/50 backdrop-blur-xl p-5 mt-4 mb-4 transition-all duration-300 shadow-[0_0_20px_rgba(59,130,246,0.1)] relative overflow-hidden"
                 >
                   {/* Decorative background pulse */}
                   <motion.div
@@ -760,8 +760,8 @@ export default function OrderStatus() {
                   />
                   
                   <div className="flex flex-col items-center justify-center text-center relative z-10">
-                    <h3 className="text-lg font-bold text-white mb-2 tracking-tight">Scan QRIS Untuk Membayar</h3>
-                    <p className="text-sm text-white/50 mb-5 max-w-sm leading-relaxed">
+                    <h3 className="text-lg font-bold text-foreground mb-2 tracking-tight">Scan QRIS Untuk Membayar</h3>
+                    <p className="text-sm text-muted-foreground/90 mb-5 max-w-sm leading-relaxed">
                       Silakan scan kode QR di bawah ini menggunakan aplikasi M-Banking atau E-Wallet Anda sebelum waktu habis.
                     </p>
                     
@@ -781,7 +781,7 @@ export default function OrderStatus() {
                         href={(o as any).checkoutUrl} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] text-white rounded-full transition-all font-semibold text-sm"
+                        className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] text-foreground rounded-full transition-all font-semibold text-sm"
                       >
                         Buka di Aplikasi <ExternalLink className="w-4 h-4" />
                       </motion.a>
@@ -796,12 +796,12 @@ export default function OrderStatus() {
         {/* STATUS TRANSAKSI TIMELINE */}
         <motion.div 
           variants={itemVariants} 
-          className="group relative rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 overflow-hidden hover:bg-white/[0.06] hover:border-white/10 transition-all duration-300"
+          className="group relative rounded-xl border border-border/70 bg-secondary/50 backdrop-blur-xl p-5 overflow-hidden hover:bg-secondary/80 hover:border-border/80 transition-all duration-300"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none z-0" />
           <div className="relative z-10">
           <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2 text-white/80 font-semibold text-sm">
+            <div className="flex items-center gap-2 text-foreground/85 font-semibold text-sm">
               <motion.div
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -812,7 +812,7 @@ export default function OrderStatus() {
             </div>
             {cfg.isLive && (
               <motion.span 
-                className="text-[10px] text-white/40 flex items-center gap-1.5 glass-panel-light px-2 py-1 rounded-full"
+                className="text-[10px] text-muted-foreground flex items-center gap-1.5 bg-card/70 backdrop-blur px-2 py-1 rounded-full"
                 animate={{ opacity: [0.4, 0.8, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -829,7 +829,7 @@ export default function OrderStatus() {
           
           <div className="relative px-2 md:px-4">
             {/* Background line */}
-            <div className="absolute top-3.5 left-10 right-10 h-[2px] bg-white/10" />
+            <div className="absolute top-3.5 left-10 right-10 h-[2px] bg-secondary/80" />
             
             {/* Active line with glow */}
             <motion.div 
@@ -873,15 +873,15 @@ export default function OrderStatus() {
                   whileTap={{ scale: 0.8 }}
                   className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center z-10 shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all duration-300 cursor-pointer"
                 >
-                  <Check className="w-4 h-4 text-black" />
+                  <Check className="w-4 h-4 text-white" />
                 </motion.div>
                 <motion.div 
-                  className="text-[10px] text-white/40 group-hover:text-white/60 transition-colors"
+                  className="text-[10px] text-muted-foreground group-hover:text-foreground/70 transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   {createdDate.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})}
                 </motion.div>
-                <div className="text-[10px] md:text-[11px] font-medium text-white/70 leading-tight">Pembayaran<br/>Diterima</div>
+                <div className="text-[10px] md:text-[11px] font-medium text-foreground/75 leading-tight">Pembayaran<br/>Diterima</div>
               </div>
 
               {/* Step 2 - Verification */}
@@ -892,7 +892,7 @@ export default function OrderStatus() {
                   className={`w-7 h-7 rounded-full flex items-center justify-center z-10 transition-all duration-500 cursor-pointer ${
                     status !== 'pending' 
                       ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' 
-                      : 'bg-white/[0.02] backdrop-blur-xl border-2 border-white/20'
+                      : 'bg-secondary/50 backdrop-blur-xl border-2 border-border'
                   }`}
                 >
                   {status !== 'pending' && (
@@ -901,7 +901,7 @@ export default function OrderStatus() {
                       animate={{ scale: 1, rotate: 0 }} 
                       transition={{ type: "spring", delay: 0.5 }}
                     >
-                      <Check className="w-4 h-4 text-black" />
+                      <Check className="w-4 h-4 text-white" />
                     </motion.div>
                   )}
                   {status === 'pending' && (
@@ -909,18 +909,18 @@ export default function OrderStatus() {
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
-                      <div className="w-2 h-2 rounded-full bg-white/20" />
+                      <div className="w-2 h-2 rounded-full bg-foreground/20" />
                     </motion.div>
                   )}
                 </motion.div>
                 <motion.div 
-                  className="text-[10px] text-white/40 group-hover:text-white/60 transition-colors"
+                  className="text-[10px] text-muted-foreground group-hover:text-foreground/70 transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   {status !== 'pending' ? createdDate.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '--:--'}
                 </motion.div>
                 <div className={`text-[10px] md:text-[11px] font-medium leading-tight transition-colors ${
-                  status !== 'pending' ? 'text-white/70' : 'text-white/30'
+                  status !== 'pending' ? 'text-foreground/75' : 'text-muted-foreground/60'
                 }`}>
                   Pembayaran<br/>Verifikasi
                 </div>
@@ -936,7 +936,7 @@ export default function OrderStatus() {
                       ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' 
                       : status === 'processing'
                       ? 'bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]'
-                      : 'bg-white/[0.02] backdrop-blur-xl border-2 border-white/20 relative'
+                      : 'bg-secondary/50 backdrop-blur-xl border-2 border-border relative'
                   }`}
                 >
                   {(status === 'success' || status === 'failed') && (
@@ -945,22 +945,22 @@ export default function OrderStatus() {
                       animate={{ scale: 1 }} 
                       transition={{ type: "spring", delay: 0.8 }}
                     >
-                      <Check className="w-4 h-4 text-black" />
+                      <Check className="w-4 h-4 text-white" />
                     </motion.div>
                   )}
                   {status === 'processing' && (
                     <motion.div 
                       animate={{ rotate: 360 }} 
                       transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                      className="w-5 h-5 border-3 border-white border-t-transparent rounded-full"
+                      className="w-5 h-5 border-3 border-primary border-t-transparent rounded-full"
                     />
                   )}
                   {status === 'pending' && (
-                    <div className="w-2 h-2 rounded-full bg-white/20" />
+                    <div className="w-2 h-2 rounded-full bg-foreground/20" />
                   )}
                 </motion.div>
                 <motion.div 
-                  className="text-[10px] text-white/40 group-hover:text-white/60 transition-colors"
+                  className="text-[10px] text-muted-foreground group-hover:text-foreground/70 transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   {(status === 'success' || status === 'failed' || status === 'processing') 
@@ -970,8 +970,8 @@ export default function OrderStatus() {
                 </motion.div>
                 <div className={`text-[10px] md:text-[11px] font-medium leading-tight transition-colors ${
                   (status === 'success' || status === 'failed' || status === 'processing') 
-                    ? 'text-white/70' 
-                    : 'text-white/30'
+                    ? 'text-foreground/75' 
+                    : 'text-muted-foreground/60'
                 }`}>
                   Dikirim ke<br/>Provider
                 </div>
@@ -987,7 +987,7 @@ export default function OrderStatus() {
                       ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' 
                       : status === 'failed' 
                       ? 'bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
-                      : 'bg-white/[0.02] backdrop-blur-xl border-2 border-white/20'
+                      : 'bg-secondary/50 backdrop-blur-xl border-2 border-border'
                   }`}
                 >
                   {status === 'success' && (
@@ -996,7 +996,7 @@ export default function OrderStatus() {
                       animate={{ scale: 1 }} 
                       transition={{ type: "spring", delay: 1 }}
                     >
-                      <Check className="w-4 h-4 text-black" />
+                      <Check className="w-4 h-4 text-white" />
                     </motion.div>
                   )}
                   {status === 'failed' && (
@@ -1005,15 +1005,15 @@ export default function OrderStatus() {
                       animate={{ scale: 1, rotate: 0 }} 
                       transition={{ type: "spring", delay: 1 }}
                     >
-                      <XCircle className="w-4 h-4 text-white" />
+                      <XCircle className="w-4 h-4 text-foreground" />
                     </motion.div>
                   )}
                   {(status === 'pending' || status === 'processing') && (
-                    <div className="w-2 h-2 rounded-full bg-white/20" />
+                    <div className="w-2 h-2 rounded-full bg-foreground/20" />
                   )}
                 </motion.div>
                 <motion.div 
-                  className="text-[10px] text-white/40 group-hover:text-white/60 transition-colors"
+                  className="text-[10px] text-muted-foreground group-hover:text-foreground/70 transition-colors"
                   whileHover={{ scale: 1.1 }}
                 >
                   {(status === 'success' || status === 'failed') 
@@ -1023,8 +1023,8 @@ export default function OrderStatus() {
                 </motion.div>
                 <div className={`text-[10px] md:text-[11px] font-medium leading-tight transition-colors ${
                   (status === 'success' || status === 'failed') 
-                    ? 'text-white/70' 
-                    : 'text-white/30'
+                    ? 'text-foreground/75' 
+                    : 'text-muted-foreground/60'
                 }`}>
                   {status === 'failed' ? 'Provider\nMenolak' : 'Provider\nMenerima'}
                 </div>
@@ -1037,7 +1037,7 @@ export default function OrderStatus() {
         {/* BUTUH BANTUAN */}
         <motion.div 
           variants={itemVariants} 
-          className="group rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl p-5 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative transition-all duration-300 hover:bg-white/[0.06] hover:border-white/10"
+          className="group rounded-xl border border-border/70 bg-secondary/50 backdrop-blur-xl p-5 flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative transition-all duration-300 hover:bg-secondary/80 hover:border-border/80"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none z-0" />
           <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6">
@@ -1050,7 +1050,7 @@ export default function OrderStatus() {
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
           <div className="flex-1 relative z-10">
-            <div className="flex items-center gap-2 text-white/80 font-semibold text-sm mb-3">
+            <div className="flex items-center gap-2 text-foreground/85 font-semibold text-sm mb-3">
               <motion.div
                 animate={{ y: [0, -3, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
@@ -1059,7 +1059,7 @@ export default function OrderStatus() {
               </motion.div>
               BUTUH BANTUAN?
             </div>
-            <p className="text-sm text-white/40 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Jika pembayaran Anda sudah terpotong namun pesanan gagal, silakan hubungi support dengan menyertakan ID Transaksi.
             </p>
           </div>
@@ -1084,7 +1084,7 @@ export default function OrderStatus() {
             whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.1)" }}
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate("/products")} 
-            className="flex-1 py-3.5 rounded-xl border border-white/10 text-white font-semibold text-sm flex justify-center items-center gap-2 overflow-hidden relative group"
+            className="flex-1 py-3.5 rounded-xl border border-border/80 text-foreground font-semibold text-sm flex justify-center items-center gap-2 overflow-hidden relative group"
           >
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" 
@@ -1103,7 +1103,7 @@ export default function OrderStatus() {
           <motion.button 
             whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.1)" }}
             whileTap={{ scale: 0.98 }} 
-            className="flex-1 py-3.5 rounded-xl border border-white/10 text-white font-semibold text-sm flex justify-center items-center gap-2 overflow-hidden relative group"
+            className="flex-1 py-3.5 rounded-xl border border-border/80 text-foreground font-semibold text-sm flex justify-center items-center gap-2 overflow-hidden relative group"
           >
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300" 
@@ -1127,7 +1127,7 @@ export default function OrderStatus() {
             }}
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate("/dashboard")} 
-            className="flex-1 py-3.5 rounded-xl bg-red-600 text-white transition-all duration-300 font-semibold text-sm flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.2)] relative overflow-hidden group"
+            className="flex-1 py-3.5 rounded-xl bg-red-600 text-foreground transition-all duration-300 font-semibold text-sm flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(220,38,38,0.2)] relative overflow-hidden group"
           >
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" 

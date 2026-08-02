@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function ResetPassword() {
   const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ export default function ResetPassword() {
 
   const updatePasswordMutation = trpc.auth.updatePassword.useMutation({
     onSuccess: () => {
-      toast.success("Password berjaya ditukar! 🎉", {
+      toast.success("Password berjaya ditukar! ðŸŽ‰", {
         description: "Anda akan dialihkan ke halaman login...",
         duration: 3000,
       });
@@ -115,44 +115,44 @@ export default function ResetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden pt-24 pb-12">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-amber-400/20 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-orange-600/10 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
       <div className="w-full max-w-md relative z-10">
-        <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl p-8 lg:p-10">
+        <div className="rounded-[2rem] border border-border/80 bg-secondary/60 backdrop-blur-xl shadow-2xl p-8 lg:p-10">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8 justify-center">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
-                <Gamepad2 className="h-6 w-6 text-black" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.35)]">
+                <Gamepad2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
-                <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
+                <span className="font-black text-xl tracking-wide uppercase text-foreground">Nick<span>Store</span></span>
+                <p className="text-[10px] text-muted-foreground/90 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
 
             <div className="flex items-center justify-center mb-6">
-              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
+              <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-amber-400/25 to-orange-600/10 flex items-center justify-center border border-primary/30 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
                 {hasRecoveryToken ? (
-                  <ShieldCheck className="h-10 w-10 text-[#D946EF]" />
+                  <ShieldCheck className="h-10 w-10 text-primary" />
                 ) : (
-                  <KeyRound className="h-10 w-10 text-[#D946EF]" />
+                  <KeyRound className="h-10 w-10 text-primary" />
                 )}
               </div>
             </div>
 
-            <h1 className="text-2xl font-black text-center text-white tracking-tight uppercase">
+            <h1 className="text-2xl font-black text-center text-foreground tracking-tight uppercase">
               {hasRecoveryToken ? "Tetapkan Password Baru" : "Lupa Password?"}
             </h1>
-            <p className="text-[10px] text-white/50 mt-2 text-center uppercase tracking-widest font-black">
+            <p className="text-[10px] text-muted-foreground/90 mt-2 text-center uppercase tracking-widest font-black">
               {hasRecoveryToken
                 ? "Masukkan password baru untuk akun Anda"
                 : "Masukkan email dan kami akan kirim tautan reset"}
             </p>
           </div>
 
-          {/* ── STATE: Token present — show set new password form ── */}
+          {/* â”€â”€ STATE: Token present â€” show set new password form â”€â”€ */}
           {hasRecoveryToken ? (
             <form
               onSubmit={handleUpdatePassword}
@@ -160,11 +160,11 @@ export default function ResetPassword() {
             >
               {/* New Password */}
               <div className="space-y-2">
-                <Label htmlFor="new-password" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Password Baru <span className="text-[#8B5CF6]">*</span>
+                <Label htmlFor="new-password" className="text-xs font-black uppercase tracking-widest text-foreground/75 flex items-center gap-1">
+                  Password Baru <span className="text-primary">*</span>
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="new-password"
                     type={showPassword ? "text" : "password"}
@@ -174,7 +174,7 @@ export default function ResetPassword() {
                       setNewPassword(e.target.value);
                       setPasswordError("");
                     }}
-                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
+                    className={`pl-11 pr-11 h-12 bg-secondary/50 border-border/80 text-foreground placeholder:text-muted-foreground/60 rounded-xl transition-all focus:bg-secondary/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/40 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
                     disabled={updatePasswordMutation.isPending}
                     autoComplete="new-password"
                     autoFocus
@@ -182,7 +182,7 @@ export default function ResetPassword() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-secondary/60"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -192,11 +192,11 @@ export default function ResetPassword() {
 
               {/* Confirm Password */}
               <div className="space-y-2">
-                <Label htmlFor="confirm-password" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Sahkan Password <span className="text-[#8B5CF6]">*</span>
+                <Label htmlFor="confirm-password" className="text-xs font-black uppercase tracking-widest text-foreground/75 flex items-center gap-1">
+                  Sahkan Password <span className="text-primary">*</span>
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="confirm-password"
                     type={showConfirm ? "text" : "password"}
@@ -206,14 +206,14 @@ export default function ResetPassword() {
                       setConfirmPassword(e.target.value);
                       setPasswordError("");
                     }}
-                    className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
+                    className={`pl-11 pr-11 h-12 bg-secondary/50 border-border/80 text-foreground placeholder:text-muted-foreground/60 rounded-xl transition-all focus:bg-secondary/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/40 ${passwordError ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" : ""}`}
                     disabled={updatePasswordMutation.isPending}
                     autoComplete="new-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-secondary/60"
                     tabIndex={-1}
                   >
                     {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -229,14 +229,14 @@ export default function ResetPassword() {
 
               {/* Password strength hint */}
               {newPassword && (
-                <div className="space-y-1 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                <div className="space-y-1 p-3 rounded-xl bg-secondary/50 border border-border/70">
                   {[
                     { ok: newPassword.length >= 8, label: "Minimal 8 karakter" },
                     { ok: /[A-Z]/.test(newPassword), label: "Ada huruf besar" },
                     { ok: /[0-9]/.test(newPassword), label: "Ada angka" },
                   ].map((item, i) => (
-                    <div key={i} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${item.ok ? "text-emerald-500" : "text-white/30"}`}>
-                      <CheckCircle2 className={`h-3.5 w-3.5 ${item.ok ? "text-emerald-500" : "text-white/20"}`} />
+                    <div key={i} className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${item.ok ? "text-emerald-500" : "text-muted-foreground/60"}`}>
+                      <CheckCircle2 className={`h-3.5 w-3.5 ${item.ok ? "text-emerald-500" : "text-muted-foreground/40"}`} />
                       {item.label}
                     </div>
                   ))}
@@ -245,12 +245,12 @@ export default function ResetPassword() {
 
               <Button
                 type="submit"
-                className="w-full h-14 mt-4 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
+                className="w-full h-14 mt-4 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(249,115,22,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.55)] border-0"
                 disabled={updatePasswordMutation.isPending}
               >
                 {updatePasswordMutation.isPending ? (
                   <span className="flex items-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin text-black" />
+                    <Loader2 className="h-5 w-5 animate-spin text-white" />
                     Menyimpan...
                   </span>
                 ) : (
@@ -262,7 +262,7 @@ export default function ResetPassword() {
               </Button>
             </form>
           ) : emailSent ? (
-            /* ── STATE: Email sent confirmation ── */
+            /* â”€â”€ STATE: Email sent confirmation â”€â”€ */
             <div className="text-center space-y-6 animate-in fade-in duration-500">
               <div className="flex items-center justify-center">
                 <div className="h-20 w-20 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
@@ -270,15 +270,15 @@ export default function ResetPassword() {
                 </div>
               </div>
               <div>
-                <p className="text-xl font-black text-white uppercase tracking-tight">Email Terkirim!</p>
-                <p className="text-[10px] text-white/50 mt-3 font-medium uppercase tracking-widest leading-relaxed">
-                  Cek inbox <span className="text-[#D946EF]">{email}</span> untuk tautan reset password. Periksa juga folder spam.
+                <p className="text-xl font-black text-foreground uppercase tracking-tight">Email Terkirim!</p>
+                <p className="text-[10px] text-muted-foreground/90 mt-3 font-medium uppercase tracking-widest leading-relaxed">
+                  Cek inbox <span className="text-primary">{email}</span> untuk tautan reset password. Periksa juga folder spam.
                 </p>
               </div>
               <div className="pt-4 space-y-3">
                 <Button
                   variant="outline"
-                  className="w-full h-12 rounded-xl bg-transparent border-white/10 text-white/70 hover:bg-white/[0.05] hover:text-white text-[10px] font-black tracking-widest uppercase"
+                  className="w-full h-12 rounded-xl bg-transparent border-border/80 text-foreground/75 hover:bg-secondary/60 hover:text-foreground text-[10px] font-black tracking-widest uppercase"
                   onClick={() => {
                     setEmailSent(false);
                     forgotMutation.reset();
@@ -288,7 +288,7 @@ export default function ResetPassword() {
                 </Button>
                 <Button 
                   variant="ghost" 
-                  className="w-full h-12 rounded-xl bg-transparent text-[#D946EF] hover:bg-white/[0.05] hover:text-[#8B5CF6] text-[10px] font-black tracking-widest uppercase transition-colors" 
+                  className="w-full h-12 rounded-xl bg-transparent text-primary hover:bg-secondary/60 hover:text-primary text-[10px] font-black tracking-widest uppercase transition-colors" 
                   onClick={() => navigate("/login")}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
@@ -297,24 +297,24 @@ export default function ResetPassword() {
               </div>
             </div>
           ) : (
-            /* ── STATE: Request reset email form ── */
+            /* â”€â”€ STATE: Request reset email form â”€â”€ */
             <form
               onSubmit={handleRequestReset}
               className="space-y-6 animate-in slide-in-from-bottom-4 fade-in duration-500"
             >
               <div className="space-y-2">
-                <Label htmlFor="reset-email" className="text-xs font-black uppercase tracking-widest text-white/70 flex items-center gap-1">
-                  Alamat Email <span className="text-[#8B5CF6]">*</span>
+                <Label htmlFor="reset-email" className="text-xs font-black uppercase tracking-widest text-foreground/75 flex items-center gap-1">
+                  Alamat Email <span className="text-primary">*</span>
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <Input
                     id="reset-email"
                     type="email"
                     placeholder="contoh@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50"
+                    className="pl-11 h-12 bg-secondary/50 border-border/80 text-foreground placeholder:text-muted-foreground/60 rounded-xl transition-all focus:bg-secondary/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/40"
                     disabled={forgotMutation.isPending}
                     autoComplete="email"
                     autoFocus
@@ -324,12 +324,12 @@ export default function ResetPassword() {
 
               <Button
                 type="submit"
-                className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
+                className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(249,115,22,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.55)] border-0 mt-4"
                 disabled={forgotMutation.isPending}
               >
                 {forgotMutation.isPending ? (
                   <span className="flex items-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin text-black" />
+                    <Loader2 className="h-5 w-5 animate-spin text-white" />
                     Menghantar...
                   </span>
                 ) : (
@@ -340,10 +340,10 @@ export default function ResetPassword() {
                 )}
               </Button>
 
-              <div className="flex items-center justify-center pt-4 border-t border-white/10 mt-6">
+              <div className="flex items-center justify-center pt-4 border-t border-border/80 mt-6">
                 <Link
                   to="/login"
-                  className="text-[10px] font-black uppercase tracking-widest text-[#D946EF] hover:text-[#8B5CF6] transition-colors flex items-center gap-2"
+                  className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary transition-colors flex items-center gap-2"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Kembali ke Login

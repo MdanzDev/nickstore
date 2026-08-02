@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router";
+﻿import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "@/hooks/useAuth";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import {
@@ -36,9 +36,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    CONSTANTS
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const navItems = [
   { 
     path: "/dashboard", 
@@ -69,7 +69,7 @@ const navItems = [
     label: "Laporan", 
     icon: BarChart3,
     description: "Analisis & statistik",
-    color: "text-purple-500",
+    color: "text-primary",
     bg: "bg-purple-500/10",
   },
   { 
@@ -77,7 +77,7 @@ const navItems = [
     label: "API Settings", 
     icon: Key,
     description: "Kelola API Key",
-    color: "text-amber-500",
+    color: "text-amber-600",
     bg: "bg-amber-500/10",
   },
   { 
@@ -98,20 +98,20 @@ const quickLinks = [
   { path: "/docs", label: "API Docs", icon: Key, external: false },
 ];
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    GREETING HELPER
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function getGreeting(): { text: string; emoji: string } {
   const hour = new Date().getHours();
-  if (hour < 12) return { text: "Selamat Pagi", emoji: "🌅" };
-  if (hour < 15) return { text: "Selamat Siang", emoji: "☀️" };
-  if (hour < 18) return { text: "Selamat Sore", emoji: "🌤️" };
-  return { text: "Selamat Malam", emoji: "🌙" };
+  if (hour < 12) return { text: "Selamat Pagi", emoji: "ðŸŒ…" };
+  if (hour < 15) return { text: "Selamat Siang", emoji: "â˜€ï¸" };
+  if (hour < 18) return { text: "Selamat Sore", emoji: "ðŸŒ¤ï¸" };
+  return { text: "Selamat Malam", emoji: "ðŸŒ™" };
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    NOTIFICATION PANEL (Mock)
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   if (!isOpen) return null;
 
@@ -124,34 +124,34 @@ function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-80 bg-[#0B0A10]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
-        <div className="p-4 border-b border-white/10">
+      <div className="absolute right-0 top-full mt-2 w-80 bg-card/90 backdrop-blur-xl border border-border/80 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
+        <div className="p-4 border-b border-border/80">
           <div className="flex items-center justify-between">
-            <h3 className="font-black text-sm uppercase tracking-wider text-white">Notifikasi</h3>
-            <Badge className="text-[10px] bg-[#8B5CF6] text-black font-black uppercase tracking-widest border-none">3 Baru</Badge>
+            <h3 className="font-black text-sm uppercase tracking-wider text-foreground">Notifikasi</h3>
+            <Badge className="text-[10px] bg-primary text-white font-black uppercase tracking-widest border-none">3 Baru</Badge>
           </div>
         </div>
         <div className="max-h-64 overflow-y-auto custom-scrollbar">
           {notifications.map((notif) => (
             <div
               key={notif.id}
-              className={`p-4 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors cursor-pointer group ${
-                notif.unread ? "bg-white/[0.01]" : ""
+              className={`p-4 border-b border-border/70 last:border-0 hover:bg-secondary/50 transition-colors cursor-pointer group ${
+                notif.unread ? "bg-secondary/40" : ""
               }`}
             >
               <div className="flex items-start gap-3">
                 <div className={`h-2 w-2 rounded-full mt-1.5 shrink-0 shadow-[0_0_10px_currentColor] ${notif.color}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white uppercase tracking-tight group-hover:text-[#D946EF] transition-colors">{notif.title}</p>
-                  <p className="text-[10px] font-medium text-white/50 mt-1 line-clamp-2 leading-relaxed">{notif.desc}</p>
-                  <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-2">{notif.time}</p>
+                  <p className="text-xs font-bold text-foreground uppercase tracking-tight group-hover:text-primary transition-colors">{notif.title}</p>
+                  <p className="text-[10px] font-medium text-muted-foreground/90 mt-1 line-clamp-2 leading-relaxed">{notif.desc}</p>
+                  <p className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-widest mt-2">{notif.time}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        <div className="p-3 border-t border-white/10">
-          <Button variant="ghost" size="sm" className="w-full text-[10px] font-black uppercase tracking-widest text-[#8B5CF6] hover:text-[#D946EF] hover:bg-white/[0.02]">
+        <div className="p-3 border-t border-border/80">
+          <Button variant="ghost" size="sm" className="w-full text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary hover:bg-secondary/50">
             Lihat Semua Notifikasi
           </Button>
         </div>
@@ -160,9 +160,9 @@ function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    USER MENU DROPDOWN
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function UserMenuDropdown({ 
   isOpen, 
   onClose, 
@@ -181,15 +181,15 @@ function UserMenuDropdown({
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute right-0 top-full mt-2 w-56 bg-[#0B0A10]/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
-        <div className="p-4 border-b border-white/10">
+      <div className="absolute right-0 top-full mt-2 w-56 bg-card/90 backdrop-blur-xl border border-border/80 rounded-2xl shadow-[0_0_30px_rgba(0,0,0,0.5)] z-50 animate-in slide-in-from-top-2 fade-in duration-200">
+        <div className="p-4 border-b border-border/80">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center text-sm font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center text-sm font-black text-white shadow-[0_0_15px_rgba(249,115,22,0.35)]">
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0">
-              <p className="text-xs font-bold text-white uppercase tracking-tight truncate">{user?.name || "User"}</p>
-              <p className="text-[9px] font-black text-white/50 uppercase tracking-widest truncate mt-0.5">{user?.email || "user@email.com"}</p>
+              <p className="text-xs font-bold text-foreground uppercase tracking-tight truncate">{user?.name || "User"}</p>
+              <p className="text-[9px] font-black text-muted-foreground/90 uppercase tracking-widest truncate mt-0.5">{user?.email || "user@email.com"}</p>
             </div>
           </div>
         </div>
@@ -205,20 +205,20 @@ function UserMenuDropdown({
                 if (item.path) navigate(item.path);
                 if (item.action) item.action();
               }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-white hover:bg-white/[0.02] transition-colors group"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-foreground/75 hover:text-foreground hover:bg-secondary/50 transition-colors group"
             >
-              <item.icon className="h-4 w-4 group-hover:text-[#8B5CF6] transition-colors" />
+              <item.icon className="h-4 w-4 group-hover:text-primary transition-colors" />
               {item.label}
             </button>
           ))}
         </div>
-        <div className="p-2 border-t border-white/10">
+        <div className="p-2 border-t border-border/80">
           <button
             onClick={() => {
               onClose();
               onLogout();
             }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-300 hover:bg-red-50 transition-colors"
           >
             <LogOut className="h-4 w-4" />
             Keluar
@@ -229,9 +229,9 @@ function UserMenuDropdown({
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function UserDashboardLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
@@ -288,7 +288,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
   }, [location.pathname]);
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] bg-[#0B0A10] text-white selection:bg-[#8B5CF6]/30 selection:text-white">
+    <div className="flex min-h-[calc(100vh-4rem)] bg-card text-foreground selection:bg-primary/30 selection:text-foreground">
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
@@ -303,18 +303,18 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 fixed lg:sticky top-0 z-50 h-screen ${
           collapsed ? "w-[72px]" : "w-64"
-        } border-r border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shrink-0 transition-all duration-300 flex flex-col overflow-y-auto`}
+        } border-r border-border/80 bg-secondary/60 backdrop-blur-xl shrink-0 transition-all duration-300 flex flex-col overflow-y-auto`}
       >
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-border/80">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(255,107,0,0.3)]">
-              <Gamepad2 className="h-5 w-5 text-black" />
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(249,115,22,0.35)]">
+              <Gamepad2 className="h-5 w-5 text-white" />
             </div>
             {!collapsed && (
               <div className="min-w-0">
-                <p className="text-sm font-black uppercase tracking-tight text-white">NickStore</p>
-                <p className="text-[9px] font-black uppercase tracking-widest text-white/50">Member Area</p>
+                <p className="text-sm font-black uppercase tracking-tight text-foreground">NickStore</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/90">Member Area</p>
               </div>
             )}
           </div>
@@ -322,7 +322,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           {/* Mobile close button */}
           <button
             onClick={() => setMobileOpen(false)}
-            className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-white/10 text-white lg:hidden transition-colors"
+            className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-secondary/80 text-foreground lg:hidden transition-colors"
             aria-label="Close sidebar"
           >
             <X className="h-4 w-4" />
@@ -332,7 +332,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
         {/* Navigation */}
         <nav className="flex-1 p-3 space-y-1">
           {!collapsed && (
-            <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] px-3 mb-3 mt-2">
+            <p className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] px-3 mb-3 mt-2">
               Menu Utama
             </p>
           )}
@@ -347,13 +347,13 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative ${
                   isActive
-                    ? "bg-[#8B5CF6]/10 text-white shadow-[0_0_15px_rgba(255,107,0,0.1)] border border-[#8B5CF6]/20"
-                    : "text-white/60 hover:text-white hover:bg-white/[0.02]"
+                    ? "bg-primary/10 text-foreground shadow-[0_0_15px_rgba(249,115,22,0.12)] border border-primary/20"
+                    : "text-foreground/70 hover:text-foreground hover:bg-secondary/50"
                 }`}
                 title={collapsed ? item.label : undefined}
               >
                 <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
-                  isActive ? "bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] text-black shadow-[0_0_10px_rgba(255,107,0,0.3)]" : "bg-white/5 text-white/40 group-hover:bg-white/10 group-hover:text-white"
+                  isActive ? "bg-gradient-to-br from-amber-400 to-orange-600 text-white shadow-[0_0_10px_rgba(255,107,0,0.3)]" : "bg-secondary/60 text-muted-foreground group-hover:bg-secondary/80 group-hover:text-foreground"
                 }`}>
                   <Icon className="h-4 w-4" />
                 </div>
@@ -362,19 +362,19 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                   <>
                     <div className="min-w-0">
                       <span className="truncate block text-xs font-bold uppercase tracking-tight">{item.label}</span>
-                      <span className="text-[9px] font-black text-white/40 uppercase tracking-widest truncate block mt-0.5">
+                      <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest truncate block mt-0.5">
                         {item.description}
                       </span>
                     </div>
                     {isActive && (
-                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#D946EF] shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
+                      <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(251,191,36,0.5)]" />
                     )}
                   </>
                 )}
                 
                 {/* Active indicator bar */}
                 {isActive && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-[#8B5CF6] to-[#D946EF] rounded-r-full shadow-[0_0_10px_rgba(255,107,0,0.5)]" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gradient-to-b from-amber-400 to-orange-600 rounded-r-full shadow-[0_0_10px_rgba(255,107,0,0.5)]" />
                 )}
               </Link>
             );
@@ -384,7 +384,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
         {/* Quick Links */}
         {!collapsed && (
           <div className="px-3 pb-3">
-            <p className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] px-3 mb-3">
+            <p className="text-[9px] font-black text-muted-foreground/60 uppercase tracking-[0.2em] px-3 mb-3">
               Quick Links
             </p>
             <div className="space-y-1">
@@ -394,9 +394,9 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                   <Link
                     key={link.path}
                     to={link.path}
-                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/[0.02] transition-colors group"
+                    className="flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-foreground/70 hover:text-foreground hover:bg-secondary/50 transition-colors group"
                   >
-                    <Icon className="h-4 w-4 text-white/40 group-hover:text-[#8B5CF6] transition-colors" />
+                    <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span>{link.label}</span>
                   </Link>
                 );
@@ -407,9 +407,9 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                 href="https://wa.me/60137345871"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors group"
+                className="flex items-center gap-3 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-foreground/70 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors group"
               >
-                <MessageCircle className="h-4 w-4 text-white/40 group-hover:text-emerald-400 transition-colors" />
+                <MessageCircle className="h-4 w-4 text-muted-foreground group-hover:text-emerald-400 transition-colors" />
                 <span>Bantuan</span>
               </a>
             </div>
@@ -425,7 +425,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                 <Link
                   key={link.path}
                   to={link.path}
-                  className="flex items-center justify-center p-2 rounded-xl text-white/40 hover:text-white hover:bg-white/[0.02] transition-colors"
+                  className="flex items-center justify-center p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
                   title={link.label}
                 >
                   <Icon className="h-4 w-4" />
@@ -436,10 +436,10 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
         )}
 
         {/* Sidebar Footer */}
-        <div className="p-3 border-t border-white/10 space-y-1">
+        <div className="p-3 border-t border-border/80 space-y-1">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors w-full group"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-red-600 hover:text-red-300 hover:bg-red-50 transition-colors w-full group"
             title={collapsed ? "Keluar" : undefined}
           >
             <div className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0 bg-red-500/10 group-hover:bg-red-500/20 transition-colors">
@@ -451,7 +451,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
           {/* Collapse Toggle */}
           <button
             onClick={toggleCollapse}
-            className="hidden lg:flex items-center justify-center w-full py-2.5 rounded-xl text-white/40 hover:text-white hover:bg-white/[0.02] transition-colors"
+            className="hidden lg:flex items-center justify-center w-full py-2.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
@@ -471,7 +471,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
         {/* Top Bar */}
         <header className={`sticky top-0 z-30 transition-all duration-300 ${
           isScrolled 
-            ? "bg-[#0B0A10]/90 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" 
+            ? "bg-card/90 backdrop-blur-xl border-b border-border/80 shadow-[0_4px_30px_rgba(0,0,0,0.5)]" 
             : "bg-transparent border-b border-transparent"
         }`}>
           <div className="flex items-center justify-between px-4 lg:px-6 py-4">
@@ -480,7 +480,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
               {/* Mobile menu button */}
               <button
                 onClick={() => setMobileOpen(true)}
-                className="p-2 rounded-lg hover:bg-white/10 text-white lg:hidden transition-colors"
+                className="p-2 rounded-lg hover:bg-secondary/80 text-foreground lg:hidden transition-colors"
                 aria-label="Open sidebar"
               >
                 <Menu className="h-5 w-5" />
@@ -490,16 +490,16 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
               <div className="hidden sm:block min-w-0">
                 <div className="flex items-center gap-3">
                   {currentPage && (
-                    <div className={`h-10 w-10 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,107,0,0.3)]`}>
-                      <currentPage.icon className={`h-5 w-5 text-black`} />
+                    <div className={`h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(249,115,22,0.35)]`}>
+                      <currentPage.icon className={`h-5 w-5 text-white`} />
                     </div>
                   )}
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-white/50 flex items-center gap-1.5">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90 flex items-center gap-1.5">
                       <span>{greeting.emoji}</span>
-                      {greeting.text}, <span className="text-white">{firstName}</span>
+                      {greeting.text}, <span className="text-foreground">{firstName}</span>
                     </p>
-                    <h1 className="text-lg font-black uppercase tracking-tight text-white truncate mt-0.5">
+                    <h1 className="text-lg font-black uppercase tracking-tight text-foreground truncate mt-0.5">
                       {currentPage?.label || "Dashboard"}
                     </h1>
                   </div>
@@ -508,7 +508,7 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
               
               {/* Mobile title */}
               <div className="sm:hidden">
-                <h1 className="text-lg font-black uppercase tracking-tight text-white">{currentPage?.label || "Dashboard"}</h1>
+                <h1 className="text-lg font-black uppercase tracking-tight text-foreground">{currentPage?.label || "Dashboard"}</h1>
               </div>
             </div>
 
@@ -516,30 +516,30 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
             <div className="flex items-center gap-3 shrink-0">
               {/* Balance Badge */}
               {userData.accountBalance !== undefined && (
-                <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 hover:bg-[#8B5CF6]/20 transition-all cursor-pointer shadow-[0_0_15px_rgba(255,107,0,0.1)] group"
+                <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all cursor-pointer shadow-[0_0_15px_rgba(249,115,22,0.12)] group"
                   onClick={() => navigate("/deposit")}
                 >
-                  <Wallet className="h-4 w-4 text-[#D946EF]" />
-                  <span className="text-[11px] font-black text-white uppercase tracking-wider">
+                  <Wallet className="h-4 w-4 text-primary" />
+                  <span className="text-[11px] font-black text-foreground uppercase tracking-wider">
                     {formatPrice(userData.accountBalance, userData.balanceIdr)}
                   </span>
-                  <ChevronRight className="h-3 w-3 text-[#D946EF] group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="h-3 w-3 text-primary group-hover:translate-x-1 transition-transform" />
                 </div>
               )}
 
               {/* Notifications */}
               <div className="relative">
                 <button 
-                  className="relative p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                  className="relative p-2.5 rounded-xl bg-secondary/60 border border-border/80 hover:bg-secondary/80 transition-colors"
                   onClick={() => {
                     setShowNotifications(!showNotifications);
                     setShowUserMenu(false);
                   }}
                   aria-label="Notifications"
                 >
-                  <Bell className="h-4 w-4 text-white" />
+                  <Bell className="h-4 w-4 text-foreground" />
                   {hasNotifications && (
-                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#8B5CF6] shadow-[0_0_5px_rgba(255,107,0,0.8)] animate-pulse" />
+                    <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary shadow-[0_0_5px_rgba(255,107,0,0.8)] animate-pulse" />
                   )}
                 </button>
                 <NotificationPanel 
@@ -555,19 +555,19 @@ export default function UserDashboardLayout({ children }: { children: React.Reac
                     setShowUserMenu(!showUserMenu);
                     setShowNotifications(false);
                   }}
-                  className="flex items-center gap-2 p-1.5 pl-2 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+                  className="flex items-center gap-2 p-1.5 pl-2 rounded-xl hover:bg-secondary/60 transition-colors border border-transparent hover:border-border/80"
                   aria-label="User menu"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center text-xs font-black text-black shadow-[0_0_15px_rgba(255,107,0,0.3)]">
+                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center text-xs font-black text-white shadow-[0_0_15px_rgba(249,115,22,0.35)]">
                     {userData.name?.charAt(0)?.toUpperCase() || "U"}
                   </div>
                   <div className="hidden lg:block text-left min-w-0 pr-1">
-                    <p className="text-xs font-bold text-white uppercase tracking-tight truncate max-w-[80px]">
+                    <p className="text-xs font-bold text-foreground uppercase tracking-tight truncate max-w-[80px]">
                       {firstName}
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-[#D946EF]">Member</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-primary">Member</p>
                   </div>
-                  <ChevronDown className="hidden lg:block h-3 w-3 text-white/50" />
+                  <ChevronDown className="hidden lg:block h-3 w-3 text-muted-foreground/90" />
                 </button>
                 <UserMenuDropdown 
                   isOpen={showUserMenu} 

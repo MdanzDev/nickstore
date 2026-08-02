@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
@@ -34,9 +34,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    CONSTANTS
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const presetAmounts = [
   { value: 5, label: "RM 5", popular: false },
   { value: 10, label: "RM 10", popular: false },
@@ -56,9 +56,9 @@ const paymentMethods = [
 const DEPOSIT_MIN = 1; // RM 1 minimum
 const DEPOSIT_MAX = 5000; // RM 5000 maximum
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    ANIMATED NUMBER
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function AnimatedNumber({ value, duration = 1000 }: { value: number; duration?: number }) {
   const [displayValue, setDisplayValue] = useState(0);
 
@@ -84,9 +84,9 @@ function AnimatedNumber({ value, duration = 1000 }: { value: number; duration?: 
   return <span>RM {(displayValue / 100).toFixed(2)}</span>;
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    COUNTDOWN TIMER
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CountdownTimer({ expiryTime, onExpired }: { expiryTime: string; onExpired: () => void }) {
   const [timeLeft, setTimeLeft] = useState("");
   const [isExpired, setIsExpired] = useState(false);
@@ -122,7 +122,7 @@ function CountdownTimer({ expiryTime, onExpired }: { expiryTime: string; onExpir
     <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-mono font-bold text-lg transition-all ${
       isUrgent 
         ? "bg-red-500/10 text-red-500 border border-red-500/20 animate-pulse" 
-        : "bg-amber-500/10 text-amber-500 border border-amber-500/20"
+        : "bg-amber-500/10 text-amber-600 border border-amber-500/20"
     }`}>
       <Clock className={`h-5 w-5 ${isUrgent ? "animate-spin" : ""}`} />
       {timeLeft}
@@ -130,9 +130,9 @@ function CountdownTimer({ expiryTime, onExpired }: { expiryTime: string; onExpir
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    PAYMENT METHOD CARD
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PaymentMethodCard({ 
   method, 
   isActive, 
@@ -148,38 +148,38 @@ function PaymentMethodCard({
       disabled={method.comingSoon}
       className={`relative p-4 rounded-xl border-2 text-center transition-all duration-300 group overflow-hidden ${
         method.comingSoon
-          ? "opacity-40 cursor-not-allowed border-white/5 bg-white/5"
+          ? "opacity-40 cursor-not-allowed border-border/70 bg-secondary/60"
           : isActive
-          ? "border-[#8B5CF6] bg-[#8B5CF6]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
-          : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] hover:scale-[1.01]"
+          ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(249,115,22,0.2)] scale-[1.02]"
+          : "border-border/70 bg-secondary/50 hover:border-border hover:bg-secondary/60 hover:scale-[1.01]"
       }`}
     >
       {/* Glow Effect */}
       {isActive && !method.comingSoon && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-transparent opacity-50 blur-xl rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-400/25 to-transparent opacity-50 blur-xl rounded-xl" />
       )}
       
       {method.comingSoon && (
         <div className="absolute -top-2 -right-2">
-          <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-white/10 text-white/50 border-white/10">
+          <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-secondary/80 text-muted-foreground/90 border-border/80">
             Soon
           </Badge>
         </div>
       )}
       <div className="relative z-10 flex flex-col items-center">
         <method.icon className={`h-7 w-7 mb-3 transition-colors ${
-          isActive && !method.comingSoon ? "text-[#8B5CF6]" : "text-white/40 group-hover:text-white/80"
+          isActive && !method.comingSoon ? "text-primary" : "text-muted-foreground group-hover:text-foreground/85"
         }`} />
-        <span className="text-[11px] font-black tracking-wide uppercase text-white block">{method.label}</span>
-        <span className="text-[9px] font-bold text-white/40 block mt-1 uppercase tracking-widest">{method.description}</span>
+        <span className="text-[11px] font-black tracking-wide uppercase text-foreground block">{method.label}</span>
+        <span className="text-[9px] font-bold text-muted-foreground block mt-1 uppercase tracking-widest">{method.description}</span>
       </div>
     </button>
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    AMOUNT CARD
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function AmountCard({ 
   preset, 
   isActive, 
@@ -194,33 +194,33 @@ function AmountCard({
       onClick={onClick}
       className={`relative p-4 rounded-xl border-2 text-center transition-all duration-300 overflow-hidden ${
         isActive
-          ? "border-[#8B5CF6] bg-[#8B5CF6]/10 shadow-[0_0_20px_rgba(255,107,0,0.2)] scale-[1.02]"
-          : "border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.05] hover:scale-[1.01]"
+          ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(249,115,22,0.2)] scale-[1.02]"
+          : "border-border/70 bg-secondary/50 hover:border-border hover:bg-secondary/60 hover:scale-[1.01]"
       }`}
     >
       {/* Glow Effect */}
       {isActive && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-transparent opacity-50 blur-xl rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-400/25 to-transparent opacity-50 blur-xl rounded-xl" />
       )}
       
       {preset.popular && (
         <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
-          <Badge className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] border-0 text-black shadow-[0_0_10px_rgba(255,107,0,0.5)]">
+          <Badge className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-gradient-to-r from-amber-400 to-orange-600 border-0 text-white shadow-[0_0_10px_rgba(255,107,0,0.5)]">
             <TrendingUp className="h-2 w-2 mr-1" />
             POPULER
           </Badge>
         </div>
       )}
-      <p className={`relative z-10 text-xl font-black ${isActive ? "text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF]" : "text-white"}`} style={{ fontFamily: "'Syne', sans-serif" }}>
+      <p className={`relative z-10 text-xl font-black ${isActive ? "text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600" : "text-foreground"}`} style={{ fontFamily: "'Syne', sans-serif" }}>
         {preset.label}
       </p>
     </button>
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function Deposit() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();
@@ -414,11 +414,11 @@ export default function Deposit() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0A10] text-white">
+    <div className="min-h-screen bg-card text-foreground">
       {/* Premium Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full blur-[100px] mix-blend-screen" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-amber-400/15 to-transparent rounded-full blur-[100px]" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-orange-600/10 to-transparent rounded-full blur-[100px]" />
       </div>
 
       <div className="relative container mx-auto px-4 py-8 max-w-2xl z-10">
@@ -428,38 +428,38 @@ export default function Deposit() {
             variant="ghost" 
             size="icon" 
             onClick={() => navigate("/dashboard")}
-            className="hover:bg-white/10 rounded-full h-10 w-10 text-white border border-white/5 bg-white/[0.02] backdrop-blur-md transition-all hover:scale-105"
+            className="hover:bg-secondary/80 rounded-full h-10 w-10 text-foreground border border-border/70 bg-secondary/50 backdrop-blur-md transition-all hover:scale-105"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontFamily: "'Syne', sans-serif" }}>Top Up Saldo</h1>
-            <p className="text-xs font-bold text-white/50 uppercase tracking-widest mt-1">Isi saldo dengan metode pembayaran</p>
+            <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600" style={{ fontFamily: "'Syne', sans-serif" }}>Top Up Saldo</h1>
+            <p className="text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mt-1">Isi saldo dengan metode pembayaran</p>
           </div>
         </div>
 
         {/* Balance Card */}
-        <Card className="p-8 mb-8 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 relative overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#8B5CF6]/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
+        <Card className="p-8 mb-8 bg-secondary/60 backdrop-blur-xl border-border/80 relative overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-amber-400/25 to-orange-600/15 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-2xl" />
           
           <div className="relative flex items-center justify-between">
             <div className="space-y-2">
               <div className="flex items-center gap-2 mb-2">
-                <p className="text-[10px] font-black text-white/50 uppercase tracking-widest">Saldo Anda</p>
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-[#00c864]/30 text-[#00c864] bg-[#00c864]/10 shadow-[0_0_10px_rgba(0,200,100,0.2)]">
+                <p className="text-[10px] font-black text-muted-foreground/90 uppercase tracking-widest">Saldo Anda</p>
+                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 border-emerald-300 text-emerald-700 bg-emerald-50 shadow-[0_0_10px_rgba(0,200,100,0.2)]">
                   <Zap className="h-2.5 w-2.5 mr-1" />
                   Aktif
                 </Badge>
               </div>
               <div className="flex flex-col items-start">
-                <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
                   <AnimatedNumber value={Number(balanceMyr) * 100} duration={1500} />
                 </p>
               </div>
             </div>
-            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_30px_rgba(255,107,0,0.4)]">
-              <Wallet className="h-10 w-10 text-black" />
+            <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_30px_rgba(255,107,0,0.4)]">
+              <Wallet className="h-10 w-10 text-white" />
             </div>
           </div>
         </Card>
@@ -470,8 +470,8 @@ export default function Deposit() {
             {/* Payment Methods */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-[11px] font-black uppercase tracking-widest text-white/70">Metode Pembayaran</h3>
-                <Badge variant="secondary" className="text-[9px] font-bold uppercase tracking-widest bg-[#00c864]/10 text-[#00c864] hover:bg-[#00c864]/20 border-0 px-2 py-0.5">
+                <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground/75">Metode Pembayaran</h3>
+                <Badge variant="secondary" className="text-[9px] font-bold uppercase tracking-widest bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-0 px-2 py-0.5">
                   <Shield className="h-3 w-3 mr-1" />
                   Terenkripsi
                 </Badge>
@@ -489,10 +489,10 @@ export default function Deposit() {
             </div>
 
             {/* Amount Selection */}
-            <Card className="p-6 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
+            <Card className="p-6 bg-secondary/60 backdrop-blur-xl border-border/80 rounded-[2rem] shadow-xl">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[11px] font-black uppercase tracking-widest text-white/70">Pilih Nominal Top Up</h3>
-                <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest bg-white/5 text-white border-white/10 px-2 py-0.5">
+                <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground/75">Pilih Nominal Top Up</h3>
+                <Badge variant="outline" className="text-[9px] font-bold uppercase tracking-widest bg-secondary/60 text-foreground border-border/80 px-2 py-0.5">
                   <Coins className="h-3 w-3 mr-1" />
                   Min RM {DEPOSIT_MIN.toFixed(2)}
                 </Badge>
@@ -511,10 +511,10 @@ export default function Deposit() {
 
               <div className="relative mb-6">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/10" />
+                  <div className="w-full border-t border-border/80" />
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="px-3 bg-[#0B0A10] text-[9px] font-bold uppercase tracking-widest text-white/40">
+                  <span className="px-3 bg-card text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
                     atau masukkan nominal custom
                   </span>
                 </div>
@@ -525,43 +525,43 @@ export default function Deposit() {
                   <Input
                     type="number"
                     step="0.01"
-                    placeholder={`RM ${DEPOSIT_MIN.toFixed(2)} – RM ${DEPOSIT_MAX.toFixed(2)}`}
+                    placeholder={`RM ${DEPOSIT_MIN.toFixed(2)} â€“ RM ${DEPOSIT_MAX.toFixed(2)}`}
                     value={customAmount}
                     onChange={(e) => {
                       const value = e.target.value;
                       setCustomAmount(value);
                       if (value) setAmount(0);
                     }}
-                    className={`h-14 text-center text-xl font-black bg-white/[0.02] border-white/10 focus:border-[#8B5CF6] focus:ring-1 focus:ring-[#8B5CF6]/50 transition-all text-white placeholder:text-white/20 pl-14 rounded-xl ${
+                    className={`h-14 text-center text-xl font-black bg-secondary/50 border-border/80 focus:border-primary focus:ring-1 focus:ring-primary/40 transition-all text-foreground placeholder:text-muted-foreground/40 pl-14 rounded-xl ${
                       customAmount && !isValidAmount ? "border-red-500 focus:border-red-500 focus:ring-red-500/50" : ""
                     }`}
                   />
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 font-black tracking-widest text-sm">RM</div>
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-black tracking-widest text-sm">RM</div>
                 </div>
                 {customAmount && !isValidAmount && (
-                  <p className="text-[10px] font-bold text-red-400 mt-2 flex items-center gap-1 uppercase tracking-widest">
+                  <p className="text-[10px] font-bold text-red-600 mt-2 flex items-center gap-1 uppercase tracking-widest">
                     <AlertCircle className="h-3 w-3" />
-                    Nominal harus antara RM {DEPOSIT_MIN.toFixed(2)} – RM {DEPOSIT_MAX.toFixed(2)}
+                    Nominal harus antara RM {DEPOSIT_MIN.toFixed(2)} â€“ RM {DEPOSIT_MAX.toFixed(2)}
                   </p>
                 )}
               </div>
 
               {finalAmount > 0 && isValidAmount && (
-                <div className="p-5 rounded-2xl bg-white/[0.02] space-y-3 text-sm mb-6 border border-white/5">
+                <div className="p-5 rounded-2xl bg-secondary/50 space-y-3 text-sm mb-6 border border-border/70">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">Nominal Top Up (MYR)</span>
-                    <span className="font-black text-white">RM {finalAmount.toFixed(2)}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/90">Nominal Top Up (MYR)</span>
+                    <span className="font-black text-foreground">RM {finalAmount.toFixed(2)}</span>
                   </div>
                   {/* Ekuivalen IDR removed */}
-                  <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                    <span className="text-[11px] font-black uppercase tracking-widest text-white">Total Bayar</span>
-                    <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-xl" style={{ fontFamily: "'Syne', sans-serif" }}>RM {finalAmount.toFixed(2)}</span>
+                  <div className="flex justify-between items-center pt-4 border-t border-border/80">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-foreground">Total Bayar</span>
+                    <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 text-xl" style={{ fontFamily: "'Syne', sans-serif" }}>RM {finalAmount.toFixed(2)}</span>
                   </div>
                 </div>
               )}
 
               <Button
-                className="w-full h-14 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-widest"
+                className="w-full h-14 rounded-xl text-sm font-black bg-gradient-to-r from-amber-400 to-orange-600 hover:scale-[1.02] text-white border-0 shadow-[0_0_20px_rgba(255,107,0,0.4)] transition-all uppercase tracking-widest"
                 onClick={handleCreateDeposit}
                 disabled={createDepositMutation.isPending || processingDeposit || !isValidAmount}
               >
@@ -579,9 +579,9 @@ export default function Deposit() {
                 )}
               </Button>
 
-              <div className="flex items-center justify-center gap-3 mt-5 text-[9px] font-bold uppercase tracking-widest text-white/30">
+              <div className="flex items-center justify-center gap-3 mt-5 text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">
                 <div className="flex items-center gap-1.5"><Shield className="h-3 w-3" /> Transaksi Aman</div>
-                <span className="w-1 h-1 rounded-full bg-white/20"></span>
+                <span className="w-1 h-1 rounded-full bg-foreground/20"></span>
                 <div className="flex items-center gap-1.5"><Zap className="h-3 w-3" /> Proses Instan</div>
               </div>
             </Card>
@@ -590,26 +590,26 @@ export default function Deposit() {
 
         {/* Payment Screen */}
         {depositData && (status === "pending" || status === "success" || status === "expired") && (
-          <Card className="p-6 bg-[#0B0A10]/80 backdrop-blur-xl border-white/10 rounded-[2rem] shadow-xl">
+          <Card className="p-6 bg-secondary/60 backdrop-blur-xl border-border/80 rounded-[2rem] shadow-xl">
             {/* Status Banner */}
             <div className={`p-6 rounded-2xl text-center mb-6 transition-all duration-500 border ${
               status === "pending"
-                ? "bg-[#D946EF]/5 border-[#D946EF]/20"
+                ? "bg-primary/5 border-primary/20"
                 : status === "success"
-                ? "bg-[#00c864]/5 border-[#00c864]/20"
+                ? "bg-emerald-50 border-emerald-200"
                 : "bg-red-500/5 border-red-500/20"
             }`}>
               {status === "pending" && (
                 <div className="space-y-4">
                   <div className="relative inline-block">
                     <div className="absolute inset-0 animate-ping opacity-20">
-                      <Clock className="h-14 w-14 text-[#D946EF] mx-auto" />
+                      <Clock className="h-14 w-14 text-primary mx-auto" />
                     </div>
-                    <Clock className="h-14 w-14 mx-auto text-[#D946EF] relative drop-shadow-[0_0_15px_rgba(255,184,0,0.5)]" />
+                    <Clock className="h-14 w-14 mx-auto text-primary relative drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
                   </div>
                   <div>
-                    <p className="font-black text-[#D946EF] text-xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Menunggu Pembayaran</p>
-                    <p className="text-xs font-bold text-white/50 mt-1 uppercase tracking-widest">{depositData.instructions}</p>
+                    <p className="font-black text-primary text-xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Menunggu Pembayaran</p>
+                    <p className="text-xs font-bold text-muted-foreground/90 mt-1 uppercase tracking-widest">{depositData.instructions}</p>
                   </div>
                   <CountdownTimer expiryTime={depositData.expiredAt} onExpired={handleExpired} />
                 </div>
@@ -618,14 +618,14 @@ export default function Deposit() {
               {status === "success" && (
                 <div className="space-y-4">
                   <div className="relative inline-block">
-                    <Check className="h-16 w-16 mx-auto text-[#00c864] drop-shadow-[0_0_15px_rgba(0,200,100,0.5)]" />
-                    <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-[#D946EF] animate-pulse" />
+                    <Check className="h-16 w-16 mx-auto text-emerald-700 drop-shadow-[0_0_15px_rgba(0,200,100,0.5)]" />
+                    <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-primary animate-pulse" />
                   </div>
                   <div>
-                    <p className="font-black text-[#00c864] text-2xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Pembayaran Berhasil!</p>
-                    <p className="text-sm font-bold text-white/70 mt-2">
+                    <p className="font-black text-emerald-700 text-2xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Pembayaran Berhasil!</p>
+                    <p className="text-sm font-bold text-foreground/75 mt-2">
                       Saldo sebesar{" "}
-                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-lg">
+                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 text-lg">
                         RM {depositData.creditAmount.toFixed(2)}
                       </span>{" "}
                       telah ditambahkan
@@ -639,7 +639,7 @@ export default function Deposit() {
                   <AlertCircle className="h-14 w-14 mx-auto text-red-500 drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
                   <div>
                     <p className="font-black text-red-500 text-xl tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Waktu Habis</p>
-                    <p className="text-xs font-bold text-white/50 mt-1 uppercase tracking-widest">Silakan buat deposit baru</p>
+                    <p className="text-xs font-bold text-muted-foreground/90 mt-1 uppercase tracking-widest">Silakan buat deposit baru</p>
                   </div>
                 </div>
               )}
@@ -649,7 +649,7 @@ export default function Deposit() {
             {status === "pending" && depositData.qrImage && (
               <div className="flex flex-col items-center mb-8">
                 <div className="relative">
-                  <div className="p-4 rounded-3xl border border-[#8B5CF6]/30 bg-white shadow-[0_0_40px_rgba(255,107,0,0.2)]">
+                  <div className="p-4 rounded-3xl border border-primary/30 bg-white shadow-[0_0_40px_rgba(249,115,22,0.2)]">
                     <img
                       src={getQrImageUrl()}
                       alt="QRIS Payment Code"
@@ -660,7 +660,7 @@ export default function Deposit() {
                     />
                   </div>
                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.5)] px-4 py-1 uppercase tracking-widest font-black text-[10px]">
+                    <Badge className="bg-gradient-to-r from-amber-400 to-orange-600 text-white border-0 shadow-[0_0_15px_rgba(255,107,0,0.5)] px-4 py-1 uppercase tracking-widest font-black text-[10px]">
                       <QrCode className="h-3.5 w-3.5 mr-1.5" />
                       Scan QR ini
                     </Badge>
@@ -671,11 +671,11 @@ export default function Deposit() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="mt-10 bg-white/5 border-white/10 hover:bg-white/10 text-white font-bold rounded-xl h-10 px-6 transition-all"
+                    className="mt-10 bg-secondary/60 border-border/80 hover:bg-secondary/80 text-foreground font-bold rounded-xl h-10 px-6 transition-all"
                     onClick={() => handleCopy(depositData.qrString || "", "qrstring")}
                   >
                     {copiedField === "qrstring" ? (
-                      <Check className="h-4 w-4 mr-2 text-[#00c864]" />
+                      <Check className="h-4 w-4 mr-2 text-emerald-700" />
                     ) : (
                       <Copy className="h-4 w-4 mr-2" />
                     )}
@@ -688,18 +688,18 @@ export default function Deposit() {
             {/* Transaction Details */}
             <div className="space-y-2">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-[11px] font-black uppercase tracking-widest text-white/70">Detail Transaksi</h4>
+                <h4 className="text-[11px] font-black uppercase tracking-widest text-foreground/75">Detail Transaksi</h4>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[9px] font-bold uppercase tracking-widest text-[#D946EF] hover:text-[#8B5CF6] hover:bg-[#D946EF]/10 px-2 h-6"
+                  className="text-[9px] font-bold uppercase tracking-widest text-primary hover:text-primary hover:bg-primary/10 px-2 h-6"
                   onClick={() => setShowInstructions(!showInstructions)}
                 >
                   {showInstructions ? "Tutup" : "Lihat"} Panduan
                 </Button>
               </div>
 
-              <div className="rounded-2xl border border-white/10 overflow-hidden bg-white/[0.02]">
+              <div className="rounded-2xl border border-border/80 overflow-hidden bg-secondary/50">
                 {[
                   { label: "ID Deposit", value: depositData.depositId, field: "id", mono: true },
                   { label: "Top Up (MYR)", value: `RM ${depositData.creditAmount.toFixed(2)}`, field: "amount" },
@@ -723,14 +723,14 @@ export default function Deposit() {
                 ].map((item) => (
                   <div 
                     key={item.field} 
-                    className={`flex justify-between items-center p-3.5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors ${
-                      item.highlight ? "bg-[#8B5CF6]/5" : ""
+                    className={`flex justify-between items-center p-3.5 border-b border-border/70 last:border-0 hover:bg-secondary/60 transition-colors ${
+                      item.highlight ? "bg-primary/5" : ""
                     }`}
                   >
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/50">{item.label}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/90">{item.label}</span>
                     <div className="flex items-center gap-2">
-                      <span className={`${item.mono ? "font-mono text-xs bg-white/5 px-2 py-0.5 rounded text-white/70" : ""} ${
-                        item.highlight ? "font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-base" : "text-sm font-bold text-white"
+                      <span className={`${item.mono ? "font-mono text-xs bg-secondary/60 px-2 py-0.5 rounded text-foreground/75" : ""} ${
+                        item.highlight ? "font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 text-base" : "text-sm font-bold text-foreground"
                       }`}>
                         {item.value}
                       </span>
@@ -742,10 +742,10 @@ export default function Deposit() {
                             depositData.depositId,
                             item.field
                           )}
-                          className="text-white/30 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                          className="text-muted-foreground/60 hover:text-foreground p-1.5 rounded-lg hover:bg-secondary/80 transition-colors"
                         >
                           {copiedField === item.field ? (
-                            <Check className="h-3.5 w-3.5 text-[#00c864]" />
+                            <Check className="h-3.5 w-3.5 text-emerald-700" />
                           ) : (
                             <Copy className="h-3.5 w-3.5" />
                           )}
@@ -758,14 +758,14 @@ export default function Deposit() {
 
               {/* Payment Instructions */}
               {showInstructions && (
-                <div className="mt-4 p-5 rounded-2xl bg-[#00c864]/5 border border-[#00c864]/20 space-y-3 animate-in slide-in-from-top-2">
-                  <h5 className="text-[11px] font-black uppercase tracking-widest text-[#00c864] flex items-center gap-2">
+                <div className="mt-4 p-5 rounded-2xl bg-emerald-50 border border-emerald-200 space-y-3 animate-in slide-in-from-top-2">
+                  <h5 className="text-[11px] font-black uppercase tracking-widest text-emerald-700 flex items-center gap-2">
                     <Info className="h-3.5 w-3.5" />
                     Cara Membayar
                   </h5>
-                  <ol className="text-xs font-medium text-white/60 space-y-2 list-decimal list-inside">
+                  <ol className="text-xs font-medium text-foreground/70 space-y-2 list-decimal list-inside">
                     <li>Buka aplikasi e-wallet atau mobile banking kamu</li>
-                    <li>Pilih menu <strong className="text-white">Scan QR</strong> atau <strong className="text-white">Bayar</strong></li>
+                    <li>Pilih menu <strong className="text-foreground">Scan QR</strong> atau <strong className="text-foreground">Bayar</strong></li>
                     <li>Scan kode QR yang ditampilkan di atas</li>
                     <li>Periksa nominal dan pastikan sesuai dengan total yang tertera</li>
                     <li>Konfirmasi pembayaran dan tunggu verifikasi otomatis</li>
@@ -780,14 +780,14 @@ export default function Deposit() {
                 <div className="flex gap-3">
                   <Button 
                     variant="outline" 
-                    className="flex-1 h-12 rounded-xl font-bold bg-white/5 border-white/10 hover:bg-white/10 text-white transition-all" 
+                    className="flex-1 h-12 rounded-xl font-bold bg-secondary/60 border-border/80 hover:bg-secondary/80 text-foreground transition-all" 
                     onClick={handleReset}
                   >
                     <X className="mr-2 h-4 w-4" />
                     Batal
                   </Button>
                   <Button 
-                    className="flex-1 h-12 rounded-xl font-black bg-white/10 hover:bg-white/20 text-white border-0 transition-all" 
+                    className="flex-1 h-12 rounded-xl font-black bg-secondary/80 hover:bg-secondary text-foreground border-0 transition-all" 
                     variant="secondary"
                     onClick={() => toast.info("Status diperbarui setiap 5 detik")}
                   >
@@ -799,7 +799,7 @@ export default function Deposit() {
               
               {status === "success" && (
                 <Button 
-                  className="w-full h-12 rounded-xl text-sm font-black bg-[#00c864] hover:bg-[#00a854] text-white border-0 shadow-[0_0_15px_rgba(0,200,100,0.4)] transition-all hover:scale-[1.02]"
+                  className="w-full h-12 rounded-xl text-sm font-black bg-[#00c864] hover:bg-[#00a854] text-foreground border-0 shadow-[0_0_15px_rgba(0,200,100,0.4)] transition-all hover:scale-[1.02]"
                   onClick={() => navigate("/dashboard")}
                 >
                   <Check className="mr-2 h-5 w-5" />
@@ -809,7 +809,7 @@ export default function Deposit() {
               
               {status === "expired" && (
                 <Button 
-                  className="w-full h-12 rounded-xl text-sm font-black bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] text-black border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all"
+                  className="w-full h-12 rounded-xl text-sm font-black bg-gradient-to-r from-amber-400 to-orange-600 hover:scale-[1.02] text-white border-0 shadow-[0_0_15px_rgba(255,107,0,0.4)] transition-all"
                   onClick={handleReset}
                 >
                   <RefreshCw className="mr-2 h-5 w-5" />
@@ -824,36 +824,36 @@ export default function Deposit() {
         <div className="mt-8">
           <button
             onClick={() => setShowHistory(!showHistory)}
-            className="flex items-center justify-between w-full p-5 rounded-[1.5rem] bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 border border-white/5 hover:border-white/20 hover:scale-[1.01]"
+            className="flex items-center justify-between w-full p-5 rounded-[1.5rem] bg-secondary/50 hover:bg-secondary/60 transition-all duration-300 border border-border/70 hover:border-border hover:scale-[1.01]"
           >
             <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-xl bg-[#8B5CF6]/10 flex items-center justify-center border border-[#8B5CF6]/20 shadow-[0_0_15px_rgba(255,107,0,0.1)]">
-                <History className="h-6 w-6 text-[#8B5CF6]" />
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(249,115,22,0.12)]">
+                <History className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left">
-                <span className="font-black text-sm uppercase tracking-widest text-white">Riwayat Deposit</span>
-                <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">
+                <span className="font-black text-sm uppercase tracking-widest text-foreground">Riwayat Deposit</span>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
                   {deposits.length} transaksi tercatat
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               {deposits.length > 0 && (
-                <Badge variant="secondary" className="text-[9px] font-black bg-white/10 text-white border-0 px-2 py-0.5">
+                <Badge variant="secondary" className="text-[9px] font-black bg-secondary/80 text-foreground border-0 px-2 py-0.5">
                   {deposits.length}
                 </Badge>
               )}
-              <ChevronRight className={`h-5 w-5 text-white/50 transition-transform duration-300 ${showHistory ? "rotate-90" : ""}`} />
+              <ChevronRight className={`h-5 w-5 text-muted-foreground/90 transition-transform duration-300 ${showHistory ? "rotate-90" : ""}`} />
             </div>
           </button>
 
           {showHistory && (
             <div className="mt-4 space-y-3 animate-in slide-in-from-top-2 duration-300">
               {deposits.length === 0 ? (
-                <Card className="p-10 text-center bg-white/[0.02] border-white/5 rounded-3xl">
-                  <History className="h-16 w-16 mx-auto text-white/10 mb-4" />
-                  <p className="text-sm font-bold text-white/70 uppercase tracking-widest">Belum ada riwayat deposit</p>
-                  <p className="text-[10px] font-medium text-white/40 mt-2 uppercase tracking-widest">
+                <Card className="p-10 text-center bg-secondary/50 border-border/70 rounded-3xl">
+                  <History className="h-16 w-16 mx-auto text-foreground/10 mb-4" />
+                  <p className="text-sm font-bold text-foreground/75 uppercase tracking-widest">Belum ada riwayat deposit</p>
+                  <p className="text-[10px] font-medium text-muted-foreground mt-2 uppercase tracking-widest">
                     Transaksi deposit kamu akan muncul di sini
                   </p>
                 </Card>
@@ -861,29 +861,29 @@ export default function Deposit() {
                 deposits.slice(0, 10).map((d: any, i: number) => (
                   <div 
                     key={i} 
-                    className="flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-white/10 transition-all duration-300 hover:scale-[1.01]"
+                    className="flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border/70 hover:bg-secondary/60 hover:border-border/80 transition-all duration-300 hover:scale-[1.01]"
                   >
                     <div className="flex items-center gap-4">
                       <div className={`h-12 w-12 rounded-xl flex items-center justify-center border ${
                         d.completed || d.status === "success"
-                          ? "bg-[#00c864]/10 border-[#00c864]/20 shadow-[0_0_15px_rgba(0,200,100,0.1)]"
+                          ? "bg-emerald-50 border-emerald-200 shadow-[0_0_15px_rgba(0,200,100,0.1)]"
                           : d.status === "expired"
                           ? "bg-red-500/10 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.1)]"
-                          : "bg-[#D946EF]/10 border-[#D946EF]/20 shadow-[0_0_15px_rgba(255,184,0,0.1)]"
+                          : "bg-primary/10 border-primary/20 shadow-[0_0_15px_rgba(255,184,0,0.1)]"
                       }`}>
                         {d.completed || d.status === "success" ? (
-                          <Check className="h-6 w-6 text-[#00c864]" />
+                          <Check className="h-6 w-6 text-emerald-700" />
                         ) : d.status === "expired" ? (
                           <X className="h-6 w-6 text-red-500" />
                         ) : (
-                          <Clock className="h-6 w-6 text-[#D946EF]" />
+                          <Clock className="h-6 w-6 text-primary" />
                         )}
                       </div>
                       <div>
-                        <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-base" style={{ fontFamily: "'Syne', sans-serif" }}>
+                        <p className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-600 text-base" style={{ fontFamily: "'Syne', sans-serif" }}>
                           RM {Number(d.creditAmount || d.amount).toFixed(2)}
                         </p>
-                        <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mt-0.5">
+                        <p className="text-[10px] font-bold text-muted-foreground/90 uppercase tracking-widest mt-0.5">
                           {d.createdAt ? new Date(d.createdAt).toLocaleDateString("id-ID", {
                             day: "numeric",
                             month: "short",
@@ -897,10 +897,10 @@ export default function Deposit() {
                       variant="outline" 
                       className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 ${
                         d.completed || d.status === "success"
-                          ? "border-[#00c864]/30 text-[#00c864] bg-[#00c864]/10 shadow-[0_0_10px_rgba(0,200,100,0.1)]"
+                          ? "border-emerald-300 text-emerald-700 bg-emerald-50 shadow-[0_0_10px_rgba(0,200,100,0.1)]"
                           : d.status === "expired"
                           ? "border-red-500/30 text-red-500 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.1)]"
-                          : "border-[#D946EF]/30 text-[#D946EF] bg-[#D946EF]/10 shadow-[0_0_10px_rgba(255,184,0,0.1)]"
+                          : "border-primary/30 text-primary bg-primary/10 shadow-[0_0_10px_rgba(255,184,0,0.1)]"
                       }`}
                     >
                       {d.completed || d.status === "success" ? "Success" : d.status === "expired" ? "Expired" : "Pending"}
@@ -913,14 +913,14 @@ export default function Deposit() {
         </div>
 
         {/* Bottom Info */}
-        <div className="mt-8 p-5 rounded-[1.5rem] bg-white/[0.02] border border-white/5">
+        <div className="mt-8 p-5 rounded-[1.5rem] bg-secondary/50 border border-border/70">
           <div className="flex items-start gap-4">
-            <div className="h-10 w-10 rounded-xl bg-[#00c864]/10 flex items-center justify-center border border-[#00c864]/20 shadow-[0_0_15px_rgba(0,200,100,0.1)] flex-shrink-0">
-              <Shield className="h-5 w-5 text-[#00c864]" />
+            <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-200 shadow-[0_0_15px_rgba(0,200,100,0.1)] flex-shrink-0">
+              <Shield className="h-5 w-5 text-emerald-700" />
             </div>
             <div>
-              <p className="text-sm font-black text-white uppercase tracking-widest">Keamanan Terjamin</p>
-              <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mt-1.5 leading-relaxed">
+              <p className="text-sm font-black text-foreground uppercase tracking-widest">Keamanan Terjamin</p>
+              <p className="text-[10px] font-bold text-muted-foreground/90 uppercase tracking-widest mt-1.5 leading-relaxed">
                 Semua transaksi diproses dengan enkripsi end-to-end. Data pembayaran Anda aman bersama kami.
               </p>
             </div>

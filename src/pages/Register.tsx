@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+﻿import { useState, useCallback, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import SeoHead from "@/components/SeoHead";
 import { trpc } from "@/providers/trpc";
@@ -32,9 +32,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    PASSWORD STRENGTH METER
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PasswordStrengthMeter({ password }: { password: string }) {
   if (!password) return null;
 
@@ -116,9 +116,9 @@ function PasswordStrengthMeter({ password }: { password: string }) {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    FORM INPUT WITH ICON
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function FormInput({
   id,
   label,
@@ -152,20 +152,20 @@ function FormInput({
 }) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id} className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-white/70">
+      <Label htmlFor={id} className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-foreground/75">
         {label}
-        {required && <span className="text-[#8B5CF6]">*</span>}
-        {!required && <span className="text-[10px] text-white/40 font-bold ml-1">(Opsional)</span>}
+        {required && <span className="text-primary">*</span>}
+        {!required && <span className="text-[10px] text-muted-foreground font-bold ml-1">(Opsional)</span>}
       </Label>
       <div className="relative">
-        <Icon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+        <Icon className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
           id={id}
           type={type}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
+          className={`pl-11 h-12 bg-secondary/50 border-border/80 text-foreground placeholder:text-muted-foreground/60 rounded-xl transition-all focus:bg-secondary/60 focus:border-primary/50 focus:ring-1 focus:ring-primary/40 ${
             error 
               ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
               : ""
@@ -189,7 +189,7 @@ function FormInput({
         </p>
       )}
       {hint && !error && (
-        <p id={`${id}-hint`} className="text-[10px] uppercase tracking-widest font-black text-white/40 mt-1">
+        <p id={`${id}-hint`} className="text-[10px] uppercase tracking-widest font-black text-muted-foreground mt-1">
           {hint}
         </p>
       )}
@@ -197,9 +197,9 @@ function FormInput({
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function Register() {
   const navigate = useNavigate();
   
@@ -243,7 +243,7 @@ export default function Register() {
 
   const registerMutation = trpc.auth.register.useMutation({
     onSuccess: (data) => {
-      toast.success("Pendaftaran berhasil! 🎉", {
+      toast.success("Pendaftaran berhasil! ðŸŽ‰", {
         description: "Mengalihkan ke halaman utama...",
         duration: 2000,
       });
@@ -277,7 +277,7 @@ export default function Register() {
 
   const telegramWebAppMutation = trpc.auth.telegramWebApp.useMutation({
     onSuccess: () => {
-      toast.success("Pendaftaran & Log Masuk Telegram Berjaya! 🎉");
+      toast.success("Pendaftaran & Log Masuk Telegram Berjaya! ðŸŽ‰");
       setTimeout(() => navigate("/dashboard"), 500);
     },
     onError: (error) => {
@@ -360,7 +360,7 @@ export default function Register() {
               await setSessionTokenMutation.mutateAsync({ token: pollData.token });
             } catch {}
 
-            toast.success(`Log masuk / pendaftaran Telegram berjaya! 🎉`, {
+            toast.success(`Log masuk / pendaftaran Telegram berjaya! ðŸŽ‰`, {
               description: `Selamat datang, ${pollData.user?.username || 'Pengguna Telegram'}!`,
             });
             setTimeout(() => navigate("/dashboard"), 500);
@@ -486,41 +486,41 @@ export default function Register() {
         description="Daftar akaun baharu di NickStore untuk menikmati harga topup game termurah, bonus promo & perkhidmatan pantas 24/7."
       />
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-amber-400/20 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-orange-600/10 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl relative z-10">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-border/80 bg-secondary/60 backdrop-blur-xl shadow-2xl relative z-10">
         {/* Left - Form */}
         <div className="p-8 lg:p-12 flex flex-col justify-center">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
-                <Gamepad2 className="h-6 w-6 text-black" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.35)]">
+                <Gamepad2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
-                <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
+                <span className="font-black text-xl tracking-wide uppercase text-foreground">Nick<span>Store</span></span>
+                <p className="text-[10px] text-muted-foreground/90 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 uppercase tracking-tight">
+            <h1 className="text-3xl lg:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600 uppercase tracking-tight">
               Buat Akun Baru
             </h1>
-            <p className="text-sm text-white/50 mt-2 font-medium">
+            <p className="text-sm text-muted-foreground/90 mt-2 font-medium">
               Daftar sekarang dan dapatkan benefit eksklusif member
             </p>
             
             {/* Quick Benefits */}
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Zap, text: "Proses Instan", color: "text-[#D946EF]" },
-                { icon: Shield, text: "100% Aman", color: "text-[#D946EF]" },
-                { icon: Gift, text: "Bonus Member", color: "text-[#D946EF]" },
+                { icon: Zap, text: "Proses Instan", color: "text-primary" },
+                { icon: Shield, text: "100% Aman", color: "text-primary" },
+                { icon: Gift, text: "Bonus Member", color: "text-primary" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5">
+                <div key={i} className="flex items-center gap-2 bg-secondary/50 border border-border/80 rounded-lg px-3 py-1.5">
                   <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
-                  <span className="text-[10px] text-white/70 font-black uppercase tracking-widest">{item.text}</span>
+                  <span className="text-[10px] text-foreground/75 font-black uppercase tracking-widest">{item.text}</span>
                 </div>
               ))}
             </div>
@@ -590,8 +590,8 @@ export default function Register() {
                     <div className="flex items-center gap-3">
                       <Loader2 className="h-5 w-5 animate-spin text-[#0088cc] shrink-0" />
                       <div>
-                        <p className="text-xs font-bold text-white">Menunggu Pengesahan Telegram...</p>
-                        <p className="text-[10px] text-white/60">Sila tekan 'Start' pada bot Telegram yang terbuka.</p>
+                        <p className="text-xs font-bold text-foreground">Menunggu Pengesahan Telegram...</p>
+                        <p className="text-[10px] text-foreground/70">Sila tekan 'Start' pada bot Telegram yang terbuka.</p>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -599,14 +599,14 @@ export default function Register() {
                         href={telegramBotUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 text-center py-2 rounded-xl bg-[#0088cc] text-white font-bold text-xs"
+                        className="flex-1 text-center py-2 rounded-xl bg-[#0088cc] text-foreground font-bold text-xs"
                       >
                         Buka Bot Telegram Lagi
                       </a>
                       <button
                         type="button"
                         onClick={() => { stopPolling(); setAwaitingTelegramBot(false); }}
-                        className="px-3 py-2 rounded-xl bg-white/10 text-white/70 hover:text-white text-xs font-bold"
+                        className="px-3 py-2 rounded-xl bg-secondary/80 text-foreground/75 hover:text-foreground text-xs font-bold"
                       >
                         Batal
                       </button>
@@ -617,11 +617,11 @@ export default function Register() {
                     type="button"
                     onClick={handleTelegramRegister}
                     disabled={telegramWebAppMutation.isPending}
-                    className="w-full h-12 rounded-xl bg-[#0088cc] hover:bg-[#0077bb] text-white font-black uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(0,136,204,0.3)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 border-0"
+                    className="w-full h-12 rounded-xl bg-[#0088cc] hover:bg-[#0077bb] text-foreground font-black uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(0,136,204,0.3)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 border-0"
                   >
                     {telegramWebAppMutation.isPending ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        <Loader2 className="h-4 w-4 animate-spin text-foreground" />
                         Menghubungkan Telegram...
                       </>
                     ) : (
@@ -634,8 +634,8 @@ export default function Register() {
                 )}
 
                 <div className="relative flex items-center justify-center my-4">
-                  <div className="border-t border-white/10 w-full" />
-                  <span className="bg-[#0B0A10] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
+                  <div className="border-t border-border/80 w-full" />
+                  <span className="bg-card px-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground absolute shrink-0">
                     Atau Isi Borang Manual
                   </span>
                 </div>
@@ -702,7 +702,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-white/40 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-secondary/60"
                   tabIndex={-1}
                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                 >
@@ -721,13 +721,13 @@ export default function Register() {
                 checked={agreeTerms}
                 onCheckedChange={(checked) => setAgreeTerms(checked as boolean)}
                 disabled={isLoading}
-                className="mt-0.5 border-white/20 data-[state=checked]:bg-[#8B5CF6] data-[state=checked]:border-[#8B5CF6]"
+                className="mt-0.5 border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="terms" className="text-xs font-black uppercase tracking-widest text-white/50 cursor-pointer leading-relaxed hover:text-white/70 transition-colors">
+              <Label htmlFor="terms" className="text-xs font-black uppercase tracking-widest text-muted-foreground/90 cursor-pointer leading-relaxed hover:text-foreground/75 transition-colors">
                 Saya menyetujui{" "}
                 <button
                   type="button"
-                  className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline"
+                  className="text-primary hover:text-primary hover:underline"
                   onClick={() => toast.info("Syarat & Ketentuan akan ditampilkan di halaman terpisah")}
                 >
                   Syarat & Ketentuan
@@ -735,7 +735,7 @@ export default function Register() {
                 {" "}dan{" "}
                 <button
                   type="button"
-                  className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline"
+                  className="text-primary hover:text-primary hover:underline"
                   onClick={() => toast.info("Kebijakan Privasi akan ditampilkan di halaman terpisah")}
                 >
                   Kebijakan Privasi
@@ -754,12 +754,12 @@ export default function Register() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0 mt-4"
+              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(249,115,22,0.35)] hover:shadow-[0_0_30px_rgba(251,191,36,0.55)] border-0 mt-4"
               disabled={isLoading}
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin text-black" />
+                  <Loader2 className="h-5 w-5 animate-spin text-white" />
                   Membuat Akun...
                 </span>
               ) : (
@@ -782,12 +782,12 @@ export default function Register() {
           )}
 
           {/* Footer Links */}
-          <div className="mt-8 pt-8 border-t border-white/10 space-y-4 animate-in fade-in duration-500 delay-200">
-            <p className="text-center text-xs font-black uppercase tracking-widest text-white/50">
+          <div className="mt-8 pt-8 border-t border-border/80 space-y-4 animate-in fade-in duration-500 delay-200">
+            <p className="text-center text-xs font-black uppercase tracking-widest text-muted-foreground/90">
               Sudah punya akun?{" "}
               <Link
                 to="/login"
-                className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
+                className="text-primary hover:text-primary hover:underline inline-flex items-center gap-1 transition-colors ml-1"
               >
                 Masuk disini
                 <ArrowRight className="h-3 w-3" />
@@ -796,7 +796,7 @@ export default function Register() {
 
             <Button
               variant="outline"
-              className="w-full h-12 rounded-xl bg-transparent border-white/10 text-white/70 hover:bg-white/[0.05] hover:text-white text-[10px] font-black tracking-widest uppercase"
+              className="w-full h-12 rounded-xl bg-transparent border-border/80 text-foreground/75 hover:bg-secondary/60 hover:text-foreground text-[10px] font-black tracking-widest uppercase"
               onClick={() => navigate("/")}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -806,15 +806,15 @@ export default function Register() {
         </div>
 
         {/* Right - Benefits Panel */}
-        <div className="hidden lg:flex flex-col justify-center p-12 bg-black/40 border-l border-white/10 relative overflow-hidden">
+        <div className="hidden lg:flex flex-col justify-center p-12 bg-gradient-to-br from-amber-500 via-orange-600 to-orange-700 relative overflow-hidden">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-amber-300/20 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
           
           {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-[0.03]"
+          <div className="absolute inset-0 opacity-[0.08]"
             style={{
-              backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
             }}
           />
@@ -823,19 +823,17 @@ export default function Register() {
             {/* Logo & Title */}
             <div className="text-center">
               <div className="relative inline-block mb-8">
-                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center mx-auto border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
-                  <Crown className="h-12 w-12 text-[#D946EF]" />
+                <div className="h-24 w-24 rounded-3xl bg-white/15 backdrop-blur border border-white/30 flex items-center justify-center mx-auto shadow-[0_16px_40px_rgba(0,0,0,0.25)]">
+                  <Crown className="h-12 w-12 text-amber-100" />
                 </div>
-                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#D946EF] animate-pulse" />
+                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-amber-200 animate-pulse" />
               </div>
               
-              <h2 className="text-3xl font-black mb-3 uppercase tracking-tight text-white">
+              <h2 className="text-3xl font-extrabold mb-3 uppercase tracking-tight text-white">
                 Kenapa Harus<br />
-                <span className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] bg-clip-text text-transparent">
-                  Daftar Sekarang?
-                </span>
+                <span className="text-amber-200">Daftar Sekarang?</span>
               </h2>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-orange-100/90">
                 Dapatkan akses penuh ke semua fitur
               </p>
             </div>
@@ -846,59 +844,51 @@ export default function Register() {
                 { 
                   icon: Zap, 
                   title: "Transaksi Super Instan", 
-                  desc: "Top up diproses dalam hitungan detik, 24/7 non-stop",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Top up diproses dalam hitungan detik, 24/7 non-stop"
                 },
                 { 
                   icon: Shield, 
                   title: "Garansi 100% Refund", 
-                  desc: "Uang kembali penuh jika transaksi gagal",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Uang kembali penuh jika transaksi gagal"
                 },
                 { 
                   icon: Gift, 
                   title: "Promo Eksklusif Member", 
-                  desc: "Diskon dan cashback setiap bulan",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Diskon dan cashback setiap bulan"
                 },
                 { 
                   icon: TrendingUp, 
                   title: "Harga Termurah", 
-                  desc: "Bandingkan sendiri, kami yang terendah",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Bandingkan sendiri, kami yang terendah"
                 },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 border border-white/5 hover:border-white/10 group backdrop-blur-sm"
+                  className="flex items-start gap-4 p-4 rounded-xl bg-white/10 backdrop-blur hover:bg-white/15 transition-all duration-300 border border-white/20 hover:border-white/30 group"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
-                  <div className={`h-12 w-12 rounded-xl ${item.bg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                    <item.icon className={`h-5 w-5 ${item.color}`} />
+                  <div className="h-12 w-12 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                    <item.icon className="h-5 w-5 text-amber-100" />
                   </div>
                   <div className="min-w-0 pt-1">
                     <h3 className="text-xs font-black uppercase tracking-widest text-white mb-1">{item.title}</h3>
-                    <p className="text-[10px] font-medium text-white/50 leading-relaxed">{item.desc}</p>
+                    <p className="text-[10px] font-medium text-orange-100/80 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Social Proof */}
-            <div className="text-center pt-8 border-t border-white/10">
-              <div className="flex items-center justify-center gap-1 text-[#D946EF] mb-3">
+            <div className="text-center pt-8 border-t border-white/20">
+              <div className="flex items-center justify-center gap-1 text-amber-200 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
                 ))}
                 <span className="text-sm font-black text-white ml-2">4.99</span>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-orange-100/80">
                 Bergabung dengan{" "}
-                <span className="text-[#D946EF]">1,247+</span> member lainnya
+                <span className="text-amber-200">1,247+</span> member lainnya
               </p>
               
               {/* Member Avatars */}
@@ -906,15 +896,15 @@ export default function Register() {
                 {["R", "S", "B", "D", "A"].map((letter, i) => (
                   <div
                     key={i}
-                    className="h-10 w-10 rounded-full border-2 border-[#0B0A10] flex items-center justify-center text-xs font-black text-white shadow-xl"
+                    className="h-10 w-10 rounded-full border-2 border-orange-700 flex items-center justify-center text-xs font-black text-white shadow-xl"
                     style={{
-                      background: `hsl(${i * 40 + 20}, 70%, 50%)`,
+                      background: `hsl(${i * 10 + 25}, 90%, 45%)`,
                     }}
                   >
                     {letter}
                   </div>
                 ))}
-                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0B0A10] backdrop-blur-md">
+                <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black text-white border-2 border-orange-700 backdrop-blur-md">
                   +1.2K
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import AdminLayout from "./AdminLayout";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import {
@@ -132,18 +132,18 @@ export default function AdminVouchers() {
         {/* HEADER & HUB TAB SWITCHER */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-2">
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Kupon & Pengumuman Platform</h1>
-            <p className="text-sm text-white/50 mt-1">Urus kode kupon diskaun promosi dan notifikasi pengumuman pelanggan</p>
+            <h1 className="text-2xl font-bold text-foreground tracking-tight">Kupon & Pengumuman Platform</h1>
+            <p className="text-sm text-muted-foreground/90 mt-1">Urus kode kupon diskaun promosi dan notifikasi pengumuman pelanggan</p>
           </div>
 
           {/* TAB BUTTONS */}
-          <div className="flex items-center gap-2 p-1 rounded-2xl bg-[#14192B] border border-white/10 self-start md:self-auto">
+          <div className="flex items-center gap-2 p-1 rounded-2xl bg-[#14192B] border border-border/80 self-start md:self-auto">
             <button
               onClick={() => setActiveTab("vouchers")}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "vouchers"
-                  ? "bg-amber-400 text-black shadow-md shadow-amber-400/20"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  ? "bg-amber-400 text-white shadow-md shadow-amber-400/20"
+                  : "text-foreground/70 hover:text-foreground hover:bg-secondary/60"
               }`}
             >
               <Ticket className="h-4 w-4" /> Kode Kupon
@@ -152,8 +152,8 @@ export default function AdminVouchers() {
               onClick={() => setActiveTab("announcements")}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                 activeTab === "announcements"
-                  ? "bg-violet-600 text-white shadow-md shadow-orange-500/20"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  ? "bg-violet-600 text-foreground shadow-md shadow-orange-500/20"
+                  : "text-foreground/70 hover:text-foreground hover:bg-secondary/60"
               }`}
             >
               <Megaphone className="h-4 w-4" /> Pengumuman Platform
@@ -166,27 +166,27 @@ export default function AdminVouchers() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="relative w-full sm:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <input
                   type="text"
                   value={voucherSearch}
                   onChange={(e) => setVoucherSearch(e.target.value)}
                   placeholder="Cari kod kupon..."
-                  className="w-full h-10 pl-10 pr-10 rounded-xl bg-[#14192B] border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400"
+                  className="w-full h-10 pl-10 pr-10 rounded-xl bg-[#14192B] border border-border/80 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-amber-400"
                 />
               </div>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowCreateVoucher(!showCreateVoucher)}
-                  className="flex items-center gap-2 h-10 px-4 rounded-xl bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs transition-all shadow-md shadow-amber-400/10"
+                  className="flex items-center gap-2 h-10 px-4 rounded-xl bg-amber-400 hover:bg-amber-500 text-white font-bold text-xs transition-all shadow-md shadow-amber-400/10"
                 >
                   <Plus className="h-4 w-4" /> Cipta Kupon Baru
                 </button>
                 <button
                   onClick={() => vouchersQuery.refetch()}
                   disabled={vouchersQuery.isFetching}
-                  className="flex items-center gap-2 h-10 px-4 rounded-xl bg-[#14192B] border border-white/10 text-sm text-white/70 hover:text-white"
+                  className="flex items-center gap-2 h-10 px-4 rounded-xl bg-[#14192B] border border-border/80 text-sm text-foreground/75 hover:text-foreground"
                 >
                   <RefreshCw className={`h-4 w-4 ${vouchersQuery.isFetching ? 'animate-spin' : ''}`} />
                   Muat Semula
@@ -196,65 +196,65 @@ export default function AdminVouchers() {
 
             {/* Create Voucher Form */}
             {showCreateVoucher && (
-              <div className="p-6 rounded-2xl bg-[#14192B] border border-white/10 space-y-4">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <div className="p-6 rounded-2xl bg-[#14192B] border border-border/80 space-y-4">
+                <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                   <Ticket className="h-5 w-5 text-amber-400" /> Cipta Kode Kupon Promosi Baru
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Kod Kupon</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Kod Kupon</label>
                     <input
                       type="text"
                       placeholder="Contoh: KRYZDISKAUN10"
                       value={voucherForm.code}
                       onChange={(e) => setVoucherForm({ ...voucherForm, code: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white font-mono uppercase"
+                      className="w-full h-10 px-3 rounded-xl bg-secondary/60 border border-border/80 text-sm text-foreground font-mono uppercase"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Jenis Diskaun</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Jenis Diskaun</label>
                     <select
                       value={voucherForm.type}
                       onChange={(e) => setVoucherForm({ ...voucherForm, type: e.target.value as any })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-card border border-border/80 text-sm text-foreground"
                     >
                       <option value="percentage">Peratusan (%)</option>
                       <option value="fixed">Jumlah Tetap (MYR)</option>
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Nilai Diskaun</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Nilai Diskaun</label>
                     <input
                       type="number"
                       placeholder={voucherForm.type === 'percentage' ? '10 (untuk 10%)' : '5.00'}
                       value={voucherForm.value}
                       onChange={(e) => setVoucherForm({ ...voucherForm, value: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white font-mono"
+                      className="w-full h-10 px-3 rounded-xl bg-secondary/60 border border-border/80 text-sm text-foreground font-mono"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Had Penggunaan</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Had Penggunaan</label>
                     <input
                       type="number"
                       placeholder="Contoh: 100"
                       value={voucherForm.usageLimit}
                       onChange={(e) => setVoucherForm({ ...voucherForm, usageLimit: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white font-mono"
+                      className="w-full h-10 px-3 rounded-xl bg-secondary/60 border border-border/80 text-sm text-foreground font-mono"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Tarikh Luput</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Tarikh Luput</label>
                     <input
                       type="date"
                       value={voucherForm.expiryDate}
                       onChange={(e) => setVoucherForm({ ...voucherForm, expiryDate: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-card border border-border/80 text-sm text-foreground"
                     />
                   </div>
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
-                  <button onClick={() => setShowCreateVoucher(false)} className="px-4 py-2 rounded-xl bg-white/5 text-xs text-white/70 font-semibold">Batal</button>
-                  <button onClick={handleCreateVoucher} disabled={createVoucherMutation.isPending} className="px-4 py-2 rounded-xl bg-amber-400 text-black text-xs font-bold">
+                  <button onClick={() => setShowCreateVoucher(false)} className="px-4 py-2 rounded-xl bg-secondary/60 text-xs text-foreground/75 font-semibold">Batal</button>
+                  <button onClick={handleCreateVoucher} disabled={createVoucherMutation.isPending} className="px-4 py-2 rounded-xl bg-amber-400 text-white text-xs font-bold">
                     {createVoucherMutation.isPending ? "Mencipta..." : "Simpan Kupon"}
                   </button>
                 </div>
@@ -262,11 +262,11 @@ export default function AdminVouchers() {
             )}
 
             {/* Vouchers Table */}
-            <div className="rounded-2xl bg-[#14192B] border border-white/5 p-5">
+            <div className="rounded-2xl bg-[#14192B] border border-border/70 p-5">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-white/5 text-white/40 text-[11px] uppercase font-semibold">
+                    <tr className="border-b border-border/70 text-muted-foreground text-[11px] uppercase font-semibold">
                       <th className="pb-3 px-3">Kod Kupon</th>
                       <th className="pb-3 px-3">Jenis & Nilai</th>
                       <th className="pb-3 px-3 text-center">Penggunaan</th>
@@ -277,19 +277,19 @@ export default function AdminVouchers() {
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     {filteredVouchers.map((v: any) => (
-                      <tr key={v.id} className="hover:bg-white/[0.02] text-xs">
+                      <tr key={v.id} className="hover:bg-secondary/50 text-xs">
                         <td className="py-3 px-3 font-mono font-bold text-amber-400">{v.code}</td>
-                        <td className="py-3 px-3 font-bold text-white">
+                        <td className="py-3 px-3 font-bold text-foreground">
                           {v.type === 'percentage' ? `${v.value}% OFF` : `RM ${Number(v.value).toFixed(2)} OFF`}
                         </td>
-                        <td className="py-3 px-3 text-center text-white/70">
+                        <td className="py-3 px-3 text-center text-foreground/75">
                           {v.usageCount} / {v.usageLimit}
                         </td>
-                        <td className="py-3 px-3 text-right text-white/40 text-[11px]">
+                        <td className="py-3 px-3 text-right text-muted-foreground text-[11px]">
                           {v.expiryDate ? new Date(v.expiryDate).toLocaleDateString("ms-MY") : "-"}
                         </td>
                         <td className="py-3 px-3 text-center">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${v.isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${v.isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-600'}`}>
                             {v.isActive ? 'Aktif' : 'Nyahaktif'}
                           </span>
                         </td>
@@ -297,13 +297,13 @@ export default function AdminVouchers() {
                           <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => toggleVoucherMutation.mutate({ id: v.id, isActive: !v.isActive })}
-                              className="p-1.5 rounded-lg bg-white/5 text-amber-400 hover:bg-white/10"
+                              className="p-1.5 rounded-lg bg-secondary/60 text-amber-400 hover:bg-secondary/80"
                             >
                               <Power className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => deleteVoucherMutation.mutate({ id: v.id })}
-                              className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                              className="p-1.5 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </button>
@@ -322,45 +322,45 @@ export default function AdminVouchers() {
         {activeTab === "announcements" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                 <Megaphone className="h-5 w-5 text-orange-400" /> Senarai Pengumuman & Banner Notis
               </h3>
               <button
                 onClick={() => setShowCreateAnno(!showCreateAnno)}
-                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-violet-600 text-white font-bold text-xs shadow-md shadow-orange-500/10"
+                className="flex items-center gap-2 h-10 px-4 rounded-xl bg-violet-600 text-foreground font-bold text-xs shadow-md shadow-orange-500/10"
               >
                 <Plus className="h-4 w-4" /> Cipta Pengumuman Baru
               </button>
             </div>
 
             {showCreateAnno && (
-              <div className="p-6 rounded-2xl bg-[#14192B] border border-white/10 space-y-4">
+              <div className="p-6 rounded-2xl bg-[#14192B] border border-border/80 space-y-4">
                 <div className="space-y-3">
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Tajuk Pengumuman</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Tajuk Pengumuman</label>
                     <input
                       type="text"
                       placeholder="Contoh: Maintenance Server Provider"
                       value={annoForm.title}
                       onChange={(e) => setAnnoForm({ ...annoForm, title: e.target.value })}
-                      className="w-full h-10 px-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-secondary/60 border border-border/80 text-sm text-foreground"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Kandungan Pengumuman</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Kandungan Pengumuman</label>
                     <textarea
                       placeholder="Isi makluman..."
                       value={annoForm.content}
                       onChange={(e) => setAnnoForm({ ...annoForm, content: e.target.value })}
-                      className="w-full p-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white h-24"
+                      className="w-full p-3 rounded-xl bg-secondary/60 border border-border/80 text-sm text-foreground h-24"
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-semibold text-white/70 block mb-1">Jenis Notis</label>
+                    <label className="text-xs font-semibold text-foreground/75 block mb-1">Jenis Notis</label>
                     <select
                       value={annoForm.type}
                       onChange={(e) => setAnnoForm({ ...annoForm, type: e.target.value as any })}
-                      className="w-full h-10 px-3 rounded-xl bg-[#0B0A10] border border-white/10 text-sm text-white"
+                      className="w-full h-10 px-3 rounded-xl bg-card border border-border/80 text-sm text-foreground"
                     >
                       <option value="info">Info (Biru)</option>
                       <option value="warning">Amaran / Maintenance (Kuning)</option>
@@ -369,26 +369,26 @@ export default function AdminVouchers() {
                   </div>
                 </div>
                 <div className="flex justify-end gap-3 pt-2">
-                  <button onClick={() => setShowCreateAnno(false)} className="px-4 py-2 rounded-xl bg-white/5 text-xs text-white/70 font-semibold">Batal</button>
-                  <button onClick={handleCreateAnno} className="px-4 py-2 rounded-xl bg-violet-600 text-white text-xs font-bold">Simpan Pengumuman</button>
+                  <button onClick={() => setShowCreateAnno(false)} className="px-4 py-2 rounded-xl bg-secondary/60 text-xs text-foreground/75 font-semibold">Batal</button>
+                  <button onClick={handleCreateAnno} className="px-4 py-2 rounded-xl bg-violet-600 text-foreground text-xs font-bold">Simpan Pengumuman</button>
                 </div>
               </div>
             )}
 
             <div className="space-y-3">
               {announcements.map((a) => (
-                <div key={a.id} className="p-4 rounded-2xl bg-[#14192B] border border-white/5 flex items-start justify-between gap-4">
+                <div key={a.id} className="p-4 rounded-2xl bg-[#14192B] border border-border/70 flex items-start justify-between gap-4">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${a.type === 'warning' ? 'bg-amber-500/20 text-amber-400' : a.type === 'success' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-sky-500/20 text-sky-400'}`}>
                         {a.type.toUpperCase()}
                       </span>
-                      <h4 className="font-bold text-sm text-white">{a.title}</h4>
+                      <h4 className="font-bold text-sm text-foreground">{a.title}</h4>
                     </div>
-                    <p className="text-xs text-white/60">{a.content}</p>
-                    <p className="text-[10px] text-white/30 pt-1">{a.createdAt}</p>
+                    <p className="text-xs text-foreground/70">{a.content}</p>
+                    <p className="text-[10px] text-muted-foreground/60 pt-1">{a.createdAt}</p>
                   </div>
-                  <button onClick={() => handleDeleteAnno(a.id)} className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20">
+                  <button onClick={() => handleDeleteAnno(a.id)} className="p-2 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-500/20">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

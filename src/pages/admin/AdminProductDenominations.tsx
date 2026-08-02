@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import AdminLayout from "./AdminLayout";
 import { Card } from "@/components/ui/card";
@@ -175,7 +175,7 @@ export default function AdminProductDenominations() {
           <div>
             <h1 className="text-2xl font-bold">Kelola Nominal</h1>
             <p className="text-sm text-muted-foreground">
-              {product.name} · {product.category || "Game"}
+              {product.name} Â· {product.category || "Game"}
             </p>
           </div>
         </div>

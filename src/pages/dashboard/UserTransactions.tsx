@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+﻿import { useState, useCallback, useMemo } from "react";
 import { trpc } from "@/providers/trpc";
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { Card } from "@/components/ui/card";
@@ -19,9 +19,9 @@ import {
   Globe,
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    CONSTANTS
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const STATUS_OPTIONS = ["Semua", "pending", "processing", "success", "failed", "refund", "cancelled"];
 const SOURCE_OPTIONS = ["Semua", "website", "telegram"];
 
@@ -30,27 +30,27 @@ const STATUS_CONFIG: Record<string, { label: string; icon: any; color: string; b
   sukses:      { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
   completed:   { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
   delivered:   { label: "Success",     icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
-  pending:     { label: "Pending",     icon: Clock,       color: "text-[#D946EF]",     bg: "bg-[#D946EF]/10",     border: "border-[#D946EF]/20" },
+  pending:     { label: "Pending",     icon: Clock,       color: "text-primary",     bg: "bg-primary/10",     border: "border-primary/20" },
   processing:  { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
   proses:      { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
   confirmed:   { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
   shipped:     { label: "Processing",  icon: Zap,         color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/20" },
-  failed:      { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
-  gagal:       { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
-  cancelled:   { label: "Failed",      icon: XCircle,     color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/20" },
-  refund:      { label: "Refund",      icon: AlertCircle, color: "text-[#8B5CF6]",     bg: "bg-[#8B5CF6]/10",     border: "border-[#8B5CF6]/20" },
+  failed:      { label: "Failed",      icon: XCircle,     color: "text-red-600",       bg: "bg-red-500/10",       border: "border-red-500/20" },
+  gagal:       { label: "Failed",      icon: XCircle,     color: "text-red-600",       bg: "bg-red-500/10",       border: "border-red-500/20" },
+  cancelled:   { label: "Failed",      icon: XCircle,     color: "text-red-600",       bg: "bg-red-500/10",       border: "border-red-500/20" },
+  refund:      { label: "Refund",      icon: AlertCircle, color: "text-primary",     bg: "bg-primary/10",     border: "border-primary/20" },
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    STATUS BADGE (memoised)
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const StatusBadge = ({ status }: { status: string }) => {
   const config = STATUS_CONFIG[status?.toLowerCase()] ?? {
     label: status,
     icon: AlertCircle,
-    color: "text-white/50",
-    bg: "bg-white/5",
-    border: "border-white/10",
+    color: "text-muted-foreground/90",
+    bg: "bg-secondary/60",
+    border: "border-border/80",
   };
   const Icon = config.icon;
   return (
@@ -60,9 +60,9 @@ const StatusBadge = ({ status }: { status: string }) => {
   );
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    PAGINATION (reusable)
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const Pagination = ({
   currentPage,
   totalPages,
@@ -96,7 +96,7 @@ const Pagination = ({
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="h-8 rounded-lg border-white/10 hover:bg-white/5 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
+        className="h-8 rounded-lg border-border/80 hover:bg-secondary/60 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
       >
         <ChevronLeft className="h-3.5 w-3.5 mr-1" /> Prev
       </Button>
@@ -114,7 +114,7 @@ const Pagination = ({
               className={`h-8 w-8 p-0 text-[9px] font-black ${
                 currentPage === page
                   ? "bg-primary text-primary-foreground shadow-md"
-                  : "border-white/10 hover:bg-white/5"
+                  : "border-border/80 hover:bg-secondary/60"
               }`}
               onClick={() => onPageChange(page as number)}
             >
@@ -128,7 +128,7 @@ const Pagination = ({
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="h-8 rounded-lg border-white/10 hover:bg-white/5 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
+        className="h-8 rounded-lg border-border/80 hover:bg-secondary/60 text-[9px] font-black uppercase tracking-widest disabled:opacity-50"
       >
         Next <ChevronRight className="h-3.5 w-3.5 ml-1" />
       </Button>
@@ -136,9 +136,9 @@ const Pagination = ({
   );
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN PAGE
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function UserTransactions() {
   const { formatPrice } = useCurrency();
   const [page, setPage] = useState(1);
@@ -173,29 +173,29 @@ export default function UserTransactions() {
       <div className="space-y-8 max-w-7xl mx-auto">
         {/* Header */}
         <div>
-          <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-white">
+          <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-foreground">
             Riwayat Transaksi
           </h1>
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mt-1">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90 mt-1">
             Menampilkan data riwayat transaksi yang telah Kamu lakukan
           </p>
         </div>
 
         {/* Filters Card */}
-        <Card className="p-6 bg-[#0B0A10]/80 border-white/10 backdrop-blur-xl">
+        <Card className="p-6 bg-secondary/60 border-border/80 backdrop-blur-xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Status
               </label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
               >
                 {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s} className="bg-[#0B0A10] text-white">
+                  <option key={s} value={s} className="bg-card text-foreground">
                     {s}
                   </option>
                 ))}
@@ -204,17 +204,17 @@ export default function UserTransactions() {
 
             {/* Source Filter */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Sumber
               </label>
               <select
                 value={sourceFilter}
                 onChange={(e) => setSourceFilter(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors appearance-none"
               >
                 {SOURCE_OPTIONS.map((s) => (
-                  <option key={s} value={s} className="bg-[#0B0A10] text-white">
-                    {s === "Semua" ? "Semua Sumber" : s === "website" ? "🌐 Website" : "📱 Telegram Bot"}
+                  <option key={s} value={s} className="bg-card text-foreground">
+                    {s === "Semua" ? "Semua Sumber" : s === "website" ? "ðŸŒ Website" : "ðŸ“± Telegram Bot"}
                   </option>
                 ))}
               </select>
@@ -222,25 +222,25 @@ export default function UserTransactions() {
 
             {/* Date Pickers */}
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Tanggal Mulai
               </label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
               />
             </div>
             <div>
-              <label className="text-[9px] font-black uppercase tracking-widest text-[#D946EF] mb-2 block">
+              <label className="text-[9px] font-black uppercase tracking-widest text-primary mb-2 block">
                 Tanggal Akhir
               </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full h-10 rounded-xl border border-white/10 bg-white/5 px-4 text-xs font-black uppercase tracking-widest text-white/80 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
+                className="w-full h-10 rounded-xl border border-border/80 bg-secondary/60 px-4 text-xs font-black uppercase tracking-widest text-foreground/85 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-colors [color-scheme:dark]"
               />
             </div>
 
@@ -249,7 +249,7 @@ export default function UserTransactions() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-border/80 hover:border-emerald-500/50 hover:bg-emerald-500/10 text-foreground flex-1 transition-colors"
                 onClick={() => handleExport("csv")}
               >
                 <Download className="mr-2 h-4 w-4 text-emerald-400" />
@@ -258,10 +258,10 @@ export default function UserTransactions() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 rounded-xl border-white/10 hover:border-[#D946EF]/50 hover:bg-[#D946EF]/10 text-white flex-1 transition-colors"
+                className="h-10 rounded-xl border-border/80 hover:border-primary/50 hover:bg-primary/10 text-foreground flex-1 transition-colors"
                 onClick={() => handleExport("xlsx")}
               >
-                <Download className="mr-2 h-4 w-4 text-[#D946EF]" />
+                <Download className="mr-2 h-4 w-4 text-primary" />
                 <span className="text-[10px] font-black uppercase tracking-widest">XLSX</span>
               </Button>
             </div>
@@ -269,7 +269,7 @@ export default function UserTransactions() {
         </Card>
 
         {/* Data Table Card */}
-        <Card className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border-white/10 shadow-2xl backdrop-blur-xl">
+        <Card className="rounded-[1.5rem] overflow-hidden bg-secondary/60 border-border/80 shadow-2xl backdrop-blur-xl">
           {isLoading ? (
             <div className="p-16 text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
@@ -279,13 +279,13 @@ export default function UserTransactions() {
             </div>
           ) : orders.length === 0 ? (
             <div className="p-16 text-center">
-              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/5 mb-6 shadow-inner">
-                <Receipt className="h-10 w-10 text-white/20" />
+              <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/60 mb-6 shadow-inner">
+                <Receipt className="h-10 w-10 text-muted-foreground/40" />
               </div>
-              <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
+              <h3 className="text-xl font-black text-foreground uppercase tracking-tight mb-2">
                 Belum Ada Transaksi
               </h3>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90">
                 Tidak ditemukan transaksi dengan filter tersebut.
               </p>
             </div>
@@ -316,43 +316,43 @@ export default function UserTransactions() {
                   return (
                     <div
                       key={order.id}
-                      className="group relative flex flex-col md:flex-row md:items-center justify-between p-4 gap-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.06] hover:border-white/10 transition-all duration-300 backdrop-blur-sm overflow-hidden"
+                      className="group relative flex flex-col md:flex-row md:items-center justify-between p-4 gap-4 rounded-2xl bg-secondary/50 border border-border/70 hover:bg-secondary/80 hover:border-border/80 transition-all duration-300 backdrop-blur-sm overflow-hidden"
                     >
                       {/* Hover glow effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                       
                       <div className="flex items-start md:items-center gap-4 z-10 w-full md:w-auto flex-1">
-                        <div className={`hidden sm:flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl border shadow-inner transition-colors duration-300 ${statusConfig.bg} ${statusConfig.border} ${statusConfig.color} group-hover:bg-white/10`}>
+                        <div className={`hidden sm:flex flex-shrink-0 items-center justify-center w-12 h-12 rounded-xl border shadow-inner transition-colors duration-300 ${statusConfig.bg} ${statusConfig.border} ${statusConfig.color} group-hover:bg-secondary/80`}>
                           <StatusIcon className="w-5 h-5" />
                         </div>
                         
                         <div className="flex flex-col gap-1.5 w-full">
                           <div className="flex items-center justify-between md:hidden w-full">
-                            <span className="font-mono text-[9px] text-white/50">{invId}</span>
+                            <span className="font-mono text-[9px] text-muted-foreground/90">{invId}</span>
                             <StatusBadge status={order.status} />
                           </div>
                           
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-white/90 group-hover:text-white transition-colors leading-tight line-clamp-2">
+                            <span className="font-bold text-sm text-foreground/90 group-hover:text-foreground transition-colors leading-tight line-clamp-2">
                               {itemDesc}
                             </span>
                           </div>
 
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[9px] font-black uppercase tracking-widest text-white/30">Target</span>
-                              <span className="font-mono text-[10px] font-bold text-[#D946EF] bg-[#D946EF]/10 px-2 py-0.5 rounded">
+                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Target</span>
+                              <span className="font-mono text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">
                                 {userInput}{zone}
                               </span>
                             </div>
                             <div className="hidden md:flex items-center gap-1.5">
-                              <span className="text-[9px] font-black uppercase tracking-widest text-white/30">Invoice</span>
-                              <span className="font-mono text-[10px] text-white/50">{invId}</span>
+                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">Invoice</span>
+                              <span className="font-mono text-[10px] text-muted-foreground/90">{invId}</span>
                             </div>
                           </div>
 
                           {isCancelled && parsedKeterangan && (
-                            <div className="text-[9px] font-black uppercase tracking-widest text-red-400 mt-2 flex items-start gap-1.5 bg-red-500/5 p-2 rounded-lg border border-red-500/10 w-fit">
+                            <div className="text-[9px] font-black uppercase tracking-widest text-red-600 mt-2 flex items-start gap-1.5 bg-red-500/5 p-2 rounded-lg border border-red-500/10 w-fit">
                               <AlertCircle className="h-3 w-3 shrink-0 mt-0.5" />
                               <span className="line-clamp-2 max-w-md" title={parsedKeterangan}>Alasan: {parsedKeterangan}</span>
                             </div>
@@ -360,16 +360,16 @@ export default function UserTransactions() {
                         </div>
                       </div>
                       
-                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 z-10 w-full md:w-auto mt-2 md:mt-0 pt-2 md:pt-0 border-t border-white/5 md:border-t-0">
+                      <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 z-10 w-full md:w-auto mt-2 md:mt-0 pt-2 md:pt-0 border-t border-border/70 md:border-t-0">
                         <div className="flex flex-col items-start md:items-end gap-1">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-white/30 md:hidden">Harga</span>
-                          <span className="font-black text-base whitespace-nowrap text-white">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 md:hidden">Harga</span>
+                          <span className="font-black text-base whitespace-nowrap text-foreground">
                             {formatPrice(order.totalMyr, order.totalIdr)}
                           </span>
                         </div>
                         
                         <div className="flex items-center gap-3 md:flex-col md:items-end md:gap-1">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                             {new Date(order.createdAt).toLocaleDateString("id-ID", { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                           </span>
                           <div className="hidden md:block">
@@ -384,8 +384,8 @@ export default function UserTransactions() {
 
               {/* Pagination */}
               {meta && (
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-white/10 bg-white/[0.01]">
-                  <p className="text-[9px] font-black uppercase tracking-widest text-white/40">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 border-t border-border/80 bg-secondary/40">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                     Menampilkan {orders.length} dari {meta.total} hasil
                   </p>
                   <Pagination

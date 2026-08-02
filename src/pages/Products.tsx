@@ -42,7 +42,7 @@ import { getTypeLabel, getTypeColor, getProductTypeFromData, getProductTypeConfi
 import { groupSmmProducts, type SmmPlatformGroup } from "@/lib/smmPlatforms";
 
 const categories = [
-  { id: "all", label: "Semua", icon: LayoutGrid, color: "#8B5CF6" },
+  { id: "all", label: "Semua", icon: LayoutGrid, color: "#EA580C" },
   ...Object.values(PRODUCT_TYPES).map(t => ({
     id: t.key,
     label: t.label,
@@ -65,9 +65,9 @@ const ITEMS_PER_PAGE = 24;
 ───────────────────────────────────────────── */
 function ProductCardSkeleton() {
   return (
-    <Card className="overflow-hidden border border-border/60">
-      <div className="aspect-[4/3] bg-gradient-to-br from-secondary/50 to-background animate-pulse relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+    <Card className="overflow-hidden border-border">
+      <div className="aspect-[4/3] bg-gradient-to-br from-secondary to-background animate-pulse relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
       </div>
       <div className="p-3 space-y-2">
         <div className="h-4 bg-secondary animate-pulse rounded w-3/4" />
@@ -100,40 +100,38 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
     return (
       <Link to={`/products/${String(product.id)}`}>
         <div 
-          className="group relative flex items-center p-4 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300"
+          className="group relative flex items-center p-4 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 bg-card border-border"
           style={{
-            background: "rgba(255,255,255,0.015)",
-            border: "1px solid rgba(255,255,255,0.05)",
-            boxShadow: isHovered ? '0 20px 40px -10px rgba(139,92,246,0.15), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
+            boxShadow: isHovered ? "0 20px 40px -16px rgba(234,88,12,0.22)" : "0 8px 24px -16px rgba(120,90,40,0.14)",
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative bg-gradient-to-br from-primary/20 to-transparent">
+          <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 relative bg-gradient-to-br from-amber-50 to-secondary">
              {imageUrl && !imageError ? (
               imageUrl.startsWith("http") || imageUrl.startsWith("/") ? (
                 <img src={imageUrl} alt={name} className="w-full h-full object-cover" onError={() => setImageError(true)} />
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-3xl">
+                <div className="w-full h-full flex items-center justify-center bg-amber-50 text-3xl">
                   {imageUrl}
                 </div>
               )
              ) : (
-              <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
-                <Gamepad2 className="w-8 h-8 text-white/10" />
+              <div className="w-full h-full flex items-center justify-center bg-amber-50">
+                <Gamepad2 className="w-8 h-8 text-amber-300" />
               </div>
              )}
           </div>
           <div className="ml-4 flex-1">
-            <p className="font-bold text-[15px] text-white tracking-wide truncate group-hover:text-primary transition-colors">{name}</p>
-            <p className="text-[11px] text-white/40 mt-0.5 uppercase tracking-wider font-medium">
+            <p className="font-bold text-[15px] text-foreground tracking-wide truncate group-hover:text-primary transition-colors">{name}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5 uppercase tracking-wider font-medium">
               <span className="inline-flex items-center gap-1" style={{ color: categoryColor }}>
                 <typeConfig.icon className="w-3 h-3" /> {getTypeLabel(productType)}
               </span>
             </p>
           </div>
           <div className="text-right">
-            <span className="block text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">
+            <span className="block text-[15px] font-extrabold text-primary tabular-nums">
               {hasPrice ? `Rp ${Number(product.price).toLocaleString("id-ID")}` : "Lihat Harga"}
             </span>
           </div>
@@ -145,20 +143,19 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
   return (
     <Link to={`/products/${String(product.id)}`} aria-label={`Top up ${name}`}>
       <div 
-        className="group relative h-full flex flex-col rounded-[24px] overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-3"
+        className="group relative h-full flex flex-col rounded-[24px] overflow-hidden cursor-pointer transition-all duration-500 hover:-translate-y-3 bg-card"
         style={{
-          background: "rgba(255,255,255,0.015)",
-          border: "1px solid rgba(255,255,255,0.05)",
-          boxShadow: isHovered ? '0 30px 60px -15px rgba(139,92,246,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' : 'inset 0 1px 0 rgba(255,255,255,0.02)'
+          border: "1px solid hsl(var(--border))",
+          boxShadow: isHovered ? "0 30px 60px -20px rgba(234,88,12,0.28)" : "0 12px 28px -18px rgba(120,90,40,0.18)",
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Glow backdrop behind image */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-200/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
         
         {/* Image Wrapper */}
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className="relative aspect-[4/3] overflow-hidden bg-amber-50/60">
           {imageUrl && !imageError ? (
             imageUrl.startsWith("http") || imageUrl.startsWith("/") ? (
               <img 
@@ -169,23 +166,22 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
                 onError={() => setImageError(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-white/[0.02] text-3xl sm:text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
+              <div className="w-full h-full flex items-center justify-center bg-amber-50 text-3xl sm:text-6xl group-hover:scale-[1.15] group-hover:rotate-1 transition-transform duration-700">
                 {imageUrl}
               </div>
             )
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-white/[0.02]">
-              <Gamepad2 className="w-12 h-12 text-white/10 group-hover:text-primary/40 transition-colors duration-500" />
+            <div className="w-full h-full flex items-center justify-center bg-amber-50">
+              <Gamepad2 className="w-12 h-12 text-amber-300 group-hover:text-primary/40 transition-colors duration-500" />
             </div>
           )}
           
           {/* Internal shadow gradient for seamless blend */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0A10] via-[#0B0A10]/40 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/30 to-transparent opacity-90 group-hover:opacity-80 transition-opacity duration-300" />
           
           {/* Quick purchase indicator */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 scale-90 group-hover:scale-100">
-            <span className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black shadow-[0_0_20px_rgba(139,92,246,0.4)] backdrop-blur-md"
-              style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
+            <span className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white shadow-[0_8px_20px_rgba(249,115,22,0.45)] backdrop-blur-md bg-gradient-to-r from-amber-400 to-orange-600">
               <Zap className="w-3.5 h-3.5" /> Top Up
             </span>
           </div>
@@ -193,8 +189,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
           {/* Badges */}
           {product.popular && (
             <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-black shadow-lg"
-                style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-white shadow-lg bg-gradient-to-r from-amber-400 to-orange-600">
                 <Flame className="w-3 h-3" /> HOT
               </span>
             </div>
@@ -202,30 +197,30 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
         </div>
         
         {/* Info Area */}
-        <div className="relative p-5 pt-1 flex-1 bg-card/40 backdrop-blur-xl border-t border-white/5 flex flex-col justify-between">
+        <div className="relative p-5 pt-1 flex-1 bg-card border-t border-border/70 flex flex-col justify-between">
           <div className="mb-3">
-            <p className="font-bold text-[15px] text-white tracking-wide line-clamp-2 group-hover:text-primary transition-colors duration-300">
+            <p className="font-bold text-[15px] text-foreground tracking-wide line-clamp-2 group-hover:text-primary transition-colors duration-300">
               {name}
             </p>
-            <p className="text-[11px] text-white/40 mt-1 uppercase tracking-wider font-medium">
+            <p className="text-[11px] text-muted-foreground mt-1 uppercase tracking-wider font-medium">
               <span className="inline-flex items-center gap-1" style={{ color: categoryColor }}>
                 <typeConfig.icon className="w-3 h-3" /> {getTypeLabel(productType)}
               </span>
             </p>
           </div>
-          <div className="flex items-end justify-between mt-auto pt-2 border-t border-white/5">
-            <span className="text-[14px] sm:text-[15px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500">
+          <div className="flex items-end justify-between mt-auto pt-2 border-t border-border/70">
+            <span className="text-[14px] sm:text-[15px] font-extrabold text-primary tabular-nums">
               {hasPrice ? `Rp ${Number(product.price).toLocaleString("id-ID")}` : "Lihat Harga"}
             </span>
-            <span className="hidden sm:flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#00c864]/10 text-[#00c864] border border-[#00c864]/20 uppercase tracking-widest">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse" />
+            <span className="hidden sm:flex items-center gap-1 text-[9px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Instan
             </span>
           </div>
         </div>
         
         {/* Hover Border Glow */}
-        <div className="absolute inset-0 rounded-[24px] pointer-events-none border border-transparent group-hover:border-primary/30 transition-colors duration-500" />
+        <div className="absolute inset-0 rounded-[24px] pointer-events-none border border-transparent group-hover:border-primary/40 transition-colors duration-500" />
       </div>
     </Link>
   );
@@ -236,7 +231,7 @@ function ProductCard({ product, view }: { product: any; view?: "grid" | "list" }
 ───────────────────────────────────────────── */
 function ViewToggle({ view, onChange }: { view: "grid" | "list"; onChange: (v: "grid" | "list") => void }) {
   return (
-    <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary/30 border border-border">
+    <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary/60 border border-border">
       <button
         onClick={() => onChange("grid")}
         className={`p-1.5 rounded-md transition-all ${
@@ -438,54 +433,50 @@ export default function Products() {
   const totalPages = meta?.pages || Math.ceil(totalProducts / ITEMS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-[#080b14] text-white overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
       <SeoHead
         title="Katalog Game & Voucher Top Up Murah"
         description="Senarai penuh topup game & voucher murah di Kryz-Net. Beli Diamonds Mobile Legends, Free Fire, Honor of Kings, Magic Chess & voucher secara automatik 24/7."
       />
       
-      {/* Hero Header Section */}
-      <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0%,transparent_70%)] animate-pulse-glow" />
-      <div className="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full pointer-events-none bg-[radial-gradient(circle,rgba(139,92,246,0.08)_0%,transparent_70%)]" />
-
       {/* Header Section */}
       <div className="relative pt-20 sm:pt-32 pb-8 sm:pb-12 px-4 sm:px-6">
-        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none border-b border-white/5" />
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-50/80 to-transparent pointer-events-none border-b border-border/70" />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase bg-white/5 border border-white/10 text-white/60">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase bg-card border border-border text-muted-foreground">
                 <LayoutGrid className="w-3 h-3 text-primary" />
                 Katalog Produk
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white" style={{ fontFamily: "'Syne', sans-serif" }}>
-                Jelajahi <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-yellow-400">Semua Game</span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground">
+                Jelajahi <span className="text-gradient">Semua Game</span>
               </h1>
-              <p className="text-sm text-white/50 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse" />
+              <p className="text-sm text-muted-foreground flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 {totalProducts.toLocaleString()} layanan aktif & sinkronisasi real-time
               </p>
             </div>
             
-            {/* Search Box - Premium Style */}
+            {/* Search Box */}
             <div className="w-full md:w-96 relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-amber-300 to-orange-500 rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-500" />
               <form onSubmit={handleSearch} className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 text-white/40" />
+                  <Search className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <input
                   type="text"
                   placeholder="Cari game favoritmu..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full bg-[#0B0A10]/80 border border-white/10 rounded-xl pl-11 pr-10 py-3 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all backdrop-blur-xl"
+                  className="w-full bg-card border border-border rounded-xl pl-11 pr-10 py-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all shadow-[0_8px_24px_-16px_rgba(120,90,40,0.2)]"
                 />
                 {search && (
                   <button
                     type="button"
                     onClick={clearSearch}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/40 hover:text-white"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -498,7 +489,7 @@ export default function Products() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 relative z-10">
         {/* Controls Toolbar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 p-3 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 p-3 rounded-2xl bg-card border border-border shadow-[0_12px_28px_-20px_rgba(120,90,40,0.2)]">
           {/* Categories */}
           <div className="flex gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-hide">
             {categories.map((cat) => {
@@ -507,39 +498,39 @@ export default function Products() {
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryChange(cat.id)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                     isActive
-                      ? "bg-primary text-black shadow-[0_0_15px_rgba(139,92,246,0.3)]"
-                      : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white"
+                      ? "bg-primary text-primary-foreground shadow-[0_4px_12px_rgba(249,115,22,0.35)]"
+                      : "bg-secondary/60 text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 >
-                  <cat.icon className="w-3.5 h-3.5" style={{ color: isActive ? '#000' : cat.color }} />
+                  <cat.icon className="w-3.5 h-3.5" style={{ color: isActive ? undefined : cat.color }} />
                   {cat.label}
                   {isActive && products.length > 0 && (
-                    <span className="ml-1 bg-black/20 px-1.5 py-0.5 rounded-md text-[9px]">{products.length}</span>
+                    <span className="ml-1 bg-black/15 px-1.5 py-0.5 rounded-md text-[9px]">{products.length}</span>
                   )}
                 </button>
               );
             })}
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto border-t border-white/10 sm:border-0 pt-3 sm:pt-0">
+          <div className="flex items-center gap-3 w-full sm:w-auto border-t border-border sm:border-0 pt-3 sm:pt-0">
             <ViewToggle view={view} onChange={setView} />
             <Button
               variant="outline"
               size="icon"
               onClick={() => setShowFilters(!showFilters)}
-              className="h-9 w-9 border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20"
+              className="h-9 w-9 border-border bg-card hover:bg-secondary"
             >
-              <SlidersHorizontal className="h-4 w-4 text-white/70" />
+              <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
             </Button>
           </div>
         </div>
 
         {/* Advanced Filters */}
         {showFilters && (
-          <div className="mb-8 p-5 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-md animate-in slide-in-from-top-4 duration-300">
-            <h3 className="text-xs font-bold uppercase tracking-widest text-white/50 mb-4 flex items-center gap-2">
+          <div className="mb-8 p-5 rounded-2xl bg-card border border-border shadow-[0_12px_28px_-20px_rgba(120,90,40,0.2)] animate-in slide-in-from-top-4 duration-300">
+            <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
               <Filter className="h-3 w-3" /> Urutkan Berdasarkan
             </h3>
             <div className="flex flex-wrap gap-2">
@@ -547,10 +538,10 @@ export default function Products() {
                 <button
                   key={option.id}
                   onClick={() => handleSortChange(option.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                     sortBy === option.id
-                      ? "bg-white/10 border border-white/20 text-white"
-                      : "bg-transparent border border-white/5 text-white/50 hover:bg-white/5 hover:text-white/80"
+                      ? "bg-primary/10 border border-primary/30 text-primary"
+                      : "bg-transparent border border-border text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 >
                   <option.icon className={`h-3.5 w-3.5 ${sortBy === option.id ? 'text-primary' : ''}`} />
@@ -560,8 +551,6 @@ export default function Products() {
             </div>
           </div>
         )}
-
-
 
         {/* Products Grid/List */}
         {isLoading ? (
@@ -576,10 +565,10 @@ export default function Products() {
           </div>
         ) : products.length === 0 ? (
           <div className="text-center py-20">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary/30 mb-6">
-              <Gamepad2 className="h-10 w-10 text-muted-foreground/30" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-secondary/60 mb-6">
+              <Gamepad2 className="h-10 w-10 text-muted-foreground/40" />
             </div>
-            <h2 className="text-xl font-semibold mb-2">Tidak ada produk ditemukan</h2>
+            <h2 className="text-xl font-extrabold mb-2">Tidak ada produk ditemukan</h2>
             <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
               {search || activeCategory !== "all"
                 ? "Coba ubah kata kunci atau pilih kategori yang berbeda"
@@ -606,7 +595,7 @@ export default function Products() {
             {grouped && !activeSmmPlatform && grouped.smmPlatforms.length > 0 && (
               <>
                 <div className="mb-4">
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
                     <Share2 className="w-4 h-4" /> Sosial Media
                   </h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -614,22 +603,22 @@ export default function Products() {
                       <button
                         key={platform.platform}
                         onClick={() => setActiveSmmPlatform(platform.platform)}
-                        className="relative p-5 rounded-2xl border-2 border-white/5 bg-white/[0.02] hover:border-[#A78BFA]/40 hover:bg-[#A78BFA]/5 transition-all duration-300 text-left group"
+                        className="relative p-5 rounded-2xl border-2 border-border bg-card hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 text-left group shadow-[0_12px_28px_-20px_rgba(120,90,40,0.2)]"
                       >
                         <div className="flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-xl bg-[#A78BFA]/10 flex items-center justify-center">
-                            <Share2 className="w-5 h-5 text-[#A78BFA]" />
+                          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                            <Share2 className="w-5 h-5 text-primary" />
                           </div>
                           <div className="min-w-0">
-                            <p className="font-bold text-sm text-white truncate">{platform.platform}</p>
-                            <p className="text-[10px] text-white/40">{platform.products.length} layanan</p>
+                            <p className="font-bold text-sm text-foreground truncate">{platform.platform}</p>
+                            <p className="text-[10px] text-muted-foreground">{platform.products.length} layanan</p>
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-[#A78BFA]">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-primary">
                             {platform.totalServices} item
                           </span>
-                          <span className="text-[10px] text-white/30 group-hover:text-white/60 transition-colors">
+                          <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">
                             Lihat →
                           </span>
                         </div>
@@ -640,9 +629,9 @@ export default function Products() {
                 {/* Divider */}
                 {displayProducts.length > 0 && (
                   <div className="flex items-center gap-4 my-6">
-                    <div className="flex-1 border-t border-white/5" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-white/30">Game & Lainnya</span>
-                    <div className="flex-1 border-t border-white/5" />
+                    <div className="flex-1 border-t border-border" />
+                    <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Game & Lainnya</span>
+                    <div className="flex-1 border-t border-border" />
                   </div>
                 )}
               </>
@@ -653,14 +642,14 @@ export default function Products() {
               <div className="mb-4">
                 <button
                   onClick={() => setActiveSmmPlatform(null)}
-                  className="flex items-center gap-2 text-sm font-bold text-white/60 hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   Kembali ke Semua
                 </button>
-                <h3 className="text-lg font-bold text-white mt-2 flex items-center gap-2">
-                  <Share2 className="w-5 h-5 text-[#A78BFA]" /> {activeSmmPlatform}
-                  <span className="text-xs font-normal text-white/40">({displayProducts.length} layanan)</span>
+                <h3 className="text-lg font-extrabold text-foreground mt-2 flex items-center gap-2">
+                  <Share2 className="w-5 h-5 text-primary" /> {activeSmmPlatform}
+                  <span className="text-xs font-normal text-muted-foreground">({displayProducts.length} layanan)</span>
                 </h3>
               </div>
             )}
@@ -671,7 +660,7 @@ export default function Products() {
                 : "grid-cols-1 max-w-3xl mx-auto"
             }`}>
               {displayProducts.map((product: any) => (
-                <ProductCard key={String(product.id)} product={product} />
+                <ProductCard key={String(product.id)} product={product} view={view} />
               ))}
             </div>
 
@@ -693,26 +682,26 @@ export default function Products() {
         )}
 
         {/* Bottom Promo Banner */}
-        <div className="mt-20 p-8 sm:p-12 rounded-[32px] overflow-hidden relative"
-          style={{ background: "linear-gradient(135deg, rgba(255,107,0,0.1) 0%, rgba(255,184,0,0.05) 100%)", border: "1px solid rgba(255,107,0,0.2)" }}>
+        <div className="mt-20 p-8 sm:p-12 rounded-[32px] overflow-hidden relative bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100"
+          style={{ border: "1px solid hsl(var(--border))" }}>
           {/* Grid pattern */}
-          <div className="absolute inset-0 pointer-events-none opacity-20"
-            style={{ backgroundImage: "linear-gradient(rgba(255,107,0,0.2) 1px,transparent 1px),linear-gradient(90deg,rgba(255,107,0,0.2) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
+          <div className="absolute inset-0 pointer-events-none opacity-30"
+            style={{ backgroundImage: "linear-gradient(rgba(234,88,12,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(234,88,12,0.12) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
           
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white mb-2" style={{ fontFamily: "'Syne', sans-serif" }}>
-                Tidak menemukan <span className="text-primary">game anda?</span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground mb-2">
+                Tidak menemukan <span className="text-gradient">game anda?</span>
               </h3>
-              <p className="text-white/50 text-sm">Hubungi Customer Service kami. Kami akan bantu anda mencari layanan top up yang diinginkan.</p>
+              <p className="text-muted-foreground text-sm">Hubungi Customer Service kami. Kami akan bantu anda mencari layanan top up yang diinginkan.</p>
             </div>
             <a 
               href="https://wa.me/60137345871"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-white text-black font-bold text-sm shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform"
+              className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-600 text-white font-bold text-sm shadow-[0_12px_28px_-8px_rgba(249,115,22,0.5)] hover:scale-105 hover:shadow-[0_16px_36px_-8px_rgba(249,115,22,0.6)] transition-all"
             >
-              <Zap className="w-5 h-5 text-[#00c864]" /> Chat WhatsApp CS
+              <Zap className="w-5 h-5" /> Chat WhatsApp CS
             </a>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { trpc } from "@/providers/trpc";
 import { Switch } from "@/components/ui/switch";
 import AdminLayout from "./AdminLayout";
@@ -15,14 +15,14 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-function SectionCard({ title, icon, iconColor = "#8B5CF6", children }: { title: string; icon: React.ReactNode; iconColor?: string; children: React.ReactNode }) {
+function SectionCard({ title, icon, iconColor = "#EA580C", children }: { title: string; icon: React.ReactNode; iconColor?: string; children: React.ReactNode }) {
   return (
     <div className="lg-card rounded-2xl p-6 space-y-4">
-      <div className="flex items-center gap-2 pb-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+      <div className="flex items-center gap-2 pb-4 border-b" style={{ borderColor: "rgba(120,90,40,0.15)" }}>
         <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: `${iconColor}15`, border: `1px solid ${iconColor}25` }}>
           <div style={{ color: iconColor }} className="h-4 w-4">{icon}</div>
         </div>
-        <h2 className="text-sm font-black uppercase tracking-widest text-white">{title}</h2>
+        <h2 className="text-sm font-black uppercase tracking-widest text-foreground">{title}</h2>
       </div>
       {children}
     </div>
@@ -79,10 +79,10 @@ export default function AdminSettings() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-black text-white flex items-center gap-2">
-              <Settings className="h-6 w-6 text-[#8B5CF6]" /> Pengaturan Platform
+            <h1 className="text-2xl font-black text-foreground flex items-center gap-2">
+              <Settings className="h-6 w-6 text-primary" /> Pengaturan Platform
             </h1>
-            <p className="text-sm text-white/40 mt-1">Konfigurasi markup, API keys, dan akses admin</p>
+            <p className="text-sm text-muted-foreground mt-1">Konfigurasi markup, API keys, dan akses admin</p>
           </div>
           <button
             className="lg-btn-ghost flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold"
@@ -94,14 +94,14 @@ export default function AdminSettings() {
 
         {isLoading ? (
           <div className="py-24 text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#8B5CF6]" />
-            <p className="text-sm text-white/40 mt-3">Memuat konfigurasi sistem...</p>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+            <p className="text-sm text-muted-foreground mt-3">Memuat konfigurasi sistem...</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-6 pb-12">
             {/* Markup Config */}
             <SectionCard title="Markup Harga per Tier (%)" icon={<Percent />} iconColor="#34D399">
-              <p className="text-xs text-white/40">Markup ditambahkan otomatis pada harga modal provider.</p>
+              <p className="text-xs text-muted-foreground">Markup ditambahkan otomatis pada harga modal provider.</p>
               <div className="grid grid-cols-2 gap-4">
                 <LgInput label="Customer / Guest" type="number" value={markups.customer} onChange={(e) => setMarkups({ ...markups, customer: Number(e.target.value) })} disabled={isSaving} />
                 <LgInput label="Gold Partner" type="number" value={markups.gold} onChange={(e) => setMarkups({ ...markups, gold: Number(e.target.value) })} disabled={isSaving} />
@@ -111,11 +111,11 @@ export default function AdminSettings() {
             </SectionCard>
 
             {/* Auto Upgrade Config */}
-            <SectionCard title="Rules Upgrade Tier & Spends (MYR)" icon={<TrendingUp />} iconColor="#8B5CF6">
-              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <SectionCard title="Rules Upgrade Tier & Spends (MYR)" icon={<TrendingUp />} iconColor="#F59E0B">
+              <div className="flex items-center justify-between p-3 rounded-xl" style={{ background: "rgba(120,90,40,0.04)", border: "1px solid rgba(120,90,40,0.12)" }}>
                 <div>
-                  <p className="text-xs font-black text-white">Auto Upgrade System</p>
-                  <p className="text-[10px] text-white/40 mt-0.5">Upgrade otomatis jika belanja melebihi minimum</p>
+                  <p className="text-xs font-black text-foreground">Auto Upgrade System</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">Upgrade otomatis jika belanja melebihi minimum</p>
                 </div>
                 <Switch checked={autoUpgrade} onCheckedChange={setAutoUpgrade} disabled={isSaving} />
               </div>
@@ -127,8 +127,8 @@ export default function AdminSettings() {
             </SectionCard>
 
             {/* Provider Credentials */}
-            <SectionCard title="Kredensial Provider (Mytopupku)" icon={<Key />} iconColor="#D946EF">
-              <p className="text-xs text-white/40">Untuk sinkronisasi produk & pemesanan real-time.</p>
+            <SectionCard title="Kredensial Provider (Mytopupku)" icon={<Key />} iconColor="#EA580C">
+              <p className="text-xs text-muted-foreground">Untuk sinkronisasi produk & pemesanan real-time.</p>
               <div className="space-y-3">
                 <LgInput label="Provider API Key" type="password" value={providerApiKey} onChange={(e) => setProviderApiKey(e.target.value)} placeholder="Masukkan API Key" disabled={isSaving} />
                 <LgInput label="Provider Secret / Signature Key" type="password" value={providerSecretKey} onChange={(e) => setProviderSecretKey(e.target.value)} placeholder="Masukkan Secret Key" disabled={isSaving} />
@@ -137,7 +137,7 @@ export default function AdminSettings() {
 
             {/* Admin Emails */}
             <SectionCard title="Akses Administrator" icon={<Mail />} iconColor="#38BDF8">
-              <p className="text-xs text-white/40">Daftar email Administrator. Pisahkan dengan koma (,).</p>
+              <p className="text-xs text-muted-foreground">Daftar email Administrator. Pisahkan dengan koma (,).</p>
               <div className="space-y-1.5">
                 <label className="lg-label">Email Administrator</label>
                 <textarea
@@ -147,8 +147,8 @@ export default function AdminSettings() {
                 />
               </div>
               <div className="flex items-start gap-2.5 p-3 rounded-xl" style={{ background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)" }}>
-                <ShieldAlert className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
-                <p className="text-[11px] text-red-400"><span className="font-black">Peringatan:</span> Kesalahan email dapat mengunci akses Admin Panel Anda.</p>
+                <ShieldAlert className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                <p className="text-[11px] text-red-600"><span className="font-black">Peringatan:</span> Kesalahan email dapat mengunci akses Admin Panel Anda.</p>
               </div>
             </SectionCard>
 

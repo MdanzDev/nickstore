@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, memo, useEffect, useRef } from "react";
+﻿import { useState, useMemo, useCallback, memo, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router";
 import SeoHead from "@/components/SeoHead";
 import { trpc } from "@/providers/trpc";
@@ -68,7 +68,7 @@ import {
 import { toast } from "sonner";
 
 
-// ─── Types ──────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface Denomination {
   id: string;
@@ -116,7 +116,7 @@ interface Product {
   requiresZoneId?: boolean;
 }
 
-// ─── Utilities ──────────────────────────────────────────────────────
+// â”€â”€â”€ Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const getImageUrl = (url: string): string => {
   if (!url) return "";
@@ -130,7 +130,7 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString("id-ID");
 };
 
-// ─── Components ─────────────────────────────────────────────────────
+// â”€â”€â”€ Components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const ProductSkeleton = memo(() => (
   <div className="container mx-auto px-4 py-8 space-y-8 animate-in fade-in-50">
@@ -211,7 +211,7 @@ const ErrorState = memo(({ onRetry }: { onRetry: () => void }) => (
 
 ErrorState.displayName = "ErrorState";
 
-// ─── Custom Hook ────────────────────────────────────────────────────
+// â”€â”€â”€ Custom Hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function useProductDetail(id: string | undefined) {
   const productQuery = trpc.products.getById.useQuery(
@@ -247,7 +247,7 @@ function useProductDetail(id: string | undefined) {
   };
 }
 
-// ─── Main Component ─────────────────────────────────────────────────
+// â”€â”€â”€ Main Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -468,7 +468,7 @@ export default function ProductDetail() {
           return v ? `${getSchemaFieldLabel(f)}: ${String(v)}` : "";
         })
         .filter(Boolean)
-        .join(" · ");
+        .join(" Â· ");
     }
     if (productType === "smm") return formData.target ? String(formData.target) : "";
     if (productType === "pulsa") return formData.phone ? String(formData.phone) : "";
@@ -479,7 +479,7 @@ export default function ProductDetail() {
       if (formData.heroRequest) parts.push(`Hero: ${formData.heroRequest}`);
       if (formData.currentRank) parts.push(`Rank: ${formData.currentRank}`);
       if (getFieldValue("quantity")) parts.push(`Qty: ${getFieldValue("quantity")}`);
-      return parts.join(" · ");
+      return parts.join(" Â· ");
     }
     if (productType === "vilog" || productType === "voucher") return formData.email ? String(formData.email) : "";
     return formData.userId ? String(formData.userId) + (formData.zoneId ? ` (${formData.zoneId})` : "") : "";
@@ -812,7 +812,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-16 text-center animate-in fade-in-50">
-        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/10 mb-6">
+        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/80 mb-6">
           <Gamepad2 className="h-12 w-12 text-muted-foreground/30" aria-hidden="true" />
         </div>
         <h2 className="text-xl font-semibold mb-2">Produk tidak ditemukan</h2>
@@ -828,7 +828,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0A10] overflow-hidden">
+    <div className="min-h-screen bg-card overflow-hidden">
       <SeoHead
         title={`Topup ${product.name} Murah & Instant`}
         description={`Beli item & topup ${product.name} automatik 24/7 dengan harga termurah di NickStore. Proses pantas, telus & selamat.`}
@@ -837,21 +837,21 @@ export default function ProductDetail() {
       <div className="container mx-auto px-4 py-8 max-w-[1400px]">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6 ml-2">
-          <ol className="flex items-center gap-2 text-sm text-white/50 font-medium">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground/90 font-medium">
             <li>
               <button onClick={() => navigate("/")} className="hover:text-primary transition-colors flex items-center gap-1.5">
                 <Gamepad2 className="w-4 h-4" />
                 Beranda
               </button>
             </li>
-            <li aria-hidden="true" className="text-white/20">/</li>
+            <li aria-hidden="true" className="text-muted-foreground/40">/</li>
             <li>
               <button onClick={() => navigate("/products")} className="hover:text-primary transition-colors">
                 Produk
               </button>
             </li>
-            <li aria-hidden="true" className="text-white/20">/</li>
-            <li className="text-white truncate max-w-[200px]" aria-current="page">
+            <li aria-hidden="true" className="text-muted-foreground/40">/</li>
+            <li className="text-foreground truncate max-w-[200px]" aria-current="page">
               {product.name}
             </li>
           </ol>
@@ -861,14 +861,14 @@ export default function ProductDetail() {
         <header className="mb-8 relative rounded-[32px] overflow-hidden p-8 sm:p-10" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)" }}>
           {/* Ambient Glow */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none opacity-30"
-            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%)", transform: "translate(30%, -30%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 60%)", transform: "translate(30%, -30%)" }} />
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-20"
-            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 60%)", transform: "translate(-30%, 30%)" }} />
+            style={{ background: "radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 60%)", transform: "translate(-30%, 30%)" }} />
 
           <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
             {/* Image Container */}
-            <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-[28px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.4)] ring-1 ring-white/10 group">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-violet-400/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-[28px] overflow-hidden shadow-[0_24px_48px_-24px_rgba(190,130,20,0.35)] ring-1 ring-border group">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-300/40 to-orange-400/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {product.images?.[0] ? (
                 getImageUrl(String(product.images[0])).startsWith("http") || getImageUrl(String(product.images[0])).startsWith("/") ? (
                   <img
@@ -879,24 +879,24 @@ export default function ProductDetail() {
                     decoding="async"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://placehold.co/200x200/1a1a1a/8B5CF6?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
+                      target.src = `https://placehold.co/200x200/F6EFDF/EA580C?text=${encodeURIComponent(String(product.name).slice(0, 10))}`;
                     }}
                   />
                 ) : (
-                  <div className="w-full h-full bg-white/5 flex items-center justify-center text-4xl sm:text-7xl group-hover:scale-110 transition-transform duration-700">
+                  <div className="w-full h-full bg-secondary/60 flex items-center justify-center text-4xl sm:text-7xl group-hover:scale-110 transition-transform duration-700">
                     {getImageUrl(String(product.images[0]))}
                   </div>
                 )
               ) : (
-                <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                  <Gamepad2 className="h-16 w-16 text-white/20" aria-hidden="true" />
+                <div className="w-full h-full bg-secondary/60 flex items-center justify-center">
+                  <Gamepad2 className="h-16 w-16 text-muted-foreground/40" aria-hidden="true" />
                 </div>
               )}
               {/* Popular indicator */}
               {(product as any).popular && (
                 <div className="absolute top-3 left-3 z-20">
-                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-black shadow-lg"
-                    style={{ background: "linear-gradient(135deg, #8B5CF6, #D946EF)" }}>
+                  <span className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black text-white shadow-lg"
+                    style={{ background: "linear-gradient(135deg, #F59E0B, #EA580C)" }}>
                     <Flame className="w-3 h-3" /> HOT
                   </span>
                 </div>
@@ -908,24 +908,24 @@ export default function ProductDetail() {
               <p className="text-xs font-bold text-primary tracking-widest uppercase mb-3 flex items-center gap-2">
                 <Tag className="w-3.5 h-3.5" /> {String(product.category || "Game Top Up")}
               </p>
-              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-white mb-6 leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-foreground mb-6 leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>
                 {String(product.name)}
               </h1>
               
               <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#00c864]/10 border border-[#00c864]/20 text-[#00c864] text-xs font-bold tracking-wide">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#00c864] animate-pulse" />
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold tracking-wide">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   {effectiveIsManual ? "PROSES MANUAL" : "PROSES INSTAN"}
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold tracking-wide">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 text-xs font-bold tracking-wide">
                   <Star className="w-3.5 h-3.5 fill-amber-500" />
                   4.99 RATING
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white/70 text-xs font-bold tracking-wide">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/60 border border-border/80 text-foreground/75 text-xs font-bold tracking-wide">
                   <Users className="w-3.5 h-3.5" />
                   {formatNumber((product as any).totalOrders || 61234)} TERJUAL
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-white/70 text-xs font-bold tracking-wide">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-secondary/60 border border-border/80 text-foreground/75 text-xs font-bold tracking-wide">
                   <ShoppingCart className="w-3.5 h-3.5" />
                   {filteredDenominations.length} PILIHAN
                 </div>
@@ -936,14 +936,14 @@ export default function ProductDetail() {
             <div className="hidden lg:grid grid-cols-1 gap-3 shrink-0">
               {[
                 { icon: Shield, label: "Aman", value: "100%", color: "#38BDF8" },
-                { icon: Clock, label: "Instan", value: "< 1 menit", color: "#D946EF" },
+                { icon: Clock, label: "Instan", value: "< 1 menit", color: "#EA580C" },
               ].map((stat, i) => (
                 <div key={i} className="flex items-center gap-4 px-6 py-4 rounded-2xl" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: `${stat.color}15` }}>
                     <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
                   </div>
                   <div>
-                    <p className="text-[11px] font-bold text-white/50 uppercase tracking-wider">{stat.label}</p>
+                    <p className="text-[11px] font-bold text-muted-foreground/90 uppercase tracking-wider">{stat.label}</p>
                     <p className="text-[15px] font-black mt-0.5" style={{ color: stat.color }}>{stat.value}</p>
                   </div>
                 </div>
@@ -957,16 +957,16 @@ export default function ProductDetail() {
           <div className="lg:col-span-2 space-y-6">
             {/* User Data Card */}
             <Card className="animate-in slide-in-from-left-4 fade-in duration-500 rounded-3xl overflow-hidden" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
-              <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
+              <CardHeader className="pb-4 border-b border-border/70 bg-secondary/40">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-foreground text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                       1
                     </div>
-                    <CardTitle className="text-lg font-bold text-white tracking-wide">Data Player</CardTitle>
+                    <CardTitle className="text-lg font-bold text-foreground tracking-wide">Data Player</CardTitle>
                   </div>
                   {formData.userId && (
-                    <Badge variant="outline" className="text-[10px] border-[#00c864]/30 text-[#00c864] bg-[#00c864]/10">
+                    <Badge variant="outline" className="text-[10px] border-emerald-300 text-emerald-700 bg-emerald-50">
                       <Check className="h-3 w-3 mr-1" />
                       Terisi
                     </Badge>
@@ -978,7 +978,7 @@ export default function ProductDetail() {
                 {/* Info Toggle */}
                 <button
                   onClick={() => setShowInfo(!showInfo)}
-                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 text-amber-500 text-sm transition-all hover:bg-amber-500/10"
+                  className="w-full flex items-center justify-between p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 text-sm transition-all hover:bg-amber-100"
                   aria-expanded={showInfo}
                 >
                   <div className="flex items-center gap-2">
@@ -989,13 +989,13 @@ export default function ProductDetail() {
                 </button>
 
                 {showInfo && (
-                  <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 text-sm text-white/50 space-y-2 animate-in slide-in-from-top-2">
+                  <div className="p-4 rounded-2xl bg-secondary/50 border border-border/70 text-sm text-muted-foreground/90 space-y-2 animate-in slide-in-from-top-2">
                     <div className="flex gap-2">
-                      <Info className="h-4 w-4 shrink-0 mt-0.5 text-amber-500" aria-hidden="true" />
+                      <Info className="h-4 w-4 shrink-0 mt-0.5 text-amber-600" aria-hidden="true" />
                       <div>
-                        <p className="font-semibold text-white/80">Sebelum melanjutkan:</p>
+                        <p className="font-semibold text-foreground/85">Sebelum melanjutkan:</p>
                         <ul className="mt-2 space-y-1.5 list-disc list-inside text-xs">
-                          <li>Pastikan <strong className="text-white/80">User ID</strong> dan <strong className="text-white/80">Zone/Server</strong> sudah benar</li>
+                          <li>Pastikan <strong className="text-foreground/85">User ID</strong> dan <strong className="text-foreground/85">Zone/Server</strong> sudah benar</li>
                           <li>Kesalahan input data bukan tanggung jawab kami</li>
                           <li>Pastikan akun game tidak sedang dalam maintenance</li>
                           <li>Proses top up akan otomatis setelah pembayaran</li>
@@ -1012,22 +1012,22 @@ export default function ProductDetail() {
                     <TypeIcon className="h-3 w-3 mr-1" />
                     {getTypeLabel(productType)}
                   </Badge>
-                  <span className="text-xs sm:text-sm text-white/60">{getTypeDescription(productType)}</span>
+                  <span className="text-xs sm:text-sm text-foreground/70">{getTypeDescription(productType)}</span>
                 </div>
               </div>
 
               {isRobloxLogin ? (
                 <div className="p-2 sm:p-4 flex flex-col gap-5">
-                  <div className="bg-amber-500/5 border border-amber-500/10 p-4 rounded-2xl flex items-start gap-3 mb-2">
-                    <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-                    <p className="text-sm text-amber-500/90 leading-relaxed">
+                  <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-start gap-3 mb-2">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <p className="text-sm text-amber-600/90 leading-relaxed">
                       Pastikan <strong>Username</strong>, <strong>Password</strong>, dan <strong>3 Backup Codes</strong> sudah benar. Kegagalan login dapat menyebabkan proses top up gagal.
                     </p>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="relative group">
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
+                      <label className="block text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mb-2 ml-1">
                         Roblox Username
                       </label>
                       <input
@@ -1035,13 +1035,13 @@ export default function ProductDetail() {
                         value={formData.userId}
                         onChange={(e) => handleInputChange("userId", e.target.value)}
                         placeholder="Contoh: myrobloxuser123"
-                        className={`w-full bg-[#0B0A10]/80 border ${errors.userId ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                        className={`w-full bg-secondary/60 border ${errors.userId ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
-                      {errors.userId && <p className="text-red-400 text-xs mt-2 ml-1">{errors.userId}</p>}
+                      {errors.userId && <p className="text-red-600 text-xs mt-2 ml-1">{errors.userId}</p>}
                     </div>
 
                     <div className="relative group">
-                      <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
+                      <label className="block text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mb-2 ml-1">
                         Roblox Password
                       </label>
                       <input
@@ -1049,9 +1049,9 @@ export default function ProductDetail() {
                         value={formData.robloxPassword}
                         onChange={(e) => handleInputChange("robloxPassword", e.target.value)}
                         placeholder="Masukkan password akun"
-                        className={`w-full bg-[#0B0A10]/80 border ${errors.robloxPassword ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                        className={`w-full bg-secondary/60 border ${errors.robloxPassword ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                       />
-                      {errors.robloxPassword && <p className="text-red-400 text-xs mt-2 ml-1">{errors.robloxPassword}</p>}
+                      {errors.robloxPassword && <p className="text-red-600 text-xs mt-2 ml-1">{errors.robloxPassword}</p>}
                     </div>
                   </div>
                   
@@ -1060,7 +1060,7 @@ export default function ProductDetail() {
                       const field = `recovery${num}` as "recovery1" | "recovery2" | "recovery3";
                       return (
                         <div key={num} className="relative group">
-                          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
+                          <label className="block text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mb-2 ml-1">
                             Backup Code {num}
                           </label>
                           <input
@@ -1068,9 +1068,9 @@ export default function ProductDetail() {
                             value={formData[field]}
                             onChange={(e) => handleInputChange(field, e.target.value)}
                             placeholder="Contoh: 1234abcd"
-                            className={`w-full bg-[#0B0A10]/80 border ${errors[field] ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-4 py-3.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                            className={`w-full bg-secondary/60 border ${errors[field] ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-4 py-3.5 text-sm text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                           />
-                          {errors[field] && <p className="text-red-400 text-xs mt-2 ml-1">{errors[field]}</p>}
+                          {errors[field] && <p className="text-red-600 text-xs mt-2 ml-1">{errors[field]}</p>}
                         </div>
                       )
                     })}
@@ -1104,7 +1104,7 @@ export default function ProductDetail() {
 
                       return (
                         <div key={field.key} className={`relative group ${field.type === "textarea" ? "md:col-span-2" : ""}`}>
-                          <label className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1">
+                          <label className="block text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mb-2 ml-1">
                             {label}
                             {field.required && <span className="text-primary ml-1">*</span>}
                           </label>
@@ -1116,16 +1116,16 @@ export default function ProductDetail() {
                                 value={value}
                                 onChange={(e) => setFieldValue(field.key, e.target.value)}
                                 placeholder={placeholder}
-                                className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
+                                className={`w-full bg-secondary/60 border ${error ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all pr-24 backdrop-blur-xl`}
                               />
                               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
                                 {String(value || "") && (
-                                  <button onClick={() => handleCopy(String(value || ""), field.key)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                                    {copiedField === field.key ? <Check className="h-4 w-4 text-[#00c864]" /> : <Copy className="h-4 w-4 text-white/40 hover:text-white/80" />}
+                                  <button onClick={() => handleCopy(String(value || ""), field.key)} className="p-1.5 hover:bg-secondary/80 rounded-lg transition-colors">
+                                    {copiedField === field.key ? <Check className="h-4 w-4 text-emerald-700" /> : <Copy className="h-4 w-4 text-muted-foreground hover:text-foreground/85" />}
                                   </button>
                                 )}
-                                <button onClick={() => setShowUserId(!showUserId)} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-                                  {showUserId ? <EyeOff className="h-4 w-4 text-white/40 hover:text-white/80" /> : <Eye className="h-4 w-4 text-white/40 hover:text-white/80" />}
+                                <button onClick={() => setShowUserId(!showUserId)} className="p-1.5 hover:bg-secondary/80 rounded-lg transition-colors">
+                                  {showUserId ? <EyeOff className="h-4 w-4 text-muted-foreground hover:text-foreground/85" /> : <Eye className="h-4 w-4 text-muted-foreground hover:text-foreground/85" />}
                                 </button>
                               </div>
                             </div>
@@ -1135,17 +1135,17 @@ export default function ProductDetail() {
                               onChange={(e) => setFieldValue(field.key, e.target.value)}
                               placeholder={placeholder}
                               rows={4}
-                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl resize-none`}
+                              className={`w-full bg-secondary/60 border ${error ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl resize-none`}
                             />
                           ) : isSelect ? (
                             <select
                               value={String(value || "")}
                               onChange={(e) => setFieldValue(field.key, e.target.value)}
-                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl appearance-none`}
+                              className={`w-full bg-secondary/60 border ${error ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl appearance-none`}
                             >
                               <option value="">Pilih...</option>
                               {(field.options || []).map((opt) => (
-                                <option key={opt} value={opt} className="bg-[#0B0A10] text-white">{opt}</option>
+                                <option key={opt} value={opt} className="bg-card text-foreground">{opt}</option>
                               ))}
                             </select>
                           ) : (
@@ -1156,12 +1156,12 @@ export default function ProductDetail() {
                               value={value}
                               onChange={(e) => setFieldValue(field.key, field.type === "number" ? e.target.value : e.target.value)}
                               placeholder={placeholder}
-                              className={`w-full bg-[#0B0A10]/80 border ${error ? 'border-red-500/50' : 'border-white/10 group-hover:border-white/20'} rounded-2xl px-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
+                              className={`w-full bg-secondary/60 border ${error ? 'border-red-500/50' : 'border-border group-hover:border-primary/40'} rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl`}
                             />
                           )}
-                          {error && <p className="text-red-400 text-xs mt-2 ml-1">{error}</p>}
+                          {error && <p className="text-red-600 text-xs mt-2 ml-1">{error}</p>}
                           {field.key === "quantity" && selectedItem && (
-                            <p className="text-[#00c864]/80 text-xs mt-2 ml-1 font-medium">
+                            <p className="text-emerald-700/80 text-xs mt-2 ml-1 font-medium">
                               Min: {(selectedItem as any).min_order || 1} | Max: {(selectedItem as any).max_order || "Tak Terbatas"}
                             </p>
                           )}
@@ -1179,17 +1179,17 @@ export default function ProductDetail() {
                           <span className="font-bold">Mengecek nickname...</span>
                         </div>
                       ) : nicknameError ? (
-                        <div className="flex items-center gap-3 text-sm text-red-400 bg-red-400/5 p-4 rounded-2xl border border-red-400/10">
+                        <div className="flex items-center gap-3 text-sm text-red-600 bg-red-50 p-4 rounded-2xl border border-red-200">
                           <AlertCircle className="h-5 w-5" />
                           <span className="font-semibold">{nicknameError}</span>
                         </div>
                       ) : validatedNickname ? (
-                        <div className="flex items-center gap-3 text-sm text-[#00c864] bg-[#00c864]/5 p-4 rounded-2xl border border-[#00c864]/10">
+                        <div className="flex items-center gap-3 text-sm text-emerald-700 bg-emerald-50 p-4 rounded-2xl border border-emerald-200">
                           <Check className="h-5 w-5" />
-                          <span className="font-semibold">Nickname: <strong className="text-white">{validatedNickname}</strong></span>
+                          <span className="font-semibold">Nickname: <strong className="text-foreground">{validatedNickname}</strong></span>
                         </div>
                       ) : (
-                        <div className="text-xs font-semibold text-white/30 tracking-wide uppercase">
+                        <div className="text-xs font-semibold text-muted-foreground/60 tracking-wide uppercase">
                           Masukkan User ID dan Zone ID untuk mengecek nickname
                         </div>
                       )}
@@ -1202,16 +1202,16 @@ export default function ProductDetail() {
 
             {/* Denominations Card */}
             <Card className="animate-in slide-in-from-left-4 fade-in duration-500 delay-100 rounded-3xl overflow-hidden" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
-              <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
+              <CardHeader className="pb-4 border-b border-border/70 bg-secondary/40">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-foreground text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                       2
                     </div>
-                    <CardTitle className="text-lg font-bold text-white tracking-wide">Pilih Nominal</CardTitle>
+                    <CardTitle className="text-lg font-bold text-foreground tracking-wide">Pilih Nominal</CardTitle>
                   </div>
                   {!isDenomLoading && (
-                    <Badge variant="secondary" className="text-xs bg-white/5 border border-white/10 hover:bg-white/10 font-bold tracking-wider">
+                    <Badge variant="secondary" className="text-xs bg-secondary/60 border border-border/80 hover:bg-secondary/80 font-bold tracking-wider">
                       {filteredDenominations.length} TERSEDIA
                     </Badge>
                   )}
@@ -1227,30 +1227,30 @@ export default function ProductDetail() {
                 {isDenomLoading ? (
                   <div className="flex flex-col items-center justify-center py-12" role="status">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" aria-hidden="true" />
-                    <p className="text-sm font-bold text-white/50 tracking-wider uppercase mt-4">Memuat nominal...</p>
+                    <p className="text-sm font-bold text-muted-foreground/90 tracking-wider uppercase mt-4">Memuat nominal...</p>
                     <span className="sr-only">Memuat daftar nominal...</span>
                   </div>
                 ) : filteredDenominations.length === 0 ? (
                   <div className="text-center py-12 text-muted-foreground">
                     <Gamepad2 className="h-12 w-12 mx-auto mb-3 opacity-20" aria-hidden="true" />
-                    <p className="text-sm font-bold text-white/50 tracking-wider uppercase">Belum ada nominal tersedia</p>
-                    <p className="text-xs mt-2 text-white/30">Silakan cek kembali nanti</p>
+                    <p className="text-sm font-bold text-muted-foreground/90 tracking-wider uppercase">Belum ada nominal tersedia</p>
+                    <p className="text-xs mt-2 text-muted-foreground/60">Silakan cek kembali nanti</p>
                   </div>
                 ) : (
                   <div className={needsValidation && !isValidated ? "pointer-events-none opacity-40 select-none transition-opacity duration-300" : "transition-opacity duration-300"}>
                     {/* Server Tabs */}
                     {servers.length > 1 && (
                       <div className="mb-6">
-                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mb-3 tracking-widest uppercase flex items-center gap-1.5">
-                          <Server className="h-3.5 w-3.5 text-purple-400" />
+                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 mb-3 tracking-widest uppercase flex items-center gap-1.5">
+                          <Server className="h-3.5 w-3.5 text-primary" />
                           Pilih Server
                         </p>
-                        <div className="flex gap-2 p-1 bg-white/5 rounded-xl border border-white/10 w-fit">
+                        <div className="flex gap-2 p-1 bg-secondary/60 rounded-xl border border-border/80 w-fit">
                           {servers.map((srv, idx) => (
                             <button
                               key={srv}
                               onClick={() => setSelectedServer(srv)}
-                              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${selectedServer === srv ? 'bg-primary text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+                              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${selectedServer === srv ? 'bg-primary text-primary-foreground shadow-lg' : 'text-foreground/70 hover:text-foreground hover:bg-secondary/80'}`}
                             >
                               {srv === 'mytopupku' ? 'Server 1' : srv === 'zxuantopup' ? 'Server 2' : `Server ${idx + 1}`}
                             </button>
@@ -1262,8 +1262,8 @@ export default function ProductDetail() {
                     {/* Popular denominations highlighted */}
                     {popularDenoms.length > 0 && (
                       <div className="mb-6">
-                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500 mb-3 tracking-widest uppercase flex items-center gap-1.5">
-                          <Flame className="h-3.5 w-3.5 text-violet-400" />
+                        <p className="text-[11px] font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 mb-3 tracking-widest uppercase flex items-center gap-1.5">
+                          <Flame className="h-3.5 w-3.5 text-primary" />
                           PALING DIMINATI
                         </p>
                         <div className="grid grid-cols-2 gap-3">
@@ -1306,12 +1306,12 @@ export default function ProductDetail() {
 
             {/* Payment Method Card */}
             <Card className="animate-in slide-in-from-left-4 fade-in duration-500 delay-150 rounded-3xl overflow-hidden" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
-              <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
+              <CardHeader className="pb-4 border-b border-border/70 bg-secondary/40">
                 <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-foreground text-sm font-black flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                     3
                   </div>
-                  <CardTitle className="text-lg font-bold text-white tracking-wide">Pilih Pembayaran</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground tracking-wide">Pilih Pembayaran</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4 pt-6">
@@ -1320,29 +1320,29 @@ export default function ProductDetail() {
                     onClick={() => isAuthenticated ? setPaymentMethod('balance') : navigate('/login')}
                     className={`relative p-5 rounded-2xl border-2 text-left transition-all duration-300 flex items-center gap-4 group ${
                       !isAuthenticated 
-                        ? "border-white/5 bg-white/[0.01] opacity-70 cursor-not-allowed" 
+                        ? "border-border/70 bg-secondary/40 opacity-70 cursor-not-allowed" 
                         : paymentMethod === 'balance'
-                          ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(139,92,246,0.2)] scale-[1.02]"
-                          : "border-white/5 bg-white/[0.02] shadow-xl hover:border-primary/30 hover:scale-[1.01]"
+                          ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(249,115,22,0.25)] scale-[1.02]"
+                          : "border-border/70 bg-secondary/50 shadow-xl hover:border-primary/30 hover:scale-[1.01]"
                     }`}
                   >
-                    <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${!isAuthenticated ? 'bg-white/5 group-hover:bg-white/10' : 'bg-primary/20 group-hover:bg-primary/30'}`}>
-                      <Wallet className={`h-6 w-6 ${!isAuthenticated ? 'text-white/40' : 'text-primary'}`} />
+                    <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 transition-colors ${!isAuthenticated ? 'bg-secondary/60 group-hover:bg-secondary/80' : 'bg-primary/20 group-hover:bg-primary/30'}`}>
+                      <Wallet className={`h-6 w-6 ${!isAuthenticated ? 'text-muted-foreground' : 'text-primary'}`} />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className={`font-bold text-[15px] ${paymentMethod === 'balance' ? 'text-primary' : 'text-white group-hover:text-primary transition-colors'}`}>Saldo NickStore</p>
+                        <p className={`font-bold text-[15px] ${paymentMethod === 'balance' ? 'text-primary' : 'text-foreground group-hover:text-primary transition-colors'}`}>Saldo NickStore</p>
                         {!isAuthenticated && (
-                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-white/10 font-bold border-white/10">
+                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0 bg-secondary/80 font-bold border-border/80">
                             LOGIN DULU
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs font-medium text-white/40 uppercase tracking-widest">Bayar instan</p>
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Bayar instan</p>
                     </div>
                     {paymentMethod === 'balance' && isAuthenticated && (
-                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
-                        <Check className="h-3.5 w-3.5 text-black font-bold" />
+                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(249,115,22,0.5)]">
+                        <Check className="h-3.5 w-3.5 text-white font-bold" />
                       </div>
                     )}
                   </button>
@@ -1351,43 +1351,43 @@ export default function ProductDetail() {
                     onClick={() => setPaymentMethod('qris')}
                     className={`relative p-5 rounded-2xl border-2 text-left transition-all duration-300 flex items-center gap-4 group ${
                       paymentMethod === 'qris'
-                        ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(139,92,246,0.2)] scale-[1.02]"
-                        : "border-white/5 bg-white/[0.02] shadow-xl hover:border-primary/30 hover:scale-[1.01]"
+                        ? "border-primary bg-primary/10 shadow-[0_15px_30px_-10px_rgba(249,115,22,0.25)] scale-[1.02]"
+                        : "border-border/70 bg-secondary/50 shadow-xl hover:border-primary/30 hover:scale-[1.01]"
                     }`}
                   >
-                    <div className="h-12 w-12 rounded-xl bg-[#00c864]/20 group-hover:bg-[#00c864]/30 transition-colors flex items-center justify-center shrink-0">
-                      <QrCode className="h-6 w-6 text-[#00c864]" />
+                    <div className="h-12 w-12 rounded-xl bg-emerald-100 group-hover:bg-emerald-200 transition-colors flex items-center justify-center shrink-0">
+                      <QrCode className="h-6 w-6 text-emerald-700" />
                     </div>
                     <div>
-                      <p className={`font-bold text-[15px] mb-1 ${paymentMethod === 'qris' ? 'text-primary' : 'text-white group-hover:text-primary transition-colors'}`}>QRIS All Payment</p>
-                      <p className="text-xs font-medium text-white/40 uppercase tracking-widest">OVO, DANA, GOPAY</p>
+                      <p className={`font-bold text-[15px] mb-1 ${paymentMethod === 'qris' ? 'text-primary' : 'text-foreground group-hover:text-primary transition-colors'}`}>QRIS All Payment</p>
+                      <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">OVO, DANA, GOPAY</p>
                     </div>
                     {paymentMethod === 'qris' && (
-                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.5)]">
-                        <Check className="h-3.5 w-3.5 text-black font-bold" />
+                      <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(249,115,22,0.5)]">
+                        <Check className="h-3.5 w-3.5 text-white font-bold" />
                       </div>
                     )}
                   </button>
                 </div>
 
                 {paymentMethod === 'qris' && !isAuthenticated && (
-                  <div className="mt-6 pt-6 border-t border-white/5 animate-in slide-in-from-top-2">
-                    <Label htmlFor="guestPhone" className="block text-xs font-bold text-white/50 uppercase tracking-widest mb-2 ml-1 flex items-center gap-1">
+                  <div className="mt-6 pt-6 border-t border-border/70 animate-in slide-in-from-top-2">
+                    <Label htmlFor="guestPhone" className="block text-xs font-bold text-muted-foreground/90 uppercase tracking-widest mb-2 ml-1 flex items-center gap-1">
                       Nomor WhatsApp
                       <span className="text-red-500">*</span>
                     </Label>
                     <div className="relative group">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60" />
                       <Input
                         id="guestPhone"
                         placeholder="Contoh: 081234567890"
                         value={guestPhone}
                         onChange={(e) => setGuestPhone(e.target.value)}
-                        className={`w-full bg-[#0B0A10]/80 border ${!guestPhone ? 'border-white/10 group-hover:border-white/20' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-12 sm:h-14`}
+                        className={`w-full bg-secondary/60 border ${!guestPhone ? 'border-border group-hover:border-primary/40' : 'border-primary/50'} rounded-2xl pl-11 pr-5 py-4 text-foreground placeholder-muted-foreground/60 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all backdrop-blur-xl h-12 sm:h-14`}
                         maxLength={15}
                       />
                     </div>
-                    <p className="text-[10px] font-semibold tracking-wider uppercase text-white/30 mt-2 ml-1">
+                    <p className="text-[10px] font-semibold tracking-wider uppercase text-muted-foreground/60 mt-2 ml-1">
                       * Struk pembelian akan dikirim ke nomor ini
                     </p>
                   </div>
@@ -1403,25 +1403,25 @@ export default function ProductDetail() {
             {/* Rating Card */}
             <Card className="p-6 animate-in slide-in-from-right-4 fade-in duration-500 rounded-3xl" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
               <div className="flex items-center justify-between mb-4">
-                <p className="text-xs font-bold text-white/50 uppercase tracking-widest">
+                <p className="text-xs font-bold text-muted-foreground/90 uppercase tracking-widest">
                   Rating & Ulasan
                 </p>
-                <Badge variant="outline" className="text-[10px] font-bold tracking-wider bg-white/5 border-white/10">
+                <Badge variant="outline" className="text-[10px] font-bold tracking-wider bg-secondary/60 border-border/80">
                   <ThumbsUp className="h-3 w-3 mr-1.5 text-primary" />
                   99% PUAS
                 </Badge>
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                <span className="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600" style={{ fontFamily: "'Syne', sans-serif" }}>
                   4.99
                 </span>
                 <div>
                   <div className="flex gap-0.5 mb-1" aria-label="Rating 5 dari 5 bintang">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-amber-500 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" aria-hidden="true" />
+                      <Star key={i} className="h-5 w-5 fill-amber-500 text-amber-600 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" aria-hidden="true" />
                     ))}
                   </div>
-                  <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                     DARI {formatNumber(61661)} ULASAN
                   </p>
                 </div>
@@ -1434,69 +1434,69 @@ export default function ProductDetail() {
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
               
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-primary to-violet-400 text-white text-sm font-black flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-foreground text-sm font-black flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
                   4
                 </div>
-                <CardTitle className="text-lg font-bold text-white tracking-wide">Ringkasan Pesanan</CardTitle>
+                <CardTitle className="text-lg font-bold text-foreground tracking-wide">Ringkasan Pesanan</CardTitle>
               </div>
               
               <div className="space-y-4 text-sm font-medium">
-                <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-widest shrink-0">Game</span>
-                  <span className="text-right ml-4 text-white font-bold">{String(product.name)}</span>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-secondary/50 border border-border/70">
+                  <span className="text-muted-foreground/90 text-xs font-bold uppercase tracking-widest shrink-0">Game</span>
+                  <span className="text-right ml-4 text-foreground font-bold">{String(product.name)}</span>
                 </div>
                 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-widest shrink-0">Item</span>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-secondary/50 border border-border/70">
+                  <span className="text-muted-foreground/90 text-xs font-bold uppercase tracking-widest shrink-0">Item</span>
                   <span className="text-right ml-4 font-bold">
                     {selectedItem ? (
                       <span className="text-primary">{selectedItem.name}</span>
                     ) : (
-                      <span className="text-white/30 italic">Belum dipilih</span>
+                      <span className="text-muted-foreground/60 italic">Belum dipilih</span>
                     )}
                   </span>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                  <span className="text-white/50 text-xs font-bold uppercase tracking-widest shrink-0">Target</span>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-secondary/50 border border-border/70">
+                  <span className="text-muted-foreground/90 text-xs font-bold uppercase tracking-widest shrink-0">Target</span>
                   <span className="text-right ml-4 font-bold">
                     {targetDisplay ? (
-                      <span className="text-white font-mono bg-white/5 px-2 py-1 rounded-md">
+                      <span className="text-foreground font-mono bg-secondary/60 px-2 py-1 rounded-md">
                         {targetDisplay}
                       </span>
                     ) : (
-                      <span className="text-white/30 italic">Belum diisi</span>
+                      <span className="text-muted-foreground/60 italic">Belum diisi</span>
                     )}
                   </span>
                 </div>
 
-                <div className="my-6 border-t border-white/5" />
+                <div className="my-6 border-t border-border/70" />
 
                 {/* Voucher Section */}
-                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                  <p className="text-[10px] text-white/50 mb-3 flex items-center gap-1.5 font-bold uppercase tracking-widest">
+                <div className="p-4 rounded-2xl bg-secondary/50 border border-border/70">
+                  <p className="text-[10px] text-muted-foreground/90 mb-3 flex items-center gap-1.5 font-bold uppercase tracking-widest">
                     <Tag className="h-3.5 w-3.5" aria-hidden="true" />
                     KODE VOUCHER
                   </p>
                   
                   {voucherResult ? (
-                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-[#00c864]/10 border border-[#00c864]/20 animate-in zoom-in-95">
+                    <div className="flex items-center justify-between p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 animate-in zoom-in-95">
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[15px] font-black text-[#00c864]">
+                          <span className="text-[15px] font-black text-emerald-700">
                             {voucherResult.code}
                           </span>
-                          <Badge className="text-[9px] bg-[#00c864] text-black font-bold tracking-wider border-0 px-1.5 py-0">
+                          <Badge className="text-[9px] bg-emerald-500 text-foreground font-bold tracking-wider border-0 px-1.5 py-0">
                             AKTIF
                           </Badge>
                         </div>
-                        <p className="text-xs font-bold text-[#00c864]/70 uppercase tracking-widest">
+                        <p className="text-xs font-bold text-emerald-700/70 uppercase tracking-widest">
                           Hemat {formattedDiscount}
                         </p>
                       </div>
                       <button
                         onClick={handleClearVoucher}
-                        className="text-white/40 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-500/10"
+                        className="text-muted-foreground hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50"
                         aria-label="Hapus voucher"
                       >
                         <X className="h-4 w-4" />
@@ -1510,14 +1510,14 @@ export default function ProductDetail() {
                           value={voucherCode}
                           onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
                           onKeyDown={(e) => e.key === "Enter" && handleApplyVoucher()}
-                          className="text-sm font-bold uppercase pr-8 bg-[#0B0A10]/80 border-white/10 rounded-xl h-11 focus:border-primary/50"
+                          className="text-sm font-bold uppercase pr-8 bg-secondary/60 border-border/80 rounded-xl h-11 focus:border-primary/50"
                           maxLength={20}
                           disabled={!selectedNominal}
                         />
                         {voucherCode && (
                           <button
                             onClick={() => setVoucherCode("")}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                           >
                             <X className="h-4 w-4" />
                           </button>
@@ -1527,7 +1527,7 @@ export default function ProductDetail() {
                         variant="outline"
                         onClick={handleApplyVoucher}
                         disabled={validateVoucherMutation.isPending || !voucherCode.trim() || !selectedNominal}
-                        className="shrink-0 h-11 px-5 rounded-xl border-white/10 hover:border-primary/50 font-bold bg-white/5 hover:bg-primary/10 hover:text-primary transition-all"
+                        className="shrink-0 h-11 px-5 rounded-xl border-border/80 hover:border-primary/50 font-bold bg-secondary/60 hover:bg-primary/10 hover:text-primary transition-all"
                       >
                         {validateVoucherMutation.isPending ? (
                           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -1539,25 +1539,25 @@ export default function ProductDetail() {
                   )}
                 </div>
 
-                <div className="my-6 border-t border-white/5" />
+                <div className="my-6 border-t border-border/70" />
 
                 {/* Pricing Details */}
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center text-white/70">
+                  <div className="flex justify-between items-center text-foreground/75">
                     <span className="text-xs font-bold uppercase tracking-widest">Subtotal</span>
                     <span className="font-bold">{selectedItem ? formattedSubtotal : "-"}</span>
                   </div>
                   
                   {discount > 0 && (
-                    <div className="flex justify-between items-center text-[#00c864] animate-in slide-in-from-right-2">
+                    <div className="flex justify-between items-center text-emerald-700 animate-in slide-in-from-right-2">
                       <span className="text-xs font-bold uppercase tracking-widest">Diskon Voucher</span>
                       <span className="font-bold">-{formattedDiscount}</span>
                     </div>
                   )}
                   
-                  <div className="flex justify-between items-end pt-4 mt-4 border-t border-white/5">
-                    <span className="text-sm font-bold uppercase tracking-widest text-white/50 mb-1">Total Pembayaran</span>
-                    <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+                  <div className="flex justify-between items-end pt-4 mt-4 border-t border-border/70">
+                    <span className="text-sm font-bold uppercase tracking-widest text-muted-foreground/90 mb-1">Total Pembayaran</span>
+                    <span className="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600" style={{ fontFamily: "'Syne', sans-serif" }}>
                       {selectedItem ? formattedTotal : "-"}
                     </span>
                   </div>
@@ -1565,11 +1565,11 @@ export default function ProductDetail() {
 
                 {/* Balance Info */}
                 {isAuthenticated && (
-                  <div className="flex justify-between items-center p-4 mt-4 rounded-xl bg-white/[0.02] border border-white/5 text-xs">
-                    <span className="font-bold text-white/50 uppercase tracking-widest flex items-center gap-1.5">
+                  <div className="flex justify-between items-center p-4 mt-4 rounded-xl bg-secondary/50 border border-border/70 text-xs">
+                    <span className="font-bold text-muted-foreground/90 uppercase tracking-widest flex items-center gap-1.5">
                       <Wallet className="w-3.5 h-3.5" /> Saldo Anda
                     </span>
-                    <span className={`font-black text-sm ${isBalanceSufficient ? "text-[#00c864]" : "text-red-500"}`}>
+                    <span className={`font-black text-sm ${isBalanceSufficient ? "text-emerald-700" : "text-red-500"}`}>
                       {balanceFormatted}
                     </span>
                   </div>
@@ -1577,10 +1577,10 @@ export default function ProductDetail() {
               </div>
 
               <Button
-                className={`hidden lg:flex w-full mt-6 text-black font-black h-12 sm:h-14 rounded-xl text-base tracking-wide transition-all duration-300 ${
+                className={`hidden lg:flex w-full mt-6 text-white font-black h-12 sm:h-14 rounded-xl text-base tracking-wide transition-all duration-300 ${
                   isOrderValid 
-                    ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.4)] border-0" 
-                    : "bg-white/10 text-white/30 border border-white/5 hover:bg-white/10"
+                    ? "bg-gradient-to-r from-amber-400 to-orange-600 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(249,115,22,0.45)] border-0" 
+                    : "bg-secondary/80 text-muted-foreground/60 border border-border/70 hover:bg-secondary/80"
                 }`}
                 disabled={!isOrderValid}
                 onClick={handleOrder}
@@ -1605,7 +1605,7 @@ export default function ProductDetail() {
                 </p>
               )}
               
-              <div className="flex items-center justify-center gap-2 mt-4 text-[10px] font-bold uppercase tracking-widest text-white/30">
+              <div className="flex items-center justify-center gap-2 mt-4 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
                 <Shield className="h-3 w-3" aria-hidden="true" />
                 <span>Transaksi aman & terenkripsi</span>
               </div>
@@ -1614,16 +1614,16 @@ export default function ProductDetail() {
             {/* Help Card */}
             <Card className="p-6 animate-in slide-in-from-right-4 fade-in duration-500 delay-200 rounded-3xl relative overflow-hidden" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)" }}>
               {/* Background pattern */}
-              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)", backgroundSize: "20px 20px" }} />
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(120,90,40,0.35) 1px,transparent 1px),linear-gradient(90deg,rgba(120,90,40,0.35) 1px,transparent 1px)", backgroundSize: "20px 20px" }} />
               
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-5">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#00c864]/20 to-[#00c864]/5 flex items-center justify-center border border-[#00c864]/20 shadow-[0_0_15px_rgba(0,200,100,0.2)]">
-                    <MessageCircle className="h-6 w-6 text-[#00c864]" aria-hidden="true" />
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-emerald-100 to-emerald-50 flex items-center justify-center border border-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.25)]">
+                    <MessageCircle className="h-6 w-6 text-emerald-700" aria-hidden="true" />
                   </div>
                   <div>
-                    <h3 className="font-black text-white text-base tracking-wide">Butuh Bantuan?</h3>
-                    <p className="text-xs font-medium text-white/40 mt-0.5">CS kami siap membantu 24/7</p>
+                    <h3 className="font-black text-foreground text-base tracking-wide">Butuh Bantuan?</h3>
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">CS kami siap membantu 24/7</p>
                   </div>
                 </div>
                 <a
@@ -1632,7 +1632,7 @@ export default function ProductDetail() {
                   rel="noopener noreferrer"
                   className="block"
                 >
-                  <Button variant="outline" className="w-full text-sm font-bold bg-white/5 border-white/10 hover:bg-[#00c864]/10 hover:border-[#00c864]/30 hover:text-[#00c864] h-12 rounded-xl transition-all">
+                  <Button variant="outline" className="w-full text-sm font-bold bg-secondary/60 border-border/80 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 h-12 rounded-xl transition-all">
                     <MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" />
                     Chat WhatsApp CS
                   </Button>
@@ -1644,19 +1644,19 @@ export default function ProductDetail() {
       </div>
 
       {/* Mobile Sticky Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#0B0A10]/90 backdrop-blur-xl border-t border-white/10 lg:hidden z-40 pb-safe shadow-[0_-20px_40px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-card/90 backdrop-blur-xl border-t border-border/80 lg:hidden z-40 pb-safe shadow-[0_-20px_40px_-16px_rgba(120,90,40,0.25)]">
         <div className="flex items-center justify-between gap-4 max-w-7xl mx-auto">
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-0.5">Total Pembayaran</p>
-            <p className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500 truncate" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <p className="text-[10px] font-bold text-muted-foreground/90 uppercase tracking-widest mb-0.5">Total Pembayaran</p>
+            <p className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 truncate" style={{ fontFamily: "'Syne', sans-serif" }}>
               {selectedItem ? formattedTotal : "-"}
             </p>
           </div>
           <Button
             className={`shrink-0 h-12 px-6 rounded-xl font-black tracking-wide transition-all ${
               isOrderValid
-                ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black shadow-[0_0_20px_rgba(139,92,246,0.4)] border-0"
-                : "bg-white/10 text-white/30 border border-white/5"
+                ? "bg-gradient-to-r from-amber-400 to-orange-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.45)] border-0"
+                : "bg-secondary/80 text-muted-foreground/60 border border-border/70"
             }`}
             disabled={!isOrderValid}
             onClick={handleOrder}
@@ -1675,18 +1675,18 @@ export default function ProductDetail() {
 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
-        <DialogContent className="max-w-md animate-in zoom-in-95 bg-[#0B0A10] border-white/10 p-0 overflow-hidden rounded-[2rem]">
+        <DialogContent className="max-w-md animate-in zoom-in-95 bg-card border-border/80 p-0 overflow-hidden rounded-[2rem]">
           {/* Decorative Top Glow */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
           
           <DialogHeader className="p-6 pb-2">
-            <DialogTitle className="flex items-center gap-3 text-xl font-black text-white">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-violet-400 flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.4)]">
-                <Shield className="h-5 w-5 text-white" aria-hidden="true" />
+            <DialogTitle className="flex items-center gap-3 text-xl font-black text-foreground">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+                <Shield className="h-5 w-5 text-foreground" aria-hidden="true" />
               </div>
               Konfirmasi Pesanan
             </DialogTitle>
-            <DialogDescription className="text-xs font-medium text-white/50 uppercase tracking-widest mt-2">
+            <DialogDescription className="text-xs font-medium text-muted-foreground/90 uppercase tracking-widest mt-2">
               Pastikan semua data sudah benar
             </DialogDescription>
           </DialogHeader>
@@ -1714,7 +1714,7 @@ export default function ProductDetail() {
                 label: "Voucher",
                 value: `${voucherResult.code} (-${formattedDiscount})`,
                 icon: Tag,
-                className: "text-[#00c864]"
+                className: "text-emerald-700"
               },
               { 
                 label: "Pembayaran", 
@@ -1725,24 +1725,24 @@ export default function ProductDetail() {
               <div
                 key={item.label}
                 className={`flex items-center justify-between py-3.5 ${
-                  idx < arr.length - 1 ? "border-b border-white/5" : ""
+                  idx < arr.length - 1 ? "border-b border-border/70" : ""
                 } ${item?.className || ""}`}
               >
                 <div className="flex items-center gap-2.5">
-                  {item.icon && <item.icon className="h-4 w-4 text-white/40" aria-hidden="true" />}
-                  <span className="text-white/50 text-[11px] font-bold uppercase tracking-widest">{item.label}</span>
+                  {item.icon && <item.icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />}
+                  <span className="text-muted-foreground/90 text-[11px] font-bold uppercase tracking-widest">{item.label}</span>
                 </div>
                 <span className={`font-bold text-right max-w-[60%] ${
-                  item?.mono ? "font-mono text-xs bg-white/5 px-2 py-1 rounded-md text-white" : "text-white"
+                  item?.mono ? "font-mono text-xs bg-secondary/60 px-2 py-1 rounded-md text-foreground" : "text-foreground"
                 } ${item?.highlight ? "!text-primary" : ""}`}>
                   {item.value}
                 </span>
               </div>
             ))}
             
-            <div className="flex items-center justify-between py-5 bg-white/[0.02] border-y border-white/5 -mx-6 px-6 mt-2">
-              <span className="font-bold text-xs uppercase tracking-widest text-white/50">Total Bayar</span>
-              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-500" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <div className="flex items-center justify-between py-5 bg-secondary/50 border-y border-border/70 -mx-6 px-6 mt-2">
+              <span className="font-bold text-xs uppercase tracking-widest text-muted-foreground/90">Total Bayar</span>
+              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600" style={{ fontFamily: "'Syne', sans-serif" }}>
                 {formattedTotal}
               </span>
             </div>
@@ -1751,21 +1751,21 @@ export default function ProductDetail() {
           <div className="px-6 pb-6 mt-4">
             {!isBalanceSufficient && isAuthenticated && paymentMethod === "balance" && (
               <div 
-                className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-sm animate-in slide-in-from-bottom-2 mb-4"
+                className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-sm animate-in slide-in-from-bottom-2 mb-4"
                 role="alert"
               >
                 <div className="flex items-start gap-3 mb-4">
-                  <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-amber-500" aria-hidden="true" />
+                  <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-amber-600" aria-hidden="true" />
                   <div>
-                    <p className="font-bold text-amber-500">Saldo tidak mencukupi</p>
-                    <p className="text-xs mt-1 font-medium text-white/50">
-                      Saldo Anda: <span className="font-bold text-white">{balanceFormatted}</span>
-                      {" "}• Kekurangan: <span className="font-bold text-amber-500">{formatPrice(Math.max(0, totalMyr - balanceMyr), Math.max(0, totalIdr - balanceIdr))}</span>
+                    <p className="font-bold text-amber-600">Saldo tidak mencukupi</p>
+                    <p className="text-xs mt-1 font-medium text-muted-foreground/90">
+                      Saldo Anda: <span className="font-bold text-foreground">{balanceFormatted}</span>
+                      {" "}â€¢ Kekurangan: <span className="font-bold text-amber-600">{formatPrice(Math.max(0, totalMyr - balanceMyr), Math.max(0, totalIdr - balanceIdr))}</span>
                     </p>
                   </div>
                 </div>
                 <Button
-                  className="w-full h-11 rounded-xl text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:scale-[1.02] text-black font-black border-0 shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all"
+                  className="w-full h-11 rounded-xl text-sm bg-gradient-to-r from-amber-500 to-yellow-500 hover:scale-[1.02] text-white font-black border-0 shadow-[0_0_15px_rgba(245,158,11,0.4)] transition-all"
                   onClick={() => { setShowConfirm(false); navigate("/deposit"); }}
                 >
                   <Zap className="mr-2 h-4 w-4" />
@@ -1776,13 +1776,13 @@ export default function ProductDetail() {
 
             {submitError && (
               <div 
-                className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-start gap-3 animate-in slide-in-from-bottom-2 mb-4"
+                className="p-4 rounded-2xl bg-red-50 border border-red-200 text-red-500 text-sm flex items-start gap-3 animate-in slide-in-from-bottom-2 mb-4"
                 role="alert"
               >
                 <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" aria-hidden="true" />
                 <div>
                   <p className="font-bold">Gagal memproses pesanan</p>
-                  <p className="text-xs mt-1 font-medium text-red-400">{submitError}</p>
+                  <p className="text-xs mt-1 font-medium text-red-600">{submitError}</p>
                 </div>
               </div>
             )}
@@ -1790,14 +1790,14 @@ export default function ProductDetail() {
             <div className="flex gap-3">
               <Button
                 variant="outline"
-                className="flex-1 h-12 rounded-xl font-bold bg-white/5 border-white/10 hover:bg-white/10 transition-all text-white"
+                className="flex-1 h-12 rounded-xl font-bold bg-secondary/60 border-border/80 hover:bg-secondary/80 transition-all text-foreground"
                 onClick={() => setShowConfirm(false)}
                 disabled={createOrderMutation.isPending}
               >
                 Batal
               </Button>
               <Button
-                className="flex-[2] h-12 rounded-xl font-black bg-gradient-to-r from-primary to-violet-400 text-black border-0 hover:scale-[1.02] shadow-[0_0_15px_rgba(139,92,246,0.4)] transition-all"
+                className="flex-[2] h-12 rounded-xl font-black bg-gradient-to-r from-amber-400 to-orange-600 text-white border-0 hover:scale-[1.02] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all"
                 onClick={handleConfirmOrder}
                 disabled={createOrderMutation.isPending || guestOrderMutation.isPending || !paymentMethod || (paymentMethod === "balance" && !isBalanceSufficient)}
               >

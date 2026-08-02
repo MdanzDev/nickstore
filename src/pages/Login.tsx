@@ -318,41 +318,41 @@ export default function Login() {
         description="Log masuk ke akaun NickStore anda untuk menguruskan pesanan topup game, baki wallet & transaksi secara pantas."
       />
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-amber-200/60 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-orange-200/50 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl shadow-2xl relative z-10">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-0 rounded-[2rem] border border-border bg-card shadow-[0_32px_64px_-32px_rgba(190,130,20,0.35)] relative z-10 overflow-hidden">
         {/* Left - Form */}
         <div className="p-8 lg:p-12 flex flex-col justify-center">
           {/* Header */}
           <div className="mb-10 animate-in slide-in-from-top-4 fade-in duration-500">
             <div className="flex items-center gap-3 mb-8">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
-                <Gamepad2 className="h-6 w-6 text-black" />
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_8px_20px_rgba(249,115,22,0.4)]">
+                <Gamepad2 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <span className="font-black text-xl tracking-wide uppercase text-white">Nick<span>Store</span></span>
-                <p className="text-[10px] text-white/50 tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
+                <span className="font-extrabold text-xl tracking-wide uppercase text-foreground">Nick<span className="text-primary">Store</span></span>
+                <p className="text-[10px] text-muted-foreground tracking-[0.2em] uppercase font-black">Platform Top Up #1 Malaysia</p>
               </div>
             </div>
             
-            <h1 className="text-3xl lg:text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 uppercase tracking-tight">
-              Selamat Datang
+            <h1 className="text-3xl lg:text-4xl font-extrabold text-foreground uppercase tracking-tight">
+              Selamat <span className="text-gradient">Datang</span>
             </h1>
-            <p className="text-sm text-white/50 mt-2 font-medium">
+            <p className="text-sm text-muted-foreground mt-2 font-medium">
               Masuk untuk melanjutkan ke akun Anda
             </p>
             
             {/* Quick Stats */}
             <div className="flex items-center gap-4 mt-6">
               {[
-                { icon: Zap, text: "Proses Instan", color: "text-[#D946EF]" },
-                { icon: Shield, text: "100% Aman", color: "text-[#D946EF]" },
-                { icon: Users, text: "1.2K+ Member", color: "text-[#D946EF]" },
+                { icon: Zap, text: "Proses Instan", color: "text-primary" },
+                { icon: Shield, text: "100% Aman", color: "text-primary" },
+                { icon: Users, text: "1.2K+ Member", color: "text-primary" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5">
+                <div key={i} className="flex items-center gap-2 bg-secondary/60 border border-border rounded-lg px-3 py-1.5">
                   <item.icon className={`h-3.5 w-3.5 ${item.color}`} />
-                  <span className="text-[10px] text-white/70 font-black uppercase tracking-widest">{item.text}</span>
+                  <span className="text-[10px] text-foreground/75 font-black uppercase tracking-widest">{item.text}</span>
                 </div>
               ))}
             </div>
@@ -361,12 +361,12 @@ export default function Login() {
             {/* Telegram WebApp / Bot One-Click Login Button */}
             <div className="space-y-4">
               {awaitingTelegramBot ? (
-                <div className="p-4 rounded-2xl bg-[#0088cc]/10 border border-[#0088cc]/30 space-y-3 animate-in fade-in">
+                <div className="p-4 rounded-2xl bg-sky-50 border border-sky-200 space-y-3 animate-in fade-in">
                   <div className="flex items-center gap-3">
                     <Loader2 className="h-5 w-5 animate-spin text-[#0088cc] shrink-0" />
                     <div>
-                      <p className="text-xs font-bold text-white">Menunggu Pengesahan Telegram...</p>
-                      <p className="text-[10px] text-white/60">Sila tekan 'Start' pada bot Telegram yang terbuka.</p>
+                      <p className="text-xs font-bold text-foreground">Menunggu Pengesahan Telegram...</p>
+                      <p className="text-[10px] text-muted-foreground">Sila tekan 'Start' pada bot Telegram yang terbuka.</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -381,7 +381,7 @@ export default function Login() {
                     <button
                       type="button"
                       onClick={() => { stopPolling(); setAwaitingTelegramBot(false); }}
-                      className="px-3 py-2 rounded-xl bg-white/10 text-white/70 hover:text-white text-xs font-bold"
+                      className="px-3 py-2 rounded-xl bg-secondary text-foreground/75 hover:text-foreground text-xs font-bold"
                     >
                       Batal
                     </button>
@@ -392,7 +392,7 @@ export default function Login() {
                   type="button"
                   onClick={handleTelegramLogin}
                   disabled={telegramWebAppMutation.isPending}
-                  className="w-full h-12 rounded-xl bg-[#0088cc] hover:bg-[#0077bb] text-white font-black uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(0,136,204,0.3)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 border-0"
+                  className="w-full h-12 rounded-xl bg-[#0088cc] hover:bg-[#0077bb] text-white font-black uppercase tracking-widest text-xs shadow-[0_8px_20px_rgba(0,136,204,0.35)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 border-0"
                 >
                   {telegramWebAppMutation.isPending ? (
                     <>
@@ -409,8 +409,8 @@ export default function Login() {
               )}
 
               <div className="relative flex items-center justify-center my-4">
-                <div className="border-t border-white/10 w-full" />
-                <span className="bg-[#0B0A10] px-3 text-[10px] font-black uppercase tracking-widest text-white/40 absolute shrink-0">
+                <div className="border-t border-border w-full" />
+                <span className="bg-card px-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground absolute shrink-0">
                   Atau dengan Email
                 </span>
               </div>
@@ -418,7 +418,7 @@ export default function Login() {
 
             {/* Error Alert */}
             {loginError && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm flex items-start gap-3 animate-in slide-in-from-top-2 fade-in">
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm flex items-start gap-3 animate-in slide-in-from-top-2 fade-in">
               <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold uppercase tracking-wider text-[10px]">Login Gagal</p>
@@ -431,11 +431,11 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-5 animate-in slide-in-from-bottom-4 fade-in duration-500 delay-100">
             {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white/70">
-                Email <span className="text-[#8B5CF6]">*</span>
+              <Label htmlFor="email" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-foreground/75">
+                Email <span className="text-primary">*</span>
               </Label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Input
                   ref={emailInputRef}
                   id="email"
@@ -444,9 +444,9 @@ export default function Login() {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => handleBlur("email")}
-                  className={`pl-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
+                  className={`pl-11 h-12 bg-secondary/50 border-border text-foreground placeholder:text-muted-foreground rounded-xl transition-all focus:bg-card focus:border-primary/60 focus:ring-1 focus:ring-primary/40 ${
                     errors.email && touched.email
-                      ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
+                      ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/40" 
                       : ""
                   }`}
                   disabled={isLoading}
@@ -469,18 +469,18 @@ export default function Login() {
             {/* Password Field */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-white/70">
-                  Kata Sandi <span className="text-[#8B5CF6]">*</span>
+                <Label htmlFor="password" className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-foreground/75">
+                  Kata Sandi <span className="text-primary">*</span>
                 </Label>
                 <Link
                   to="/reset-password"
-                  className="text-[10px] text-[#D946EF] hover:text-[#8B5CF6] hover:underline font-black uppercase tracking-widest transition-colors"
+                  className="text-[10px] text-primary hover:text-primary/80 hover:underline font-black uppercase tracking-widest transition-colors"
                 >
                   Lupa password?
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -488,9 +488,9 @@ export default function Login() {
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
                   onBlur={() => handleBlur("password")}
-                  className={`pl-11 pr-11 h-12 bg-white/[0.02] border-white/10 text-white placeholder:text-white/30 rounded-xl transition-all focus:bg-white/[0.05] focus:border-[#8B5CF6]/50 focus:ring-1 focus:ring-[#8B5CF6]/50 ${
+                  className={`pl-11 pr-11 h-12 bg-secondary/50 border-border text-foreground placeholder:text-muted-foreground rounded-xl transition-all focus:bg-card focus:border-primary/60 focus:ring-1 focus:ring-primary/40 ${
                     errors.password && touched.password
-                      ? "border-red-500/50 focus:border-red-500 focus:ring-red-500/50" 
+                      ? "border-red-500/60 focus:border-red-500 focus:ring-red-500/40" 
                       : ""
                   }`}
                   disabled={isLoading}
@@ -501,7 +501,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-lg hover:bg-secondary"
                   tabIndex={-1}
                   aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
                 >
@@ -523,9 +523,9 @@ export default function Login() {
                 checked={rememberMe}
                 onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                 disabled={isLoading}
-                className="border-white/20 data-[state=checked]:bg-[#8B5CF6] data-[state=checked]:border-[#8B5CF6]"
+                className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="remember" className="text-xs font-black uppercase tracking-widest text-white/50 cursor-pointer select-none hover:text-white/70 transition-colors">
+              <Label htmlFor="remember" className="text-xs font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-foreground/80 transition-colors">
                 Ingat saya
               </Label>
             </div>
@@ -533,12 +533,12 @@ export default function Login() {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:from-[#D946EF] hover:to-[#8B5CF6] text-black transition-all duration-300 hover:scale-[1.02] shadow-[0_0_20px_rgba(255,107,0,0.3)] hover:shadow-[0_0_30px_rgba(255,184,0,0.5)] border-0"
+              className="w-full h-14 rounded-xl text-xs font-black tracking-widest uppercase bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-300 hover:scale-[1.02] shadow-[0_12px_28px_rgba(249,115,22,0.4)] hover:shadow-[0_16px_36px_rgba(251,146,60,0.5)] border-0"
               disabled={isLoading}
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin text-black" />
+                  <Loader2 className="h-5 w-5 animate-spin text-white" />
                   Memproses...
                 </span>
               ) : (
@@ -552,7 +552,7 @@ export default function Login() {
 
             {/* Form Status */}
             {allFieldsFilled && !hasErrors && !isLoading && (
-              <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-500 animate-in fade-in">
+              <div className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-600 animate-in fade-in">
                 <Check className="h-3 w-3" />
                 Data siap dikirim
               </div>
@@ -560,12 +560,12 @@ export default function Login() {
           </form>
 
           {/* Footer Links */}
-          <div className="mt-8 pt-8 border-t border-white/10 space-y-4 animate-in fade-in duration-500 delay-200">
-            <p className="text-center text-xs font-black uppercase tracking-widest text-white/50">
+          <div className="mt-8 pt-8 border-t border-border space-y-4 animate-in fade-in duration-500 delay-200">
+            <p className="text-center text-xs font-black uppercase tracking-widest text-muted-foreground">
               Belum punya akun?{" "}
               <Link
                 to="/register"
-                className="text-[#D946EF] hover:text-[#8B5CF6] hover:underline inline-flex items-center gap-1 transition-colors ml-1"
+                className="text-primary hover:text-primary/80 hover:underline inline-flex items-center gap-1 transition-colors ml-1"
               >
                 Daftar sekarang
                 <ArrowRight className="h-3 w-3" />
@@ -574,7 +574,7 @@ export default function Login() {
 
             <Button
               variant="outline"
-              className="w-full h-12 rounded-xl bg-transparent border-white/10 text-white/70 hover:bg-white/[0.05] hover:text-white text-[10px] font-black tracking-widest uppercase"
+              className="w-full h-12 rounded-xl bg-card border-border text-foreground/75 hover:bg-secondary hover:text-foreground text-[10px] font-black tracking-widest uppercase"
               onClick={() => navigate("/")}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -584,15 +584,15 @@ export default function Login() {
         </div>
 
         {/* Right - Benefits Panel */}
-        <div className="hidden lg:flex flex-col justify-center p-12 bg-black/40 border-l border-white/10 relative overflow-hidden">
+        <div className="hidden lg:flex flex-col justify-center p-12 bg-gradient-to-br from-amber-500 via-orange-600 to-orange-700 relative overflow-hidden">
           {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#8B5CF6]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#D946EF]/10 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/2 blur-[80px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-amber-300/20 to-transparent rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px]" />
           
           {/* Grid Pattern */}
-          <div className="absolute inset-0 opacity-[0.03]"
+          <div className="absolute inset-0 opacity-[0.08]"
             style={{
-              backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
             }}
           />
@@ -601,19 +601,17 @@ export default function Login() {
             {/* Logo & Title */}
             <div className="text-center">
               <div className="relative inline-block mb-8">
-                <div className="h-24 w-24 rounded-3xl bg-gradient-to-br from-[#8B5CF6]/20 to-[#D946EF]/5 flex items-center justify-center mx-auto border border-[#8B5CF6]/30 shadow-[0_0_30px_rgba(255,107,0,0.2)]">
-                  <Crown className="h-12 w-12 text-[#D946EF]" />
+                <div className="h-24 w-24 rounded-3xl bg-white/15 backdrop-blur border border-white/30 flex items-center justify-center mx-auto shadow-[0_16px_40px_rgba(0,0,0,0.25)]">
+                  <Crown className="h-12 w-12 text-amber-100" />
                 </div>
-                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-[#D946EF] animate-pulse" />
+                <Sparkles className="absolute -top-3 -right-3 h-8 w-8 text-amber-200 animate-pulse" />
               </div>
               
-              <h2 className="text-3xl font-black mb-3 uppercase tracking-tight text-white">
+              <h2 className="text-3xl font-extrabold mb-3 uppercase tracking-tight text-white">
                 Kenapa Harus<br />
-                <span className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] bg-clip-text text-transparent">
-                  Jadi Member?
-                </span>
+                <span className="text-amber-200">Jadi Member?</span>
               </h2>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-orange-100/90">
                 Dapatkan akses penuh ke semua fitur
               </p>
             </div>
@@ -624,59 +622,51 @@ export default function Login() {
                 { 
                   icon: Zap, 
                   title: "Transaksi Instan 24/7", 
-                  desc: "Top up diproses dalam hitungan detik, kapan saja",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Top up diproses dalam hitungan detik, kapan saja"
                 },
                 { 
                   icon: Shield, 
                   title: "Refund Mudah & Cepat", 
-                  desc: "Garansi uang kembali 100% jika transaksi gagal",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Garansi uang kembali 100% jika transaksi gagal"
                 },
                 { 
                   icon: Gift, 
                   title: "Promo Eksklusif Member", 
-                  desc: "Diskon dan cashback spesial setiap bulan",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Diskon dan cashback spesial setiap bulan"
                 },
                 { 
                   icon: Wallet, 
                   title: "Biaya Admin Rendah", 
-                  desc: "Biaya termurah dibanding platform lain",
-                  color: "text-[#D946EF]",
-                  bg: "bg-[#D946EF]/10 border-[#D946EF]/20"
+                  desc: "Biaya termurah dibanding platform lain"
                 },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 border border-white/5 hover:border-white/10 group backdrop-blur-sm"
+                  className="flex items-start gap-4 p-4 rounded-xl bg-white/10 backdrop-blur hover:bg-white/15 transition-all duration-300 border border-white/20 hover:border-white/30 group"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
-                  <div className={`h-12 w-12 rounded-xl ${item.bg} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                    <item.icon className={`h-5 w-5 ${item.color}`} />
+                  <div className={`h-12 w-12 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                    <item.icon className={`h-5 w-5 text-amber-100`} />
                   </div>
                   <div className="min-w-0 pt-1">
                     <h3 className="text-xs font-black uppercase tracking-widest text-white mb-1">{item.title}</h3>
-                    <p className="text-[10px] font-medium text-white/50 leading-relaxed">{item.desc}</p>
+                    <p className="text-[10px] font-medium text-orange-100/80 leading-relaxed">{item.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Social Proof */}
-            <div className="text-center pt-8 border-t border-white/10">
-              <div className="flex items-center justify-center gap-1 text-[#D946EF] mb-3">
+            <div className="text-center pt-8 border-t border-white/20">
+              <div className="flex items-center justify-center gap-1 text-amber-200 mb-3">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 fill-current drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]" />
                 ))}
                 <span className="text-sm font-black text-white ml-2">4.99</span>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/50">
+              <p className="text-[10px] font-black uppercase tracking-widest text-orange-100/80">
                 Dipercaya{" "}
-                <span className="text-[#D946EF]">1,247+</span> pengguna aktif
+                <span className="text-amber-200">1,247+</span> pengguna aktif
               </p>
               
               {/* Member Avatars */}
@@ -684,15 +674,15 @@ export default function Login() {
                 {["R", "S", "B", "D", "A"].map((letter, i) => (
                   <div
                     key={i}
-                    className="h-10 w-10 rounded-full border-2 border-[#0B0A10] flex items-center justify-center text-xs font-black text-white shadow-xl"
+                    className="h-10 w-10 rounded-full border-2 border-orange-700 flex items-center justify-center text-xs font-black text-white shadow-xl"
                     style={{
-                      background: `hsl(${i * 40 + 20}, 70%, 50%)`,
+                      background: `hsl(${i * 10 + 25}, 90%, 45%)`,
                     }}
                   >
                     {letter}
                   </div>
                 ))}
-                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-black text-white border-2 border-[#0B0A10] backdrop-blur-md">
+                <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-black text-white border-2 border-orange-700 backdrop-blur-md">
                   +1.2K
                 </div>
               </div>
@@ -704,7 +694,7 @@ export default function Login() {
                 href="https://wa.me/60137345871"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-emerald-400 transition-colors"
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-orange-100/80 hover:text-white transition-colors"
               >
                 <MessageCircle className="h-4 w-4" />
                 Butuh bantuan? Chat WhatsApp

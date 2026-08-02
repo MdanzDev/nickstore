@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { trpc } from "@/providers/trpc";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,7 @@ export default function UserApi() {
               />
               <Button 
                 onClick={() => handleCopy(newKey)} 
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium flex gap-2 shrink-0"
+                className="bg-emerald-600 hover:bg-emerald-500 text-foreground font-medium flex gap-2 shrink-0"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? "Tersalin!" : "Salin Key"}
@@ -111,7 +111,7 @@ export default function UserApi() {
                     variant="outline"
                     onClick={handleRegenerate}
                     disabled={generateApiKey.isPending}
-                    className="border-amber-500/40 hover:bg-amber-500/10 text-amber-400 font-medium shrink-0 flex gap-2"
+                    className="border-amber-500/40 hover:bg-amber-100 text-amber-400 font-medium shrink-0 flex gap-2"
                   >
                     {generateApiKey.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
                     Regenerate Key
@@ -154,7 +154,7 @@ export default function UserApi() {
               variant="outline"
               size="sm"
               onClick={() => window.open('/docs', '_blank')}
-              className="border-amber-500/40 hover:bg-amber-500/10 text-amber-400"
+              className="border-amber-500/40 hover:bg-amber-100 text-amber-400"
             >
               Lihat Dokumentasi Lengkap
             </Button>

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+﻿import { useState, useMemo, useCallback } from "react";
 import { trpc } from "@/providers/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,9 +25,9 @@ import {
 import { useCurrency } from "@/providers/CurrencyProvider";
 import { useAuth } from "@/hooks/useAuth";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    CONSTANTS
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const timeFilters = [
   { id: "today", label: "Hari Ini", icon: Clock },
   { id: "yesterday", label: "Kemarin", icon: Clock },
@@ -37,9 +37,9 @@ const timeFilters = [
 ];
 
 const rankColors = {
-  1: { bg: "from-[#D946EF]/20 to-[#D946EF]/5", border: "border-[#D946EF]/30", text: "text-[#D946EF]", badge: "bg-[#D946EF] text-black" },
-  2: { bg: "from-slate-400/20 to-slate-400/5", border: "border-slate-400/30", text: "text-slate-400", badge: "bg-slate-400 text-black" },
-  3: { bg: "from-[#8B5CF6]/20 to-[#8B5CF6]/5", border: "border-[#8B5CF6]/30", text: "text-[#8B5CF6]", badge: "bg-[#8B5CF6] text-white" },
+  1: { bg: "from-amber-400/25 to-amber-400/10", border: "border-amber-400/40", text: "text-amber-600", badge: "bg-gradient-to-r from-amber-400 to-orange-600 text-white" },
+  2: { bg: "from-slate-400/20 to-slate-400/5", border: "border-slate-400/30", text: "text-slate-500", badge: "bg-slate-400 text-white" },
+  3: { bg: "from-amber-800/20 to-amber-800/5", border: "border-amber-800/30", text: "text-amber-800", badge: "bg-amber-800 text-white" },
 };
 
 const rankIcons = {
@@ -48,9 +48,9 @@ const rankIcons = {
   3: Medal,
 };
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    SKELETON
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function LeaderboardSkeleton() {
   return (
     <div className="container mx-auto px-4 py-24 max-w-4xl animate-pulse relative z-10">
@@ -81,15 +81,15 @@ function LeaderboardSkeleton() {
       </div>
 
       {/* Table Skeleton */}
-      <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden shadow-2xl">
+      <div className="rounded-[2rem] border border-border/80 bg-secondary/60 backdrop-blur-xl overflow-hidden shadow-2xl">
         <div className="p-4 space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4">
-              <Skeleton className="h-8 w-8 rounded-full bg-white/5" />
-              <Skeleton className="h-4 flex-1 bg-white/5" />
-              <Skeleton className="h-4 w-20 bg-white/5" />
-              <Skeleton className="h-4 w-16 bg-white/5" />
-              <Skeleton className="h-4 w-24 bg-white/5" />
+              <Skeleton className="h-8 w-8 rounded-full bg-secondary/60" />
+              <Skeleton className="h-4 flex-1 bg-secondary/60" />
+              <Skeleton className="h-4 w-20 bg-secondary/60" />
+              <Skeleton className="h-4 w-16 bg-secondary/60" />
+              <Skeleton className="h-4 w-24 bg-secondary/60" />
             </div>
           ))}
         </div>
@@ -98,20 +98,20 @@ function LeaderboardSkeleton() {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    EMPTY STATE
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function EmptyState() {
   return (
-    <div className="p-12 text-center rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl">
-      <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white/[0.02] border border-white/10 mb-6">
-        <Trophy className="h-10 w-10 text-white/30" aria-hidden="true" />
+    <div className="p-12 text-center rounded-[2rem] border border-border/80 bg-secondary/60 backdrop-blur-xl">
+      <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-secondary/50 border border-border/80 mb-6">
+        <Trophy className="h-10 w-10 text-muted-foreground/60" aria-hidden="true" />
       </div>
-      <h3 className="text-lg font-bold text-white mb-2 uppercase tracking-wide">Belum Ada Data</h3>
-      <p className="text-sm text-white/50 mb-6 max-w-sm mx-auto font-medium">
+      <h3 className="text-lg font-bold text-foreground mb-2 uppercase tracking-wide">Belum Ada Data</h3>
+      <p className="text-sm text-muted-foreground/90 mb-6 max-w-sm mx-auto font-medium">
         Belum ada transaksi untuk periode ini. Jadilah yang pertama dan dapatkan posisi teratas!
       </p>
-      <Button variant="outline" className="bg-transparent border-white/10 text-white hover:bg-white/[0.05] hover:text-[#D946EF] uppercase tracking-widest text-[10px] font-black h-12 px-6 rounded-xl">
+      <Button variant="outline" className="bg-transparent border-border/80 text-foreground hover:bg-secondary/60 hover:text-primary uppercase tracking-widest text-[10px] font-black h-12 px-6 rounded-xl">
         <ShoppingCart className="mr-2 h-4 w-4" />
         Mulai Belanja
       </Button>
@@ -119,9 +119,9 @@ function EmptyState() {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    PODIUM CARD
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PodiumCard({ 
   user, 
   rank, 
@@ -141,8 +141,8 @@ function PodiumCard({
       {/* Rank Icon */}
       {isFirst && (
         <div className="relative inline-block mb-2">
-          <Crown className="h-8 w-8 text-[#D946EF] mx-auto animate-bounce drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]" />
-          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-[#D946EF] animate-pulse" />
+          <Crown className="h-8 w-8 text-primary mx-auto animate-bounce drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+          <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-primary animate-pulse" />
         </div>
       )}
       
@@ -152,19 +152,19 @@ function PodiumCard({
       }`}>
         <div className={`w-full h-full rounded-2xl flex items-center justify-center text-2xl font-black border-2 backdrop-blur-sm ${
           isFirst 
-            ? 'bg-gradient-to-br from-[#D946EF]/20 to-[#D946EF]/5 border-[#D946EF]/50 shadow-[0_0_20px_rgba(255,184,0,0.3)]' 
+            ? 'bg-gradient-to-br from-amber-400/25 to-amber-400/10 border-amber-400/50 shadow-[0_0_20px_rgba(255,184,0,0.3)]' 
             : rank === 2
             ? 'bg-gradient-to-br from-slate-400/20 to-slate-400/5 border-slate-400/50'
-            : 'bg-gradient-to-br from-[#8B5CF6]/20 to-[#8B5CF6]/5 border-[#8B5CF6]/50'
+            : 'bg-gradient-to-br from-amber-800/20 to-amber-800/5 border-amber-800/50'
         }`}>
-          <span className={isFirst ? 'text-[#D946EF]' : rank === 2 ? 'text-slate-300' : 'text-[#8B5CF6]'}>
+          <span className={isFirst ? 'text-primary' : rank === 2 ? 'text-slate-500' : 'text-amber-800'}>
             {String(user.name || "?").charAt(0).toUpperCase()}
           </span>
         </div>
         {isFirst && (
           <div className="absolute -top-2 -right-2">
-            <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_10px_rgba(255,107,0,0.5)]">
-              <Star className="h-3 w-3 text-black" fill="currentColor" />
+            <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_10px_rgba(255,107,0,0.5)]">
+              <Star className="h-3 w-3 text-white" fill="currentColor" />
             </div>
           </div>
         )}
@@ -172,15 +172,15 @@ function PodiumCard({
       
       {/* User Info */}
       <p className={`text-sm font-black tracking-wide uppercase truncate max-w-[120px] mx-auto ${
-        isFirst ? 'text-[#D946EF] drop-shadow-[0_0_5px_rgba(255,184,0,0.5)]' : 'text-white'
+        isFirst ? 'text-primary drop-shadow-[0_0_5px_rgba(251,191,36,0.5)]' : 'text-foreground'
       }`}>
         {String(user.name || "Anonymous")}
       </p>
-      <p className="text-[10px] tracking-widest text-white/50 mt-1 uppercase">
+      <p className="text-[10px] tracking-widest text-muted-foreground/90 mt-1 uppercase">
         @{String(user.username || user.name || "user")}
       </p>
       <p className={`text-xs font-black tracking-wider mt-2 bg-clip-text text-transparent bg-gradient-to-r ${
-        isFirst ? 'from-[#D946EF] to-[#8B5CF6]' : 'from-white to-white/70'
+        isFirst ? 'from-amber-500 to-orange-600' : 'from-slate-500 to-slate-400'
       }`}>
         {formatPrice(user.totalMyr, user.totalIdr)}
       </p>
@@ -188,13 +188,13 @@ function PodiumCard({
       {/* Podium Block */}
       <div className={`mx-auto rounded-t-2xl mt-4 flex items-center justify-center border-t-2 border-l border-r backdrop-blur-md ${
         isFirst 
-          ? 'w-28 h-32 bg-gradient-to-t from-[#D946EF]/20 to-[#D946EF]/5 border-t-[#D946EF]/50 border-x-[#D946EF]/20' 
+          ? 'w-28 h-32 bg-gradient-to-t from-amber-400/25 to-amber-400/10 border-t-amber-400/50 border-x-amber-400/20' 
           : rank === 2
           ? 'w-24 h-24 bg-gradient-to-t from-slate-400/20 to-slate-400/5 border-t-slate-400/50 border-x-slate-400/20'
-          : 'w-24 h-16 bg-gradient-to-t from-[#8B5CF6]/20 to-[#8B5CF6]/5 border-t-[#8B5CF6]/50 border-x-[#8B5CF6]/20'
+          : 'w-24 h-16 bg-gradient-to-t from-amber-800/20 to-amber-800/5 border-t-amber-800/50 border-x-amber-800/20'
       }`}>
         <span className={`text-3xl font-black ${
-          isFirst ? 'text-[#D946EF] drop-shadow-[0_0_10px_rgba(255,184,0,0.5)]' : 'text-white/30'
+          isFirst ? 'text-primary drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]' : 'text-muted-foreground/60'
         }`}>
           #{rank}
         </span>
@@ -203,9 +203,9 @@ function PodiumCard({
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    RANK TREND INDICATOR
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function RankTrend({ trend }: { trend?: "up" | "down" | "same" }) {
   if (!trend || trend === "same") {
     return <Minus className="h-3 w-3 text-muted-foreground" />;
@@ -218,9 +218,9 @@ function RankTrend({ trend }: { trend?: "up" | "down" | "same" }) {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function Leaderboard() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { formatPrice } = useCurrency();
@@ -260,22 +260,22 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen relative pt-24 pb-12 overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-amber-400/20 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-orange-600/10 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
       
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
         {/* Header */}
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-500">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#8B5CF6]/10 border border-[#8B5CF6]/20 mb-6">
-            <Trophy className="h-4 w-4 text-[#D946EF]" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D946EF]">Top Spenders</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 mb-6">
+            <Trophy className="h-4 w-4 text-primary" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Top Spenders</span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent uppercase tracking-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-amber-500 via-orange-500 to-orange-600 bg-clip-text text-transparent uppercase tracking-tight mb-4">
             Leaderboard
           </h1>
           
-          <p className="text-sm text-white/60 font-medium max-w-md mx-auto leading-relaxed">
+          <p className="text-sm text-foreground/70 font-medium max-w-md mx-auto leading-relaxed">
             Top customer berdasarkan total transaksi. Belanja lebih banyak untuk naik peringkat!
           </p>
           
@@ -300,14 +300,14 @@ export default function Leaderboard() {
                 onClick={() => handleFilterChange(filter.id)}
                 className={`transition-all duration-300 h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest ${
                   isActive 
-                    ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black border-0 shadow-[0_0_20px_rgba(255,107,0,0.3)] scale-105" 
-                    : "bg-white/[0.02] border-white/10 text-white/70 hover:bg-white/[0.05] hover:text-white hover:border-white/20"
+                    ? "bg-gradient-to-r from-amber-400 to-orange-600 text-white border-0 shadow-[0_0_20px_rgba(249,115,22,0.35)] scale-105" 
+                    : "bg-secondary/50 border-border/80 text-foreground/75 hover:bg-secondary/60 hover:text-foreground hover:border-border"
                 }`}
               >
-                <Icon className={`h-3.5 w-3.5 mr-2 ${isActive ? 'text-black' : 'text-white/50'}`} />
+                <Icon className={`h-3.5 w-3.5 mr-2 ${isActive ? 'text-white' : 'text-muted-foreground/90'}`} />
                 {filter.label}
                 {isActive && (
-                  <Badge className="ml-2 h-5 bg-black/20 text-black border-0 px-1.5 font-bold">
+                  <Badge className="ml-2 h-5 bg-white/25 text-white border-0 px-1.5 font-bold">
                     {leaderboardData.length}
                   </Badge>
                 )}
@@ -340,22 +340,22 @@ export default function Leaderboard() {
 
         {/* Leaderboard Table */}
         {leaderboardData.length > 0 && (
-          <div className="rounded-[2rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+          <div className="rounded-[2rem] border border-border/80 bg-secondary/60 backdrop-blur-xl overflow-hidden shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
             {/* Current User Rank Banner */}
             {currentUserRank !== null && currentUserRank >= 0 && (
-              <div className="p-5 bg-gradient-to-r from-[#8B5CF6]/10 to-[#D946EF]/5 border-b border-white/10 flex items-center justify-between">
+              <div className="p-5 bg-gradient-to-r from-amber-400/15 to-orange-600/10 border-b border-border/80 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_15px_rgba(255,107,0,0.3)]">
-                    <Users className="h-6 w-6 text-black" />
+                  <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.35)]">
+                    <Users className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black tracking-widest text-[#D946EF] uppercase mb-1">Peringkat Anda</p>
-                    <p className="text-sm font-bold text-white">
+                    <p className="text-[10px] font-black tracking-widest text-primary uppercase mb-1">Peringkat Anda</p>
+                    <p className="text-sm font-bold text-foreground">
                       #{currentUserRank + 1} dari {leaderboardData.length} pengguna
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="bg-white/[0.02] border-white/10 hover:bg-white/[0.05] hover:text-[#D946EF] text-[10px] font-black uppercase tracking-widest h-10 px-4 rounded-xl">
+                <Button variant="outline" size="sm" className="bg-secondary/50 border-border/80 hover:bg-secondary/60 hover:text-primary text-[10px] font-black uppercase tracking-widest h-10 px-4 rounded-xl">
                   <ChevronUp className="mr-2 h-4 w-4" />
                   Naikkan
                 </Button>
@@ -365,23 +365,23 @@ export default function Leaderboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 bg-black/20">
-                    <th className="text-left p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em]">
+                  <tr className="border-b border-border/80 bg-secondary/80">
+                    <th className="text-left p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em]">
                       Rank
                     </th>
-                    <th className="text-left p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em]">
+                    <th className="text-left p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em]">
                       Pengguna
                     </th>
-                    <th className="text-left p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em] hidden md:table-cell">
+                    <th className="text-left p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em] hidden md:table-cell">
                       Game Favorite
                     </th>
-                    <th className="text-center p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em]">
+                    <th className="text-center p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em]">
                       Orders
                     </th>
-                    <th className="text-center p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em] hidden sm:table-cell">
+                    <th className="text-center p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em] hidden sm:table-cell">
                       Trend
                     </th>
-                    <th className="text-right p-5 font-black text-white/50 text-[10px] uppercase tracking-[0.2em]">
+                    <th className="text-right p-5 font-black text-muted-foreground/90 text-[10px] uppercase tracking-[0.2em]">
                       Total
                     </th>
                   </tr>
@@ -401,10 +401,10 @@ export default function Leaderboard() {
                     return (
                       <tr 
                         key={userData.rank || index} 
-                        className={`border-b border-white/5 transition-all duration-300 ${
+                        className={`border-b border-border/70 transition-all duration-300 ${
                           isCurrentUser 
-                            ? "bg-[#8B5CF6]/10 hover:bg-[#8B5CF6]/20" 
-                            : "hover:bg-white/[0.02]"
+                            ? "bg-primary/10 hover:bg-primary/20" 
+                            : "hover:bg-secondary/50"
                         }`}
                       >
                         {/* Rank */}
@@ -413,15 +413,15 @@ export default function Leaderboard() {
                             {isTop3 ? (
                               <div className={`h-10 w-10 rounded-xl flex items-center justify-center border ${
                                 rank === 1 
-                                  ? 'bg-[#D946EF]/10 text-[#D946EF] border-[#D946EF]/30' 
+                                  ? 'bg-primary/10 text-primary border-primary/30' 
                                   : rank === 2 
                                   ? 'bg-slate-400/10 text-slate-300 border-slate-400/30' 
-                                  : 'bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/30'
+                                  : 'bg-primary/10 text-primary border-primary/30'
                               }`}>
                                 <RankIcon className="h-5 w-5" />
                               </div>
                             ) : (
-                              <span className="h-10 w-10 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-center text-sm font-black text-white/50">
+                              <span className="h-10 w-10 rounded-xl bg-secondary/50 border border-border/80 flex items-center justify-center text-sm font-black text-muted-foreground/90">
                                 {rank}
                               </span>
                             )}
@@ -433,30 +433,30 @@ export default function Leaderboard() {
                           <div className="flex items-center gap-4">
                             <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-lg font-black relative border ${
                               isCurrentUser
-                                ? 'bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] text-black border-transparent shadow-[0_0_15px_rgba(255,107,0,0.3)]'
+                                ? 'bg-gradient-to-br from-amber-400 to-orange-600 text-white border-transparent shadow-[0_0_15px_rgba(249,115,22,0.35)]'
                                 : isTop3 && colors
                                 ? `bg-gradient-to-br ${colors.bg} ${colors.text} ${colors.border}`
-                                : 'bg-white/[0.02] text-white/70 border-white/10'
+                                : 'bg-secondary/50 text-foreground/75 border-border/80'
                             }`}>
                               {String(userData.name || "?").charAt(0).toUpperCase()}
                               {isCurrentUser && (
                                 <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-md bg-white flex items-center justify-center shadow-lg">
-                                  <Star className="h-3 w-3 text-black" fill="currentColor" />
+                                  <Star className="h-3 w-3 text-white" fill="currentColor" />
                                 </div>
                               )}
                             </div>
                             <div className="min-w-0">
                               <p className={`font-black tracking-wide uppercase truncate ${
-                                isCurrentUser ? 'text-[#D946EF]' : 'text-white'
+                                isCurrentUser ? 'text-primary' : 'text-foreground'
                               }`}>
                                 {String(userData.name || "Anonymous")}
                                 {isCurrentUser && (
-                                  <Badge className="ml-3 text-[9px] bg-[#8B5CF6]/20 text-[#D946EF] border-0 px-2 font-black uppercase tracking-widest">
+                                  <Badge className="ml-3 text-[9px] bg-primary/20 text-primary border-0 px-2 font-black uppercase tracking-widest">
                                     Anda
                                   </Badge>
                                 )}
                               </p>
-                              <p className="text-[10px] text-white/50 tracking-widest uppercase mt-1">
+                              <p className="text-[10px] text-muted-foreground/90 tracking-widest uppercase mt-1">
                                 @{String(userData.username || userData.name || "user")}
                               </p>
                             </div>
@@ -464,17 +464,17 @@ export default function Leaderboard() {
                         </td>
                         
                         {/* Favorite Game */}
-                        <td className="p-5 text-white/70 hidden md:table-cell">
+                        <td className="p-5 text-foreground/75 hidden md:table-cell">
                           <div className="flex items-center gap-2 font-medium">
-                            <Gamepad2 className="h-4 w-4 text-white/50" />
+                            <Gamepad2 className="h-4 w-4 text-muted-foreground/90" />
                             <span className="text-sm">{userData.favorite || "Multi Game"}</span>
                           </div>
                         </td>
                         
                         {/* Orders Count */}
                         <td className="p-5 text-center">
-                          <Badge variant="outline" className="text-xs bg-white/[0.02] border-white/10 text-white px-3 py-1 font-bold">
-                            <ShoppingCart className="h-3 w-3 mr-2 text-white/50" />
+                          <Badge variant="outline" className="text-xs bg-secondary/50 border-border/80 text-foreground px-3 py-1 font-bold">
+                            <ShoppingCart className="h-3 w-3 mr-2 text-muted-foreground/90" />
                             {userData.orders || 0}x
                           </Badge>
                         </td>
@@ -489,13 +489,13 @@ export default function Leaderboard() {
                           <div>
                             <p className={`font-black tracking-wider text-lg ${
                               isTop3 
-                                ? rank === 1 ? 'text-[#D946EF]' : 'text-[#8B5CF6]' 
-                                : 'text-white'
+                                ? rank === 1 ? 'text-primary' : 'text-primary' 
+                                : 'text-foreground'
                             }`}>
                               {formatPrice(userData.totalMyr, userData.totalIdr)}
                             </p>
                             {isTop3 && (
-                              <p className="text-[9px] text-white/50 uppercase tracking-[0.2em] font-black mt-1">
+                              <p className="text-[9px] text-muted-foreground/90 uppercase tracking-[0.2em] font-black mt-1">
                                 Top {rank} Spender
                               </p>
                             )}
@@ -509,20 +509,20 @@ export default function Leaderboard() {
             </div>
             
             {/* Footer */}
-            <div className="p-5 border-t border-white/10 bg-black/20">
-              <div className="flex items-center justify-between text-[10px] uppercase tracking-widest font-black text-white/50">
+            <div className="p-5 border-t border-border/80 bg-secondary/80">
+              <div className="flex items-center justify-between text-[10px] uppercase tracking-widest font-black text-muted-foreground/90">
                 <div className="flex items-center gap-6">
                   <span className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-white/30" />
+                    <Users className="h-4 w-4 text-muted-foreground/60" />
                     {leaderboardData.length} Pengguna
                   </span>
                   <span className="flex items-center gap-2">
-                    <ShoppingCart className="h-4 w-4 text-white/30" />
+                    <ShoppingCart className="h-4 w-4 text-muted-foreground/60" />
                     {leaderboardData.reduce((sum: number, u: any) => sum + (u.orders || 0), 0)} Total Orders
                   </span>
                 </div>
                 <span className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-white/30" />
+                  <Clock className="h-4 w-4 text-muted-foreground/60" />
                   Real-time
                 </span>
               </div>
@@ -532,15 +532,15 @@ export default function Leaderboard() {
 
         {/* Bottom CTA */}
         <div className="flex justify-center mt-12 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-500">
-          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-[#8B5CF6]/10 to-[#D946EF]/10 border border-[#8B5CF6]/30 shadow-[0_0_20px_rgba(255,107,0,0.15)]">
-            <Flame className="h-5 w-5 text-[#8B5CF6]" />
-            <span className="text-xs text-white/70 font-medium">
+          <div className="inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-amber-400/15 to-orange-600/10 border border-primary/30 shadow-[0_0_20px_rgba(255,107,0,0.15)]">
+            <Flame className="h-5 w-5 text-primary" />
+            <span className="text-xs text-foreground/75 font-medium">
               Data diperbarui secara realtime.
             </span>
-            <span className="text-xs font-black uppercase tracking-wider text-[#D946EF] ml-2">
+            <span className="text-xs font-black uppercase tracking-wider text-primary ml-2">
               Belanja lebih banyak untuk naik peringkat!
             </span>
-            <Gift className="h-5 w-5 text-[#D946EF]" />
+            <Gift className="h-5 w-5 text-primary" />
           </div>
         </div>
       </div>

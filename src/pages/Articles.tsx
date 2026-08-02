@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+﻿import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Clock } from "lucide-react";
 
@@ -14,7 +14,7 @@ const articles = [
   },
   {
     id: 2,
-    title: "Review Honkai: Star Rail — Worth Top Up atau Gratis Aja?",
+    title: "Review Honkai: Star Rail â€” Worth Top Up atau Gratis Aja?",
     excerpt: "Analisis mendalam apakah worth it untuk spending di Honkai Star Rail. Breakdown...",
     readTime: "7 min",
     date: "22 Apr 2026",
@@ -23,7 +23,7 @@ const articles = [
   },
   {
     id: 3,
-    title: "Netflix vs Disney+ vs Vidio — Mana yang Paling Worth?",
+    title: "Netflix vs Disney+ vs Vidio â€” Mana yang Paling Worth?",
     excerpt: "Perbandingan lengkap harga, konten, dan fitur dari 3 layanan streaming terpopuler di...",
     readTime: "6 min",
     date: "21 Apr 2026",
@@ -41,7 +41,7 @@ const articles = [
   },
   {
     id: 5,
-    title: "Update Free Fire April 2026 — Skin Baru & Event Spesial",
+    title: "Update Free Fire April 2026 â€” Skin Baru & Event Spesial",
     excerpt: "Rangkuman update terbaru Free Fire bulan April 2026. Ada skin legendary baru, event t...",
     readTime: "3 min",
     date: "19 Apr 2026",
@@ -59,7 +59,7 @@ const articles = [
   },
   {
     id: 7,
-    title: "Promo Top Up Spesial April 2026 — Cashback Hingga 10%!",
+    title: "Promo Top Up Spesial April 2026 â€” Cashback Hingga 10%!",
     excerpt: "Jangan lewatkan promo cashback spesial bulan April! Dapatkan bonus saldo untuk...",
     readTime: "2 min",
     date: "17 Apr 2026",
@@ -84,18 +84,18 @@ export default function Articles() {
   return (
     <div className="container mx-auto px-4 py-8 relative pt-24 pb-12 overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-[#8B5CF6]/10 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-[#D946EF]/5 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-b from-amber-400/20 to-transparent blur-[100px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-t from-orange-600/10 to-transparent blur-[120px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
 
       <div className="relative z-10">
         <div className="text-center mb-12 animate-in slide-in-from-top-4 fade-in duration-500">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,107,0,0.3)] border border-[#8B5CF6]/20">
-            <FileText className="h-8 w-8 text-black" />
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(255,107,0,0.3)] border border-white/30">
+            <FileText className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70 uppercase tracking-tight mb-2">
+          <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600 uppercase tracking-tight mb-2">
             Artikel
           </h1>
-          <p className="text-[10px] text-white/50 font-black uppercase tracking-[0.2em]">
+          <p className="text-[10px] text-muted-foreground/90 font-black uppercase tracking-[0.2em]">
             Tips, review, dan berita terbaru seputar game dan top up
           </p>
         </div>
@@ -120,31 +120,31 @@ export default function Articles() {
 
 function ArticleCard({ article }: { article: typeof articles[0] }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-[#0B0A10]/80 backdrop-blur-xl overflow-hidden hover:border-[#8B5CF6]/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group cursor-pointer relative hover:-translate-y-1">
-      <div className="aspect-video relative overflow-hidden bg-black/40 border-b border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent group-hover:scale-105 transition-transform duration-500" />
+    <div className="rounded-[1.5rem] border border-border/80 bg-secondary/60 backdrop-blur-xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group cursor-pointer relative hover:-translate-y-1">
+      <div className="aspect-video relative overflow-hidden bg-secondary border-b border-border/70">
+        <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 to-transparent group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <FileText className="h-10 w-10 text-white/10 group-hover:text-[#8B5CF6]/20 transition-colors duration-300" />
+          <FileText className="h-10 w-10 text-foreground/10 group-hover:text-primary/20 transition-colors duration-300" />
         </div>
         {article.featured && (
-          <div className="absolute top-3 left-3 px-2 py-1 rounded bg-[#8B5CF6]/20 border border-[#8B5CF6]/50 text-[10px] font-black uppercase tracking-widest text-[#D946EF] backdrop-blur-md">
+          <div className="absolute top-3 left-3 px-2 py-1 rounded bg-primary/20 border border-primary/50 text-[10px] font-black uppercase tracking-widest text-primary backdrop-blur-md">
             Featured
           </div>
         )}
       </div>
       <div className="p-5">
-        <div className="text-[#8B5CF6] text-[10px] font-black uppercase tracking-widest mb-2">
+        <div className="text-primary text-[10px] font-black uppercase tracking-widest mb-2">
           {article.category}
         </div>
-        <h3 className="font-black text-white text-sm line-clamp-2 group-hover:text-[#D946EF] transition-colors uppercase tracking-tight leading-snug">
+        <h3 className="font-black text-foreground text-sm line-clamp-2 group-hover:text-primary transition-colors uppercase tracking-tight leading-snug">
           {article.title}
         </h3>
-        <p className="text-[10px] font-medium text-white/50 mt-3 line-clamp-2 leading-relaxed">
+        <p className="text-[10px] font-medium text-muted-foreground/90 mt-3 line-clamp-2 leading-relaxed">
           {article.excerpt}
         </p>
-        <div className="flex items-center gap-4 mt-5 pt-4 border-t border-white/5 text-[10px] font-black uppercase tracking-widest text-white/40">
+        <div className="flex items-center gap-4 mt-5 pt-4 border-t border-border/70 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <Clock className="h-3 w-3 text-[#D946EF]" /> {article.readTime}
+            <Clock className="h-3 w-3 text-primary" /> {article.readTime}
           </span>
           <span>{article.date}</span>
         </div>

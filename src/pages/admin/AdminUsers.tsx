@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { trpc } from "@/providers/trpc";
 import { Card } from "@/components/ui/card";
@@ -291,19 +291,19 @@ export default function AdminUsers() {
     switch (role?.toLowerCase()) {
       case "admin":
         return (
-          <Badge className="bg-gradient-to-r from-rose-500 to-red-600 text-white border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
+          <Badge className="bg-gradient-to-r from-rose-500 to-red-600 text-foreground border-none shadow-[0_0_10px_rgba(239,68,68,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
             Admin
           </Badge>
         );
       case "business":
         return (
-          <Badge className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white border-none shadow-[0_0_10px_rgba(124,58,237,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
+          <Badge className="bg-gradient-to-r from-violet-600 to-indigo-600 text-foreground border-none shadow-[0_0_10px_rgba(124,58,237,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
             Business Partner
           </Badge>
         );
       case "platinum":
         return (
-          <Badge className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white border-none shadow-[0_0_10px_rgba(6,182,212,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
+          <Badge className="bg-gradient-to-r from-cyan-400 to-blue-500 text-foreground border-none shadow-[0_0_10px_rgba(6,182,212,0.5)] font-semibold px-2 py-0.5 text-[10px] uppercase tracking-wider">
             Platinum Partner
           </Badge>
         );
@@ -337,11 +337,11 @@ export default function AdminUsers() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-black text-white">Users</h1>
-            <p className="text-sm text-white/40 mt-1">Kelola semua pengguna platform</p>
+            <h1 className="text-2xl font-black text-foreground">Users</h1>
+            <p className="text-sm text-muted-foreground mt-1">Kelola semua pengguna platform</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+            <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full" style={{ background: "rgba(120,90,40,0.06)", border: "1px solid rgba(120,90,40,0.15)", color: "rgba(38,33,26,0.55)" }}>
               {meta?.total || 0} total users
             </span>
             <button onClick={() => refetch()} disabled={isPending}
@@ -354,7 +354,7 @@ export default function AdminUsers() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/60 pointer-events-none" />
           <input
             className="lg-input w-full h-10 pl-10 pr-10 rounded-xl text-sm"
             placeholder="Cari nama, email, Telegram ID..."
@@ -364,7 +364,7 @@ export default function AdminUsers() {
           {search && (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-foreground/75 transition-colors"
             >
               <X className="h-4 w-4" />
             </button>
@@ -376,13 +376,13 @@ export default function AdminUsers() {
           <div className="lg-card rounded-2xl overflow-hidden">
           {isPending ? (
             <div className="p-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#8B5CF6]" />
-              <p className="text-sm text-white/40 mt-3 font-bold">Memuat data users...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm text-muted-foreground mt-3 font-bold">Memuat data users...</p>
             </div>
           ) : users.length === 0 ? (
             <div className="p-12 text-center">
-              <Search className="h-12 w-12 mx-auto mb-3 text-white/10" />
-              <p className="text-sm text-white/40">Tidak ada user ditemukan</p>
+              <Search className="h-12 w-12 mx-auto mb-3 text-foreground/10" />
+              <p className="text-sm text-muted-foreground">Tidak ada user ditemukan</p>
               {search && (
                 <button onClick={() => setSearch("")} className="mt-4 lg-btn-ghost px-4 py-2 rounded-xl text-xs font-bold">
                   Reset pencarian
@@ -393,9 +393,9 @@ export default function AdminUsers() {
             <div className="overflow-x-auto relative z-10">
               <table className="w-full text-sm">
                 <thead>
-                  <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(0,0,0,0.3)" }}>
+                  <tr style={{ borderBottom: "1px solid rgba(120,90,40,0.12)", background: "rgba(120,90,40,0.04)" }}>
                     {["User", "Email", "Role", "Saldo", "Status", "Aksi"].map(h => (
-                      <th key={h} className={`p-3 text-[10px] font-black uppercase tracking-widest text-white/30 ${
+                      <th key={h} className={`p-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 ${
                         h === "Email" ? "text-left hidden md:table-cell" :
                         h === "Role" ? "text-center hidden lg:table-cell" :
                         h === "Saldo" ? "text-right" :
@@ -417,7 +417,7 @@ export default function AdminUsers() {
                         className={`lg-table-row transition-all duration-300 group ${
                           !u.isActive ? "opacity-50 grayscale" : ""
                         }`}
-                        style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
+                        style={{ borderBottom: "1px solid rgba(120,90,40,0.1)" }}
                       >
                         <td className="p-4 relative">
                           {/* Highlight indicator */}
@@ -426,10 +426,10 @@ export default function AdminUsers() {
                           <div
                             className={`h-9 w-9 rounded-xl flex items-center justify-center text-xs font-black shrink-0 ${
                               u.isActive
-                                ? "text-[#8B5CF6]"
-                                : "text-white/30"
+                                ? "text-primary"
+                                : "text-muted-foreground/60"
                             }`}
-                            style={{ background: u.isActive ? "rgba(255,107,0,0.1)" : "rgba(255,255,255,0.05)", border: `1px solid ${u.isActive ? "rgba(255,107,0,0.2)" : "rgba(255,255,255,0.1)"}` }}
+                            style={{ background: u.isActive ? "rgba(249,115,22,0.12)" : "rgba(120,90,40,0.05)", border: `1px solid ${u.isActive ? "rgba(249,115,22,0.2)" : "rgba(120,90,40,0.15)"}` }}
                           >
                             {u.name?.charAt(0).toUpperCase() || "?"}
                           </div>
@@ -446,13 +446,13 @@ export default function AdminUsers() {
                           </div>
                         </div>
                       </td>
-                      <td className="p-3 text-white/60 text-xs hidden md:table-cell font-bold">
-                          <div className="flex items-center text-sm text-white/50 gap-1.5 mt-0.5">
+                      <td className="p-3 text-foreground/70 text-xs hidden md:table-cell font-bold">
+                          <div className="flex items-center text-sm text-muted-foreground/90 gap-1.5 mt-0.5">
                             <Mail className="h-3.5 w-3.5" />
                             {u.email ? (
                               <span className="truncate max-w-[180px]">{u.email}</span>
                             ) : (
-                              <span className="text-white/30 italic text-xs">Tiada Emel</span>
+                              <span className="text-muted-foreground/60 italic text-xs">Tiada Emel</span>
                             )}
                           </div>
                       </td>
@@ -482,7 +482,7 @@ export default function AdminUsers() {
                           {/* Edit */}
                           <button
                             onClick={() => openDialog(u, "edit")}
-                            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-primary transition-all hover:scale-110 active:scale-95"
+                            className="p-2 rounded-lg bg-secondary/60 hover:bg-secondary/80 hover:text-primary transition-all hover:scale-110 active:scale-95"
                             title="Edit user"
                           >
                             <Pencil className="h-3.5 w-3.5" />
@@ -491,7 +491,7 @@ export default function AdminUsers() {
                           {/* Balance */}
                           <button
                             onClick={() => openDialog(u, "balance")}
-                            className="p-2 rounded-lg bg-white/5 hover:bg-amber-500/20 hover:text-amber-400 transition-all hover:scale-110 active:scale-95"
+                            className="p-2 rounded-lg bg-secondary/60 hover:bg-amber-500/20 hover:text-amber-400 transition-all hover:scale-110 active:scale-95"
                             title="Adjust saldo"
                           >
                             <DollarSign className="h-3.5 w-3.5" />
@@ -500,8 +500,8 @@ export default function AdminUsers() {
                           {/* Toggle Active/Inactive */}
                           <button
                             onClick={() => handleToggleActive(u)}
-                            className={`p-2 rounded-lg bg-white/5 transition-all hover:scale-110 active:scale-95 ${
-                              u.isActive ? "hover:bg-red-500/20 hover:text-red-400" : "hover:bg-emerald-500/20 hover:text-emerald-400"
+                            className={`p-2 rounded-lg bg-secondary/60 transition-all hover:scale-110 active:scale-95 ${
+                              u.isActive ? "hover:bg-red-500/20 hover:text-red-600" : "hover:bg-emerald-500/20 hover:text-emerald-400"
                             }`}
                             title={u.isActive ? "Nonaktifkan user" : "Aktifkan user"}
                           >
@@ -515,7 +515,7 @@ export default function AdminUsers() {
                           {/* Delete permanently */}
                           <button
                             onClick={() => openDialog(u, "delete")}
-                            className="p-2 rounded-lg bg-white/5 hover:bg-red-500/20 hover:text-red-500 transition-all hover:scale-110 active:scale-95"
+                            className="p-2 rounded-lg bg-secondary/60 hover:bg-red-500/20 hover:text-red-500 transition-all hover:scale-110 active:scale-95"
                             title="Hapus permanen"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
@@ -532,9 +532,9 @@ export default function AdminUsers() {
 
           {/* Pagination */}
           {meta && meta.pages > 1 && (
-            <div className="flex items-center justify-between p-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <p className="text-xs text-white/30 font-bold">
-                Halaman {page} dari {meta.pages} · {meta.total} users
+            <div className="flex items-center justify-between p-4" style={{ borderTop: "1px solid rgba(120,90,40,0.12)" }}>
+              <p className="text-xs text-muted-foreground/60 font-bold">
+                Halaman {page} dari {meta.pages} Â· {meta.total} users
               </p>
               <div className="flex gap-2">
                 <button
@@ -572,8 +572,8 @@ export default function AdminUsers() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               {activeTab === "edit" && <UserCog className="h-5 w-5 text-primary" />}
-              {activeTab === "balance" && <Wallet className="h-5 w-5 text-amber-500" />}
-              {activeTab === "deactivate" && <Ban className="h-5 w-5 text-violet-400" />}
+              {activeTab === "balance" && <Wallet className="h-5 w-5 text-amber-600" />}
+              {activeTab === "deactivate" && <Ban className="h-5 w-5 text-primary" />}
               {activeTab === "delete" && <AlertTriangle className="h-5 w-5 text-destructive" />}
               {activeTab === "edit" && "Edit User"}
               {activeTab === "balance" && "Adjust Saldo"}
@@ -582,7 +582,7 @@ export default function AdminUsers() {
             </DialogTitle>
             {selectedUser && (
               <DialogDescription>
-                {selectedUser.name} · {selectedUser.email}
+                {selectedUser.name} Â· {selectedUser.email}
               </DialogDescription>
             )}
           </DialogHeader>
@@ -792,7 +792,7 @@ export default function AdminUsers() {
                           const originalIdr = selectedUser.balanceIdr || 0;
                           const addedMyr = currency === "MYR" ? amount : amount / 4111;
                           const addedIdr = currency === "IDR" ? amount : amount * 4111;
-                          return `${formatPrice(originalMyr, originalIdr)} → ${formatPrice(originalMyr + addedMyr, originalIdr + addedIdr)}`;
+                          return `${formatPrice(originalMyr, originalIdr)} â†’ ${formatPrice(originalMyr + addedMyr, originalIdr + addedIdr)}`;
                         })()}
                         {balanceType === "subtract" && (() => {
                           const amount = Number(balanceAmount) || 0;
@@ -800,13 +800,13 @@ export default function AdminUsers() {
                           const originalIdr = selectedUser.balanceIdr || 0;
                           const subMyr = currency === "MYR" ? amount : amount / 4111;
                           const subIdr = currency === "IDR" ? amount : amount * 4111;
-                          return `${formatPrice(originalMyr, originalIdr)} → ${formatPrice(Math.max(0, originalMyr - subMyr), Math.max(0, originalIdr - subIdr))}`;
+                          return `${formatPrice(originalMyr, originalIdr)} â†’ ${formatPrice(Math.max(0, originalMyr - subMyr), Math.max(0, originalIdr - subIdr))}`;
                         })()}
                         {balanceType === "set" && (() => {
                           const amount = Number(balanceAmount) || 0;
                           const targetMyr = currency === "MYR" ? amount : amount / 4111;
                           const targetIdr = currency === "IDR" ? amount : amount * 4111;
-                          return `${formatPrice(selectedUser.balanceMyr || 0, selectedUser.balanceIdr || 0)} → ${formatPrice(targetMyr, targetIdr)}`;
+                          return `${formatPrice(selectedUser.balanceMyr || 0, selectedUser.balanceIdr || 0)} â†’ ${formatPrice(targetMyr, targetIdr)}`;
                         })()}
                       </p>
                     </div>
@@ -822,7 +822,7 @@ export default function AdminUsers() {
                       Batal
                     </Button>
                     <Button
-                      className="flex-1 bg-amber-500 hover:bg-amber-600 text-white"
+                      className="flex-1 bg-amber-500 hover:bg-amber-600 text-foreground"
                       onClick={handleBalanceUpdate}
                       disabled={isMutating || !balanceAmount}
                     >
@@ -840,8 +840,8 @@ export default function AdminUsers() {
               {activeTab === "deactivate" && (
                 <div className="space-y-4">
                   <div className="p-4 rounded-lg bg-violet-600/10 border border-violet-500/20 text-center">
-                    <Ban className="h-12 w-12 mx-auto mb-2 text-violet-400" />
-                    <p className="font-semibold text-violet-400">Nonaktifkan User?</p>
+                    <Ban className="h-12 w-12 mx-auto mb-2 text-primary" />
+                    <p className="font-semibold text-primary">Nonaktifkan User?</p>
                     <p className="text-sm text-muted-foreground mt-1">
                       User tidak akan bisa login, namun semua data tetap tersimpan.
                       Bisa diaktifkan kembali kapan saja.
@@ -879,7 +879,7 @@ export default function AdminUsers() {
                       Batal
                     </Button>
                     <Button
-                      className="flex-1 bg-violet-600 hover:bg-orange-600 text-white"
+                      className="flex-1 bg-violet-600 hover:bg-orange-600 text-foreground"
                       onClick={handleDeactivate}
                       disabled={isMutating}
                     >

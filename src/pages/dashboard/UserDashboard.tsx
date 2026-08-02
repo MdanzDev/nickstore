@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+﻿import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { trpc } from "@/providers/trpc";
 import { useAuth } from "@/hooks/useAuth";
@@ -40,9 +40,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    CONSTANTS
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const QUICK_ACTIONS = [
   { 
     label: "Top Up Saldo", 
@@ -74,9 +74,9 @@ const QUICK_ACTIONS = [
   },
 ];
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    SKELETON
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function DashboardSkeleton() {
   return (
     <UserDashboardLayout>
@@ -109,15 +109,15 @@ function DashboardSkeleton() {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    STAT CARD
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function StatCard({ 
   icon, 
   label, 
   value, 
-  color = "text-white",
-  bgColor = "bg-white/[0.02]",
+  color = "text-foreground",
+  bgColor = "bg-secondary/50",
   trend,
 }: { 
   icon: React.ReactNode; 
@@ -128,21 +128,21 @@ function StatCard({
   trend?: "up" | "down" | null;
 }) {
   return (
-    <div className={`p-5 text-center hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,107,0,0.1)] ${bgColor} border border-white/10 rounded-2xl`}>
+    <div className={`p-5 text-center hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(249,115,22,0.12)] ${bgColor} border border-border/80 rounded-2xl`}>
       <div className={`${color} mb-3 flex justify-center`}>{icon}</div>
-      <p className="text-2xl font-black text-white">{value}</p>
+      <p className="text-2xl font-black text-foreground">{value}</p>
       <div className="flex items-center justify-center gap-1.5 mt-2">
-        <p className="text-[9px] font-black uppercase tracking-widest text-white/50">{label}</p>
+        <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/90">{label}</p>
         {trend === "up" && <TrendingUp className="h-3 w-3 text-emerald-400" />}
-        {trend === "down" && <TrendingUp className="h-3 w-3 text-red-400 rotate-180" />}
+        {trend === "down" && <TrendingUp className="h-3 w-3 text-red-600 rotate-180" />}
       </div>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    STATUS BADGE
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function StatusBadge({ status }: { status: string }) {
   const config = useMemo(() => {
     switch (status?.toLowerCase()) {
@@ -158,7 +158,7 @@ function StatusBadge({ status }: { status: string }) {
       case "pending":
         return { 
           label: "Pending", 
-          className: "bg-[#D946EF]/10 text-[#D946EF] border-[#D946EF]/20 shadow-[0_0_10px_rgba(255,184,0,0.1)]",
+          className: "bg-primary/10 text-primary border-primary/20 shadow-[0_0_10px_rgba(255,184,0,0.1)]",
           icon: Clock
         };
       case "processing":
@@ -173,19 +173,19 @@ function StatusBadge({ status }: { status: string }) {
       case "cancelled":
         return { 
           label: "Failed", 
-          className: "bg-red-500/10 text-red-400 border-red-500/20 shadow-[0_0_10px_rgba(248,113,113,0.1)]",
+          className: "bg-red-500/10 text-red-600 border-red-500/20 shadow-[0_0_10px_rgba(248,113,113,0.1)]",
           icon: XCircle
         };
       case "refund":
         return { 
           label: "Refund", 
-          className: "bg-[#8B5CF6]/10 text-[#8B5CF6] border-[#8B5CF6]/20 shadow-[0_0_10px_rgba(255,107,0,0.1)]",
+          className: "bg-primary/10 text-primary border-primary/20 shadow-[0_0_10px_rgba(249,115,22,0.12)]",
           icon: AlertCircle
         };
       default:
         return { 
           label: status || "Unknown", 
-          className: "bg-white/5 text-white/50 border-white/10",
+          className: "bg-secondary/60 text-muted-foreground/90 border-border/80",
           icon: AlertCircle
         };
     }
@@ -201,9 +201,9 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-/* ─────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    MAIN COMPONENT
-───────────────────────────────────────────── */
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function UserDashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -239,31 +239,31 @@ export default function UserDashboard() {
       case "admin":
         return {
           label: "Admin",
-          className: "bg-gradient-to-r from-rose-500 to-red-600 text-white border-none shadow-[0_0_15px_rgba(225,29,72,0.4)]",
+          className: "bg-gradient-to-r from-rose-500 to-red-600 text-foreground border-none shadow-[0_0_15px_rgba(225,29,72,0.4)]",
           icon: Crown,
         };
       case "business":
         return {
           label: "Business Partner",
-          className: "bg-gradient-to-r from-emerald-400 to-green-500 text-black border-none shadow-[0_0_15px_rgba(52,211,153,0.3)]",
+          className: "bg-gradient-to-r from-emerald-400 to-green-500 text-white border-none shadow-[0_0_15px_rgba(52,211,153,0.3)]",
           icon: Star,
         };
       case "platinum":
         return {
           label: "Platinum Partner",
-          className: "bg-gradient-to-r from-cyan-400 to-blue-500 text-black border-none shadow-[0_0_15px_rgba(34,211,238,0.3)]",
+          className: "bg-gradient-to-r from-cyan-400 to-blue-500 text-white border-none shadow-[0_0_15px_rgba(34,211,238,0.3)]",
           icon: Sparkles,
         };
       case "gold":
         return {
           label: "Gold Partner",
-          className: "bg-gradient-to-r from-[#D946EF] to-[#8B5CF6] text-black border-none shadow-[0_0_15px_rgba(255,107,0,0.3)]",
+          className: "bg-gradient-to-r from-amber-500 to-orange-600 text-white border-none shadow-[0_0_15px_rgba(249,115,22,0.35)]",
           icon: Star,
         };
       default:
         return {
           label: "Customer",
-          className: "bg-white/10 text-white/70 border-white/20",
+          className: "bg-secondary/80 text-foreground/75 border-border",
           icon: Users,
         };
     }
@@ -297,17 +297,17 @@ export default function UserDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between animate-in fade-in slide-in-from-top-4 duration-500">
           <div>
-            <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-white">Dashboard</h1>
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mt-1">
+            <h1 className="text-3xl lg:text-4xl font-black uppercase tracking-tight text-foreground">Dashboard</h1>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90 mt-1">
               Selamat datang kembali,{" "}
-              <span className="text-[#D946EF]">{user?.name || "User"}</span>
+              <span className="text-primary">{user?.name || "User"}</span>
             </p>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleRefresh}
-            className="border-white/10 hover:border-[#8B5CF6]/50 hover:bg-[#8B5CF6]/10 text-white"
+            className="border-border/80 hover:border-primary/50 hover:bg-primary/10 text-foreground"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             <span className="text-[10px] font-black uppercase tracking-widest">Refresh</span>
@@ -319,14 +319,14 @@ export default function UserDashboard() {
           {QUICK_ACTIONS.map((action, i) => (
             <button
               key={i}
-              className="p-5 flex flex-col items-center gap-3 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group hover:border-[#8B5CF6]/30"
+              className="p-5 flex flex-col items-center gap-3 rounded-2xl bg-secondary/60 border border-border/80 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.15)] group hover:border-primary/30"
               onClick={() => navigate(action.path)}
             >
               <div className={`h-12 w-12 rounded-2xl bg-gradient-to-br ${action.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)]`}>
-                <action.icon className="h-6 w-6 text-white" />
+                <action.icon className="h-6 w-6 text-foreground" />
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white group-hover:text-[#D946EF] transition-colors">{action.label}</span>
-              <div className="text-[8px] font-black uppercase tracking-widest text-white/40 bg-white/5 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">{action.label}</span>
+              <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground bg-secondary/60 px-2 py-0.5 rounded">
                 {action.badge}
               </div>
             </button>
@@ -336,21 +336,21 @@ export default function UserDashboard() {
         {/* Balance & Profile */}
         <div className="grid md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-150">
           {/* Profile Card */}
-          <div className="p-6 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(255,107,0,0.1)]">
+          <div className="p-6 rounded-2xl bg-secondary/60 border border-border/80 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(249,115,22,0.12)]">
             <div className="flex items-center gap-5">
               <div className="relative">
-                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)]">
-                  <span className="text-2xl font-black text-black">
+                <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.35)]">
+                  <span className="text-2xl font-black text-white">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </span>
                 </div>
-                <div className="absolute -bottom-2 -right-2 h-6 w-6 rounded-xl bg-emerald-400 flex items-center justify-center shadow-[0_0_10px_rgba(52,211,153,0.5)] border-2 border-[#0B0A10]">
-                  <Check className="h-3.5 w-3.5 text-black" />
+                <div className="absolute -bottom-2 -right-2 h-6 w-6 rounded-xl bg-emerald-400 flex items-center justify-center shadow-[0_0_10px_rgba(52,211,153,0.5)] border-2 border-card">
+                  <Check className="h-3.5 w-3.5 text-white" />
                 </div>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-black text-xl text-white uppercase tracking-tight truncate">{user?.name || "User"}</p>
-                <p className="text-[10px] font-black text-white/50 uppercase tracking-widest truncate mt-0.5">
+                <p className="font-black text-xl text-foreground uppercase tracking-tight truncate">{user?.name || "User"}</p>
+                <p className="text-[10px] font-black text-muted-foreground/90 uppercase tracking-widest truncate mt-0.5">
                   {(user as any)?.email || "user@email.com"}
                 </p>
                 <div className={`inline-flex items-center gap-1.5 mt-3 px-3 py-1 rounded border text-[9px] font-black uppercase tracking-widest ${roleBadge.className}`}>
@@ -362,26 +362,26 @@ export default function UserDashboard() {
           </div>
 
           {/* Balance Card */}
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0B0A10]/80 to-[#1a1310]/80 border border-[#8B5CF6]/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex items-center shadow-[0_0_30px_rgba(255,107,0,0.15)] group">
-            <div className="absolute top-0 right-0 w-48 h-48 bg-[#8B5CF6]/10 rounded-full blur-2xl group-hover:bg-[#8B5CF6]/20 transition-colors" />
-            <div className="absolute bottom-0 right-10 w-24 h-24 bg-[#D946EF]/10 rounded-full blur-xl translate-y-1/2" />
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-400/20 to-orange-600/10 border border-primary/20 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden flex items-center shadow-[0_0_30px_rgba(255,107,0,0.15)] group">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-colors" />
+            <div className="absolute bottom-0 right-10 w-24 h-24 bg-primary/10 rounded-full blur-xl translate-y-1/2" />
             
             <div className="relative z-10 w-full flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-black text-[#D946EF] uppercase tracking-widest flex items-center gap-2">
+                <p className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
                   <Wallet className="h-3.5 w-3.5" /> 
                   Saldo Akun
                 </p>
-                <p className="text-3xl lg:text-5xl font-black text-white mt-2 tracking-tight">
+                <p className="text-3xl lg:text-5xl font-black text-foreground mt-2 tracking-tight">
                   {formattedBalance}
                 </p>
-                <p className="text-[9px] font-black text-white/40 uppercase tracking-widest mt-2">
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mt-2">
                   Tersedia untuk transaksi
                 </p>
               </div>
               
-              <div className="hidden sm:flex h-20 w-20 rounded-2xl bg-gradient-to-br from-[#8B5CF6] to-[#D946EF] items-center justify-center shadow-[0_0_20px_rgba(255,107,0,0.3)] group-hover:scale-110 transition-transform duration-500">
-                <Wallet className="h-10 w-10 text-black" />
+              <div className="hidden sm:flex h-20 w-20 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 items-center justify-center shadow-[0_0_20px_rgba(249,115,22,0.35)] group-hover:scale-110 transition-transform duration-500">
+                <Wallet className="h-10 w-10 text-white" />
               </div>
             </div>
           </div>
@@ -389,22 +389,22 @@ export default function UserDashboard() {
 
         {/* Telegram Connection Widget */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-175">
-          <div className="p-5 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,136,204,0.15)]">
+          <div className="p-5 rounded-2xl bg-secondary/60 border border-border/80 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,136,204,0.15)]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-2xl flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] ${
                   (user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
                     ? 'bg-gradient-to-br from-[#0088cc] to-[#0077bb]'
-                    : 'bg-white/5 border border-white/10'
+                    : 'bg-secondary/60 border border-border/80'
                 }`}>
                   <MessageSquare className={`h-6 w-6 ${
                     (user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
-                      ? 'text-white'
-                      : 'text-white/30'
+                      ? 'text-foreground'
+                      : 'text-muted-foreground/60'
                   }`} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-2">
                     Telegram Bot
                     {(user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_') ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[8px]">
@@ -412,12 +412,12 @@ export default function UserDashboard() {
                         Terhubung
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[8px]">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20 text-[8px]">
                         Belum ditautkan
                       </span>
                     )}
                   </p>
-                  <p className="text-[9px] font-black uppercase tracking-widest text-white/40 mt-1">
+                  <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mt-1">
                     {(user as any)?.telegramId && !(user as any)?.telegramId?.startsWith('web_')
                       ? `ID: ${(user as any).telegramId}`
                       : 'Hubungkan untuk notifikasi & top up via Telegram'
@@ -454,12 +454,12 @@ export default function UserDashboard() {
         {/* Transaction Stats */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <Target className="h-4 w-4 text-[#D946EF]" />
+            <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-2">
+              <Target className="h-4 w-4 text-primary" />
               Ringkasan Transaksi
             </h2>
-            <div className="px-3 py-1 rounded bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-widest text-white/60 flex items-center">
-              <Clock className="h-3 w-3 mr-1.5 text-[#D946EF]" />
+            <div className="px-3 py-1 rounded bg-secondary/60 border border-border/80 text-[9px] font-black uppercase tracking-widest text-foreground/70 flex items-center">
+              <Clock className="h-3 w-3 mr-1.5 text-primary" />
               Real-time
             </div>
           </div>
@@ -469,14 +469,14 @@ export default function UserDashboard() {
               icon={<Receipt className="h-5 w-5" />} 
               label="Total" 
               value={stats.total}
-              bgColor="bg-white/[0.02]"
+              bgColor="bg-secondary/50"
             />
             <StatCard 
               icon={<Clock className="h-5 w-5" />} 
               label="Menunggu" 
               value={stats.pending} 
-              color="text-[#D946EF]"
-              bgColor="bg-[#D946EF]/[0.02]"
+              color="text-primary"
+              bgColor="bg-amber-400/5"
             />
             <StatCard 
               icon={<Zap className="h-5 w-5" />} 
@@ -497,7 +497,7 @@ export default function UserDashboard() {
               icon={<XCircle className="h-5 w-5" />} 
               label="Gagal" 
               value={stats.failed} 
-              color="text-red-400"
+              color="text-red-600"
               bgColor="bg-red-500/[0.02]"
             />
           </div>
@@ -506,14 +506,14 @@ export default function UserDashboard() {
         {/* Recent Transactions */}
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <History className="h-4 w-4 text-[#D946EF]" />
+            <h2 className="text-[10px] font-black text-foreground uppercase tracking-widest flex items-center gap-2">
+              <History className="h-4 w-4 text-primary" />
               Riwayat Transaksi Terbaru
             </h2>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="text-[#8B5CF6] hover:text-[#D946EF] font-black uppercase tracking-widest text-[10px] hover:bg-white/[0.02]"
+              className="text-primary hover:text-primary font-black uppercase tracking-widest text-[10px] hover:bg-secondary/50"
               onClick={() => navigate("/dashboard/transactions")}
             >
               Lihat Semua 
@@ -521,17 +521,17 @@ export default function UserDashboard() {
             </Button>
           </div>
 
-          <div className="rounded-[1.5rem] overflow-hidden bg-[#0B0A10]/80 border border-white/10 shadow-2xl backdrop-blur-xl">
+          <div className="rounded-[1.5rem] overflow-hidden bg-secondary/60 border border-border/80 shadow-2xl backdrop-blur-xl">
             {orders.length === 0 ? (
               <div className="p-16 text-center">
-                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-white/5 mb-6 shadow-inner">
-                  <Receipt className="h-10 w-10 text-white/20" />
+                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/60 mb-6 shadow-inner">
+                  <Receipt className="h-10 w-10 text-muted-foreground/40" />
                 </div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">Belum Ada Transaksi</h3>
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-8 max-w-sm mx-auto">
+                <h3 className="text-xl font-black text-foreground uppercase tracking-tight mb-2">Belum Ada Transaksi</h3>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/90 mb-8 max-w-sm mx-auto">
                   Anda belum melakukan transaksi. Mulai top up sekarang dan dapatkan benefit member!
                 </p>
-                <Button onClick={() => navigate("/products")} className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-black font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform h-12 px-8">
+                <Button onClick={() => navigate("/products")} className="bg-gradient-to-r from-amber-400 to-orange-600 text-white font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform h-12 px-8">
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Mulai Belanja
                 </Button>
@@ -540,23 +540,23 @@ export default function UserDashboard() {
               <div className="overflow-x-auto custom-scrollbar">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 bg-white/[0.02]">
-                      <th className="text-left p-5 font-black text-white/40 text-[9px] uppercase tracking-widest">
+                    <tr className="border-b border-border/80 bg-secondary/50">
+                      <th className="text-left p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest">
                         Invoice
                       </th>
-                      <th className="text-left p-5 font-black text-white/40 text-[9px] uppercase tracking-widest">
+                      <th className="text-left p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest">
                         Item
                       </th>
-                      <th className="text-left p-5 font-black text-white/40 text-[9px] uppercase tracking-widest hidden md:table-cell">
+                      <th className="text-left p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest hidden md:table-cell">
                         Target ID
                       </th>
-                      <th className="text-right p-5 font-black text-white/40 text-[9px] uppercase tracking-widest">
+                      <th className="text-right p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest">
                         Total
                       </th>
-                      <th className="text-center p-5 font-black text-white/40 text-[9px] uppercase tracking-widest">
+                      <th className="text-center p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest">
                         Status
                       </th>
-                      <th className="text-center p-5 font-black text-white/40 text-[9px] uppercase tracking-widest w-10">
+                      <th className="text-center p-5 font-black text-muted-foreground text-[9px] uppercase tracking-widest w-10">
                         Aksi
                       </th>
                     </tr>
@@ -565,17 +565,17 @@ export default function UserDashboard() {
                     {orders.map((order: any, index: number) => (
                       <tr 
                         key={String(order.id)} 
-                        className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                        className="border-b border-border/70 hover:bg-secondary/50 transition-colors"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <td className="p-5">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-[10px] font-bold text-white/80">
+                            <span className="font-mono text-[10px] font-bold text-foreground/85">
                               {String(order.id).slice(0, 16)}...
                             </span>
                             <button
                               onClick={() => handleCopy(String(order.id), String(order.id))}
-                              className="text-white/40 hover:text-[#D946EF] transition-colors"
+                              className="text-muted-foreground hover:text-primary transition-colors"
                               aria-label="Salin invoice"
                             >
                               {copiedField === String(order.id) ? (
@@ -589,11 +589,11 @@ export default function UserDashboard() {
                         
                         <td className="p-5">
                           <div className="max-w-[200px]">
-                            <p className="text-xs font-black text-white uppercase tracking-tight truncate">
+                            <p className="text-xs font-black text-foreground uppercase tracking-tight truncate">
                               {String(order.notes || order.productName || "-")}
                             </p>
                             {order.keterangan && ["cancelled", "failed"].includes(order.status) && (
-                              <p className="text-[9px] font-black uppercase tracking-widest text-red-400 mt-1.5 flex items-center gap-1.5">
+                              <p className="text-[9px] font-black uppercase tracking-widest text-red-600 mt-1.5 flex items-center gap-1.5">
                                 <AlertCircle className="h-3 w-3" />
                                 <span className="truncate">{order.keterangan}</span>
                               </p>
@@ -602,7 +602,7 @@ export default function UserDashboard() {
                         </td>
                         
                         <td className="p-5 hidden md:table-cell">
-                          <span className="font-mono text-[10px] font-bold text-[#D946EF] bg-[#D946EF]/10 px-2.5 py-1 rounded">
+                          <span className="font-mono text-[10px] font-bold text-primary bg-primary/10 px-2.5 py-1 rounded">
                             {order.gameUserId || "-"}
                             {order.zoneId ? ` (${order.zoneId})` : ""}
                           </span>
@@ -625,7 +625,7 @@ export default function UserDashboard() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 hover:bg-white/10 text-white/50 hover:text-white"
+                            className="h-8 w-8 p-0 hover:bg-secondary/80 text-muted-foreground/90 hover:text-foreground"
                             onClick={() => navigate(`/order/${order.id}`)}
                             aria-label="Lihat detail"
                           >
@@ -641,14 +641,14 @@ export default function UserDashboard() {
             
             {/* Table Footer */}
             {orders.length > 0 && (
-              <div className="p-4 border-t border-white/10 bg-white/[0.01] flex items-center justify-between">
-                <span className="text-[9px] font-black uppercase tracking-widest text-white/40">
+              <div className="p-4 border-t border-border/80 bg-secondary/40 flex items-center justify-between">
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                   Menampilkan {orders.length} transaksi terbaru
                 </span>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-[9px] font-black uppercase tracking-widest text-[#8B5CF6] hover:text-[#D946EF] hover:bg-white/5 h-8"
+                  className="text-[9px] font-black uppercase tracking-widest text-primary hover:text-primary hover:bg-secondary/60 h-8"
                   onClick={() => navigate("/dashboard/transactions")}
                 >
                   Lihat Semua
@@ -666,8 +666,8 @@ export default function UserDashboard() {
               icon: Zap,
               title: "Proses Instan",
               desc: "Transaksi diproses otomatis",
-              color: "text-[#D946EF]",
-              bg: "bg-gradient-to-br from-[#D946EF]/20 to-[#8B5CF6]/20 border border-[#D946EF]/30",
+              color: "text-primary",
+              bg: "bg-gradient-to-br from-amber-400/25 to-orange-600/15 border border-primary/30",
             },
             {
               icon: Shield,
@@ -684,14 +684,14 @@ export default function UserDashboard() {
               bg: "bg-gradient-to-br from-cyan-400/20 to-blue-600/20 border border-cyan-400/30",
             },
           ].map((item, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-[#0B0A10]/80 border border-white/10 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+            <div key={i} className="p-5 rounded-2xl bg-secondary/60 border border-border/80 hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)]">
               <div className="flex items-center gap-4">
                 <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${item.bg}`}>
                   <item.icon className={`h-5 w-5 ${item.color}`} />
                 </div>
                 <div>
-                  <h3 className="text-xs font-black text-white uppercase tracking-tight">{item.title}</h3>
-                  <p className="text-[9px] font-black text-white/50 uppercase tracking-widest mt-1">{item.desc}</p>
+                  <h3 className="text-xs font-black text-foreground uppercase tracking-tight">{item.title}</h3>
+                  <p className="text-[9px] font-black text-muted-foreground/90 uppercase tracking-widest mt-1">{item.desc}</p>
                 </div>
               </div>
             </div>

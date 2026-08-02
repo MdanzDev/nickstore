@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import AdminLayout from "./AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,7 @@ const mockAnnouncements: Announcement[] = [
 ];
 
 const TYPE_CONFIG = {
-  warning: { icon: AlertTriangle, color: "#D946EF", bg: "rgba(255,184,0,0.1)", border: "rgba(255,184,0,0.2)", label: "Warning" },
+  warning: { icon: AlertTriangle, color: "#B45309", bg: "rgba(255,184,0,0.1)", border: "rgba(255,184,0,0.2)", label: "Warning" },
   success: { icon: CheckCircle2, color: "#00c864", bg: "rgba(0,200,100,0.1)", border: "rgba(0,200,100,0.2)", label: "Promo" },
   info:    { icon: Info, color: "#38BDF8", bg: "rgba(56,189,248,0.1)", border: "rgba(56,189,248,0.2)", label: "Info" },
 };
@@ -60,8 +60,8 @@ export default function AdminAnnouncements() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-black text-white">Pengumuman</h1>
-            <p className="text-sm text-white/40 mt-1">Kelola pengumuman dan notifikasi platform</p>
+            <h1 className="text-2xl font-black text-foreground">Pengumuman</h1>
+            <p className="text-sm text-muted-foreground mt-1">Kelola pengumuman dan notifikasi platform</p>
           </div>
           <button
             onClick={() => setShowCreate(!showCreate)}
@@ -74,7 +74,7 @@ export default function AdminAnnouncements() {
         {/* Create Form */}
         {showCreate && (
           <div className="lg-card rounded-2xl p-6 space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-widest text-white">Buat Pengumuman Baru</h2>
+            <h2 className="text-sm font-black uppercase tracking-widest text-foreground">Buat Pengumuman Baru</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2 space-y-1.5">
                 <label className="lg-label">Judul</label>
@@ -117,7 +117,7 @@ export default function AdminAnnouncements() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center flex-wrap gap-2 mb-1">
-                      <h3 className="font-black text-white text-sm">{ann.title}</h3>
+                      <h3 className="font-black text-foreground text-sm">{ann.title}</h3>
                       <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full"
                         style={{ background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}` }}>
                         {cfg.label}
@@ -129,12 +129,12 @@ export default function AdminAnnouncements() {
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-white/50">{ann.content}</p>
-                    <p className="text-[10px] text-white/30 mt-2 font-bold">{ann.createdAt}</p>
+                    <p className="text-sm text-muted-foreground/90">{ann.content}</p>
+                    <p className="text-[10px] text-muted-foreground/60 mt-2 font-bold">{ann.createdAt}</p>
                   </div>
                 </div>
                 <button onClick={() => handleDelete(ann.id)}
-                  className="p-2 rounded-xl hover:bg-red-500/10 text-white/20 hover:text-red-400 transition-all border border-transparent hover:border-red-500/20 shrink-0">
+                  className="p-2 rounded-xl hover:bg-red-50 text-muted-foreground/40 hover:text-red-600 transition-all border border-transparent hover:border-red-500/20 shrink-0">
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
